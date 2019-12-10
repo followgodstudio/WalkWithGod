@@ -85,19 +85,19 @@ class _LoginPageState extends State<LoginPage>
                   mainAxisSize: MainAxisSize.max,
                   children: <Widget>[
                     Padding(
-                      padding: EdgeInsets.only(top: 75.0),
+                      padding: EdgeInsets.only(top: 40.0),
                       child: new Image(
                           width: 250.0,
                           height: 191.0,
                           fit: BoxFit.fill,
-                          image: new AssetImage('assets/img/login_logo.png')),
+                          image: new AssetImage('assets/img/login_logo.jpg')),
                     ),
                     Padding(
                       padding: EdgeInsets.only(top: 0.0),
                       child: FlatButton(
                           onPressed: () {},
                           child: Text(
-                            "Walk with God",
+                            "随 行",
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 50.0,

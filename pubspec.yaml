@@ -31,7 +31,7 @@ flutter:
   uses-material-design: true
 
   assets:
-      - assets/login_logo.png
+      - assets/login_logo.jpg
       - assets/shoes.png
       - assets/ocean_shoe.png
 
