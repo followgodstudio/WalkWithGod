@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "21802022919",
+    "firebase_url": "https://walkwithgod-73ee8.firebaseio.com",
+    "project_id": "walkwithgod-73ee8",
+    "storage_bucket": "walkwithgod-73ee8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:21802022919:android:b9208f68c19ffa4c8092a2",
+        "android_client_info": {
+          "package_name": "com.example.walk_with_god"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "21802022919-psc5aigtlo0ovljjp3cnlmlbnu55h2j1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBqW1gj125aXlB5NyaqNWogfoIulRtttI0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "21802022919-psc5aigtlo0ovljjp3cnlmlbnu55h2j1.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "21802022919-ogjhm1a2nqu4ldi39dj2m4n9serng6qf.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.walkWithGod"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
