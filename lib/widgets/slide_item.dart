@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../model/slide.dart';
 
 class SlideItem extends StatelessWidget {
@@ -13,8 +12,8 @@ class SlideItem extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         Container(
-          width: 327,
-          height: 327,
+          width: 300,
+          height: 300,
           decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(
@@ -38,7 +37,7 @@ class SlideItem extends StatelessWidget {
             child: Column(
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.only(top: 0.0),
+              padding: const EdgeInsets.only(top: 10.0),
               child: Container(
                 child: Image.asset(
                   slideList[index].icon,
@@ -74,7 +73,7 @@ class SlideItem extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 30),
+              padding: const EdgeInsets.only(top: 10.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,

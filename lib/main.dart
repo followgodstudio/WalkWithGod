@@ -2,9 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:walk_with_god/screens/LoginScreen.dart';
 import './screens/LoginScreen.dart';
-import 'screens/SignupScreen.dart';
 import 'screens/HomeScreen.dart';
-import 'screens/GettingStartedScreen.dart';
+import 'screens/MainScreen.dart';
 
 
 void main() => runApp(MyApp());
@@ -32,13 +31,13 @@ class MyApp extends StatelessWidget {
         ),
         accentColor: Colors.grey,
       ),
-      home: GettingStartedScreen(),
+      home: MainScreen(),
       routes: {
         //LoginScreen.routeName: (ctx) => LoginScreen(),
         //SignupScreen.routeName: (ctx) => SignupScreen(),
         LoginScreen.routeName: (ctx) => LoginScreen(),
         HomeScreen.routeName: (ctx) => HomeScreen(),
-        GettingStartedScreen.routeName: (ctx) => GettingStartedScreen(),
+        MainScreen.routeName: (ctx) => MainScreen(),
       },
     );
   }
