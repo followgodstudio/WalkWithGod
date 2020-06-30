@@ -1,1 +1,3 @@
 # WalkWithGod
+
+Integrated with trello. 
