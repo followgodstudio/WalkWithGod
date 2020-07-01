@@ -317,15 +317,16 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                             Container(
-                              padding: EdgeInsets.symmetric(horizontal: 70),
+                              padding: EdgeInsets.symmetric(horizontal: 20),
                               width: double.infinity,
                               child: Column(
                                 children: <Widget>[
                                   Text(
-                                    "点击按钮表示您同意并遵守随行《使用协议》和《隐私协议》",
+                                    "点击按钮表示您同意并遵守随行",
                                     textWidthBasis: TextWidthBasis.longestLine,
                                     textAlign: TextAlign.center,
                                   ),
+                                  Text("《使用协议》和《隐私协议》"),
                                 ],
                               ),
                             )

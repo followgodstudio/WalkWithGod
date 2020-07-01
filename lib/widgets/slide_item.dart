@@ -12,8 +12,8 @@ class SlideItem extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         Container(
-          width: 300,
-          height: 300,
+          width: MediaQuery.of(context).size.width * 105/188,
+          height: MediaQuery.of(context).size.width * 105/188,
           decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(
@@ -26,6 +26,7 @@ class SlideItem extends StatelessWidget {
                 ),
               )
             ],
+            borderRadius: BorderRadius.circular(15),
             shape: BoxShape.rectangle,
             image: DecorationImage(
               image: AssetImage(slideList[index].imageUrl),

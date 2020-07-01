@@ -154,17 +154,14 @@ class _MainScreenState extends State<MainScreen> {
                   ),
                 ),
               ),
-            Column(
-              children: <Widget>[
+              Column(children: <Widget>[
                 Text("This is place holder for main article"),
                 Text("This is place holder for main article"),
                 Text("This is place holder for main article"),
                 Text("This is place holder for main article"),
                 Text("This is place holder for main article"),
                 Text("This is place holder for main article"),
-              ]
-
-            ),
+              ]),
             ],
           ),
         ),
