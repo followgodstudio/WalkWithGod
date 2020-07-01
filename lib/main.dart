@@ -3,10 +3,6 @@ import 'package:walk_with_god/screens/LoginScreen.dart';
 import './screens/LoginScreen.dart';
 import 'screens/HomeScreen.dart';
 import 'screens/MainScreen.dart';
-<<<<<<< HEAD
-import 'configurations/theme.dart';
-=======
->>>>>>> 06291a3c56e75405266439d8e7369826d5ac1dde
 
 void main() => runApp(MyApp());
 
@@ -17,10 +13,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Walk With God',
       debugShowCheckedModeBanner: false,
-<<<<<<< HEAD
-      theme: dayTheme,
-      home: MainScreen(),
-=======
       theme: ThemeData(
         primarySwatch: Colors.deepOrange,
         backgroundColor: Colors.white,
@@ -37,8 +29,7 @@ class MyApp extends StatelessWidget {
         ),
         accentColor: Colors.grey,
       ),
-      home: LoginScreen(),
->>>>>>> 06291a3c56e75405266439d8e7369826d5ac1dde
+      home: MainScreen(),
       routes: {
         //LoginScreen.routeName: (ctx) => LoginScreen(),
         //SignupScreen.routeName: (ctx) => SignupScreen(),

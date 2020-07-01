@@ -57,7 +57,7 @@ class _MainScreenState extends State<MainScreen> {
           child: Column(
             children: <Widget>[
               Container(
-                height: MediaQuery.of(context).size.height,
+                height: MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top,
                 color: Theme.of(context).backgroundColor,
                 child: Padding(
                   padding: const EdgeInsets.all(10),
@@ -154,14 +154,15 @@ class _MainScreenState extends State<MainScreen> {
                   ),
                 ),
               ),
-              Column(children: <Widget>[
-                Text("This is place holder for main article"),
-                Text("This is place holder for main article"),
-                Text("This is place holder for main article"),
-                Text("This is place holder for main article"),
-                Text("This is place holder for main article"),
-                Text("This is place holder for main article"),
-              ]),
+              Column(children: <Widget>[ 
+                //slideList[_currentPage].subtitles.map((e) => Text(e, style: TextStyle(color: Colors.red),)).toList(),
+                //Text(slideList[_currentPage].body[0]),    
+                // for (int i in items) Text(item),  
+                // ...slideList[_currentPage].subtitles.map((e) => Text(e)).toList(),
+                // ...slideList[_currentPage].content.map((e) => Text(e)).toList(),
+                ...slideList[_currentPage].content.map((e) => Column(children: <Widget>[Text(e.subtitle)]))
+              ]
+              ),
             ],
           ),
         ),

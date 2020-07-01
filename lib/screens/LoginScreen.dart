@@ -314,14 +314,12 @@ class _LoginScreenState extends State<LoginScreen> {
                               width: double.infinity,
                               child: Column(
                                 children: <Widget>[
-                                  Text(
-                                    "点击按钮表示您同意并遵守随行",
-                                    textWidthBasis: TextWidthBasis.longestLine,
-                                    textAlign: TextAlign.center,
+                                  Center(
+                                    child: Text(
+                                      "点击按钮表示您同意并遵守随行",
+                                      textAlign: TextAlign.center,
+                                    ),
                                   ),
-<<<<<<< HEAD
-                                  Text("《使用协议》和《隐私协议》"),
-=======
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
@@ -348,12 +346,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                       ),
                                     ],
                                   ),
-                                  // Text(
-                                  //   "《使用协议》和《隐私协议》",
-                                  //   textWidthBasis: TextWidthBasis.longestLine,
-                                  //   textAlign: TextAlign.center,
-                                  // ),
->>>>>>> 06291a3c56e75405266439d8e7369826d5ac1dde
                                 ],
                               ),
                             )
