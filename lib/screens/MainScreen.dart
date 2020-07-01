@@ -160,7 +160,7 @@ class _MainScreenState extends State<MainScreen> {
                 // for (int i in items) Text(item),  
                 // ...slideList[_currentPage].subtitles.map((e) => Text(e)).toList(),
                 // ...slideList[_currentPage].content.map((e) => Text(e)).toList(),
-                ...slideList[_currentPage].content.map((e) => Column(children: <Widget>[Text(e.subtitle)]))
+                ...slideList[_currentPage].content.map((e) => Column(children: <Widget>[Text(e.subtitle), Text(e.body)])),
               ]
               ),
             ],
