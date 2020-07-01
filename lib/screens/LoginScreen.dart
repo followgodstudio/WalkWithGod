@@ -4,7 +4,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:walk_with_god/screens/HomeScreen.dart';
 import '../widgets/otp_input.dart';
-import 'package:flutter_linkify/flutter_linkify.dart';
 
 class LoginScreen extends StatefulWidget {
   static const routeName = '/login';
