@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:walk_with_god/widgets/aricle_paragraph.dart';
 
 import '../widgets/slide_item.dart';
 import '../model/slide.dart';
@@ -58,7 +59,7 @@ class _MainScreenState extends State<MainScreen> {
             children: <Widget>[
               Container(
                 height: MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top,
-                color: Theme.of(context).backgroundColor,
+                //color: Theme.of(context).backgroundColor,
                 child: Padding(
                   padding: const EdgeInsets.all(10),
                   child: Column(
@@ -155,12 +156,7 @@ class _MainScreenState extends State<MainScreen> {
                 ),
               ),
               Column(children: <Widget>[ 
-                //slideList[_currentPage].subtitles.map((e) => Text(e, style: TextStyle(color: Colors.red),)).toList(),
-                //Text(slideList[_currentPage].body[0]),    
-                // for (int i in items) Text(item),  
-                // ...slideList[_currentPage].subtitles.map((e) => Text(e)).toList(),
-                // ...slideList[_currentPage].content.map((e) => Text(e)).toList(),
-                ...slideList[_currentPage].content.map((e) => Column(children: <Widget>[Text(e.subtitle), Text(e.body)])),
+                ...slideList[_currentPage].content.map((e) => Column(children: <Widget>[ArticleParagraph(e)])),
               ]
               ),
             ],

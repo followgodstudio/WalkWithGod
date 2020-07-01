@@ -103,6 +103,9 @@ flutter:
     - family: Song
       fonts:
         - asset: fonts/LingDongQiCheChunTang-2.ttf
+    - family: Jinling
+      fonts:
+        - asset: fonts/FZCUJINLJW--GB1-0.ttf
     - family: HelveticaNeue
       fonts:
         - asset: fonts/HelveticaNeueBold.ttf

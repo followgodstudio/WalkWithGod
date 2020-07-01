@@ -5,13 +5,16 @@ final ThemeData dayTheme = new ThemeData(
   backgroundColor: Colors.white,
   appBarTheme: AppBarTheme(color: Colors.white),
   textTheme: TextTheme(
-    title: TextStyle(color: Colors.black87, fontSize: 31.0, fontFamily: 'Song'),
-    subtitle:
-        TextStyle(color: Colors.black54, fontSize: 28.0, fontFamily: 'Song'),
+    headline1:
+        TextStyle(color: Colors.black87, fontSize: 30.0, fontFamily: 'Jinling'),
+    subtitle1:
+        TextStyle(color: Colors.black54, fontSize: 23.0, fontFamily: 'Jinling', letterSpacing: 2, height: 2),
     caption:
         TextStyle(color: Colors.grey[500], fontSize: 23.0, fontFamily: 'Song'),
-    display2:
+    subtitle2:
         TextStyle(color: Colors.grey[500], fontSize: 16.0, fontFamily: 'Song'),
+    bodyText1:
+        TextStyle(color: Color.fromARGB(255, 77, 77, 77), fontSize: 16.0, fontFamily: 'Jinling', letterSpacing: 1.4, height: 1.8),
   ),
   accentColor: Colors.grey,
 );
