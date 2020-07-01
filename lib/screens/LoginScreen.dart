@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:walk_with_god/screens/HomeScreen.dart';
 import '../widgets/otp_input.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
 
 class LoginScreen extends StatefulWidget {
   static const routeName = '/login';
@@ -264,24 +266,15 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             TextFormField(
                               decoration: InputDecoration(
-                                  // enabledBorder: OutlineInputBorder(
-                                  //     borderRadius:
-                                  //         BorderRadius.all(Radius.circular(8)),
-                                  //     borderSide:
-                                  //         BorderSide(color: Colors.grey[200])),
                                   focusedBorder: OutlineInputBorder(
                                       borderRadius:
                                           BorderRadius.all(Radius.circular(8)),
                                       borderSide:
                                           BorderSide(color: Colors.grey[300])),
-                                  //filled: true,
-                                  //fillColor: Colors.grey[100],
                                   hintText: "Mobile Number"),
                               controller: _phoneController,
                             ),
-                            SizedBox(
-                              height: 15
-                            ),
+                            SizedBox(height: 15),
                             Container(
                               width: double.infinity,
                               child: FlatButton(
@@ -326,7 +319,41 @@ class _LoginScreenState extends State<LoginScreen> {
                                     textWidthBasis: TextWidthBasis.longestLine,
                                     textAlign: TextAlign.center,
                                   ),
+<<<<<<< HEAD
                                   Text("《使用协议》和《隐私协议》"),
+=======
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      InkWell(
+                                        child: Text("《使用协议》"),
+                                        onTap: () async {
+                                          if (await canLaunch(
+                                              "https://www.google.com")) {
+                                            await launch(
+                                                "https://www.google.com");
+                                          }
+                                        },
+                                      ),
+                                      Text("和"),
+                                      InkWell(
+                                        child: Text("《隐私协议》"),
+                                        onTap: () async {
+                                          if (await canLaunch(
+                                              "https://www.google.com")) {
+                                            await launch(
+                                                "https://www.google.com");
+                                          }
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                  // Text(
+                                  //   "《使用协议》和《隐私协议》",
+                                  //   textWidthBasis: TextWidthBasis.longestLine,
+                                  //   textAlign: TextAlign.center,
+                                  // ),
+>>>>>>> 06291a3c56e75405266439d8e7369826d5ac1dde
                                 ],
                               ),
                             )
