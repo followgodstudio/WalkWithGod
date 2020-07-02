@@ -265,6 +265,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             TextFormField(
                               decoration: InputDecoration(
+                                  prefixText: "+1",
                                   focusedBorder: OutlineInputBorder(
                                       borderRadius:
                                           BorderRadius.all(Radius.circular(8)),
