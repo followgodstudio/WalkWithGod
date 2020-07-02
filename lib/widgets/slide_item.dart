@@ -79,19 +79,43 @@ class SlideItem extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(top: 10.0),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  IconButton(
-                      iconSize: 16,
-                      icon: Icon(Icons.share),
-                      tooltip: '分享到微信',
-                      onPressed: null),
-                  IconButton(
-                      iconSize: 16,
-                      icon: Icon(Icons.center_focus_weak),
-                      tooltip: '分享到我也不知道是哪儿',
-                      onPressed: null),
+                  Container(
+                    child: Ink(
+                      decoration: const ShapeDecoration(
+                        color: Color.fromARGB(255, 230, 230, 230),
+                        shape: CircleBorder(),
+                      ),
+                      child: IconButton(
+                          color: Colors.white10,
+                          iconSize: 16,
+                          icon: Icon(Icons.share),
+                          tooltip: '分享到微信',
+                          onPressed: null),
+                    ),
+                  ),
+
+                  Container(
+                    child: Ink(
+                      decoration: const ShapeDecoration(
+                        color: Color.fromARGB(255, 230, 230, 230),
+                        shape: CircleBorder(),
+                      ),
+                      child: IconButton(
+                          iconSize: 16,
+                          icon: Icon(Icons.favorite),
+                          tooltip: '收藏',
+                          onPressed: null),
+                    ),
+                  ),
+
+                  // IconButton(
+                  //     iconSize: 16,
+                  //     icon: Icon(Icons.center_focus_weak),
+                  //     tooltip: '分享到我也不知道是哪儿',
+                  //     onPressed: null),
                 ],
               ),
             ),
