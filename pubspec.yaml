@@ -108,6 +108,8 @@ flutter:
     - family: HelveticaNeue
       fonts:
         - asset: fonts/HelveticaNeueBold.ttf
-          weight: 700
+          weight: 500
+        - asset: fonts/HelveticaNeueMedium.ttf
+          weight: 300
         - asset: fonts/HelveticaNeueUltraLight.ttf
           weight: 200

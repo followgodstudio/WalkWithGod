@@ -1,9 +1,7 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:walk_with_god/widgets/aricle_paragraph.dart';
-
 import '../widgets/slide_item.dart';
 import '../model/slide.dart';
 import '../widgets/slide_dots.dart';
@@ -58,85 +56,13 @@ class _MainScreenState extends State<MainScreen> {
           child: Column(
             children: <Widget>[
               Container(
-                height: MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top,
-                //color: Theme.of(context).backgroundColor,
+                height: MediaQuery.of(context).size.height -
+                    MediaQuery.of(context).padding.top,
                 child: Padding(
                   padding: const EdgeInsets.all(10),
                   child: Column(
                     children: <Widget>[
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: <Widget>[
-                          FlatButton(
-                            child: Column(
-                              children: <Widget>[
-                                Text.rich(
-                                  TextSpan(
-                                    text: DateFormat.MMMd()
-                                            .format(DateTime.now()) +
-                                        '  ',
-                                    children: <TextSpan>[
-                                      TextSpan(
-                                          text: DateFormat.y()
-                                              .format(DateTime.now()),
-                                          style: TextStyle(
-                                            fontFamily: 'HelveticaNeue',
-                                            fontWeight: FontWeight.w200,
-                                          )),
-                                    ],
-                                  ),
-                                  style: TextStyle(
-                                    fontFamily: 'HelveticaNeue',
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                                Stack(
-                                  alignment: AlignmentDirectional.center,
-                                  children: <Widget>[
-                                    Container(
-                                      margin: const EdgeInsets.only(
-                                          top: 5, bottom: 15),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          for (int i = 0;
-                                              i < slideList.length;
-                                              i++)
-                                            if (i == _currentPage)
-                                              SlideDots(true)
-                                            else
-                                              SlideDots(false)
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ],
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            color: Theme.of(context).appBarTheme.color,
-                            //color: Colors.blue,
-                            textColor: Theme.of(context).primaryColorDark,
-                            onPressed: () {
-                              Navigator.of(context)
-                                  .pushNamed(SignupScreen.routeName);
-                            },
-                          ),
-                        ],
-                      ),
-                      Container(
-                          padding: const EdgeInsets.only(bottom: 20.0),
-                          child: Divider(
-                              thickness: 2.0,
-                              color: Theme.of(context).primaryColor,
-                              indent: 160.0,
-                              endIndent: 160.0,
-                              height: 0.0)),
+                      Header(currentPage: _currentPage),
                       Expanded(
                         child: Stack(
                           alignment: AlignmentDirectional.topCenter,
@@ -155,14 +81,119 @@ class _MainScreenState extends State<MainScreen> {
                   ),
                 ),
               ),
-              Column(children: <Widget>[ 
-                ...slideList[_currentPage].content.map((e) => Column(children: <Widget>[ArticleParagraph(e)])),
-              ]
+              Center(
+                child: Column(children: <Widget>[
+                  ...slideList[_currentPage].content.map(
+                      (e) => Column(children: <Widget>[ArticleParagraph(e)])),
+                ]),
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class Header extends StatelessWidget {
+  const Header({
+    Key key,
+    @required int currentPage,
+  })  : _currentPage = currentPage,
+        super(key: key);
+
+  final int _currentPage;
+
+  @override
+  Widget build(BuildContext context) {
+    var now = new DateTime.now();
+    var formatter = new DateFormat('dd');
+    String formatted = formatter.format(now);
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Expanded(
+            child: Stack(
+          children: [
+            Center(
+              child: FlatButton(
+                  onPressed: () {},
+                  child: Column(
+                    children: <Widget>[
+                      FlatButton(
+                        onPressed: () {},
+                        child: Container(
+                          height: 50,
+                          width: 50,
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Color.fromARGB(255, 255, 235, 133),
+                          ),
+                          child: Stack(
+                              alignment: AlignmentDirectional.topCenter,
+                              children: [
+                                Positioned(
+                                  top: 3,
+                                  child: Text(
+                                    DateFormat.MMM().format(DateTime.now()),
+                                    style: TextStyle(
+                                        fontFamily: 'HelveticaNeue',
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w300),
+                                  ),
+                                ),
+                                Positioned(
+                                  top: 16,
+                                  child: Text(
+                                    formatted,
+                                    style: TextStyle(
+                                        fontFamily: 'HelveticaNeue',
+                                        fontSize: 26,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ),
+                              ]),
+                        ),
+                      ),
+                      Stack(
+                        alignment: AlignmentDirectional.center,
+                        children: <Widget>[
+                          Container(
+                            margin: const EdgeInsets.only(top: 10, bottom: 35),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                for (int i = 0; i < slideList.length; i++)
+                                  if (i == _currentPage)
+                                    SlideDots(true)
+                                  else
+                                    SlideDots(false)
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
+                  )),
+            ),
+            Positioned(
+              right: 0,
+              child: IconButton(
+                icon: Icon(Icons.person_outline,
+                    size: Theme.of(context).textTheme.button.fontSize),
+                onPressed: () {
+                  Navigator.of(context).pushNamed(SignupScreen.routeName);
+                },
+                color: Theme.of(context).accentColor,
+                alignment: Alignment.topCenter,
+                //padding: const EdgeInsets.only(bottom: ),
+              ),
+            ),
+          ],
+        )),
+      ],
     );
   }
 }
