@@ -4,6 +4,7 @@ final ThemeData dayTheme = new ThemeData(
   primarySwatch: Colors.deepOrange,
   backgroundColor: Colors.white,
   appBarTheme: AppBarTheme(color: Colors.white),
+  accentColor: Color.fromARGB(255, 0, 169, 157),
   textTheme: TextTheme(
     headline1:
         TextStyle(color: Colors.black87, fontSize: 29.0, fontFamily: 'Jinling'),
@@ -15,10 +16,12 @@ final ThemeData dayTheme = new ThemeData(
         fontFamily: 'Jinling',
         letterSpacing: 2,
         height: 2),
+    subtitle2: TextStyle(
+        color: Color.fromARGB(255, 0, 169, 157),
+        fontSize: 16.0,
+        fontFamily: 'Song'),
     caption:
-        TextStyle(color: Colors.grey[500], fontSize: 23.0, fontFamily: 'Song'),
-    subtitle2:
-        TextStyle(color: Colors.grey[500], fontSize: 16.0, fontFamily: 'Song'),
+        TextStyle(color: Colors.grey[300], fontSize: 23.0, fontFamily: 'Song'),
     bodyText1: TextStyle(
         color: Color.fromARGB(255, 77, 77, 77),
         fontSize: 16.0,
@@ -26,7 +29,6 @@ final ThemeData dayTheme = new ThemeData(
         letterSpacing: 1.4,
         height: 1.8),
   ),
-  accentColor: Colors.grey,
 );
 
 final ThemeData nightTheme = new ThemeData(
