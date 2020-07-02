@@ -76,10 +76,63 @@ class SlideItem extends StatelessWidget {
                 softWrap: true,
               ),
             ),
+            // Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            //   Column(
+            //     children: [
+            //       Row(
+            //         children: [
+            //           Container(
+            //             child: Ink(
+            //               decoration: const ShapeDecoration(
+            //                 color: Color.fromARGB(255, 230, 230, 230),
+            //                 shape: CircleBorder(),
+            //               ),
+            //               child: IconButton(
+            //                   color: Colors.white10,
+            //                   iconSize: 16,
+            //                   icon: Icon(Icons.person_add),
+            //                   tooltip: '分享到微信',
+            //                   onPressed: null),
+            //             ),
+            //           ),
+            //           Container(
+            //             child: Ink(
+            //               decoration: const ShapeDecoration(
+            //                 color: Color.fromARGB(255, 230, 230, 230),
+            //                 shape: CircleBorder(),
+            //               ),
+            //               child: IconButton(
+            //                   color: Colors.white10,
+            //                   iconSize: 16,
+            //                   icon: Icon(Icons.person_add),
+            //                   tooltip: '分享到微信',
+            //                   onPressed: null),
+            //             ),
+            //           ),
+            //           Container(
+            //             child: Ink(
+            //               decoration: const ShapeDecoration(
+            //                 color: Color.fromARGB(255, 230, 230, 230),
+            //                 shape: CircleBorder(),
+            //               ),
+            //               child: IconButton(
+            //                   color: Colors.white10,
+            //                   iconSize: 16,
+            //                   icon: Icon(Icons.person_add),
+            //                   tooltip: '分享到微信',
+            //                   onPressed: null),
+            //             ),
+            //           ),
+            //         ],
+            //       ),
+            //       Text("等n位好友喜欢了这篇文章")
+            //     ],
+            //   )
+            // ]),
             Padding(
               padding: const EdgeInsets.only(top: 10.0),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Container(
@@ -96,7 +149,7 @@ class SlideItem extends StatelessWidget {
                           onPressed: null),
                     ),
                   ),
-
+                  SizedBox(width: 30),
                   Container(
                     child: Ink(
                       decoration: const ShapeDecoration(
@@ -110,12 +163,6 @@ class SlideItem extends StatelessWidget {
                           onPressed: null),
                     ),
                   ),
-
-                  // IconButton(
-                  //     iconSize: 16,
-                  //     icon: Icon(Icons.center_focus_weak),
-                  //     tooltip: '分享到我也不知道是哪儿',
-                  //     onPressed: null),
                 ],
               ),
             ),
