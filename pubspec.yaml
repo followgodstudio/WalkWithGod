@@ -102,9 +102,18 @@ flutter:
     - family: Song
       fonts:
         - asset: fonts/LingDongQiCheChunTang-2.ttf
+    - family: Jinling
+      fonts:
+        - asset: fonts/FZCUJINLJW--GB1-0.ttf
     - family: HelveticaNeue
       fonts:
         - asset: fonts/HelveticaNeueBold.ttf
           weight: 700
+        - asset: fonts/HelveticaNeueHeavy.otf
+          weight: 500
+        - asset: fonts/HelveticaNeueMedium.ttf
+          weight: 300
         - asset: fonts/HelveticaNeueUltraLight.ttf
           weight: 200
+
+          

@@ -3,6 +3,9 @@ import '../model/slide.dart';
 
 class SlideItem extends StatelessWidget {
   final int index;
+  final double narrowFactor = 105 / 188;
+  final double wideFactor = 165 / 188;
+  final double midiumFactor = 135 / 188;
   SlideItem(this.index);
 
   @override
@@ -12,8 +15,8 @@ class SlideItem extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         Container(
-          width: 300,
-          height: 300,
+          width: MediaQuery.of(context).size.width * narrowFactor,
+          height: MediaQuery.of(context).size.width * narrowFactor,
           decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(
@@ -26,6 +29,7 @@ class SlideItem extends StatelessWidget {
                 ),
               )
             ],
+            borderRadius: BorderRadius.circular(15),
             shape: BoxShape.rectangle,
             image: DecorationImage(
               image: AssetImage(slideList[index].imageUrl),
@@ -49,12 +53,12 @@ class SlideItem extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(bottom: 5.0),
               child: Container(
-                width: 280.0,
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                width: MediaQuery.of(context).size.width * midiumFactor,
+                //padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: Text(
                   slideList[index].title,
                   textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.title,
+                  style: Theme.of(context).textTheme.headline1,
                   maxLines: 3,
                   softWrap: true,
                 ),
@@ -72,22 +76,93 @@ class SlideItem extends StatelessWidget {
                 softWrap: true,
               ),
             ),
+            // Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            //   Column(
+            //     children: [
+            //       Row(
+            //         children: [
+            //           Container(
+            //             child: Ink(
+            //               decoration: const ShapeDecoration(
+            //                 color: Color.fromARGB(255, 230, 230, 230),
+            //                 shape: CircleBorder(),
+            //               ),
+            //               child: IconButton(
+            //                   color: Colors.white10,
+            //                   iconSize: 16,
+            //                   icon: Icon(Icons.person_add),
+            //                   tooltip: '分享到微信',
+            //                   onPressed: null),
+            //             ),
+            //           ),
+            //           Container(
+            //             child: Ink(
+            //               decoration: const ShapeDecoration(
+            //                 color: Color.fromARGB(255, 230, 230, 230),
+            //                 shape: CircleBorder(),
+            //               ),
+            //               child: IconButton(
+            //                   color: Colors.white10,
+            //                   iconSize: 16,
+            //                   icon: Icon(Icons.person_add),
+            //                   tooltip: '分享到微信',
+            //                   onPressed: null),
+            //             ),
+            //           ),
+            //           Container(
+            //             child: Ink(
+            //               decoration: const ShapeDecoration(
+            //                 color: Color.fromARGB(255, 230, 230, 230),
+            //                 shape: CircleBorder(),
+            //               ),
+            //               child: IconButton(
+            //                   color: Colors.white10,
+            //                   iconSize: 16,
+            //                   icon: Icon(Icons.person_add),
+            //                   tooltip: '分享到微信',
+            //                   onPressed: null),
+            //             ),
+            //           ),
+            //         ],
+            //       ),
+            //       Text("等n位好友喜欢了这篇文章")
+            //     ],
+            //   )
+            // ]),
             Padding(
               padding: const EdgeInsets.only(top: 10.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  IconButton(
-                      iconSize: 16,
-                      icon: Icon(Icons.share),
-                      tooltip: '分享到微信',
-                      onPressed: null),
-                  IconButton(
-                      iconSize: 16,
-                      icon: Icon(Icons.center_focus_weak),
-                      tooltip: '分享到我也不知道是哪儿',
-                      onPressed: null),
+                  Container(
+                    child: Ink(
+                      decoration: const ShapeDecoration(
+                        color: Color.fromARGB(255, 230, 230, 230),
+                        shape: CircleBorder(),
+                      ),
+                      child: IconButton(
+                          color: Colors.white10,
+                          iconSize: 16,
+                          icon: Icon(Icons.share),
+                          tooltip: '分享到微信',
+                          onPressed: null),
+                    ),
+                  ),
+                  SizedBox(width: 30),
+                  Container(
+                    child: Ink(
+                      decoration: const ShapeDecoration(
+                        color: Color.fromARGB(255, 230, 230, 230),
+                        shape: CircleBorder(),
+                      ),
+                      child: IconButton(
+                          iconSize: 16,
+                          icon: Icon(Icons.favorite),
+                          tooltip: '收藏',
+                          onPressed: null),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -100,7 +175,7 @@ class SlideItem extends StatelessWidget {
                     size: 16,
                     color: Theme.of(context).primaryColor,
                   ),
-                  Text('继续阅读', style: Theme.of(context).textTheme.display2),
+                  Text('继续阅读', style: Theme.of(context).textTheme.subtitle2),
                 ],
               ),
             ),
