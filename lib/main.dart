@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
         ),
         accentColor: Colors.grey,
       ),
-      home: LoginScreen(),
+      home: MainScreen(),
       routes: {
         //LoginScreen.routeName: (ctx) => LoginScreen(),
         //SignupScreen.routeName: (ctx) => SignupScreen(),
