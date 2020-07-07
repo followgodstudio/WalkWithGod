@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:walk_with_god/widgets/aricle_paragraph.dart';
@@ -7,6 +8,7 @@ import '../model/slide.dart';
 import '../widgets/slide_dots.dart';
 import 'SignupScreen.dart';
 import 'package:intl/date_time_patterns.dart';
+import 'package:http/http.dart' as http;
 
 class MainScreen extends StatefulWidget {
   static const routeName = '/getting_started';
@@ -20,6 +22,7 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   void initState() {
+    fetchAndSetArticles();
     super.initState();
     Timer.periodic(Duration(seconds: 500), (Timer timer) {
       if (_currentPage < 2) {
@@ -46,6 +49,16 @@ class _MainScreenState extends State<MainScreen> {
     setState(() {
       _currentPage = index;
     });
+  }
+
+  Future<void> fetchAndSetArticles() async {
+    const url = "https://walkwithgod-73ee8.firebaseio.com/articles.json";
+    try {
+      final response = await http.get(url);
+      print(json.decode(response.body));
+    } catch (error) {
+      throw (error);
+    }
   }
 
   @override
