@@ -5,6 +5,7 @@ import 'package:walk_with_god/widgets/aricle_paragraph.dart';
 import '../widgets/slide_item.dart';
 import '../model/slide.dart';
 import '../widgets/slide_dots.dart';
+import '../widgets/comment.dart';
 import 'SignupScreen.dart';
 import 'package:intl/date_time_patterns.dart';
 
@@ -200,104 +201,29 @@ class Header extends StatelessWidget {
 }
 
 class Comments extends StatelessWidget {
-  const Comments({
+  //List<Comment> commentList;
+  Comments({
     Key key,
   }) : super(key: key);
+  //Comment(List<Comment> commentList) {}
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 30.0),
-      child: Container(
-        height: 500,
-        child: ListView(
-          children: <Widget>[
-            Comment(),
-            Comment(),
-            Comment(),
-          ],
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 30.0),
+        child: Container(
+          height: 500,
+          child:
+              ListView.builder(itemBuilder: (BuildContext context, int index) {
+            return Comment(
+                index,
+                '凯瑟琳.泽塔琼斯',
+                "https://photo.sohu.com/88/60/Img214056088.jpg",
+                "这是一段留言，是用户留下的留言，在这里仅仅是为了示范，留言会是一个什么样子。这篇文章写得挺好的。",
+                DateTime.now());
+          }),
         ),
-      ),
-    );
-  }
-}
-
-class Comment extends StatelessWidget {
-  const Comment({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-      child: Column(
-        children: [
-          Row(
-            //avator and title
-            children: [
-              Column(
-                //avator
-                children: [
-                  CircleAvatar(
-                    backgroundColor: Colors.brown.shade800,
-                    child: Text('AH'),
-                  )
-                ],
-              ),
-              Column(
-                //title and time
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Text(
-                        '凯瑟琳.泽塔琼斯 壹',
-                        style: Theme.of(context).textTheme.headline6,
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Text(DateFormat('yyyy-MM-dd H:m:s')
-                          .format(DateTime.now())),
-                    ],
-                  )
-                ],
-              )
-            ],
-          ),
-          Row(
-            children: [
-              SizedBox(
-                width: 60,
-              ),
-              Flexible(
-                child: Text(
-                  "这是一段留言，是用户留下的留言，在这里仅仅是为了示范，留言会是一个什么样子。这篇文章写得挺好的。",
-                  softWrap: true,
-                ),
-              )
-            ],
-          ),
-          Row(
-            children: [
-              SizedBox(width: 50),
-              IconButton(icon: Icon(Icons.favorite), onPressed: null),
-              Text("14"),
-              SizedBox(width: 50),
-              IconButton(icon: Icon(Icons.comment), onPressed: null),
-              Text("20")
-            ],
-          )
-        ],
       ),
     );
   }
