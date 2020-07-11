@@ -35,6 +35,7 @@ final slideList = [
     description: '我梦想有一天 耶稣基督的名字传遍互联网 无论哪个网络 在哪一个国家',
     icon: 'assets/images/icon.jpeg',
     author: '文 / 范学德',
+    //subtitles:['公号被封，经历恩典', '不是防范，而是进攻', '我在这里，请差遣我', '网络宣教，全心参与', '结语'],
     content: [
       Paragraph(
           subtitle: '公号被封，经历恩典',
@@ -66,6 +67,7 @@ final slideList = [
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec dapibus tincidunt bibendum. Maecenas eu viverra orci. Duis diam leo, porta at justo vitae, euismod aliquam nulla.',
     icon: 'assets/images/icon.jpeg',
     author: '文 / 范学德',
+    //subtitles:['公号被封，经历恩典', '不是防范，而是进攻', '我在这里，请差遣我', '网络宣教，全心参与', '结语'],
     content: [
       Paragraph(
           subtitle: '公号被封2，经历恩典',
@@ -97,6 +99,7 @@ final slideList = [
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec dapibus tincidunt bibendum. Maecenas eu viverra orci. Duis diam leo, porta at justo vitae, euismod aliquam nulla.',
     icon: 'assets/images/icon.jpeg',
     author: '文 / 范学德',
+    //subtitles:['公号被封，经历恩典', '不是防范，而是进攻', '我在这里，请差遣我', '网络宣教，全心参与', '结语'],
     content: [
       Paragraph(
           subtitle: '公号被封3，经历恩典',
