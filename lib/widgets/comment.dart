@@ -8,13 +8,15 @@ class Comment extends StatelessWidget {
   final String avatarUrl;
   final String content;
   final DateTime createdTime;
+  final int num_of_likes;
+  final List<int> list_of_comments;
 
-  Comment(this.id, this.author, this.avatarUrl, this.content, this.createdTime);
+  Comment(this.id, this.author, this.avatarUrl, this.content, this.createdTime, this.num_of_likes, this.list_of_comments);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+      padding: EdgeInsets.only(top: 5, left: 20, right: 20),
       child: Column(
         children: [
           Row(
@@ -67,9 +69,12 @@ class Comment extends StatelessWidget {
                 width: 60,
               ),
               Flexible(
-                child: Text(
-                  this.content,
-                  style: Theme.of(context).textTheme.bodyText2,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Text(
+                    this.content,
+                    style: Theme.of(context).textTheme.bodyText2,
+                  ),
                 ),
               )
             ],
@@ -78,10 +83,10 @@ class Comment extends StatelessWidget {
             children: [
               SizedBox(width: 50),
               IconButton(icon: Icon(Icons.favorite), onPressed: null),
-              Text("14", style: Theme.of(context).textTheme.overline,),
+              Text(this.num_of_likes.toString(), style: Theme.of(context).textTheme.overline,),
               SizedBox(width: 50),
               IconButton(icon: Icon(Icons.comment), onPressed: null),
-              Text("20",style: Theme.of(context).textTheme.overline,)
+              Text(this.list_of_comments.length.toString(),style: Theme.of(context).textTheme.overline,)
             ],
           )
         ],

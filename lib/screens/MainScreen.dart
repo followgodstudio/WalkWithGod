@@ -1,11 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:walk_with_god/model/comment.dart';
 import 'package:walk_with_god/widgets/aricle_paragraph.dart';
 import '../widgets/slide_item.dart';
 import '../model/slide.dart';
 import '../widgets/slide_dots.dart';
-import '../widgets/comment.dart';
+import '../widgets/comment.dart' as widget;
 import 'SignupScreen.dart';
 import 'package:intl/date_time_patterns.dart';
 
@@ -214,17 +215,29 @@ class Comments extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 30.0),
         child: Container(
           height: 500,
-          child:
-              ListView.builder(itemBuilder: (BuildContext context, int index) {
-            return Comment(
-                index,
-                '凯瑟琳.泽塔琼斯',
-                "https://photo.sohu.com/88/60/Img214056088.jpg",
-                "这是一段留言，是用户留下的留言，在这里仅仅是为了示范，留言会是一个什么样子。这篇文章写得挺好的。",
-                DateTime.now());
-          }),
+          child: ListView.separated(
+            itemBuilder: (ctx, i) => widget.Comment(
+                i,
+                commentList[i].author.user_name,
+                commentList[i].author.avatar_url,
+                commentList[i].content,
+                commentList[i].createdDate,
+                commentList[i].number_of_likes,
+                commentList[i].list_of_comment),
+            separatorBuilder: (BuildContext context, int index) =>
+                const Divider(),
+            itemCount: commentList.length,
+          ),
         ),
       ),
     );
   }
 }
+
+// PageView.builder(
+//   scrollDirection: Axis.horizontal,
+//   controller: _pageController,
+//   onPageChanged: _onPageChanged,
+//   itemCount: slideList.length,
+//   itemBuilder: (ctx, i) => SlideItem(i),
+// ),
