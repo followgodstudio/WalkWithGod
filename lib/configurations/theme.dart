@@ -30,6 +30,17 @@ final ThemeData dayTheme = new ThemeData(
         fontFamily: 'Jinling',
         letterSpacing: 1.4,
         height: 1.8),
+    bodyText2: TextStyle(
+        color: Color.fromARGB(255, 77, 77, 77),
+        fontSize: 14.0,
+        fontFamily: 'Lanting',
+        letterSpacing: -0.1,
+        ),
+    overline: TextStyle(
+        color: Color.fromARGB(255, 128, 128, 128),
+        fontSize: 10.0,
+        fontFamily: 'Lanting',
+        letterSpacing: -0.1,),
   ),
 );
 

@@ -50,8 +50,11 @@ class Comment extends StatelessWidget {
                       SizedBox(
                         width: 20,
                       ),
-                      Text(DateFormat('yyyy-MM-dd H:m:s')
-                          .format(this.createdTime)),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4.0),
+                        child: Text(DateFormat('yyyy-MM-dd H:m:s')
+                            .format(this.createdTime), style: Theme.of(context).textTheme.overline,),
+                      ),
                     ],
                   )
                 ],
@@ -66,7 +69,7 @@ class Comment extends StatelessWidget {
               Flexible(
                 child: Text(
                   this.content,
-                  softWrap: true,
+                  style: Theme.of(context).textTheme.bodyText2,
                 ),
               )
             ],
@@ -75,10 +78,10 @@ class Comment extends StatelessWidget {
             children: [
               SizedBox(width: 50),
               IconButton(icon: Icon(Icons.favorite), onPressed: null),
-              Text("14"),
+              Text("14", style: Theme.of(context).textTheme.overline,),
               SizedBox(width: 50),
               IconButton(icon: Icon(Icons.comment), onPressed: null),
-              Text("20")
+              Text("20",style: Theme.of(context).textTheme.overline,)
             ],
           )
         ],
