@@ -87,82 +87,7 @@ class _MainScreenState extends State<MainScreen> {
                       (e) => Column(children: <Widget>[ArticleParagraph(e)])),
                 ]),
               ),
-              Container(
-                height: 500,
-                child: ListView(
-                  padding: const EdgeInsets.all(8),
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.all(20),
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              Column(
-                                children: [
-                                  CircleAvatar(
-                                    backgroundColor: Colors.brown.shade800,
-                                    child: Text('AH'),
-                                  )
-                                ],
-                              ),
-                              Column(
-                                children: [
-                                  Text(
-                                    '凯瑟琳.泽塔琼斯',
-                                    style:
-                                        Theme.of(context).textTheme.headline6,
-                                    textAlign: TextAlign.left,
-                                  ),
-                                  Text(
-                                    DateTime.now().toIso8601String(),
-                                    textAlign: TextAlign.right,
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              SizedBox(
-                                width: 60,
-                              ),
-                              Flexible(
-                                child: Text(
-                                  "这是一段留言，是用户留下的留言，在这里仅仅是为了示范，留言会是一个什么样子。这篇文章写得挺好的。",
-                                  softWrap: true,
-                                ),
-                              )
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              SizedBox(width: 50),
-                              IconButton(
-                                  icon: Icon(Icons.favorite), onPressed: null),
-                              Text("14"),
-                              SizedBox(width: 50),
-                              IconButton(
-                                  icon: Icon(Icons.comment), onPressed: null),
-                              Text("20")
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                    Container(
-                      height: 50,
-                      color: Colors.amber[500],
-                      child: const Center(child: Text('Entry B')),
-                    ),
-                    Container(
-                      height: 50,
-                      color: Colors.amber[100],
-                      child: const Center(child: Text('Entry C')),
-                    ),
-                  ],
-                ),
-              ),
+              Comments(),
             ],
           ),
         ),
@@ -270,6 +195,110 @@ class Header extends StatelessWidget {
           ],
         )),
       ],
+    );
+  }
+}
+
+class Comments extends StatelessWidget {
+  const Comments({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 30.0),
+      child: Container(
+        height: 500,
+        child: ListView(
+          children: <Widget>[
+            Comment(),
+            Comment(),
+            Comment(),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class Comment extends StatelessWidget {
+  const Comment({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+      child: Column(
+        children: [
+          Row(
+            //avator and title
+            children: [
+              Column(
+                //avator
+                children: [
+                  CircleAvatar(
+                    backgroundColor: Colors.brown.shade800,
+                    child: Text('AH'),
+                  )
+                ],
+              ),
+              Column(
+                //title and time
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Text(
+                        '凯瑟琳.泽塔琼斯 壹',
+                        style: Theme.of(context).textTheme.headline6,
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Text(DateFormat('yyyy-MM-dd H:m:s')
+                          .format(DateTime.now())),
+                    ],
+                  )
+                ],
+              )
+            ],
+          ),
+          Row(
+            children: [
+              SizedBox(
+                width: 60,
+              ),
+              Flexible(
+                child: Text(
+                  "这是一段留言，是用户留下的留言，在这里仅仅是为了示范，留言会是一个什么样子。这篇文章写得挺好的。",
+                  softWrap: true,
+                ),
+              )
+            ],
+          ),
+          Row(
+            children: [
+              SizedBox(width: 50),
+              IconButton(icon: Icon(Icons.favorite), onPressed: null),
+              Text("14"),
+              SizedBox(width: 50),
+              IconButton(icon: Icon(Icons.comment), onPressed: null),
+              Text("20")
+            ],
+          )
+        ],
+      ),
     );
   }
 }
