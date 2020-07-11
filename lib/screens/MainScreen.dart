@@ -5,6 +5,7 @@ import 'package:walk_with_god/widgets/aricle_paragraph.dart';
 import '../widgets/slide_item.dart';
 import '../model/slide.dart';
 import '../widgets/slide_dots.dart';
+import '../widgets/comment.dart';
 import 'SignupScreen.dart';
 import 'package:intl/date_time_patterns.dart';
 
@@ -87,6 +88,7 @@ class _MainScreenState extends State<MainScreen> {
                       (e) => Column(children: <Widget>[ArticleParagraph(e)])),
                 ]),
               ),
+              Comments(),
             ],
           ),
         ),
@@ -194,6 +196,35 @@ class Header extends StatelessWidget {
           ],
         )),
       ],
+    );
+  }
+}
+
+class Comments extends StatelessWidget {
+  //List<Comment> commentList;
+  Comments({
+    Key key,
+  }) : super(key: key);
+  //Comment(List<Comment> commentList) {}
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 30.0),
+        child: Container(
+          height: 500,
+          child:
+              ListView.builder(itemBuilder: (BuildContext context, int index) {
+            return Comment(
+                index,
+                '凯瑟琳.泽塔琼斯',
+                "https://photo.sohu.com/88/60/Img214056088.jpg",
+                "这是一段留言，是用户留下的留言，在这里仅仅是为了示范，留言会是一个什么样子。这篇文章写得挺好的。",
+                DateTime.now());
+          }),
+        ),
+      ),
     );
   }
 }

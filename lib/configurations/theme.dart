@@ -8,6 +8,8 @@ final ThemeData dayTheme = new ThemeData(
   textTheme: TextTheme(
     headline1:
         TextStyle(color: Colors.black87, fontSize: 29.0, fontFamily: 'Jinling'),
+    headline6:
+        TextStyle(color: Colors.black87, fontSize: 17.0, fontFamily: 'Lanting'),
     button:
         TextStyle(color: Colors.black87, fontSize: 29.0, fontFamily: 'Jinling'),
     subtitle1: TextStyle(

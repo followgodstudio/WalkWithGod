@@ -105,6 +105,9 @@ flutter:
     - family: Jinling
       fonts:
         - asset: fonts/FZCUJINLJW--GB1-0.ttf
+    - family: Lanting
+      fonts:
+        - asset: fonts/FZLTZHK_GBK1_0.ttf
     - family: HelveticaNeue
       fonts:
         - asset: fonts/HelveticaNeueBold.ttf
