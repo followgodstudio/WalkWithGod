@@ -38,8 +38,7 @@ final commentList = [
       author: User(
           id: 123456789,
           user_name: "凯瑟琳.泽塔琼斯",
-          avatar_url:
-              "https://photo.sohu.com/88/60/Img214056088.jpg"),
+          avatar_url: "https://photo.sohu.com/88/60/Img214056088.jpg"),
       createdDate: DateTime.now()),
   Comment(
       id: 2,
@@ -54,6 +53,28 @@ final commentList = [
       createdDate: DateTime.now()),
   Comment(
       id: 3,
+      content: "这是一段留言，是用户留下的留言，在这里仅仅是为了示范，留言会是一个什么样子。这篇文章写得挺好的。",
+      number_of_likes: 22,
+      list_of_comment: [1, 2, 3, 4, 5, 6],
+      author: User(
+          id: 123456789,
+          user_name: "凯瑟琳.泽塔琼斯",
+          avatar_url:
+              "https://cdn.pixabay.com/photo/2013/07/13/13/38/man-161282__340.png"),
+      createdDate: DateTime.now()),
+  Comment(
+      id: 4,
+      content: "这是一段留言，是用户留下的留言，在这里仅仅是为了示范，留言会是一个什么样子。这篇文章写得挺好的。",
+      number_of_likes: 22,
+      list_of_comment: [1, 2, 3, 4, 5, 6],
+      author: User(
+          id: 123456789,
+          user_name: "凯瑟琳.泽塔琼斯",
+          avatar_url:
+              "https://cdn.pixabay.com/photo/2013/07/13/13/38/man-161282__340.png"),
+      createdDate: DateTime.now()),
+  Comment(
+      id: 5,
       content: "这是一段留言，是用户留下的留言，在这里仅仅是为了示范，留言会是一个什么样子。这篇文章写得挺好的。",
       number_of_likes: 22,
       list_of_comment: [1, 2, 3, 4, 5, 6],

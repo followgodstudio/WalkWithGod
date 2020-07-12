@@ -214,7 +214,7 @@ class Comments extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 30.0),
         child: Container(
-          height: 500,
+          height: 400,
           child: ListView.separated(
             itemBuilder: (ctx, i) => widget.Comment(
                 i,
@@ -233,11 +233,3 @@ class Comments extends StatelessWidget {
     );
   }
 }
-
-// PageView.builder(
-//   scrollDirection: Axis.horizontal,
-//   controller: _pageController,
-//   onPageChanged: _onPageChanged,
-//   itemCount: slideList.length,
-//   itemBuilder: (ctx, i) => SlideItem(i),
-// ),
