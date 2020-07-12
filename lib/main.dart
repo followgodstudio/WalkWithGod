@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       title: 'Walk With God',
       debugShowCheckedModeBanner: false,
       theme: dayTheme,
-      home: MainScreen(),
+      home: LoginScreen(),
       routes: {
         //LoginScreen.routeName: (ctx) => LoginScreen(),
         //SignupScreen.routeName: (ctx) => SignupScreen(),

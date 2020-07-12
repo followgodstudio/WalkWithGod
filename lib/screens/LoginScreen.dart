@@ -135,6 +135,46 @@ class _LoginScreenState extends State<LoginScreen> {
     _phoneController.addListener(_updateCurrentUserPhoneNumber);
   }
 
+  int _selectedItem = 0;
+  final List<Text> areaCodeList = [
+    Text('美国    +1'),
+    Text('中国    +86'),
+    Text('台湾    +886'),
+    Text('澳大利亚    +61'),
+    Text('英国    +61'),
+  ];
+
+  String _getCodeByIndex(int i){
+    String areaCode = areaCodeList[i].toString();
+    int index = areaCode.indexOf('+');
+    return areaCode.substring(index + 1, areaCode.length - 2);
+  }
+
+  void _onPressAreaCodeButton(){
+    List<ListTile> result = new List<ListTile>();
+    areaCodeList.asMap().forEach((key, code) {
+      result.add(ListTile(
+        title: code,
+        trailing: Checkbox(
+          value: _selectedItem == key,
+          checkColor: Colors.blue,
+        ),
+        onTap: () {
+          Navigator.pop(context);
+          setState(() {
+            _selectedItem = key;
+          });
+        },
+      ));
+    });
+    showModalBottomSheet(context: context, builder: (context){
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: result
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -263,13 +303,24 @@ class _LoginScreenState extends State<LoginScreen> {
                             SizedBox(
                               height: 35,
                             ),
+                            FlatButton(
+                              onPressed: _onPressAreaCodeButton,
+                              child: new Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Text('+' + _getCodeByIndex(_selectedItem)),
+                                  Icon(Icons.arrow_drop_down),
+                                ],
+                              ),
+                            ),
                             TextFormField(
                               decoration: InputDecoration(
                                   focusedBorder: OutlineInputBorder(
                                       borderRadius:
-                                          BorderRadius.all(Radius.circular(8)),
+                                      BorderRadius.all(Radius.circular(8)),
                                       borderSide:
-                                          BorderSide(color: Colors.grey[300])),
+                                      BorderSide(color: Colors.grey[300])),
                                   hintText: "Mobile Number"),
                               controller: _phoneController,
                             ),
