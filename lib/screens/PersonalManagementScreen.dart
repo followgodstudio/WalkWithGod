@@ -38,8 +38,8 @@ class _PersonalManagementScreen extends State<PersonalManagementScreen> {
                 padding: EdgeInsets.all(8.0),
                 child: Column(
                   children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
+                    Container(
+                      //padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: Column(
                         children: <Widget>[
                           Row(
@@ -65,9 +65,12 @@ class _PersonalManagementScreen extends State<PersonalManagementScreen> {
                             children: <Widget>[
                               Padding(
                                 padding:
-                                    const EdgeInsets.symmetric(vertical: 30.0),
+                                    const EdgeInsets.symmetric(vertical: 20.0),
                                 child: Row(
                                   children: <Widget>[
+                                    SizedBox(
+                                      width: 10,
+                                    ),
                                     Container(
                                       color: Color.fromARGB(255, 255, 235, 133),
                                       width: 8,
@@ -124,61 +127,103 @@ class _PersonalManagementScreen extends State<PersonalManagementScreen> {
                               ),
                             ],
                           ),
-                          Row(
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.only(top: 10),
-                                child: Container(
-                                  alignment: Alignment.centerLeft,
-                                  child: Row(
-                                    children: <Widget>[
-                                      FlatButton(
-                                        onPressed: null,
-                                        child: Ink(
-                                          decoration: const ShapeDecoration(
-                                            color: Color.fromARGB(
-                                                255, 168, 218, 220),
-                                            shape: CircleBorder(),
-                                          ),
-                                          child: IconButton(
-                                              color: Color.fromARGB(
-                                                  255, 255, 255, 255),
-                                              iconSize: 25,
-                                              icon: Icon(Icons.person),
-                                              tooltip: '我的好友',
-                                              onPressed: null),
-                                        ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Row(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(top: 0),
+                            child: Container(
+                              alignment: Alignment.centerLeft,
+                              child: Row(
+                                children: <Widget>[
+                                  Container(
+                                    //onPressed: null,
+                                    child: Ink(
+                                      decoration: const ShapeDecoration(
+                                        color:
+                                            Color.fromARGB(255, 168, 218, 220),
+                                        shape: CircleBorder(),
                                       ),
-                                      Text("我的好友"),
-                                      SizedBox(
-                                        width: 15,
-                                      ),
-                                      Text("156个关注"),
-                                    ],
+                                      child: IconButton(
+                                          color: Color.fromARGB(
+                                              255, 255, 255, 255),
+                                          iconSize: 25,
+                                          icon: Icon(Icons.person),
+                                          tooltip: '我的好友',
+                                          onPressed: null),
+                                    ),
                                   ),
-                                  height: 60,
-                                  width: 210,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(23),
-                                    color: Color.fromARGB(255, 240, 240, 240),
+                                  Text("我的好友"),
+                                  SizedBox(
+                                    width: 5,
                                   ),
-                                ),
+                                  Text("156个关注"),
+                                ],
                               ),
-                            ],
+                              height: 60,
+                              width: 180,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(23),
+                                color: Color.fromARGB(255, 240, 240, 240),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 0),
+                            child: Container(
+                              alignment: Alignment.centerLeft,
+                              child: Row(
+                                children: <Widget>[
+                                  Container(
+                                    //onPressed: null,
+                                    child: Ink(
+                                      decoration: const ShapeDecoration(
+                                        color:
+                                            Color.fromARGB(255, 168, 218, 220),
+                                        shape: CircleBorder(),
+                                      ),
+                                      child: IconButton(
+                                          color: Color.fromARGB(
+                                              255, 255, 255, 255),
+                                          iconSize: 25,
+                                          icon: Icon(Icons.mail),
+                                          tooltip: '我的好友',
+                                          onPressed: null),
+                                    ),
+                                  ),
+                                  Text("我的消息"),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text("0条未读"),
+                                ],
+                              ),
+                              height: 60,
+                              width: 180,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(23),
+                                color: Color.fromARGB(255, 240, 240, 240),
+                              ),
+                            ),
                           ),
                         ],
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: <Widget>[],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: <Widget>[],
+                    Container(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: Text("最近阅读"),
+                          )
+                        ],
                       ),
                     ),
                   ],
