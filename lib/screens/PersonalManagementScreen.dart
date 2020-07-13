@@ -133,6 +133,7 @@ class _PersonalManagementScreen extends State<PersonalManagementScreen> {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Padding(
                             padding: const EdgeInsets.only(top: 0),
@@ -165,14 +166,14 @@ class _PersonalManagementScreen extends State<PersonalManagementScreen> {
                                 ],
                               ),
                               height: 60,
-                              width: 180,
+                              width: 185,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(23),
                                 color: Color.fromARGB(255, 240, 240, 240),
                               ),
                             ),
                           ),
-                          SizedBox(width: 10),
+                          //SizedBox(width: 12),
                           Padding(
                             padding: const EdgeInsets.only(top: 0),
                             child: Container(
@@ -222,7 +223,88 @@ class _PersonalManagementScreen extends State<PersonalManagementScreen> {
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 8.0),
                             child: Text("最近阅读"),
-                          )
+                          ),
+                          FlatButton(
+                              onPressed: null,
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 10),
+                                child: Container(
+                                    height: 210,
+                                    width: 250,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      color: Colors.white,
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        ClipRRect(
+                                          //decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(20),
+                                          ),
+                                          child: Container(
+                                            height: 130,
+                                            width: 250,
+                                            child: Image.network(
+                                              'https://static01.nyt.com/images/2020/05/20/business/20Techfix-illo/20Techfix-illo-articleLarge.gif?quality=90&auto=webp',
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Title(
+                                                color: Colors.red,
+                                                child: Text(
+                                                  "只要互联网还在，我就不会停止敲打键盘",
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                              Text(
+                                                '文 / 范学德',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .overline,
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 8.0),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      "已阅读85%",
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .overline,
+                                                    ),
+                                                    Text(
+                                                      "继续阅读",
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .overline,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    )),
+                              )),
                         ],
                       ),
                     ),
