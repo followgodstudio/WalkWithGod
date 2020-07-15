@@ -8,10 +8,16 @@ final ThemeData dayTheme = new ThemeData(
   textTheme: TextTheme(
     headline1:
         TextStyle(color: Colors.black87, fontSize: 29.0, fontFamily: 'Jinling'),
+    headline2:
+        TextStyle(color: Colors.black87, fontSize: 25.0, fontFamily: 'Jinling'),
+    headline3:
+        TextStyle(color: Colors.black87, fontSize: 29.0, fontFamily: 'Lanting'),
+    headline4:
+        TextStyle(color: Colors.black87, fontSize: 25.0, fontFamily: 'Lanting'),
+    headline5:
+        TextStyle(color: Colors.black87, fontSize: 21.0, fontFamily: 'Lanting'),
     headline6:
         TextStyle(color: Colors.black87, fontSize: 17.0, fontFamily: 'Lanting'),
-    button:
-        TextStyle(color: Colors.black87, fontSize: 29.0, fontFamily: 'Jinling'),
     subtitle1: TextStyle(
         color: Colors.black54,
         fontSize: 21.5,
@@ -22,8 +28,6 @@ final ThemeData dayTheme = new ThemeData(
         color: Color.fromARGB(255, 0, 169, 157),
         fontSize: 16.0,
         fontFamily: 'Song'),
-    caption:
-        TextStyle(color: Colors.grey[300], fontSize: 23.0, fontFamily: 'Song'),
     bodyText1: TextStyle(
         color: Color.fromARGB(255, 77, 77, 77),
         fontSize: 16.0,
@@ -31,16 +35,23 @@ final ThemeData dayTheme = new ThemeData(
         letterSpacing: 1.4,
         height: 1.8),
     bodyText2: TextStyle(
-        color: Color.fromARGB(255, 77, 77, 77),
-        fontSize: 14.0,
-        fontFamily: 'Lanting',
-        letterSpacing: -0.1,
-        ),
+      color: Color.fromARGB(255, 77, 77, 77),
+      fontSize: 14.0,
+      fontFamily: 'Lanting',
+      letterSpacing: -0.1,
+    ),
+    caption:
+        TextStyle(color: Colors.grey[300], fontSize: 23.0, fontFamily: 'Song'),
     overline: TextStyle(
-        color: Color.fromARGB(255, 128, 128, 128),
-        fontSize: 10.0,
-        fontFamily: 'Lanting',
-        letterSpacing: -0.1,),
+      color: Color.fromARGB(255, 128, 128, 128),
+      fontSize: 10.0,
+      fontFamily: 'Lanting',
+      letterSpacing: -0.1,
+    ),
+    button:
+        TextStyle(color: Colors.black87, fontSize: 29.0, fontFamily: 'Jinling'),
+    //     buttonSmall:
+    // TextStyle(color: Colors.black87, fontSize: 29.0, fontFamily: 'Jinling'),
   ),
 );
 
@@ -59,3 +70,20 @@ final ThemeData nightTheme = new ThemeData(
   ),
   accentColor: Colors.grey,
 );
+
+extension CustomStyles on TextTheme {
+  TextStyle get error => const TextStyle(
+      fontSize: 15.0,
+      color: Colors.red,
+      fontWeight: FontWeight.bold);
+  TextStyle get bodyText3 => const TextStyle(
+        fontSize: 10.0,
+        color: Colors.blue,
+        fontFamily: 'Lanting',
+        letterSpacing: -0.1,
+      );
+}
+
+// class CustomTextTheme : TextTheme (){
+
+// }

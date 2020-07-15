@@ -5,6 +5,7 @@ import './screens/LoginScreen.dart';
 import 'screens/HomeScreen.dart';
 import 'screens/MainScreen.dart';
 import 'screens/PersonalManagementScreen.dart';
+import 'screens/TextStyleGuideScreen.dart';
 
 void main() => runApp(MyApp());
 
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
       title: 'Walk With God',
       debugShowCheckedModeBanner: false,
       theme: dayTheme,
-      home: MainScreen(),
+      home: TextStyleGuideScreen(),
       routes: {
         //LoginScreen.routeName: (ctx) => LoginScreen(),
         //SignupScreen.routeName: (ctx) => SignupScreen(),
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
         HomeScreen.routeName: (ctx) => HomeScreen(),
         MainScreen.routeName: (ctx) => MainScreen(),
         PersonalManagementScreen.routeName: (ctx) => PersonalManagementScreen(),
+        TextStyleGuideScreen.routeName: (ctx) => TextStyleGuideScreen(),
       },
     );
   }
