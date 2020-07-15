@@ -73,14 +73,17 @@ final ThemeData nightTheme = new ThemeData(
 
 extension CustomStyles on TextTheme {
   TextStyle get error => const TextStyle(
-      fontSize: 15.0,
-      color: Colors.red,
-      fontWeight: FontWeight.bold);
+      fontSize: 15.0, color: Colors.red, fontWeight: FontWeight.bold);
   TextStyle get bodyText3 => const TextStyle(
         fontSize: 10.0,
         color: Colors.blue,
         fontFamily: 'Lanting',
         letterSpacing: -0.1,
+      );
+  TextStyle get captionSmall1 => const TextStyle(
+        fontSize: 6.0,
+        color: Color.fromARGB(255, 0, 169, 157),
+        fontFamily: 'Lanting',
       );
 }
 

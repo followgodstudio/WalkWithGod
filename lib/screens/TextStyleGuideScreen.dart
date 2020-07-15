@@ -123,6 +123,14 @@ class TextStyleGuideScreen extends StatelessWidget {
                   "这是标示",
                   style: Theme.of(context).textTheme.caption,
                 ),
+                                Text(
+                  "这是标示(小)1",
+                  style: Theme.of(context).textTheme.captionSmall1,
+                ),
+                                Text(
+                  "This is captionSmall1",
+                  style: Theme.of(context).textTheme.captionSmall1,
+                ),
                 Text(
                   "This is overline",
                   style: Theme.of(context).textTheme.overline,
