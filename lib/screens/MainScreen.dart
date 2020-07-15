@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:walk_with_god/model/comment.dart';
+import 'package:walk_with_god/screens/PersonalManagementScreen.dart';
 import 'package:walk_with_god/widgets/aricle_paragraph.dart';
 import '../widgets/slide_item.dart';
 import '../model/slide.dart';
@@ -187,7 +188,7 @@ class Header extends StatelessWidget {
                 icon: Icon(Icons.person_outline,
                     size: Theme.of(context).textTheme.button.fontSize),
                 onPressed: () {
-                  Navigator.of(context).pushNamed(SignupScreen.routeName);
+                  Navigator.of(context).pushNamed(PersonalManagementScreen.routeName);
                 },
                 color: Theme.of(context).accentColor,
                 alignment: Alignment.topCenter,
@@ -214,7 +215,7 @@ class Comments extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 30.0),
         child: Container(
-          height: 500,
+          height: 400,
           child: ListView.separated(
             itemBuilder: (ctx, i) => widget.Comment(
                 i,
@@ -233,11 +234,3 @@ class Comments extends StatelessWidget {
     );
   }
 }
-
-// PageView.builder(
-//   scrollDirection: Axis.horizontal,
-//   controller: _pageController,
-//   onPageChanged: _onPageChanged,
-//   itemCount: slideList.length,
-//   itemBuilder: (ctx, i) => SlideItem(i),
-// ),
