@@ -26,7 +26,9 @@ class TextStyleGuideScreen extends StatelessWidget {
                     ),
                   ]),
                 ),
-                SizedBox(height: 30,),
+                SizedBox(
+                  height: 30,
+                ),
                 Text(
                   "This is headLine1",
                   style: Theme.of(context).textTheme.headline1,
@@ -124,6 +126,30 @@ class TextStyleGuideScreen extends StatelessWidget {
                   style: Theme.of(context).textTheme.caption,
                 ),
                 Text(
+                  "This is captionLarge1",
+                  style: Theme.of(context).textTheme.captionLarge1,
+                ),
+                Text(
+                  "这是标示(大)1",
+                  style: Theme.of(context).textTheme.captionLarge1,
+                ),
+                Text(
+                  "This is captionMedium1",
+                  style: Theme.of(context).textTheme.captionMedium1,
+                ),
+                Text(
+                  "这是标示(中)1",
+                  style: Theme.of(context).textTheme.captionMedium1,
+                ),
+                Text(
+                  "This is captionSmall1",
+                  style: Theme.of(context).textTheme.captionSmall1,
+                ),
+                Text(
+                  "这是标示(小)1",
+                  style: Theme.of(context).textTheme.captionSmall1,
+                ),
+                Text(
                   "This is overline",
                   style: Theme.of(context).textTheme.overline,
                 ),
@@ -138,6 +164,30 @@ class TextStyleGuideScreen extends StatelessWidget {
                 Text(
                   "这是按钮",
                   style: Theme.of(context).textTheme.button,
+                ),
+                Text(
+                  "This is buttonMedium1",
+                  style: Theme.of(context).textTheme.buttonLarge1,
+                ),
+                Text(
+                  "这是按钮（大）1",
+                  style: Theme.of(context).textTheme.buttonLarge1,
+                ),
+                Text(
+                  "This is buttonMedium1",
+                  style: Theme.of(context).textTheme.buttonMedium1,
+                ),
+                Text(
+                  "这是按钮（中）1",
+                  style: Theme.of(context).textTheme.buttonMedium1,
+                ),
+                Text(
+                  "This is buttonSmall1",
+                  style: Theme.of(context).textTheme.buttonSmall1,
+                ),
+                Text(
+                  "这是按钮（小）1",
+                  style: Theme.of(context).textTheme.buttonSmall1,
                 ),
                 Text(
                   "This is error",
