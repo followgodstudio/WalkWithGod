@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "post_id": 1,
+    "parent_comment_id": -1,
+    "createdAt":"2020-06-12T18:44:04.216Z",
+    "updatedAt":"2020-06-14T18:44:04.216Z",
+    "user_id": 1,
+    "content": ""
+  },
+  {
+    "id": 2,
+    "post_id": 1,
+    "parent_comment_id": -1,
+    "createdAt":"2020-06-12T19:44:04.216Z",
+    "updatedAt":"2020-06-12T19:44:04.216Z",
+    "user_id": 2,
+    "content": ""
+  },
+  {
+    "id": 3,
+    "post_id": 1,
+    "parent_comment_id": 1,
+    "createdAt":"2020-06-14T18:44:04.216Z",
+    "updatedAt":"2020-06-14T18:44:04.216Z",
+    "user_id": 2,
+    "content": ""
+  }
+]
