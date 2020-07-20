@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:walk_with_god/model/comment.dart';
-import 'package:walk_with_god/screens/PersonalManagementScreen.dart';
+import 'package:walk_with_god/screens/PersonalManagementScreen/PersonalManagementScreen.dart';
 import 'package:walk_with_god/widgets/aricle_paragraph.dart';
 import '../widgets/slide_item.dart';
 import '../model/slide.dart';
