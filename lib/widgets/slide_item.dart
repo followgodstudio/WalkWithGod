@@ -8,6 +8,75 @@ class SlideItem extends StatelessWidget {
   final double midiumFactor = 135 / 188;
   SlideItem(this.index);
 
+
+//  getShareMethods(){
+//    return <Widget>[
+//      ICon
+//    ];
+//  }
+
+  final shareIcons=[
+    {
+      'path': 'assets/images/icon.jpeg',
+      'callback' : ()=>{}
+    },
+    {
+      'path': 'assets/images/icon.jpeg',
+      'callback' : ()=>{}
+    },
+    {
+      'path': 'assets/images/icon.jpeg',
+      'callback' : ()=>{}
+    }
+  ];
+
+  _onPressShareButton(context){
+    List<Widget> result = new List<Widget>();
+    shareIcons.asMap().forEach((key, icon)=>{
+      result.add(
+        IconButton(
+          icon: /*Icon(Icons.add_a_photo),*/ new Image.asset(icon['path']),
+          onPressed: icon['callback']
+        )
+      )
+    });
+
+    showModalBottomSheet(context: context, builder: (context){
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Row(
+              mainAxisSize: MainAxisSize.min,
+              children: result
+          ),
+          FlatButton(
+            color: Colors.blue,
+            textColor: Colors.white,
+            disabledColor: Colors.grey,
+            disabledTextColor: Colors.black,
+            padding: EdgeInsets.all(8.0),
+            splashColor: Colors.blueAccent,
+            onPressed: ()=>{
+              _cancelShare(context)
+            },
+            child: Text(
+              "取消",
+              style: TextStyle(fontSize: 20.0),
+            ),
+          )
+        ],
+      );
+    });
+  }
+
+  _cancelShare(context){
+    Navigator.pop(context);
+  }
+
+  _onPressFavorite(context){
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -146,7 +215,7 @@ class SlideItem extends StatelessWidget {
                           iconSize: 16,
                           icon: Icon(Icons.share),
                           tooltip: '分享到微信',
-                          onPressed: null),
+                          onPressed: ()=>_onPressShareButton(context)),
                     ),
                   ),
                   SizedBox(width: 30),
@@ -157,10 +226,10 @@ class SlideItem extends StatelessWidget {
                         shape: CircleBorder(),
                       ),
                       child: IconButton(
-                          iconSize: 16,
+                          iconSize: 18,
                           icon: Icon(Icons.favorite),
                           tooltip: '收藏',
-                          onPressed: null),
+                          onPressed: ()=>_onPressFavorite(context)),
                     ),
                   ),
                 ],
