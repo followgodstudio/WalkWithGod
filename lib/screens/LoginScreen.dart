@@ -321,8 +321,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                     height: Theme.of(context).textTheme.headline4.fontSize * 1.1 + 100.0,
                                     width: 200
                                   ),
-//                                  padding: const EdgeInsets.all(8.0),
-//                                  color: Colors.blue[600],
                                   alignment: Alignment.center,
                                   child: TextFormField(
                                     decoration: InputDecoration(
@@ -334,7 +332,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                         hintText: "Mobile Number"),
                                     controller: _phoneController,
                                   ),
-//                                  transform: Matrix4.rotationZ(0.1),
                                 ),
                               ],
                             ),
