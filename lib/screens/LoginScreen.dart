@@ -303,26 +303,40 @@ class _LoginScreenState extends State<LoginScreen> {
                             SizedBox(
                               height: 35,
                             ),
-                            FlatButton(
-                              onPressed: _onPressAreaCodeButton,
-                              child: new Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  Text('+' + _getCodeByIndex(_selectedItem)),
-                                  Icon(Icons.arrow_drop_down),
-                                ],
-                              ),
-                            ),
-                            TextFormField(
-                              decoration: InputDecoration(
-                                  focusedBorder: OutlineInputBorder(
-                                      borderRadius:
-                                      BorderRadius.all(Radius.circular(8)),
-                                      borderSide:
-                                      BorderSide(color: Colors.grey[300])),
-                                  hintText: "Mobile Number"),
-                              controller: _phoneController,
+                            Row(
+                              children: <Widget>[
+                                FlatButton(
+                                  onPressed: _onPressAreaCodeButton,
+                                  child: new Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      Text('+' + _getCodeByIndex(_selectedItem)),
+                                      Icon(Icons.arrow_drop_down),
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  constraints: BoxConstraints.expand(
+                                    height: Theme.of(context).textTheme.headline4.fontSize * 1.1 + 100.0,
+                                    width: 200
+                                  ),
+//                                  padding: const EdgeInsets.all(8.0),
+//                                  color: Colors.blue[600],
+                                  alignment: Alignment.center,
+                                  child: TextFormField(
+                                    decoration: InputDecoration(
+                                        focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                            BorderRadius.all(Radius.circular(8)),
+                                            borderSide:
+                                            BorderSide(color: Colors.grey[300])),
+                                        hintText: "Mobile Number"),
+                                    controller: _phoneController,
+                                  ),
+//                                  transform: Matrix4.rotationZ(0.1),
+                                ),
+                              ],
                             ),
                             SizedBox(height: 15),
                             Container(
