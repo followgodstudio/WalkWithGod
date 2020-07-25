@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:walk_with_god/model/comment.dart';
-import 'package:walk_with_god/screens/PersonalManagementScreen.dart';
+import 'package:walk_with_god/model/Comment.dart';
+import 'package:walk_with_god/screens/PersonalManagementScreen/PersonalManagementScreen.dart';
 import 'package:walk_with_god/widgets/aricle_paragraph.dart';
 import '../widgets/slide_item.dart';
-import '../model/slide.dart';
+import '../model/Slide.dart';
 import '../widgets/slide_dots.dart';
 import '../widgets/comment.dart' as widget;
 import 'SignupScreen.dart';
@@ -188,7 +188,8 @@ class Header extends StatelessWidget {
                 icon: Icon(Icons.person_outline,
                     size: Theme.of(context).textTheme.button.fontSize),
                 onPressed: () {
-                  Navigator.of(context).pushNamed(PersonalManagementScreen.routeName);
+                  Navigator.of(context)
+                      .pushNamed(PersonalManagementScreen.routeName);
                 },
                 color: Theme.of(context).accentColor,
                 alignment: Alignment.topCenter,

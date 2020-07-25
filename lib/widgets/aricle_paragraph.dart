@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:walk_with_god/model/slide.dart';
+import 'package:walk_with_god/model/Slide.dart';
 
 class ArticleParagraph extends StatelessWidget {
   Paragraph _paragraph;
@@ -12,11 +12,12 @@ class ArticleParagraph extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Container(padding: const EdgeInsets.only(top: 50.0),
-      width: MediaQuery.of(context).size.width * 160/188,
+    return Container(
+      padding: const EdgeInsets.only(top: 50.0),
+      width: MediaQuery.of(context).size.width * 160 / 188,
       child: Column(children: <Widget>[
         Padding(
-          padding: const EdgeInsets.only(bottom:10.0),
+          padding: const EdgeInsets.only(bottom: 10.0),
           child: Row(
             children: <Widget>[
               Padding(
