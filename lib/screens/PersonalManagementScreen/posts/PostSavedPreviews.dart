@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:walk_with_god/model/PostSaved.dart';
+<<<<<<< HEAD
 import 'package:walk_with_god/widgets/slide_dots.dart';
+=======
+>>>>>>> WIP saved posts
 
 import 'PostSavedPreviewItem.dart';
 
@@ -9,13 +12,17 @@ class PostSavedPreviews extends StatefulWidget {
 
   final List<PostSaved> postsSaved;
 
+<<<<<<< HEAD
   final dotStates = [false, false, false, false, false, false];
 
+=======
+>>>>>>> WIP saved posts
   @override
   _PostSavedPreviewsState createState() => _PostSavedPreviewsState();
 }
 
 class _PostSavedPreviewsState extends State<PostSavedPreviews> {
+<<<<<<< HEAD
   void setDotState(int index) {
     setState(() {
       for (int i = 0; i < 6; i++) {
@@ -61,6 +68,18 @@ class _PostSavedPreviewsState extends State<PostSavedPreviews> {
             ],
           )
         ],
+=======
+  @override
+  Widget build(BuildContext context) {
+    return new Container(
+      height: 300,
+      child: ListView(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        children: widget.postsSaved.map((PostSaved e) {
+          return PostSavedPreviewItem(postSaved: e);
+        }).toList(),
+        scrollDirection: Axis.horizontal,
+>>>>>>> WIP saved posts
       ),
     );
   }

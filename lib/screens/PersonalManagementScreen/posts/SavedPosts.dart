@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:walk_with_god/model/PostSaved.dart';
+<<<<<<< HEAD
 import 'package:walk_with_god/widgets/slide_dots.dart';
+=======
+>>>>>>> WIP saved posts
 
 import 'PostSavedPreviews.dart';
 import 'TotalSaved.dart';

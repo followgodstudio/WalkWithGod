@@ -1,6 +1,17 @@
 import 'package:flutter/material.dart';
 
+<<<<<<< HEAD
 class TotalSaved extends StatelessWidget {
+=======
+class TotalSaved extends StatefulWidget {
+  TotalSaved({Key key}) : super(key: key);
+
+  @override
+  _TotalSavedState createState() => _TotalSavedState();
+}
+
+class _TotalSavedState extends State<TotalSaved> {
+>>>>>>> WIP saved posts
   @override
   Widget build(BuildContext context) {
     return Row(
