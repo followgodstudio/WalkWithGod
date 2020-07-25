@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:walk_with_god/screens/PersonalManagementScreen/Friendship.dart';
-import 'package:walk_with_god/screens/PersonalManagementScreen/HeadLine.dart';
-import 'package:walk_with_god/screens/PersonalManagementScreen/Reading.dart';
+import 'package:walk_with_god/screens/PersonalManagementScreen/friend/Friendship.dart';
+import 'package:walk_with_god/screens/PersonalManagementScreen/head/HeadLine.dart';
+import 'package:walk_with_god/screens/PersonalManagementScreen/posts/SavedPosts.dart';
+import 'package:walk_with_god/screens/PersonalManagementScreen/read/Reading.dart';
 
 class PersonalManagementScreen extends StatefulWidget {
   static const routeName = '/personal_management';
@@ -32,15 +33,14 @@ class _PersonalManagementScreen extends State<PersonalManagementScreen> {
             Container(
               height: MediaQuery.of(context).size.height -
                   MediaQuery.of(context).padding.top,
-              child: Padding(
+              child: ListView(
                 padding: EdgeInsets.all(8.0),
-                child: Column(
-                  children: <Widget>[
-                    HeadLine(),
-                    Friendship(),
-                    Reading(),
-                  ],
-                ),
+                children: <Widget>[
+                  HeadLine(),
+                  Friendship(),
+                  Reading(),
+                  SavedPosts()
+                ],
               ),
             ),
           ]),

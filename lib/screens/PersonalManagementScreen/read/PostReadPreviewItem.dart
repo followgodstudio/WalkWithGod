@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:walk_with_god/model/PostRead.dart';
 
-class PostReadPreviewItem extends StatefulWidget {
+class PostReadPreviewItem extends StatelessWidget {
   PostReadPreviewItem({Key key, this.postRead}) : super(key: key);
 
   final PostRead postRead;
 
-  @override
-  _PostReadPreviewItemState createState() => _PostReadPreviewItemState();
-}
-
-class _PostReadPreviewItemState extends State<PostReadPreviewItem> {
   @override
   Widget build(BuildContext context) {
     return FlatButton(
@@ -28,15 +23,14 @@ class _PostReadPreviewItemState extends State<PostReadPreviewItem> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   ClipRRect(
-                    //decoration: BoxDecoration(
                     borderRadius: BorderRadius.vertical(
                       top: Radius.circular(20),
                     ),
                     child: Container(
                       height: 130,
                       width: 250,
-                      child: Image.network(
-                        widget.postRead.photoURL,
+                      child: Image.asset(
+                        postRead.photoURL,
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -49,13 +43,13 @@ class _PostReadPreviewItemState extends State<PostReadPreviewItem> {
                         Title(
                           color: Colors.red,
                           child: Text(
-                            widget.postRead.subject,
+                            postRead.subject,
                             style: Theme.of(context).textTheme.headline1,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
                         Text(
-                          '文 / ' + widget.postRead.authorName,
+                          '文 / ${postRead.authorName}',
                           style: Theme.of(context).textTheme.overline,
                         ),
                         Padding(
@@ -64,7 +58,7 @@ class _PostReadPreviewItemState extends State<PostReadPreviewItem> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Text(
-                                "已阅读" + widget.postRead.percentage.toString() + "%",
+                                "已阅读${postRead.percentage}%",
                                 style: Theme.of(context).textTheme.overline,
                               ),
                               Text(

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:walk_with_god/configurations/theme.dart';
 import 'package:walk_with_god/screens/LoginScreen.dart';
+import 'package:walk_with_god/screens/PersonalManagementScreen/PersonalManagementScreen.dart';
 import './screens/LoginScreen.dart';
 import 'screens/HomeScreen.dart';
-import 'screens/MainScreen.dart';
-import 'screens/PersonalManagementScreen.dart';
+import 'package:walk_with_god/screens/MainScreen.dart';
 import 'screens/TextStyleGuideScreen.dart';
 
 void main() => runApp(MyApp());
