@@ -71,7 +71,7 @@ class _PostSavedPreviewsState extends State<PostSavedPreviews> {
 =======
   @override
   Widget build(BuildContext context) {
-    return new Container(
+    return Container(
       height: 300,
       child: ListView(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
