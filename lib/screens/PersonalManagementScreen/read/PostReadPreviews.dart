@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:walk_with_god/model/PostRead.dart';
-import 'package:walk_with_god/screens/PersonalManagementScreen/PostReadPreviewItem.dart';
+import 'package:walk_with_god/screens/PersonalManagementScreen/read/PostReadPreviewItem.dart';
 
 class PostReadPreviews extends StatefulWidget {
   PostReadPreviews({Key key, this.postReads}) : super(key: key);
@@ -14,7 +14,7 @@ class PostReadPreviews extends StatefulWidget {
 class _PostReadPreviewsState extends State<PostReadPreviews> {
   @override
   Widget build(BuildContext context) {
-    return new Container(
+    return Container(
       height: 300,
       child: ListView(
         padding: const EdgeInsets.symmetric(vertical: 8.0),

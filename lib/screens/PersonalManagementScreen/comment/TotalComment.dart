@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class TotalSaved extends StatelessWidget {
+class TotalComment extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -22,7 +22,7 @@ class TotalSaved extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text("您一共收藏了23篇文章",
+                    Text("您一共收写下了 54 条留言",
                         style: Theme.of(context).textTheme.bodyText2,
                         textAlign: TextAlign.left),
                     SizedBox(height: 8.0)

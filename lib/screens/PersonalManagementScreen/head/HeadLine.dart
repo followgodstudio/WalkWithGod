@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:walk_with_god/screens/PersonalManagementScreen/Summary.dart';
+import 'package:walk_with_god/screens/PersonalManagementScreen/head/Summary.dart';
 
 class Introduction extends StatelessWidget {
   @override

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:walk_with_god/model/PostSaved.dart';
+import 'package:walk_with_god/widgets/slide_dots.dart';
 
 import 'PostSavedPreviews.dart';
 import 'TotalSaved.dart';
@@ -18,6 +19,17 @@ class SavedPosts extends StatelessWidget {
           ),
           TotalSaved(),
           PostSavedPreviews(postsSaved: PostSavedLists),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              SlideDots(true),
+              SlideDots(false),
+              SlideDots(false),
+              SlideDots(false),
+              SlideDots(false),
+              SlideDots(false),
+            ],
+          )
         ],
       ),
     );
