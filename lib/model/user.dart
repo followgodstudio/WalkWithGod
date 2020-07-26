@@ -13,3 +13,9 @@ class User {
     this.avatar_url,
   });
 }
+
+final dummyUser = User(
+  id: 123456789,
+  user_name: "凯瑟琳.泽塔琼斯",
+  avatar_url: "https://photo.sohu.com/88/60/Img214056088.jpg",
+);

@@ -4,6 +4,8 @@ import 'package:walk_with_god/screens/PersonalManagementScreen/head/HeadLine.dar
 import 'package:walk_with_god/screens/PersonalManagementScreen/posts/SavedPosts.dart';
 import 'package:walk_with_god/screens/PersonalManagementScreen/read/Reading.dart';
 
+import 'comment/Comments.dart';
+
 class PersonalManagementScreen extends StatefulWidget {
   static const routeName = '/personal_management';
   @override
@@ -39,7 +41,8 @@ class _PersonalManagementScreen extends State<PersonalManagementScreen> {
                   HeadLine(),
                   Friendship(),
                   Reading(),
-                  SavedPosts()
+                  SavedPosts(),
+                  Comments(),
                 ],
               ),
             ),
