@@ -5,6 +5,8 @@ import 'Platform.dart';
 =======
 >>>>>>> WIP saved posts
 
+import 'Platform.dart';
+
 class PostRead {
   final String photoURL;
   final String subject;
@@ -22,9 +24,13 @@ class PostRead {
     @required this.postId,
     @required this.updatedAt,
 <<<<<<< HEAD
+<<<<<<< HEAD
     @required this.platform,
 =======
 >>>>>>> WIP saved posts
+=======
+    @required this.platform,
+>>>>>>> phase 1
   });
 }
 
@@ -37,6 +43,9 @@ final postReadList = [
     postId: 1,
     updatedAt: DateTime.now(),
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> phase 1
     platform: Platform(
       id: 1,
       name: "海外校园",
@@ -81,8 +90,11 @@ final postReadList = [
       name: "海外校园",
       logoURL: "assets/images/icon.jpeg",
     ),
+<<<<<<< HEAD
 =======
 >>>>>>> WIP saved posts
+=======
+>>>>>>> phase 1
   ),
   PostRead(
     photoURL: 'assets/images/image0.jpg',
@@ -92,13 +104,19 @@ final postReadList = [
     postId: 1,
     updatedAt: DateTime.now(),
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> phase 1
     platform: Platform(
       id: 1,
       name: "海外校园",
       logoURL: "assets/images/icon.jpeg",
     ),
+<<<<<<< HEAD
 =======
 >>>>>>> WIP saved posts
+=======
+>>>>>>> phase 1
   ),
   PostRead(
     photoURL: 'assets/images/image0.jpg',
@@ -108,12 +126,18 @@ final postReadList = [
     postId: 1,
     updatedAt: DateTime.now(),
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> phase 1
     platform: Platform(
       id: 1,
       name: "海外校园",
       logoURL: "assets/images/icon.jpeg",
     ),
+<<<<<<< HEAD
 =======
 >>>>>>> WIP saved posts
+=======
+>>>>>>> phase 1
   ),
 ];

@@ -26,17 +26,6 @@ class SavedPosts extends StatelessWidget {
           ),
           TotalSaved(),
           PostSavedPreviews(postsSaved: PostSavedLists),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              SlideDots(true),
-              SlideDots(false),
-              SlideDots(false),
-              SlideDots(false),
-              SlideDots(false),
-              SlideDots(false),
-            ],
-          )
         ],
       ),
     );
