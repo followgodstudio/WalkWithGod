@@ -47,7 +47,7 @@ class SmallPostPreviewItem extends StatelessWidget {
                     style: Theme.of(context).textTheme.overline,
                   ),
                   Text(
-                    '文 / ${post.authorName}',
+                    '   文 / ${post.authorName}',
                     style: Theme.of(context).textTheme.overline,
                   ),
                 ],

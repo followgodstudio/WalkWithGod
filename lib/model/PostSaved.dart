@@ -36,4 +36,44 @@ final PostSavedLists = [
       logoURL: "assets/images/icon.jpeg",
     ),
   ),
+  PostSaved(
+    photoURL: 'assets/images/image0.jpg',
+    authorName: "范学德",
+    subject: "只要互联网还在，我就不会停止敲打键盘",
+    platform: Platform(
+      id: 1,
+      name: "海外校园",
+      logoURL: "assets/images/icon.jpeg",
+    ),
+  ),
+  PostSaved(
+    photoURL: 'assets/images/image0.jpg',
+    authorName: "范学德",
+    subject: "只要互联网还在，我就不会停止敲打键盘",
+    platform: Platform(
+      id: 1,
+      name: "海外校园",
+      logoURL: "assets/images/icon.jpeg",
+    ),
+  ),
+  PostSaved(
+    photoURL: 'assets/images/image0.jpg',
+    authorName: "范学德",
+    subject: "只要互联网还在，我就不会停止敲打键盘",
+    platform: Platform(
+      id: 1,
+      name: "海外校园",
+      logoURL: "assets/images/icon.jpeg",
+    ),
+  ),
+  PostSaved(
+    photoURL: 'assets/images/image0.jpg',
+    authorName: "范学德",
+    subject: "只要互联网还在，我就不会停止敲打键盘",
+    platform: Platform(
+      id: 1,
+      name: "海外校园",
+      logoURL: "assets/images/icon.jpeg",
+    ),
+  ),
 ];
