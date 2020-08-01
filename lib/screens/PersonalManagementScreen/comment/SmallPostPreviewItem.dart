@@ -47,15 +47,7 @@ class SmallPostPreviewItem extends StatelessWidget {
                     style: Theme.of(context).textTheme.overline,
                   ),
                   Text(
-<<<<<<< HEAD
-<<<<<<< HEAD
                     '   文 / ${post.authorName}',
-=======
-                    '文 / ${post.authorName}',
->>>>>>> add comments section
-=======
-                    '   文 / ${post.authorName}',
->>>>>>> phase 1
                     style: Theme.of(context).textTheme.overline,
                   ),
                 ],

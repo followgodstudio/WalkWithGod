@@ -1,13 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:walk_with_god/model/PostSaved.dart';
-<<<<<<< HEAD
-<<<<<<< HEAD
-import 'package:walk_with_god/widgets/slide_dots.dart';
-=======
->>>>>>> WIP saved posts
-=======
-import 'package:walk_with_god/widgets/slide_dots.dart';
->>>>>>> add comments section
 
 import 'PostSavedPreviews.dart';
 import 'TotalSaved.dart';
