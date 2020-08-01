@@ -36,10 +36,6 @@ final PostSavedLists = [
       logoURL: "assets/images/icon.jpeg",
     ),
   ),
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> phase 1
   PostSaved(
     photoURL: 'assets/images/image0.jpg',
     authorName: "范学德",
@@ -80,9 +76,4 @@ final PostSavedLists = [
       logoURL: "assets/images/icon.jpeg",
     ),
   ),
-<<<<<<< HEAD
-=======
->>>>>>> WIP saved posts
-=======
->>>>>>> phase 1
 ];
