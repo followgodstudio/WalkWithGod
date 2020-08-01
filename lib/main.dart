@@ -17,13 +17,15 @@ class MyApp extends StatelessWidget {
       title: 'Walk With God',
       debugShowCheckedModeBanner: false,
       theme: dayTheme,
-      home: LoginScreen(),
+      home: PersonalManagementScreen(),
       routes: {
-        //LoginScreengi.routeName: (ctx) => LoginScreen(),
+        //LoginScreen.routeName: (ctx) => LoginScreen(),
         //SignupScreen.routeName: (ctx) => SignupScreen(),
         LoginScreen.routeName: (ctx) => LoginScreen(),
         HomeScreen.routeName: (ctx) => HomeScreen(),
         MainScreen.routeName: (ctx) => MainScreen(),
+        PersonalManagementScreen.routeName: (ctx) => PersonalManagementScreen(),
+        TextStyleGuideScreen.routeName: (ctx) => TextStyleGuideScreen(),
       },
     );
   }
