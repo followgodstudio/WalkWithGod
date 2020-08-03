@@ -28,6 +28,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _codeController = TextEditingController();
 
   Future<bool> loginUser(String phone, BuildContext context) async {
+    var areaCode = this._getCodeByIndex(_selectedItem);
     FirebaseAuth _auth = FirebaseAuth.instance;
 
     _auth.verifyPhoneNumber(
