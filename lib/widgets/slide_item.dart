@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import '../model/slide.dart';
 
@@ -9,11 +10,9 @@ class SlideItem extends StatelessWidget {
   SlideItem(this.index);
 
 
-//  getShareMethods(){
-//    return <Widget>[
-//      ICon
-//    ];
-//  }
+  onShareViaWechat(){
+
+  }
 
   final shareIcons=[
     {
