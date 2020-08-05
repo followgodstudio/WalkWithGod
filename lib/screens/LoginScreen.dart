@@ -28,6 +28,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _codeController = TextEditingController();
 
   Future<bool> loginUser(String phone, BuildContext context) async {
+    var areaCode = this._getCodeByIndex(_selectedItem);
     FirebaseAuth _auth = FirebaseAuth.instance;
 
     _auth.verifyPhoneNumber(
@@ -147,7 +148,7 @@ class _LoginScreenState extends State<LoginScreen> {
   String _getCodeByIndex(int i){
     String areaCode = areaCodeList[i].toString();
     int index = areaCode.indexOf('+');
-    return areaCode.substring(index + 1, areaCode.length - 2);
+    return areaCode.substring(index, areaCode.length - 2);
   }
 
   void _onPressAreaCodeButton(){
@@ -311,7 +312,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     mainAxisSize: MainAxisSize.min,
                                     children: <Widget>[
-                                      Text('+' + _getCodeByIndex(_selectedItem)),
+                                      Text(_getCodeByIndex(_selectedItem)),
                                       Icon(Icons.arrow_drop_down),
                                     ],
                                   ),
