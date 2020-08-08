@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:walk_with_god/screens/HomeScreen.dart';
+import 'package:walk_with_god/screens/HomeScreen/HomeScreen.dart';
 import '../widgets/otp_input.dart';
 
 class PersonalManagementScreen extends StatefulWidget {

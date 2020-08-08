@@ -3,7 +3,7 @@ import 'package:walk_with_god/configurations/theme.dart';
 import 'package:walk_with_god/screens/LoginScreen.dart';
 import 'package:walk_with_god/screens/PersonalManagementScreen/PersonalManagementScreen.dart';
 import './screens/LoginScreen.dart';
-import 'screens/HomeScreen.dart';
+import 'screens/HomeScreen/HomeScreen.dart';
 import 'package:walk_with_god/screens/MainScreen.dart';
 import 'screens/TextStyleGuideScreen.dart';
 
@@ -17,13 +17,14 @@ class MyApp extends StatelessWidget {
       title: 'Walk With God',
       debugShowCheckedModeBanner: false,
       theme: dayTheme,
-      home: LoginScreen(),
+      home: HomeScreen(),
       routes: {
         //LoginScreengi.routeName: (ctx) => LoginScreen(),
         //SignupScreen.routeName: (ctx) => SignupScreen(),
         LoginScreen.routeName: (ctx) => LoginScreen(),
         HomeScreen.routeName: (ctx) => HomeScreen(),
         MainScreen.routeName: (ctx) => MainScreen(),
+        TextStyleGuideScreen.routeName: (ctx) => TextStyleGuideScreen(),
       },
     );
   }

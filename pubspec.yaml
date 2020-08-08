@@ -32,6 +32,7 @@ dependencies:
   intl:
   url_launcher: ^5.4.11
   flutter_visibility_aware: ^0.0.2+1
+  palette_generator:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -53,12 +54,14 @@ flutter:
   uses-material-design: true
 
   assets:
+   - assets/images/
    - assets/images/image1.jpg
    - assets/images/image2.jpg
    - assets/images/image3.jpg
    - assets/images/logo.png
    - assets/images/icon.jpeg
    - assets/images/image0.jpg
+   
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
@@ -119,5 +122,8 @@ flutter:
           weight: 300
         - asset: fonts/HelveticaNeueUltraLight.ttf
           weight: 200
+    - family: Avenir
+      fonts:
+        - asset: fonts/avenirltstd-light.otf
 
           
