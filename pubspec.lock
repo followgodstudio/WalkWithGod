@@ -7,7 +7,7 @@ packages:
       name: async
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.4.1"
+    version: "2.4.2"
   boolean_selector:
     dependency: transitive
     description:
@@ -52,10 +52,27 @@ packages:
     version: "1.14.13"
   cupertino_icons:
     dependency: "direct main"
+
     description:
       name: cupertino_icons
       url: "https://pub.dartlang.org"
     source: hosted
+    version: "0.1.3"
+  dotted_decoration:
+    dependency: "direct main"
+    description:
+      name: dotted_decoration
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.2.2"
+  fake_async:
+    dependency: transitive
+
+    description:
+      name: fake_async
+      url: "https://pub.dartlang.org"
+    source: hosted
+
     version: "0.1.3"
   fake_async:
     dependency: transitive
@@ -63,6 +80,7 @@ packages:
       name: fake_async
       url: "https://pub.dartlang.org"
     source: hosted
+
     version: "1.1.0"
   firebase:
     dependency: transitive
@@ -184,6 +202,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.8"
+  modal_bottom_sheet:
+    dependency: "direct main"
+    description:
+      name: modal_bottom_sheet
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.0+1"
   path:
     dependency: transitive
     description:
@@ -244,7 +269,7 @@ packages:
       name: stack_trace
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.9.3"
+    version: "1.9.5"
   stream_channel:
     dependency: transitive
     description:
@@ -315,6 +340,11 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.8"
+
+sdks:
+  dart: ">=2.9.0-14.0.dev <3.0.0"
+  flutter: ">=1.12.13+hotfix.5 <2.0.0"
+
   visibility_detector:
     dependency: transitive
     description:
@@ -322,6 +352,3 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.5"
-sdks:
-  dart: ">=2.9.0-14.0.dev <3.0.0"
-  flutter: ">=1.13.8 <2.0.0"

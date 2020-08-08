@@ -1,6 +1,10 @@
+import 'dart:ffi';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:walk_with_god/widgets/popup_comment.dart';
 
 class Comment extends StatelessWidget {
   final int id;
@@ -11,8 +15,10 @@ class Comment extends StatelessWidget {
   final int num_of_likes;
   final List<int> list_of_comments;
 
-  Comment(this.id, this.author, this.avatarUrl, this.content, this.createdTime, this.num_of_likes, this.list_of_comments);
+  Comment(this.id, this.author, this.avatarUrl, this.content, this.createdTime,
+      this.num_of_likes, this.list_of_comments);
 
+  void openCommentPage() {}
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -54,8 +60,11 @@ class Comment extends StatelessWidget {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 4.0),
-                        child: Text(DateFormat('yyyy-MM-dd H:m:s')
-                            .format(this.createdTime), style: Theme.of(context).textTheme.overline,),
+                        child: Text(
+                          DateFormat('yyyy-MM-dd H:m:s')
+                              .format(this.createdTime),
+                          style: Theme.of(context).textTheme.overline,
+                        ),
                       ),
                     ],
                   )
@@ -83,12 +92,23 @@ class Comment extends StatelessWidget {
             children: [
               SizedBox(width: 50),
               IconButton(icon: Icon(Icons.favorite), onPressed: null),
-              Text(this.num_of_likes.toString(), style: Theme.of(context).textTheme.overline,),
+              Text(
+                this.num_of_likes.toString(),
+                style: Theme.of(context).textTheme.overline,
+              ),
               SizedBox(width: 50),
-              IconButton(icon: Icon(Icons.comment), onPressed: null),
-              Text(this.list_of_comments.length.toString(),style: Theme.of(context).textTheme.overline,)
+              IconButton(
+                  icon: Icon(Icons.comment),
+                  onPressed: () {
+                    showMaterialModalBottomSheet(context: context, builder: (context, scrollController) => PopUpComment());
+                  },
+              ),
+              Text(
+                this.list_of_comments.length.toString(),
+                style: Theme.of(context).textTheme.overline,
+              )
             ],
-          )
+          ),
         ],
       ),
     );

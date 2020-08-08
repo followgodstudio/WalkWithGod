@@ -1,4 +1,5 @@
 import 'dart:async';
+//import 'dart:js';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:walk_with_god/model/Comment.dart';
@@ -10,6 +11,7 @@ import '../widgets/slide_dots.dart';
 import '../widgets/comment.dart' as widget;
 import 'SignupScreen.dart';
 import 'package:intl/date_time_patterns.dart';
+
 
 class MainScreen extends StatefulWidget {
   static const routeName = '/getting_started';
@@ -216,7 +218,7 @@ class Comments extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 30.0),
         child: Container(
-          height: 400,
+          height: 500,
           child: ListView.separated(
             itemBuilder: (ctx, i) => widget.Comment(
                 i,
