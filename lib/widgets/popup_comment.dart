@@ -45,12 +45,7 @@ class PopUpComment extends StatelessWidget {
                         '发布',
                         style: Theme.of(context).textTheme.buttonLarge1,
                       ),
-                      onPressed: () {
-                        commentList.add(Comment(
-                          id: commentList.length + 1,
-                          content:
-                        ));
-                      },
+                      onPressed: () {},
                     ),
                   ),
                 ],
@@ -74,7 +69,6 @@ class PopUpComment extends StatelessWidget {
                 child: TextField(
                   maxLines: 11,
                   decoration: InputDecoration.collapsed(hintText: '清写下您的留言'),
-                  onSubmitted: ,
                 ),
               ),
               Container(
