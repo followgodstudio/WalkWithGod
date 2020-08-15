@@ -32,6 +32,8 @@ dependencies:
   intl:
   url_launcher: ^5.4.11
   flutter_visibility_aware: ^0.0.2+1
+  dotted_decoration:
+  modal_bottom_sheet:
 
 
   # The following adds the Cupertino Icons font to your application.
