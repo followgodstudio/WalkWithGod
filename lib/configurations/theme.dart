@@ -50,7 +50,7 @@ final ThemeData dayTheme = new ThemeData(
       letterSpacing: -0.1,
     ),
     button:
-        TextStyle(color: Colors.black87, fontSize: 29.0, fontFamily: 'Jinling'),
+        TextStyle(color: Colors.black87, fontSize: 25.0, fontFamily: 'Jinling'),
   ),
 );
 
@@ -70,14 +70,23 @@ extension CustomStyles on TextTheme {
       );
   TextStyle get captionSmall1 => const TextStyle(
         fontSize: 10.0,
-        color: Color.fromARGB(255, 0, 169, 157),
+        //color: Color.fromARGB(255, 0, 169, 157),
+        color: Colors.white,
         fontFamily: 'Lanting',
       );
   TextStyle get captionMedium1 => const TextStyle(
         fontSize: 14.0,
-        color: Color.fromARGB(255, 0, 169, 157),
+        //color: Color.fromARGB(255, 0, 169, 157),
+        color: Colors.white,
         fontFamily: 'Lanting',
       );
+  TextStyle get captionMedium2 => const TextStyle(
+        fontSize: 25.0,
+        //color: Color.fromARGB(255, 0, 169, 157),
+        color: Colors.black,
+        fontFamily: 'FangzhengTeSaSong',
+      );
+
   TextStyle get captionLarge1 => const TextStyle(
         fontSize: 18.0,
         color: Color.fromARGB(255, 0, 169, 157),

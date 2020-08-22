@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -10,18 +11,37 @@ import '../../widgets/slide_item.dart';
 import '../../model/Slide.dart';
 import '../../widgets/slide_dots.dart';
 import '../../widgets/comment.dart' as widget;
+import 'package:cloud_firestore/cloud_firestore.dart';
+import './article/ArticleList.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = '/home';
   final FirebaseUser user;
+  final Firestore firestore;
 
-  HomeScreen({this.user});
+  HomeScreen({this.user, this.firestore});
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    final now = DateTime.now();
+    var collection = Firestore.instance
+        .collection('articles')
+        .where("created_date",
+            isGreaterThanOrEqualTo:
+                new DateTime(now.year, now.month, now.day - 1))
+        .orderBy("created_date", descending: true)
+        .snapshots()
+        .toList();
+    // .listen((data) => data.documents.forEach((doc) => print(doc["title"])));
+    print(collection.toString());
+  }
+
   Future<bool> useWhiteTextColor(String imageUrl) async {
     PaletteGenerator paletteGenerator =
         await PaletteGenerator.fromImageProvider(
@@ -56,8 +76,8 @@ class _HomeScreenState extends State<HomeScreen> {
     //Color textColor = color.computeLuminance() > 0.5 ? Colors.black : Colors.white;
     Color textColor = Colors.black;
     useWhiteTextColor(
-            "https://cdn.britannica.com/78/43678-050-F4DC8D93/Starry-Night-canvas-Vincent-van-Gogh-New-1889.jpg")
-        .then((value) => textColor = value ? Colors.white : Colors.black);
+            "https://blog.sevenponds.com/wp-content/uploads/2018/12/800px-Vincent_van_Gogh_-_Self-Portrait_-_Google_Art_Project_454045.jpg")
+        .then((value) => {textColor = value ? Colors.white : Colors.black});
 
     return Scaffold(
       body: SafeArea(
@@ -65,33 +85,35 @@ class _HomeScreenState extends State<HomeScreen> {
           slivers: <Widget>[
             SliverAppBar(
               shadowColor: Colors.white,
-              leading: FlatButton(
-                  onPressed: null,
-                  child: Text(
-                    "今日",
-                    style: Theme.of(context).textTheme.caption,
-                  )),
               backgroundColor: Theme.of(context).canvasColor,
               pinned: true,
-              expandedHeight: 250.0,
-
-              flexibleSpace: Stack(
+              automaticallyImplyLeading: false,
+              flexibleSpace: Row(
                 children: <Widget>[
-                  Positioned.fill(
-                      child: Image.network(
-                    "https://d626yq9e83zk1.cloudfront.net/files/share-odb-2020-01-26.jpg",
-                    fit: BoxFit.cover,
-                  ))
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Column(
+                      children: [
+                        FlatButton(
+                            onPressed: () {},
+                            child: Text(
+                              "今日",
+                              style: Theme.of(context).textTheme.captionMedium2,
+                            )),
+                        Container(
+                            width: 30.0, height: 5.0, color: Colors.yellow),
+                      ],
+                    ),
+                  ),
+                  FlatButton(
+                    onPressed: () {},
+                    child: Text(
+                      formatted,
+                      style: Theme.of(context).textTheme.captionMain,
+                    ),
+                  ),
                 ],
               ),
-
-              // flexibleSpace: FlexibleSpaceBar(
-              //   title: Text(
-              //     formatted,
-              //     style: Theme.of(context).textTheme.captionMain,
-              //   ),
-              // ),
-
               actions: [
                 IconButton(
                   icon: ClipOval(
@@ -101,84 +123,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 )
               ],
             ),
-            SliverFixedExtentList(
-              itemExtent: MediaQuery.of(context).size.width,
-              delegate: SliverChildBuilderDelegate(
-                (BuildContext context, int index) {
-                  // return Container(
-                  //   alignment: Alignment.center,
-                  //   color: Colors.lightBlue[100 * (index % 9)],
-                  //   child: Text('List Item $index'),
-                  // );
-
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 25, vertical: 12.5),
-                    child: Container(
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: NetworkImage(
-                                "https://cdn.britannica.com/78/43678-050-F4DC8D93/Starry-Night-canvas-Vincent-van-Gogh-New-1889.jpg"),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        child: FlatButton(
-                            onPressed: () {},
-                            child: Container(
-                                child: Stack(children: [
-                              Positioned(
-                                bottom: 0,
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    //Flexible(
-                                    //flex: 2,
-                                    Container(
-                                      width: 300,
-                                      child: Text(
-                                        "梵高逝世130年，他的书信仍旧对你我说话",
-                                        style: TextStyle(color: textColor)
-                                        // Theme.of(context)
-                                        //     .textTheme
-                                        //     .headline2
-                                        ,
-                                      ),
-                                    ),
-                                    Text("testing2"),
-                                    Text("testing2"),
-                                    //),
-                                    // Flexible(flex: 1, child: Text("testing2")),
-                                    // Flexible(flex: 1, child: Text("testing3")),
-                                  ],
-                                ),
-                              )
-                            ])))),
-                  );
-                },
-              ),
+            ArticleList(
+              textColor: textColor,
+              firestore: Firestore.instance,
             ),
           ],
         ),
       ),
     );
-    // return Scaffold(
-    //   appBar: AppBar(
-    //     leading: FlatButton(onPressed: null, child: Text("今日")),
-    //     title: Text(
-    //       formatted,
-    //       style: Theme.of(context).textTheme.caption,
-    //     ),
-    //     actions: [
-    //       IconButton(
-    //         icon: ClipOval(
-    //           child: Image.asset("assets/images/logo.png"),
-    //         ),
-    //         onPressed: () {},
-    //       )
-    //     ],
-    //   ),
-    //   backgroundColor: Theme.of(context).canvasColor,
-    // );
   }
 }

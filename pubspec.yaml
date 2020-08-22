@@ -112,6 +112,9 @@ flutter:
     - family: Lanting
       fonts:
         - asset: fonts/FZLTZHK_GBK1_0.ttf
+    - family: FangzhengTeSaSong
+      fonts:
+        - asset: fonts/FZTYSFW--GB1-0.ttf
     - family: HelveticaNeue
       fonts:
         - asset: fonts/HelveticaNeueBold.ttf
