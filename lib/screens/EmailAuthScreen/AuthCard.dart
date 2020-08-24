@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-import '../../providers/auth.dart';
+import '../../providers/AuthProvider.dart';
 
 class AuthCard extends StatefulWidget {
   const AuthCard({
@@ -15,7 +15,7 @@ class AuthCard extends StatefulWidget {
 
 class _AuthCardState extends State<AuthCard> {
   final GlobalKey<FormState> _formKey = GlobalKey();
-  AuthMode _authMode = AuthMode.Login;
+  AuthMode _authMode = AuthMode.signInWithEmail;
   Map<String, String> _authData = {
     'email': '',
     'password': '',
@@ -51,33 +51,10 @@ class _AuthCardState extends State<AuthCard> {
       _isLoading = true;
     });
     try {
-      if (_authMode == AuthMode.Login) {
-        // Log user in
-        await Provider.of<Auth>(context, listen: false).login(
-          _authData['email'],
-          _authData['password'],
-        );
-      } else {
-        // Sign user up
-        await Provider.of<Auth>(context, listen: false).signup(
-          _authData['email'],
-          _authData['password'],
-        );
-      }
+      await Provider.of<Auth>(context, listen: false)
+          .authenticate(_authData['email'], _authData['password'], _authMode);
     } on PlatformException catch (error) {
-      var errorMessage = 'Authentication failed';
-      if (error.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
-        errorMessage = 'This email address is already in use.';
-      } else if (error.code == 'ERROR_INVALID_EMAIL') {
-        errorMessage = 'This is not a valid email address';
-      } else if (error.code == 'ERROR_WEAK_PASSWORD') {
-        errorMessage = 'This password is too weak.';
-      } else if (error.code == 'ERROR_USER_NOT_FOUND') {
-        errorMessage = 'Could not find a user with that email.';
-      } else if (error.code == 'ERROR_WRONG_PASSWORD') {
-        errorMessage = 'Wrong password.';
-      }
-      _showErrorDialog(errorMessage);
+      _showErrorDialog(error.message);
     } catch (error) {
       const errorMessage =
           'Could not authenticate you. Please try again later.';
@@ -90,13 +67,13 @@ class _AuthCardState extends State<AuthCard> {
   }
 
   void _switchAuthMode() {
-    if (_authMode == AuthMode.Login) {
+    if (_authMode == AuthMode.createUserWithEmail) {
       setState(() {
-        _authMode = AuthMode.Signup;
+        _authMode = AuthMode.signInWithEmail;
       });
     } else {
       setState(() {
-        _authMode = AuthMode.Login;
+        _authMode = AuthMode.signInWithEmail;
       });
     }
   }
@@ -140,12 +117,12 @@ class _AuthCardState extends State<AuthCard> {
                   _authData['password'] = value;
                 },
               ),
-              if (_authMode == AuthMode.Signup)
+              if (_authMode == AuthMode.createUserWithEmail)
                 TextFormField(
-                  enabled: _authMode == AuthMode.Signup,
+                  enabled: _authMode == AuthMode.createUserWithEmail,
                   decoration: InputDecoration(labelText: 'Confirm Password'),
                   obscureText: true,
-                  validator: _authMode == AuthMode.Signup
+                  validator: _authMode == AuthMode.createUserWithEmail
                       ? (value) {
                           if (value != _passwordController.text) {
                             return 'Passwords do not match!';
@@ -161,8 +138,9 @@ class _AuthCardState extends State<AuthCard> {
                 CircularProgressIndicator()
               else
                 RaisedButton(
-                  child:
-                      Text(_authMode == AuthMode.Login ? 'LOGIN' : 'SIGN UP'),
+                  child: Text(_authMode == AuthMode.signInWithEmail
+                      ? 'LOGIN'
+                      : 'SIGN UP'),
                   onPressed: _submit,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
@@ -174,7 +152,7 @@ class _AuthCardState extends State<AuthCard> {
                 ),
               FlatButton(
                 child: Text(
-                    '${_authMode == AuthMode.Login ? 'SIGNUP' : 'LOGIN'} INSTEAD'),
+                    '${_authMode == AuthMode.signInWithEmail ? 'SIGNUP' : 'LOGIN'} INSTEAD'),
                 onPressed: _switchAuthMode,
                 padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,

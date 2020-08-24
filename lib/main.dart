@@ -10,7 +10,7 @@ import 'screens/TextStyleGuideScreen.dart';
 
 import './screens/EmailAuthScreen/EmailAuthScreen.dart';
 import './screens/LoadingScreen.dart';
-import './providers/auth.dart';
+import './providers/AuthProvider.dart';
 
 void main() => runApp(MyApp());
 
@@ -25,15 +25,15 @@ class MyApp extends StatelessWidget {
           title: 'Walk With God',
           debugShowCheckedModeBanner: false,
           theme: dayTheme,
-          home: auth.isAuth
-              ? MainScreen()
-              : FutureBuilder(
-                  future: auth.tryAutoLogin(),
-                  builder: (ctx, authResultSnapshot) =>
-                      authResultSnapshot.connectionState ==
-                              ConnectionState.waiting
-                          ? LoadingScreen()
-                          : EmailAuthScreen()),
+          home: StreamBuilder<String>(
+              stream: auth.onAuthStateChanged,
+              builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                if (snapshot.connectionState == ConnectionState.active) {
+                  final bool isLoggedIn = snapshot.hasData;
+                  return isLoggedIn ? MainScreen() : EmailAuthScreen();
+                }
+                return LoadingScreen();
+              }),
           routes: {
             //LoginScreengi.routeName: (ctx) => LoginScreen(),
             //SignupScreen.routeName: (ctx) => SignupScreen(),
