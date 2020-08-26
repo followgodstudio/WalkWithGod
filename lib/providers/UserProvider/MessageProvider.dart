@@ -5,37 +5,29 @@ import '../../model/Constants.dart';
 
 class MessageProvider with ChangeNotifier {
   final String uid;
-  List<dynamic> _messages = [];
-
   MessageProvider(this.uid);
-
-  Future<void> load() async {
-    final fStore = Firestore.instance;
-    QuerySnapshot doc = await fStore
-        .collection(COLLECTION_USERS)
-        .document(uid)
-        .collection(COLLECTION_USER_MESSAGES)
-        .getDocuments();
-    _messages = doc.documents;
-    print(_messages);
-    notifyListeners();
-  }
 
   Stream<QuerySnapshot> getStream() {
     return Firestore.instance
-        .collection(COLLECTION_USERS)
+        .collection(C_USERS)
         .document(uid)
-        .collection('messages')
+        .collection(C_USER_MESSAGES)
         .snapshots();
   }
 
-  Future<void> save() async {
-    final fStore = Firestore.instance;
+  Future<void> add(String type, String fromUID, String aid,
+      [String body = ""]) async {
+    //TODO: add more field
     Map<String, dynamic> data = {};
-    // updateData can update part of the field, while setData replace all
-    await fStore.collection(COLLECTION_USERS).document(uid).updateData(data);
+    data[F_USER_MESSAGE_AID] = aid;
+    data[F_USER_MESSAGE_BODY] = body;
+    data[F_USER_MESSAGE_TYPE] = type;
+    data[F_USER_MESSAGE_UID] = fromUID;
+    data[F_CREATE_DATE] = Timestamp.now();
+    Firestore.instance
+        .collection(C_USERS)
+        .document(uid)
+        .collection(C_USER_MESSAGES)
+        .add(data);
   }
-  //TODO: wrtie multiple load and save
-  //TODO: upload image
-  //TODO: message trigger
 }

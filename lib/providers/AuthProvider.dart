@@ -8,7 +8,10 @@ class Auth with ChangeNotifier {
   String _uid;
 
   Stream<String> get onAuthStateChanged {
-    return _auth.onAuthStateChanged.map((FirebaseUser user) => user?.uid);
+    return _auth.onAuthStateChanged.map((FirebaseUser user) {
+      _uid = user?.uid;
+      return _uid;
+    });
   }
 
   String get currentUser {

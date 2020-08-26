@@ -15,10 +15,8 @@ class ArticleProvider with ChangeNotifier {
 
   Future<void> load() async {
     final fStore = Firestore.instance;
-    DocumentSnapshot doc = await fStore
-        .collection(COLLECTION_ARTICLES)
-        .document(this.articleId)
-        .get();
+    DocumentSnapshot doc =
+        await fStore.collection(C_ARTICLES).document(this.articleId).get();
     _article = doc.data;
     notifyListeners();
   }
