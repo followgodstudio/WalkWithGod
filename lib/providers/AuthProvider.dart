@@ -5,7 +5,7 @@ enum AuthMode { signInWithEmail, createUserWithEmail }
 
 class Auth with ChangeNotifier {
   FirebaseAuth _auth = FirebaseAuth.instance;
-  String _uid = "";
+  String _uid;
 
   Stream<String> get onAuthStateChanged {
     return _auth.onAuthStateChanged.map((FirebaseUser user) => user?.uid);
@@ -31,7 +31,7 @@ class Auth with ChangeNotifier {
 
   Future<void> logout() async {
     await _auth.signOut();
-    _uid = "";
+    _uid = null;
     notifyListeners();
   }
 }

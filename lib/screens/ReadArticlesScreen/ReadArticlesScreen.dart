@@ -18,7 +18,7 @@ class ReadArticlesScreen extends StatelessWidget {
           body: SingleChildScrollView(
               child: Column(children: <Widget>[
         // Just for testing
-        Text(userId),
+        Text(userId != null ? userId : ""),
         FlatButton(
           child:
               Row(children: <Widget>[Icon(Icons.exit_to_app), Text('Logout')]),

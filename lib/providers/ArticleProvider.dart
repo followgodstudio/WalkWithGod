@@ -4,22 +4,22 @@ import 'package:flutter/widgets.dart';
 import '../model/Constants.dart';
 
 class ArticleProvider with ChangeNotifier {
-  String articleId;
-  Map<String, dynamic> article = {};
+  final String articleId;
+  Map<String, dynamic> _article = {};
 
   ArticleProvider(this.articleId);
 
+  Map<String, dynamic> get article {
+    return _article;
+  }
+
   Future<void> load() async {
     final fStore = Firestore.instance;
-    try {
-      DocumentSnapshot doc = await fStore
-          .collection(COLLECTION_ARTICLES)
-          .document(this.articleId)
-          .get();
-      article = doc.data;
-      notifyListeners();
-    } catch (error) {
-      print(error);
-    }
+    DocumentSnapshot doc = await fStore
+        .collection(COLLECTION_ARTICLES)
+        .document(this.articleId)
+        .get();
+    _article = doc.data;
+    notifyListeners();
   }
 }
