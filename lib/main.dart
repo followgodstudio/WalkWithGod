@@ -9,9 +9,12 @@ import 'screens/HomeScreen/HomeScreen.dart';
 import 'package:walk_with_god/screens/MainScreen.dart';
 import 'screens/TextStyleGuideScreen.dart';
 
+import './configurations/theme.dart';
+import './providers/AuthProvider.dart';
+import './screens/LoginScreen.dart';
+import './screens/MainScreen.dart';
 import './screens/EmailAuthScreen/EmailAuthScreen.dart';
 import './screens/LoadingScreen.dart';
-import './providers/AuthProvider.dart';
 
 void main() => runApp(MyApp());
 

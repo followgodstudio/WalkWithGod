@@ -73,7 +73,7 @@ class _AuthCardState extends State<AuthCard> {
       });
     } else {
       setState(() {
-        _authMode = AuthMode.signInWithEmail;
+        _authMode = AuthMode.createUserWithEmail;
       });
     }
   }
