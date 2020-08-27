@@ -29,12 +29,15 @@ class _ArticleScreen extends State<ArticleScreen> {
         child: CustomScrollView(
           slivers: <Widget>[
             SliverAppBar(
+              backgroundColor: Theme.of(context).appBarTheme.color,
               leading: IconButton(
                 icon: Icon(
                   Icons.arrow_back_ios,
                   color: Colors.black,
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pop(context);
+                },
               ),
               title: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
