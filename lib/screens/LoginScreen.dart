@@ -2,7 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:walk_with_god/screens/HomeScreen.dart';
+
+import '../screens/HomeScreen.dart';
 import '../widgets/otp_input.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -145,13 +146,13 @@ class _LoginScreenState extends State<LoginScreen> {
     Text('英国    +61'),
   ];
 
-  String _getCodeByIndex(int i){
+  String _getCodeByIndex(int i) {
     String areaCode = areaCodeList[i].toString();
     int index = areaCode.indexOf('+');
     return areaCode.substring(index, areaCode.length - 2);
   }
 
-  void _onPressAreaCodeButton(){
+  void _onPressAreaCodeButton() {
     List<ListTile> result = new List<ListTile>();
     areaCodeList.asMap().forEach((key, code) {
       result.add(ListTile(
@@ -168,12 +169,11 @@ class _LoginScreenState extends State<LoginScreen> {
         },
       ));
     });
-    showModalBottomSheet(context: context, builder: (context){
-      return Column(
-        mainAxisSize: MainAxisSize.min,
-        children: result
-      );
-    });
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Column(mainAxisSize: MainAxisSize.min, children: result);
+        });
   }
 
   @override
@@ -319,17 +319,21 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                                 Container(
                                   constraints: BoxConstraints.expand(
-                                    height: Theme.of(context).textTheme.headline4.fontSize * 1.1 + 100.0,
-                                    width: 200
-                                  ),
+                                      height: Theme.of(context)
+                                                  .textTheme
+                                                  .headline4
+                                                  .fontSize *
+                                              1.1 +
+                                          100.0,
+                                      width: 200),
                                   alignment: Alignment.center,
                                   child: TextFormField(
                                     decoration: InputDecoration(
                                         focusedBorder: OutlineInputBorder(
-                                            borderRadius:
-                                            BorderRadius.all(Radius.circular(8)),
-                                            borderSide:
-                                            BorderSide(color: Colors.grey[300])),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(8)),
+                                            borderSide: BorderSide(
+                                                color: Colors.grey[300])),
                                         hintText: "Mobile Number"),
                                     controller: _phoneController,
                                   ),

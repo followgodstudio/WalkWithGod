@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:walk_with_god/configurations/theme.dart';
-import 'package:walk_with_god/screens/LoginScreen.dart';
-import 'package:walk_with_god/screens/PersonalManagementScreen/PersonalManagementScreen.dart';
-import './screens/LoginScreen.dart';
-import 'screens/HomeScreen.dart';
-import 'package:walk_with_god/screens/MainScreen.dart';
-import 'screens/TextStyleGuideScreen.dart';
 
+import './configurations/theme.dart';
+import './providers/AuthProvider.dart';
+import './screens/LoginScreen.dart';
+import './screens/HomeScreen.dart';
+import './screens/MainScreen.dart';
 import './screens/EmailAuthScreen/EmailAuthScreen.dart';
 import './screens/LoadingScreen.dart';
-import './providers/AuthProvider.dart';
 
 void main() => runApp(MyApp());
 
