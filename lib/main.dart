@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:walk_with_god/configurations/theme.dart';
+import 'package:walk_with_god/screens/ArticleScreen.dart';
 import 'package:walk_with_god/screens/LoginScreen.dart';
 import 'package:walk_with_god/screens/PersonalManagementScreen/PersonalManagementScreen.dart';
 import './screens/LoginScreen.dart';
@@ -48,6 +49,7 @@ class MyApp extends StatelessWidget {
         HomeScreen.routeName: (ctx) => HomeScreen(),
         MainScreen.routeName: (ctx) => MainScreen(),
         TextStyleGuideScreen.routeName: (ctx) => TextStyleGuideScreen(),
+        ArticleScreen.routeName: (ctx) => ArticleScreen(),
       },
     );
   }

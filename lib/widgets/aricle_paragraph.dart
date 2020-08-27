@@ -14,7 +14,7 @@ class ArticleParagraph extends StatelessWidget {
     // TODO: implement build
     return Container(
       padding: const EdgeInsets.only(top: 50.0),
-      width: MediaQuery.of(context).size.width * 160 / 188,
+      // width: MediaQuery.of(context).size.width * 160 / 188,
       child: Column(children: <Widget>[
         Padding(
           padding: const EdgeInsets.only(bottom: 10.0),
