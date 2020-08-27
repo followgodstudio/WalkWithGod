@@ -63,15 +63,41 @@ extension CustomStyles on TextTheme {
         fontFamily: 'Lanting',
         letterSpacing: -0.1,
       );
+  TextStyle get captionMain => const TextStyle(
+        fontSize: 16.0,
+        color: Color.fromARGB(255, 128, 128, 128),
+        fontFamily: 'Avenir',
+      );
   TextStyle get captionSmall1 => const TextStyle(
         fontSize: 10.0,
         color: Color.fromARGB(255, 0, 169, 157),
+        fontFamily: 'Lanting',
+      );
+  TextStyle get captionSmall2 => const TextStyle(
+        fontSize: 10.0,
+        color: Color.fromARGB(255, 128, 128, 128),
+        fontFamily: 'LantingHeiXianHei',
+      );
+  TextStyle get captionSmallWhite => const TextStyle(
+        fontSize: 10.0,
+        color: Color.fromARGB(255, 255, 255, 255),
         fontFamily: 'Lanting',
       );
   TextStyle get captionMedium1 => const TextStyle(
         fontSize: 14.0,
         color: Color.fromARGB(255, 0, 169, 157),
         fontFamily: 'Lanting',
+      );
+  TextStyle get captionMediumWhite => const TextStyle(
+        fontSize: 14.0,
+        color: Color.fromARGB(255, 255, 255, 255),
+        fontFamily: 'Lanting',
+      );
+  TextStyle get captionMedium2 => const TextStyle(
+        fontSize: 25.0,
+        //color: Color.fromARGB(255, 0, 169, 157),
+        color: Colors.black,
+        fontFamily: 'FangzhengTeYaSong',
       );
   TextStyle get captionLarge1 => const TextStyle(
         fontSize: 18.0,

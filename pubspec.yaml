@@ -35,7 +35,7 @@ dependencies:
   dotted_decoration:
   modal_bottom_sheet:
   provider: ^4.3.2
-
+  palette_generator:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -113,6 +113,9 @@ flutter:
     - family: Lanting
       fonts:
         - asset: fonts/FZLTZHK_GBK1_0.ttf
+    - family: FangzhengTeYaSong
+      fonts:
+        - asset: fonts/FZTYSFW--GB1-0.ttf        
     - family: HelveticaNeue
       fonts:
         - asset: fonts/HelveticaNeueBold.ttf

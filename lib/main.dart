@@ -4,7 +4,8 @@ import 'package:walk_with_god/configurations/theme.dart';
 import 'package:walk_with_god/screens/LoginScreen.dart';
 import 'package:walk_with_god/screens/PersonalManagementScreen/PersonalManagementScreen.dart';
 import './screens/LoginScreen.dart';
-import 'screens/HomeScreen.dart';
+import 'screens/TempScreen.dart';
+import 'screens/HomeScreen/HomeScreen.dart';
 import 'package:walk_with_god/screens/MainScreen.dart';
 import 'screens/TextStyleGuideScreen.dart';
 
@@ -30,7 +31,7 @@ class MyApp extends StatelessWidget {
               builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
                 if (snapshot.connectionState == ConnectionState.active) {
                   final bool isLoggedIn = snapshot.hasData;
-                  return isLoggedIn ? MainScreen() : EmailAuthScreen();
+                  return isLoggedIn ? HomeScreen() : EmailAuthScreen();
                 }
                 return LoadingScreen();
               }),
