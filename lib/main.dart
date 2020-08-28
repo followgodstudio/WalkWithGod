@@ -1,20 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:walk_with_god/configurations/theme.dart';
-import 'package:walk_with_god/screens/LoginScreen.dart';
-import 'package:walk_with_god/screens/PersonalManagementScreen/PersonalManagementScreen.dart';
-import './screens/LoginScreen.dart';
-import 'screens/TempScreen.dart';
-import 'screens/HomeScreen/HomeScreen.dart';
-import 'package:walk_with_god/screens/MainScreen.dart';
-import 'screens/TextStyleGuideScreen.dart';
 
 import './configurations/theme.dart';
 import './providers/AuthProvider.dart';
+import './providers/ArticleProvider/ArticlesProvider.dart';
+import './providers/UserProvider/MessageProvider.dart';
 import './screens/LoginScreen.dart';
+import './screens/HomeScreen/HomeScreen.dart';
 import './screens/MainScreen.dart';
 import './screens/EmailAuthScreen/EmailAuthScreen.dart';
 import './screens/LoadingScreen.dart';
+import './screens/PersonalManagementScreen/TestScreen.dart';
 
 void main() => runApp(MyApp());
 
@@ -22,9 +18,20 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => Auth(),
-      child: Consumer<Auth>(
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => AuthProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ArticlesProvider(),
+        ),
+        ChangeNotifierProxyProvider<AuthProvider, MessageProvider>(
+          create: (_) => MessageProvider(),
+          update: (context, auth, msg) => msg..update(auth),
+        ),
+      ],
+      child: Consumer<AuthProvider>(
         builder: (ctx, auth, _) => MaterialApp(
           title: 'Walk With God',
           debugShowCheckedModeBanner: false,
@@ -34,7 +41,7 @@ class MyApp extends StatelessWidget {
               builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
                 if (snapshot.connectionState == ConnectionState.active) {
                   final bool isLoggedIn = snapshot.hasData;
-                  return isLoggedIn ? HomeScreen() : EmailAuthScreen();
+                  return isLoggedIn ? TestScreen() : EmailAuthScreen();
                 }
                 return LoadingScreen();
               }),
