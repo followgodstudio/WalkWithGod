@@ -31,7 +31,7 @@ class ArticlesProvider with ChangeNotifier {
   Future<void> fetchList(List<String> aids) async {
     QuerySnapshot query = await Firestore.instance
         .collection(C_ARTICLES)
-        .where('id', whereIn: aids)
+        .where(FieldPath.documentId, whereIn: aids)
         .orderBy(F_CREATE_DATE, descending: true)
         .getDocuments();
     setArticles(query);
