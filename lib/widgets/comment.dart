@@ -1,10 +1,9 @@
-import 'dart:ffi';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:walk_with_god/widgets/popup_comment.dart';
+
+import '../widgets/popup_comment.dart';
 
 class Comment extends StatelessWidget {
   final int id;
@@ -98,10 +97,12 @@ class Comment extends StatelessWidget {
               ),
               SizedBox(width: 50),
               IconButton(
-                  icon: Icon(Icons.comment),
-                  onPressed: () {
-                    showMaterialModalBottomSheet(context: context, builder: (context, scrollController) => PopUpComment());
-                  },
+                icon: Icon(Icons.comment),
+                onPressed: () {
+                  showMaterialModalBottomSheet(
+                      context: context,
+                      builder: (context, scrollController) => PopUpComment());
+                },
               ),
               Text(
                 this.list_of_comments.length.toString(),
