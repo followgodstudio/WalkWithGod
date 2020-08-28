@@ -23,83 +23,220 @@ class _ArticleScreen extends State<ArticleScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              children: <Widget>[
-                Container(
-                  //width: MediaQuery.of(context).size.width * 160 / 188,
-                  //height: 500,
-                  //width: MediaQuery.of(context).size.width * 160 / 188,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        height: 200.0,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: NetworkImage(
-                                "https://blog.sevenponds.com/wp-content/uploads/2018/12/800px-Vincent_van_Gogh_-_Self-Portrait_-_Google_Art_Project_454045.jpg"),
-                            fit: BoxFit.cover,
-                          ),
-                          color: Color.fromARGB(255, 255, 235, 133),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 20.0, bottom: 10),
-                        child: Text(
-                          "只要互联网还在，我就不会停止敲打键盘",
-                          style: Theme.of(context).textTheme.headline1,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 10.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Icon(Icons.ac_unit),
-                            Text(
-                              "海外校园",
-                              style: Theme.of(context).textTheme.captionSmall2,
-                            ),
-                            Container(
-                                height: 20,
-                                child: VerticalDivider(
-                                    color: Color.fromARGB(255, 128, 128, 128))),
-                            Text(
-                              "范学德",
-                              style: Theme.of(context).textTheme.captionSmall2,
-                            ),
-                            Text(
-                              "2小时前",
-                              style: Theme.of(context).textTheme.captionSmall2,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+        child: CustomScrollView(
+          slivers: <Widget>[
+            SliverAppBar(
+              backgroundColor: Theme.of(context).appBarTheme.color,
+              leading: IconButton(
+                icon: Icon(
+                  Icons.arrow_back_ios,
+                  color: Colors.black,
                 ),
-                Divider(),
-                Center(
-                  child: Column(children: <Widget>[
-                    ...slideList[_currentPage].content.map(
-                        (e) => Column(children: <Widget>[ArticleParagraph(e)])),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              title: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "只要互联网还在，我就不会停止敲打键盘",
+                      style: Theme.of(context).textTheme.headerSmall1,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "OC海外校园",
+                          style: Theme.of(context).textTheme.captionSmall2,
+                        ),
+                        Container(
+                            height: 10,
+                            child: VerticalDivider(
+                                color: Color.fromARGB(255, 128, 128, 128))),
+                        Text(
+                          "范学德",
+                          style: Theme.of(context).textTheme.captionSmall2,
+                        ),
+                      ],
+                    ),
                   ]),
+              floating: true,
+              expandedHeight: 50,
+              actions: [
+                Placeholder(
+                  color: Theme.of(context).appBarTheme.color,
+                  fallbackWidth: 40,
                 ),
-
-                // Center(
-                //   child: Column(children: <Widget>[
-                //     ...slideList[_currentPage].content.map(
-                //         (e) => Column(children: <Widget>[ArticleParagraph(e)])),
-                //   ]),
+                // Icon(
+                //   Icons.arrow_back_ios,
                 // ),
-                Comments(),
               ],
             ),
-          ),
+            // Next, create a SliverList
+
+            SliverToBoxAdapter(
+              //padding: const EdgeInsets.all(20.0),
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      //width: MediaQuery.of(context).size.width * 160 / 188,
+                      //height: 500,
+                      //width: MediaQuery.of(context).size.width * 160 / 188,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            height: 200.0,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: NetworkImage(
+                                    "https://blog.sevenponds.com/wp-content/uploads/2018/12/800px-Vincent_van_Gogh_-_Self-Portrait_-_Google_Art_Project_454045.jpg"),
+                                fit: BoxFit.cover,
+                              ),
+                              color: Color.fromARGB(255, 255, 235, 133),
+                            ),
+                          ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(top: 20.0, bottom: 10),
+                            child: Text(
+                              "只要互联网还在，我就不会停止敲打键盘",
+                              style: Theme.of(context).textTheme.headline1,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 10.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Icon(Icons.ac_unit),
+                                Text(
+                                  "海外校园",
+                                  style:
+                                      Theme.of(context).textTheme.captionSmall2,
+                                ),
+                                Container(
+                                    height: 20,
+                                    child: VerticalDivider(
+                                        color: Color.fromARGB(
+                                            255, 128, 128, 128))),
+                                Text(
+                                  "范学德",
+                                  style:
+                                      Theme.of(context).textTheme.captionSmall2,
+                                ),
+                                Text(
+                                  "2小时前",
+                                  style:
+                                      Theme.of(context).textTheme.captionSmall2,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Divider(),
+                    Center(
+                      child: Column(children: <Widget>[
+                        ...slideList[_currentPage].content.map((e) =>
+                            Column(children: <Widget>[ArticleParagraph(e)])),
+                      ]),
+                    ),
+
+                    // Center(
+                    //   child: Column(children: <Widget>[
+                    //     ...slideList[_currentPage].content.map(
+                    //         (e) => Column(children: <Widget>[ArticleParagraph(e)])),
+                    //   ]),
+                    // ),
+                    Comments(),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
+        // child: SingleChildScrollView(
+        //   child: Padding(
+        //     padding: const EdgeInsets.all(20.0),
+        //     child: Column(
+        //       children: <Widget>[
+        //         Container(
+        //           //width: MediaQuery.of(context).size.width * 160 / 188,
+        //           //height: 500,
+        //           //width: MediaQuery.of(context).size.width * 160 / 188,
+        //           child: Column(
+        //             crossAxisAlignment: CrossAxisAlignment.start,
+        //             children: [
+        //               Container(
+        //                 height: 200.0,
+        //                 decoration: BoxDecoration(
+        //                   image: DecorationImage(
+        //                     image: NetworkImage(
+        //                         "https://blog.sevenponds.com/wp-content/uploads/2018/12/800px-Vincent_van_Gogh_-_Self-Portrait_-_Google_Art_Project_454045.jpg"),
+        //                     fit: BoxFit.cover,
+        //                   ),
+        //                   color: Color.fromARGB(255, 255, 235, 133),
+        //                 ),
+        //               ),
+        //               Padding(
+        //                 padding: const EdgeInsets.only(top: 20.0, bottom: 10),
+        //                 child: Text(
+        //                   "只要互联网还在，我就不会停止敲打键盘",
+        //                   style: Theme.of(context).textTheme.headline1,
+        //                 ),
+        //               ),
+        //               Padding(
+        //                 padding: const EdgeInsets.only(bottom: 10.0),
+        //                 child: Row(
+        //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //                   children: [
+        //                     Icon(Icons.ac_unit),
+        //                     Text(
+        //                       "海外校园",
+        //                       style: Theme.of(context).textTheme.captionSmall2,
+        //                     ),
+        //                     Container(
+        //                         height: 20,
+        //                         child: VerticalDivider(
+        //                             color: Color.fromARGB(255, 128, 128, 128))),
+        //                     Text(
+        //                       "范学德",
+        //                       style: Theme.of(context).textTheme.captionSmall2,
+        //                     ),
+        //                     Text(
+        //                       "2小时前",
+        //                       style: Theme.of(context).textTheme.captionSmall2,
+        //                     ),
+        //                   ],
+        //                 ),
+        //               ),
+        //             ],
+        //           ),
+        //         ),
+        //         Divider(),
+        //         Center(
+        //           child: Column(children: <Widget>[
+        //             ...slideList[_currentPage].content.map(
+        //                 (e) => Column(children: <Widget>[ArticleParagraph(e)])),
+        //           ]),
+        //         ),
+
+        //         // Center(
+        //         //   child: Column(children: <Widget>[
+        //         //     ...slideList[_currentPage].content.map(
+        //         //         (e) => Column(children: <Widget>[ArticleParagraph(e)])),
+        //         //   ]),
+        //         // ),
+        //         Comments(),
+        //       ],
+        //     ),
+        //   ),
+        // ),
       ),
     );
   }

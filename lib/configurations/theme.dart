@@ -57,6 +57,12 @@ final ThemeData dayTheme = new ThemeData(
 extension CustomStyles on TextTheme {
   TextStyle get error => const TextStyle(
       fontSize: 15.0, color: Colors.red, fontWeight: FontWeight.bold);
+  TextStyle get headerSmall1 => const TextStyle(
+        fontSize: 14.0,
+        color: Colors.black,
+        fontFamily: 'FangzhengTeYaSong',
+        letterSpacing: -0.1,
+      );
   TextStyle get bodyText3 => const TextStyle(
         fontSize: 10.0,
         color: Colors.blue,

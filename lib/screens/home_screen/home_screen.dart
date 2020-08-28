@@ -108,9 +108,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
               actions: [
-                IconButton(
-                  icon: ClipOval(
-                    child: Image.asset("assets/images/logo.png"),
+                FlatButton(
+                  child: CircleAvatar(
+                    backgroundColor: Colors.white,
+                    backgroundImage: AssetImage("assets/images/logo.png"),
                   ),
                   onPressed: () {},
                 )
