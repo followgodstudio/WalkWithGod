@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:palette_generator/palette_generator.dart';
+import 'package:provider/provider.dart';
 import 'package:walk_with_god/model/slide.dart';
 import '../../configurations/theme.dart';
 
@@ -13,6 +14,7 @@ import '../../widgets/slide_dots.dart';
 import '../../widgets/comment.dart' as widget;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import './article/ArticleList.dart';
+import '../../providers/articles.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = '/home';
@@ -26,6 +28,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  var _showOnlyFavorites = false;
+  var _isInit = true;
+  var _isLoading = false;
+
   @override
   void initState() {
     super.initState();
@@ -40,6 +46,22 @@ class _HomeScreenState extends State<HomeScreen> {
         .toList();
     // .listen((data) => data.documents.forEach((doc) => print(doc["title"])));
     print(collection.toString());
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+      Provider.of<Articles>(context).fetchAndSetArticlesByDate().then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
+    }
+    _isInit = false;
+    super.didChangeDependencies();
   }
 
   Future<bool> useWhiteTextColor(String imageUrl) async {
