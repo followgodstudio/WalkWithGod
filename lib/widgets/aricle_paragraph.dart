@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:walk_with_god/model/Slide.dart';
+import '../model/slide.dart';
 
 class ArticleParagraph extends StatelessWidget {
   Paragraph _paragraph;

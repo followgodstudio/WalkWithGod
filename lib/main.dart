@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import './configurations/theme.dart';
-import './providers/AuthProvider.dart';
-import './providers/ArticleProvider/ArticlesProvider.dart';
-import './providers/UserProvider/MessageProvider.dart';
-import './screens/LoginScreen.dart';
-import './screens/HomeScreen/HomeScreen.dart';
-import './screens/MainScreen.dart';
-import './screens/EmailAuthScreen/EmailAuthScreen.dart';
-import './screens/LoadingScreen.dart';
-import './screens/PersonalManagementScreen/TestScreen.dart';
+import 'configurations/theme.dart';
+import 'providers/article/articles_provider.dart';
+import 'providers/auth_provider.dart';
+import 'providers/user/messages_provider.dart';
+import 'screens/auth_screen/email_auth_screen.dart';
+import 'screens/auth_screen/login_screen.dart';
+import 'screens/home_screen/home_screen.dart';
+import 'screens/loading_screen.dart';
+import 'screens/main_screen.dart';
+import 'screens/test_screen.dart';
+import 'screens/personal_management_screen/personal_management_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -26,8 +27,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => ArticlesProvider(),
         ),
-        ChangeNotifierProxyProvider<AuthProvider, MessageProvider>(
-          create: (_) => MessageProvider(),
+        ChangeNotifierProxyProvider<AuthProvider, MessagesProvider>(
+          create: (_) => MessagesProvider(),
           update: (context, auth, msg) => msg..update(auth),
         ),
       ],
@@ -41,13 +42,15 @@ class MyApp extends StatelessWidget {
               builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
                 if (snapshot.connectionState == ConnectionState.active) {
                   final bool isLoggedIn = snapshot.hasData;
-                  return isLoggedIn ? TestScreen() : EmailAuthScreen();
+                  return isLoggedIn ? HomeScreen() : EmailAuthScreen();
                 }
                 return LoadingScreen();
               }),
           routes: {
             //LoginScreengi.routeName: (ctx) => LoginScreen(),
             //SignupScreen.routeName: (ctx) => SignupScreen(),
+            // PersonalManagementScreen.routeName: (ctx) =>
+            //     PersonalManagementScreen(),
             EmailAuthScreen.routeName: (ctx) => EmailAuthScreen(),
             LoginScreen.routeName: (ctx) => LoginScreen(),
             HomeScreen.routeName: (ctx) => HomeScreen(),
