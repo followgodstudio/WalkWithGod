@@ -51,8 +51,8 @@ class _AuthCardState extends State<AuthCard> {
       _isLoading = true;
     });
     try {
-      await Provider.of<Auth>(context, listen: false)
-          .authenticate(_authData['email'], _authData['password'], _authMode);
+      await Provider.of<AuthProvider>(context, listen: false).authenticate(
+          _authData['email'].trim(), _authData['password'], _authMode);
     } on PlatformException catch (error) {
       _showErrorDialog(error.message);
     } catch (error) {
@@ -60,10 +60,11 @@ class _AuthCardState extends State<AuthCard> {
           'Could not authenticate you. Please try again later.';
       _showErrorDialog(errorMessage);
     }
-
-    setState(() {
-      _isLoading = false;
-    });
+    if (this.mounted) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   void _switchAuthMode() {

@@ -2,15 +2,21 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../model/Constants.dart';
+import '../AuthProvider.dart';
 
 class MessageProvider with ChangeNotifier {
-  final String uid;
-  MessageProvider(this.uid);
+  String _uid;
+
+  void update(AuthProvider auth) {
+    if (auth.currentUser != null) {
+      _uid = auth.currentUser;
+    }
+  }
 
   Stream<QuerySnapshot> getStream() {
     return Firestore.instance
         .collection(C_USERS)
-        .document(uid)
+        .document(_uid)
         .collection(C_USER_MESSAGES)
         .snapshots();
   }
@@ -26,7 +32,7 @@ class MessageProvider with ChangeNotifier {
     data[F_CREATE_DATE] = Timestamp.now();
     Firestore.instance
         .collection(C_USERS)
-        .document(uid)
+        .document(_uid)
         .collection(C_USER_MESSAGES)
         .add(data);
   }

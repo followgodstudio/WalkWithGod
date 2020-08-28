@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 
 enum AuthMode { signInWithEmail, createUserWithEmail }
 
-class Auth with ChangeNotifier {
+class AuthProvider with ChangeNotifier {
   FirebaseAuth _auth = FirebaseAuth.instance;
   String _uid;
 

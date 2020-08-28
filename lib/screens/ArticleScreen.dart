@@ -1,16 +1,13 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:walk_with_god/model/Comment.dart';
-import 'package:walk_with_god/screens/PersonalManagementScreen/PersonalManagementScreen.dart';
-import 'package:walk_with_god/widgets/aricle_paragraph.dart';
-import '../widgets/slide_item.dart';
-import '../model/Slide.dart';
+
+import '../configurations/theme.dart';
+import '../model/comment.dart';
+import '../model/slide.dart';
+import '../screens/PersonalManagementScreen/PersonalManagementScreen.dart';
+import '../widgets/aricle_paragraph.dart';
 import '../widgets/slide_dots.dart';
 import '../widgets/comment.dart' as widget;
-import 'SignupScreen.dart';
-import 'package:intl/date_time_patterns.dart';
-import '../configurations/theme.dart';
 
 class ArticleScreen extends StatefulWidget {
   static const routeName = '/article_screen';
