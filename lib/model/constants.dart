@@ -9,6 +9,8 @@ const String fUpdateDate = "updatedAt";
 
 const String cArticles = "articles";
 const String cUsers = "users";
+const String cComments = "comments";
+const String cMessages = "messages";
 
 // Second level collection names
 
@@ -37,3 +39,10 @@ const String fArticleImageurl = 'imageUrl';
 const String fArticleAuthor = 'author';
 const String fArticleContent = 'content';
 const String fArticleIcon = 'icon';
+
+const String fCommentArticleId = 'articleId';
+const String fCommentContent = 'content';
+const String fCommentCreator = 'creator';
+const String fCommentParent = 'parent';
+const String fCommentReplyTo = 'replyTo';
+const String fCommentChildren = 'children';
