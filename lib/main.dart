@@ -31,9 +31,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => CommentsProvider(),
         ),
-        ChangeNotifierProxyProvider<AuthProvider, MessagesProvider>(
+        ChangeNotifierProvider(
           create: (_) => MessagesProvider(),
-          update: (context, auth, msg) => msg..update(auth),
         ),
       ],
       child: Consumer<AuthProvider>(

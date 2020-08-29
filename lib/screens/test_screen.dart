@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -9,6 +8,7 @@ import '../providers/article/articles_provider.dart';
 import '../providers/article/comment_provider.dart';
 import '../providers/article/comments_provider.dart';
 import '../providers/auth_provider.dart';
+import '../providers/user/message_provider.dart';
 import '../providers/user/messages_provider.dart';
 
 // This screen is used to test the providers
@@ -18,8 +18,6 @@ class TestScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String userId =
-        Provider.of<AuthProvider>(context, listen: false).currentUser;
     return Scaffold(
         appBar: AppBar(
           title: Text('Test Personal Management'),
@@ -30,7 +28,7 @@ class TestScreen extends StatelessWidget {
           TestLogout(),
           TestComments(),
           // TestArticles(),
-          // TestMessages(userId),
+          TestMessages(),
         ])));
   }
 }
@@ -44,7 +42,7 @@ class TestComments extends StatelessWidget {
       "v5Ys8pCJkHdoHc7DTLKo"
     ];
     String aid = "MeaMCcvB8mImA3nSravA";
-    String uid = "M5gGDuUfcHV02fzuMMQBA7z2oJa2";
+    String uid = "2xxmzDxLnUP97GBX2flyi2JfhGF2";
     return Column(
       children: [
         RaisedButton(
@@ -141,52 +139,44 @@ class TestArticle extends StatelessWidget {
 }
 
 class TestMessages extends StatelessWidget {
-  TestMessages(String uid);
-
   @override
   Widget build(BuildContext context) {
+    String uid = "2xxmzDxLnUP97GBX2flyi2JfhGF2";
     return Column(
       children: [
         Text("Messages:"),
-        RaisedButton(
-            child: Text("Add message"),
-            onPressed: () {
-              Provider.of<MessagesProvider>(context, listen: false).add(
-                  eUserMessageTypecomment,
-                  'test_uid',
-                  'test_aid',
-                  "Hello from dart!");
-            }),
-        Consumer<MessagesProvider>(
-          builder: (context, data, child) => StreamBuilder(
-              stream: data.getStream(),
-              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (snapshot.hasData) {
-                  List<DocumentSnapshot> docs = snapshot.data.documents;
-                  docs.sort((d1, d2) {
-                    return d1[fCreateDate].compareTo(d2[fCreateDate]);
-                  });
-                  return Column(
-                      children: docs
-                          .map((doc) => Row(
-                                children: [
-                                  Text(DateFormat("yyyy-MM-dd hh:mm:ss").format(
-                                      (doc.data[fCreateDate] as Timestamp)
-                                          .toDate())),
-                                  Text("   "),
-                                  Text(doc.data[fUserMessageBody] != null
-                                      ? doc.data[fUserMessageBody]
-                                      : ""),
-                                ],
-                              ))
-                          .toList());
-                } else {
-                  return CircularProgressIndicator();
-                }
-              }),
-        ),
+        FutureBuilder(
+            future: Provider.of<MessagesProvider>(context, listen: false)
+                .fetchMessageListByUserId(uid),
+            builder: (ctx, _) =>
+                Consumer<MessagesProvider>(builder: (context, data, child) {
+                  if (data.items.length > 0) {
+                    List<Widget> list = [];
+                    for (var i = 0; i < data.items.length; i++) {
+                      list.add(ChangeNotifierProvider.value(
+                        value: data.items[i],
+                        child: TestMessage(),
+                      ));
+                    }
+                    return Column(children: list);
+                  } else {
+                    return Text("None...");
+                  }
+                }))
       ],
     );
+  }
+}
+
+class TestMessage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<MessageProvider>(
+        builder: (context, data, child) => Row(children: [
+              Text(DateFormat("yyyy-MM-dd hh:mm:ss").format(data.createDate)),
+              Text("   "),
+              Text(data.content),
+            ]));
   }
 }
 

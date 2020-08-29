@@ -5,10 +5,10 @@ import '../../model/constants.dart';
 import 'comment_provider.dart';
 
 class CommentsProvider with ChangeNotifier {
-  List<CommentProvider> _comments = [];
+  List<CommentProvider> _items = [];
 
   List<CommentProvider> get items {
-    return [..._comments];
+    return [..._items];
   }
 
   Future<void> fetchL1CommentListByIds(List<String> ids) async {
@@ -34,9 +34,9 @@ class CommentsProvider with ChangeNotifier {
   }
 
   void _setSortL1CommentList(QuerySnapshot query) {
-    _comments = [];
+    _items = [];
     query.documents.forEach((data) {
-      _comments.add(CommentProvider(
+      _items.add(CommentProvider(
           id: data.documentID,
           articleId: data[fCommentArticleId],
           content: data[fCommentContent],
@@ -44,14 +44,14 @@ class CommentsProvider with ChangeNotifier {
           createDate: (data[fCreateDate] as Timestamp).toDate(),
           children: List<String>.from(data[fCommentChildren])));
     });
-    _comments.sort((d1, d2) {
+    _items.sort((d1, d2) {
       return -d1.createDate.compareTo(d2.createDate);
     });
     notifyListeners();
   }
 
   void _addL1CommentToList(String cid, Map<String, dynamic> comment) {
-    _comments.insert(
+    _items.insert(
         0,
         CommentProvider(
             id: cid,

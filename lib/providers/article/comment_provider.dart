@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../model/constants.dart';
+import '../user/messages_provider.dart';
 
 class CommentProvider with ChangeNotifier {
   final String id;
@@ -12,6 +13,7 @@ class CommentProvider with ChangeNotifier {
   final String parent;
   final String replyTo;
   List<String> children = [];
+  // TODO: add like list
   List<CommentProvider> childrenList = [];
 
   CommentProvider(
@@ -41,7 +43,7 @@ class CommentProvider with ChangeNotifier {
     comment[fCommentCreator] = l2creator;
     comment[fCreateDate] = Timestamp.now();
     comment[fCommentParent] = id;
-    if (replyTo != null)
+    if (l2replyTo != null)
       // This is a third level comment
       comment[fCommentReplyTo] = l2replyTo;
     DocumentReference docRef =
@@ -50,7 +52,10 @@ class CommentProvider with ChangeNotifier {
     await Firestore.instance.collection(cComments).document(id).setData({
       fCommentChildren: FieldValue.arrayUnion([docRef.documentID])
     }, merge: true);
-    //TODO: add to creator/replyTo's message
+    // Send the creator/replyTo a message
+    String receiver = (l2replyTo == null) ? creator : l2replyTo;
+    MessagesProvider().sendMessage(
+        eMessageTypeReply, l2creator, receiver, articleId, l2content);
     _addL2CommentToList(docRef.documentID, comment);
   }
 

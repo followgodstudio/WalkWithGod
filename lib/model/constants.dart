@@ -25,13 +25,14 @@ const String cUserSavedarticles = "savedArticles";
 const String fUserProfileName = "name";
 const String fUserProfileImageUrl = "imageUrl";
 
-const String fUserMessageType = "type";
-const String eUserMessageTypeLike = "like";
-const String eUserMessageTypecomment = "comment";
-
-const String fUserMessageUid = "uid";
-const String fUserMessageAid = "aid";
-const String fUserMessageBody = "body";
+const String fMessageType = "type";
+const String eMessageTypeLike = "like";
+const String eMessageTypeReply = "reply";
+const String fMessageCreator = "creator";
+const String fMessageReceiver = "receiver";
+const String fMessageArticleId = "articleId";
+const String fMessageContent = "content";
+const String fMessageIsRead = "isRead";
 
 const String fArticleTitle = 'title';
 const String fArticleDescription = 'description';
