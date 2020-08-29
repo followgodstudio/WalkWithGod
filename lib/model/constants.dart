@@ -47,3 +47,4 @@ const String fCommentCreator = 'creator';
 const String fCommentParent = 'parent';
 const String fCommentReplyTo = 'replyTo';
 const String fCommentChildren = 'children';
+const String fCommentLike = 'like';

@@ -27,6 +27,7 @@ class CommentsProvider with ChangeNotifier {
     comment[fCommentCreator] = creator;
     comment[fCreateDate] = Timestamp.now();
     comment[fCommentChildren] = [];
+    comment[fCommentLike] = [];
     DocumentReference docRef =
         await Firestore.instance.collection(cComments).add(comment);
     // TODO: add to article comment list
@@ -42,7 +43,8 @@ class CommentsProvider with ChangeNotifier {
           content: data[fCommentContent],
           creator: data[fCommentCreator],
           createDate: (data[fCreateDate] as Timestamp).toDate(),
-          children: List<String>.from(data[fCommentChildren])));
+          children: List<String>.from(data[fCommentChildren]),
+          like: List<String>.from(data[fCommentLike])));
     });
     _items.sort((d1, d2) {
       return -d1.createDate.compareTo(d2.createDate);
@@ -59,7 +61,8 @@ class CommentsProvider with ChangeNotifier {
             content: comment[fCommentContent],
             creator: comment[fCommentCreator],
             createDate: (comment[fCreateDate] as Timestamp).toDate(),
-            children: List<String>.from(comment[fCommentChildren])));
+            children: List<String>.from(comment[fCommentChildren]),
+            like: List<String>.from(comment[fCommentLike])));
     notifyListeners();
   }
 }

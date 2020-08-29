@@ -36,11 +36,7 @@ class TestScreen extends StatelessWidget {
 class TestComments extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    List<String> cids = [
-      "w7itk1aMcQCPJK2wgBTc",
-      "m8az7g6CSWgOgZkdiUm5",
-      "v5Ys8pCJkHdoHc7DTLKo"
-    ];
+    List<String> cids = ["w7itk1aMcQCPJK2wgBTc", "v5Ys8pCJkHdoHc7DTLKo"];
     String aid = "MeaMCcvB8mImA3nSravA";
     String uid = "2xxmzDxLnUP97GBX2flyi2JfhGF2";
     return Column(
@@ -85,14 +81,29 @@ class TestComment extends StatelessWidget {
               Text("ID: " + data.id),
               Text(data.content),
               // Text(data.createDate.toIso8601String()),
+              Row(children: [
+                Text("Reply: " + data.children.length.toString()),
+                RaisedButton(
+                    child: Text("Reply"),
+                    onPressed: () {
+                      Provider.of<CommentProvider>(context, listen: false)
+                          .addL2Comment("A reply", uid);
+                    }),
+              ]),
               Row(
                 children: [
-                  Text("Reply: " + data.children.length.toString()),
+                  Text("Like: " + data.like.length.toString()),
                   RaisedButton(
-                      child: Text("Add l2 reply"),
+                      child: Text("Like"),
                       onPressed: () {
                         Provider.of<CommentProvider>(context, listen: false)
-                            .addL2Comment("A reply", uid);
+                            .addLike(uid);
+                      }),
+                  RaisedButton(
+                      child: Text("Cancel"),
+                      onPressed: () {
+                        Provider.of<CommentProvider>(context, listen: false)
+                            .cancelLike(uid);
                       }),
                 ],
               ),
@@ -174,8 +185,8 @@ class TestMessage extends StatelessWidget {
     return Consumer<MessageProvider>(
         builder: (context, data, child) => Row(children: [
               Text(DateFormat("yyyy-MM-dd hh:mm:ss").format(data.createDate)),
-              Text("   "),
-              Text(data.content),
+              Text("  " + data.type + "  "),
+              if (data.content != null) Text(data.content),
             ]));
   }
 }
