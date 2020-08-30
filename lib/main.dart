@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
               builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
                 if (snapshot.connectionState == ConnectionState.active) {
                   final bool isLoggedIn = snapshot.hasData;
-                  return isLoggedIn ? HomeScreen() : EmailAuthScreen();
+                  return isLoggedIn ? TestScreen() : EmailAuthScreen();
                 }
                 return LoadingScreen();
               }),

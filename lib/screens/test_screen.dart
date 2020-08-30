@@ -61,6 +61,15 @@ class TestComments extends StatelessWidget {
                   child: TestComment(),
                 ));
               }
+              if (!data.noMore) {
+                list.add(RaisedButton(
+                    child: Text("Load more..."),
+                    onPressed: () async {
+                      await data.fetchMoreL1Comments();
+                    }));
+              } else {
+                list.add(Text("--------No more comments--------"));
+              }
               return Column(children: list);
             } else {
               return Text("None...");
@@ -162,7 +171,7 @@ class TestMessages extends StatelessWidget {
         Text("Messages:"),
         FutureBuilder(
             future: Provider.of<MessagesProvider>(context, listen: false)
-                .fetchMessageListByUserId(uid),
+                .fetchMessageListByUid(uid),
             builder: (ctx, _) =>
                 Consumer<MessagesProvider>(builder: (context, data, child) {
                   if (data.items.length > 0) {
@@ -172,6 +181,15 @@ class TestMessages extends StatelessWidget {
                         value: data.items[i],
                         child: TestMessage(),
                       ));
+                    }
+                    if (!data.noMore) {
+                      list.add(RaisedButton(
+                          child: Text("Load more..."),
+                          onPressed: () async {
+                            await data.fetchMoreMessages();
+                          }));
+                    } else {
+                      list.add(Text("--------No more messages--------"));
                     }
                     return Column(children: list);
                   } else {
