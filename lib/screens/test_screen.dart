@@ -25,6 +25,11 @@ class TestScreen extends StatelessWidget {
         ),
         body: SingleChildScrollView(
             child: Column(children: <Widget>[
+          Container(
+            width: 200,
+            height: 200,
+            child: Image(image: AssetImage('assets/images/placeholder.png')),
+          ),
           TestUserProfile(),
           TestComments(),
           // TestArticles(),

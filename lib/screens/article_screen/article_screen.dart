@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import '../../providers/article/articles_provider.dart';
 
 import '../../configurations/theme.dart';
 import '../../model/comment.dart';
-import '../../screens/personal_management_screen/personal_management_screen.dart';
+import '../../providers/article/articles_provider.dart';
 import '../../widgets/aricle_paragraph.dart';
 import '../../widgets/comment.dart' as widget;
-import '../../widgets/slide_dots.dart';
 
 class ArticleScreen extends StatefulWidget {
   static const routeName = '/article_screen';
