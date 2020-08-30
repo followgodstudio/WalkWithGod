@@ -14,7 +14,7 @@ class ArticlesProvider with ChangeNotifier {
   Future<void> fetchAll() async {
     QuerySnapshot query = await Firestore.instance
         .collection(cArticles)
-        .orderBy(fCreateDate, descending: true)
+        .orderBy(fCreatedDate, descending: true)
         .getDocuments();
     setArticles(query);
   }
@@ -22,7 +22,7 @@ class ArticlesProvider with ChangeNotifier {
   Future<void> fetchLatest([int n = 10]) async {
     QuerySnapshot query = await Firestore.instance
         .collection(cArticles)
-        .orderBy(fCreateDate, descending: true)
+        .orderBy(fCreatedDate, descending: true)
         .limit(n)
         .getDocuments();
     setArticles(query);
@@ -33,7 +33,7 @@ class ArticlesProvider with ChangeNotifier {
         .collection(cArticles)
         .where(FieldPath.documentId, whereIn: aids)
         // .orderBy(FieldPath.documentId)
-        // .orderBy(fCreateDate, descending: true)
+        // .orderBy(fCreatedDate, descending: true)
         .getDocuments();
     setArticles(query);
   }
@@ -43,8 +43,8 @@ class ArticlesProvider with ChangeNotifier {
 
     QuerySnapshot query = await Firestore.instance
         .collection(cArticles)
-        .where(fCreateDate, isGreaterThanOrEqualTo: dateTime)
-        .orderBy(fCreateDate, descending: true)
+        .where(fCreatedDate, isGreaterThanOrEqualTo: dateTime)
+        .orderBy(fCreatedDate, descending: true)
         .limit(n)
         .getDocuments();
     setArticles(query);

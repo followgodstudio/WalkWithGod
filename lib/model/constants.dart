@@ -1,50 +1,62 @@
 ///******** keys in Firestore ********///
 
+const int loadLimit = 10;
+
 // Global field names
 
-const String fCreateDate = "createdAt";
-const String fUpdateDate = "updatedAt";
+const String fCreatedDate = "created_date";
+const String fUpdatedDate = "updated_date";
 
 // First Level collection names
 
 const String cArticles = "articles";
 const String cUsers = "users";
-const String cComments = "comments";
-const String cMessages = "messages";
 
 // Second level collection names
+
+const String cArticleComments = "comments";
 
 const String cUserProfile = "profile";
 const String cUserfollowers = "followers";
 const String cUserfollowings = "followings";
 const String cUserMessages = "messages";
-const String cUserSavedarticles = "savedArticles";
+const String cUserSavedarticles = "saved_articles";
+
+// Third level collection names
+
+const String cArticleCommentReplies = "replies";
+const String cArticleCommentLikes = "likes";
 
 // Third level field names
 
 const String fUserProfileName = "name";
-const String fUserProfileImageUrl = "imageUrl";
+const String fUserProfileImageUrl = "image_url";
 
 const String fMessageType = "type";
 const String eMessageTypeLike = "like";
 const String eMessageTypeReply = "reply";
-const String fMessageCreator = "creator";
-const String fMessageReceiver = "receiver";
-const String fMessageArticleId = "articleId";
+const String fMessageSenderUid = "sender_uid";
+const String fMessageSenderName = "sender_name";
+const String fMessageSenderImage = "sender_image";
+const String fMessageReceiverUid = "receiver_uid";
+const String fMessageArticleId = "article_id";
 const String fMessageContent = "content";
-const String fMessageIsRead = "isRead";
+const String fMessageIsRead = "is_read";
 
 const String fArticleTitle = 'title';
 const String fArticleDescription = 'description';
-const String fArticleImageurl = 'imageUrl';
+const String fArticleImageurl = 'image_url';
 const String fArticleAuthor = 'author';
 const String fArticleContent = 'content';
 const String fArticleIcon = 'icon';
 
-const String fCommentArticleId = 'articleId';
+const String fCommentArticleId = 'aid';
 const String fCommentContent = 'content';
-const String fCommentCreator = 'creator';
+const String fCommentCreatorUid = 'creator_uid';
+const String fCommentCreatorName = 'creator_name';
+const String fCommentCreatorImage = 'creator_image';
 const String fCommentParent = 'parent';
-const String fCommentReplyTo = 'replyTo';
-const String fCommentChildren = 'children';
-const String fCommentLike = 'like';
+const String fCommentReplyTo = 'reply_to';
+const String fCommentChildrenCount = 'children_count';
+const String fCommentLikesCount = 'likes_count';
+const String fCommentReplyLikes = 'likes';

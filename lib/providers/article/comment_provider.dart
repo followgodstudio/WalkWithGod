@@ -8,115 +8,223 @@ class CommentProvider with ChangeNotifier {
   final String id;
   final String articleId;
   final String content;
-  final String creator;
+  final String creatorUid;
+  final String creatorName;
+  final String creatorImage;
   final DateTime createDate;
   final String parent;
   final String replyTo;
-  List<String> like = [];
-  List<String> children = [];
-  List<CommentProvider> childrenList = [];
+  int likesCount;
+  int childrenCount; // level 1 comment will have this field
+  List<String> likes = [];
+  List<CommentProvider> children = []; // level 1 comment will have this field
 
   CommentProvider({
     @required this.id,
     @required this.articleId,
     @required this.content,
-    @required this.creator,
+    @required this.creatorUid,
+    @required this.creatorName,
+    @required this.creatorImage,
     @required this.createDate,
-    @required this.like,
-    this.children, // level 1 comment will have this field
-    this.parent, // level 2 comment will have this field
+    @required this.likesCount,
+    this.childrenCount, // level 1 comment will have this field
+    this.parent, // level 2/3 comment will have this field
+    this.likes, // level 2/3 comment will have this field
     this.replyTo, // level 3 comment will have this field
   });
 
-  Future<void> fetchL2ChildrenCommentList() async {
+  Future<void> fetchL2ChildrenCommentList([int limit = loadLimit]) async {
     if (children == []) return;
     QuerySnapshot query = await Firestore.instance
-        .collection(cComments)
-        .where(FieldPath.documentId, whereIn: children)
+        .collection(cArticles)
+        .document(articleId)
+        .collection(cArticleComments)
+        .document(id)
+        .collection(cArticleCommentReplies)
+        .orderBy(fCreatedDate, descending: true)
+        .limit(limit)
         .getDocuments();
-    _setSortL2CommentList(query);
+    _setL2CommentList(query);
   }
 
-  Future<void> addLike(String user) async {
-    if (like.contains(user)) return;
+  Future<void> fetchLikes() async {
+    // Only used for level 1 comment, level 2 will be fetched automatically
+    if (likes == null) likes = [];
+    if (likesCount == likes.length) return;
+    QuerySnapshot query = await Firestore.instance
+        .collection(cArticles)
+        .document(articleId)
+        .collection(cArticleComments)
+        .document(id)
+        .collection(cArticleCommentLikes)
+        .getDocuments();
+    likes = query.documents.map((doc) => doc.documentID).toList();
+  }
+
+  Future<void> addLike(String userId, String userName, String userImage) async {
+    await fetchLikes();
+    if (likes.contains(userId)) return;
     // Add user to like list
-    await Firestore.instance.collection(cComments).document(id).setData({
-      fCommentLike: FieldValue.arrayUnion([user])
-    }, merge: true);
+    if (parent == null) {
+      // Level 1
+      // Add a document
+      await Firestore.instance
+          .collection(cArticles)
+          .document(articleId)
+          .collection(cArticleComments)
+          .document(id)
+          .collection(cArticleCommentLikes)
+          .document(userId)
+          .setData({});
+      // Increase like count by 1
+      await Firestore.instance
+          .collection(cArticles)
+          .document(articleId)
+          .collection(cArticleComments)
+          .document(id)
+          .updateData({fCommentLikesCount: FieldValue.increment(1)});
+    } else {
+      // Level 2
+      await Firestore.instance
+          .collection(cArticles)
+          .document(articleId)
+          .collection(cArticleComments)
+          .document(parent)
+          .collection(cArticleCommentReplies)
+          .document(id)
+          .updateData({
+        fCommentLikesCount: FieldValue.increment(1),
+        fCommentReplyLikes: FieldValue.arrayUnion([userId])
+      });
+    }
     // Send the creator a message
-    MessagesProvider().sendMessage(eMessageTypeLike, user, creator, articleId);
-    like.add(user);
+    MessagesProvider().sendMessage(
+        eMessageTypeLike, userId, userName, userImage, creatorUid, articleId);
+    // Change local variables
+    likes.add(userId);
+    likesCount += 1;
     notifyListeners();
   }
 
   Future<void> cancelLike(String user) async {
-    if (!like.contains(user)) return;
-    // Add user to like list
-    await Firestore.instance.collection(cComments).document(id).setData({
-      fCommentLike: FieldValue.arrayRemove([user])
-    }, merge: true);
+    await fetchLikes();
+    if (!likes.contains(user)) return;
+    // Remove user from like list
+    if (parent == null) {
+      // Level 1
+      // Remove a document
+      await Firestore.instance
+          .collection(cArticles)
+          .document(articleId)
+          .collection(cArticleComments)
+          .document(id)
+          .collection(cArticleCommentLikes)
+          .document(user)
+          .delete();
+      // Decrease like count by 1
+      await Firestore.instance
+          .collection(cArticles)
+          .document(articleId)
+          .collection(cArticleComments)
+          .document(id)
+          .updateData({fCommentLikesCount: FieldValue.increment(-1)});
+    } else {
+      // Level 2
+      await Firestore.instance
+          .collection(cArticles)
+          .document(articleId)
+          .collection(cArticleComments)
+          .document(parent)
+          .collection(cArticleCommentReplies)
+          .document(id)
+          .updateData({
+        fCommentLikesCount: FieldValue.increment(-1),
+        fCommentReplyLikes: FieldValue.arrayRemove([user])
+      });
+    }
     // revoke message?
-    like.remove(user);
+    likes.remove(user);
+    likesCount -= 1;
     notifyListeners();
   }
 
-  Future<void> addL2Comment(String l2content, String l2creator,
+  Future<void> addL2Comment(String l2content, String l2creatorUid,
+      String l2creatorName, String l2creatorImage,
       [String l2replyTo]) async {
     Map<String, dynamic> comment = {};
     comment[fCommentArticleId] = articleId;
     comment[fCommentContent] = l2content;
-    comment[fCommentCreator] = l2creator;
-    comment[fCreateDate] = Timestamp.now();
+    comment[fCommentCreatorUid] = l2creatorUid;
+    comment[fCommentCreatorName] = l2creatorName;
+    comment[fCommentCreatorImage] = l2creatorImage;
+    comment[fCreatedDate] = Timestamp.now();
     comment[fCommentParent] = id;
-    comment[fCommentLike] = [];
+    comment[fCommentReplyLikes] = [];
+    comment[fCommentLikesCount] = 0;
     if (l2replyTo != null)
       // This is a third level comment
       comment[fCommentReplyTo] = l2replyTo;
-    DocumentReference docRef =
-        await Firestore.instance.collection(cComments).add(comment);
-    // Add returned cid in parent's children list
-    await Firestore.instance.collection(cComments).document(id).setData({
-      fCommentChildren: FieldValue.arrayUnion([docRef.documentID])
-    }, merge: true);
+    // Add a document
+    DocumentReference docRef = await Firestore.instance
+        .collection(cArticles)
+        .document(articleId)
+        .collection(cArticleComments)
+        .document(id)
+        .collection(cArticleCommentReplies)
+        .add(comment);
+    // Increase parent's children count by 1
+    await Firestore.instance
+        .collection(cArticles)
+        .document(articleId)
+        .collection(cArticleComments)
+        .document(id)
+        .updateData({fCommentChildrenCount: FieldValue.increment(1)});
     // Send the creator/replyTo a message
-    String receiver = (l2replyTo == null) ? creator : l2replyTo;
-    MessagesProvider().sendMessage(
-        eMessageTypeReply, l2creator, receiver, articleId, l2content);
+    String receiver = (l2replyTo == null) ? creatorUid : l2replyTo;
+    MessagesProvider().sendMessage(eMessageTypeReply, l2creatorUid,
+        l2creatorName, l2creatorImage, receiver, articleId);
     _addL2CommentToList(docRef.documentID, comment);
   }
 
-  void _setSortL2CommentList(QuerySnapshot query) {
-    childrenList = [];
+  void _setL2CommentList(QuerySnapshot query) {
+    children = [];
     query.documents.forEach((data) {
-      childrenList.add(CommentProvider(
+      children.add(CommentProvider(
           id: data.documentID,
           articleId: data[fCommentArticleId],
           content: data[fCommentContent],
-          creator: data[fCommentCreator],
-          createDate: (data[fCreateDate] as Timestamp).toDate(),
+          creatorUid: data[fCommentCreatorUid],
+          creatorName: data[fCommentCreatorName],
+          creatorImage: data[fCommentCreatorImage],
+          createDate: (data[fCreatedDate] as Timestamp).toDate(),
           parent: data[fCommentParent],
           replyTo: data[fCommentReplyTo],
-          like: List<String>.from(data[fCommentLike])));
-    });
-    childrenList.sort((d1, d2) {
-      return -d1.createDate.compareTo(d2.createDate);
+          childrenCount: data[fCommentChildrenCount],
+          likes: List<String>.from(data[fCommentReplyLikes]),
+          likesCount: data[fCommentLikesCount]));
     });
     notifyListeners();
   }
 
-  void _addL2CommentToList(String cid, Map<String, dynamic> comment) {
-    children.insert(0, cid);
-    childrenList.insert(
+  void _addL2CommentToList(String cid, Map<String, dynamic> data) {
+    if (parent != null) return; // Level 2 cannot have children
+    children.insert(
         0,
         CommentProvider(
             id: cid,
-            articleId: comment[fCommentArticleId],
-            content: comment[fCommentContent],
-            creator: comment[fCommentCreator],
-            createDate: (comment[fCreateDate] as Timestamp).toDate(),
-            parent: comment[fCommentParent],
-            replyTo: comment[fCommentReplyTo],
-            like: List<String>.from(comment[fCommentLike])));
+            articleId: data[fCommentArticleId],
+            content: data[fCommentContent],
+            creatorUid: data[fCommentCreatorUid],
+            creatorName: data[fCommentCreatorName],
+            creatorImage: data[fCommentCreatorImage],
+            createDate: (data[fCreatedDate] as Timestamp).toDate(),
+            parent: data[fCommentParent],
+            replyTo: data[fCommentReplyTo],
+            childrenCount: data[fCommentChildrenCount],
+            likes: List<String>.from(data[fCommentReplyLikes]),
+            likesCount: data[fCommentLikesCount]));
+    childrenCount += 1;
     notifyListeners();
   }
 }

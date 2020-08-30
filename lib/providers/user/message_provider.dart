@@ -6,28 +6,32 @@ import '../../model/constants.dart';
 class MessageProvider with ChangeNotifier {
   final String id;
   final String articleId;
-  final String creator;
-  final String receiver;
+  final String senderUid;
+  final String senderName;
+  final String senderImage;
+  final String receiverUid;
   final String type;
   final DateTime createDate;
   bool isRead;
-  final String content;
 
   MessageProvider({
     @required this.id,
     @required this.articleId,
-    @required this.creator,
-    @required this.receiver,
+    @required this.senderUid,
+    @required this.senderName,
+    @required this.senderImage,
+    @required this.receiverUid,
     @required this.type,
     @required this.createDate,
     @required this.isRead,
-    this.content,
   });
 
   Future<void> markMessageAsRead(bool read) async {
     if (isRead == read) return;
     await Firestore.instance
-        .collection(cMessages)
+        .collection(cUsers)
+        .document(receiverUid)
+        .collection(cUserMessages)
         .document(id)
         .updateData({fMessageIsRead: read});
     isRead = read;
