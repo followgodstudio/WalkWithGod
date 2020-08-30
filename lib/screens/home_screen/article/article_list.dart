@@ -26,10 +26,10 @@ class ArticleList extends StatelessWidget {
     int timeDiffInMonths = 0;
     int timeDiffInYears = 0;
     if (timeDiffInHours > 24 * 365) {
-      timeDiffInYears = timeDiffInHours ~/ 24;
+      timeDiffInYears = timeDiffInHours ~/ (24 * 365);
       //timeDiffInHours %= timeDiffInHours;
     } else if (timeDiffInHours > 24 * 30) {
-      timeDiffInMonths = timeDiffInHours ~/ 24;
+      timeDiffInMonths = timeDiffInHours ~/ (24 * 30);
       //timeDiffInHours %= timeDiffInHours;
     } else if (timeDiffInHours > 24) {
       timeDiffInDays = timeDiffInHours ~/ 24;
@@ -200,7 +200,8 @@ class ArticleList extends StatelessWidget {
                 )),
           );
         },
-        childCount: articlesData.articles.length,
+        childCount:
+            articlesData.articles == null ? 0 : articlesData.articles.length,
       ),
     );
   }

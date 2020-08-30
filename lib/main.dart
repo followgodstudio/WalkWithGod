@@ -4,6 +4,7 @@ import 'screens/article_screen/article_screen.dart';
 
 import 'configurations/theme.dart';
 import 'providers/article/articles_provider.dart';
+import 'providers/article/comments_provider.dart';
 import 'providers/auth_provider.dart';
 import 'providers/user/messages_provider.dart';
 import 'screens/auth_screen/email_auth_screen.dart';
@@ -28,9 +29,11 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => ArticlesProvider(),
         ),
-        ChangeNotifierProxyProvider<AuthProvider, MessagesProvider>(
+        ChangeNotifierProvider(
+          create: (_) => CommentsProvider(),
+        ),
+        ChangeNotifierProvider(
           create: (_) => MessagesProvider(),
-          update: (context, auth, msg) => msg..update(auth),
         ),
       ],
       child: Consumer<AuthProvider>(

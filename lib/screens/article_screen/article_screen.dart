@@ -28,10 +28,10 @@ class _ArticleScreen extends State<ArticleScreen> {
     int timeDiffInMonths = 0;
     int timeDiffInYears = 0;
     if (timeDiffInHours > 24 * 365) {
-      timeDiffInYears = timeDiffInHours ~/ 24;
+      timeDiffInYears = timeDiffInHours ~/ (24 * 365);
       //timeDiffInHours %= timeDiffInHours;
     } else if (timeDiffInHours > 24 * 30) {
-      timeDiffInMonths = timeDiffInHours ~/ 24;
+      timeDiffInMonths = timeDiffInHours ~/ (24 * 30);
       //timeDiffInHours %= timeDiffInHours;
     } else if (timeDiffInHours > 24) {
       timeDiffInDays = timeDiffInHours ~/ 24;

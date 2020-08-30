@@ -22,7 +22,7 @@ class ArticleProvider with ChangeNotifier {
   final String icon;
   final String author;
   final DateTime createdDate;
-  final List content;
+  final List<Paragraph> content;
   final String publisher;
 
   ArticleProvider(

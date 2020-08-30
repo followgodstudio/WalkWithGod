@@ -108,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
               actions: [
                 FlatButton(
                   child: CircleAvatar(
-                    backgroundColor: Colors.white,
+                    backgroundColor: Theme.of(context).canvasColor,
                     backgroundImage: AssetImage("assets/images/logo.png"),
                   ),
                   onPressed: () {},
