@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 
+import 'user/profile_provider.dart';
+
 enum AuthMode { signInWithEmail, createUserWithEmail }
 
 class AuthProvider with ChangeNotifier {
@@ -24,6 +26,7 @@ class AuthProvider with ChangeNotifier {
     if (authMode == AuthMode.createUserWithEmail) {
       result = await _auth.createUserWithEmailAndPassword(
           email: username, password: password);
+      await ProfileProvider().initProfile(result.user.uid);
     } else if (authMode == AuthMode.signInWithEmail) {
       result = await _auth.signInWithEmailAndPassword(
           email: username, password: password);

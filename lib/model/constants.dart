@@ -29,8 +29,8 @@ const String cArticleCommentLikes = "likes";
 
 // Third level field names
 
-const String fUserProfileName = "name";
-const String fUserProfileImageUrl = "image_url";
+const String fUserName = "name";
+const String fUserImageUrl = "image_url";
 
 const String fMessageType = "type";
 const String eMessageTypeLike = "like";

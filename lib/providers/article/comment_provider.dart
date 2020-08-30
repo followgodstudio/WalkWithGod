@@ -15,9 +15,11 @@ class CommentProvider with ChangeNotifier {
   final String parent;
   final String replyTo;
   int likesCount;
-  int childrenCount; // level 1 comment will have this field
   List<String> likes = [];
+  int childrenCount; // level 1 comment will have this field
   List<CommentProvider> children = []; // level 1 comment will have this field
+  DocumentSnapshot _lastVisibleChild; // level 1 comment will have this field
+  bool _noMoreChild = false; // level 1 comment will have this field
 
   CommentProvider({
     @required this.id,
@@ -34,8 +36,13 @@ class CommentProvider with ChangeNotifier {
     this.replyTo, // level 3 comment will have this field
   });
 
+  bool get noMoreChild {
+    return _noMoreChild;
+  }
+
   Future<void> fetchL2ChildrenCommentList([int limit = loadLimit]) async {
-    if (children == []) return;
+    // level 1 comment will call this method
+    if (parent != null) return;
     QuerySnapshot query = await Firestore.instance
         .collection(cArticles)
         .document(articleId)
@@ -45,7 +52,24 @@ class CommentProvider with ChangeNotifier {
         .orderBy(fCreatedDate, descending: true)
         .limit(limit)
         .getDocuments();
-    _setL2CommentList(query);
+    children = [];
+    _appendL2CommentList(query);
+  }
+
+  Future<void> fetchMoreL2ChildrenComments([int limit = loadLimit]) async {
+    // level 1 comment will call this method
+    if (parent != null) return;
+    QuerySnapshot query = await Firestore.instance
+        .collection(cArticles)
+        .document(articleId)
+        .collection(cArticleComments)
+        .document(id)
+        .collection(cArticleCommentReplies)
+        .orderBy(fCreatedDate, descending: true)
+        .startAfterDocument(_lastVisibleChild)
+        .limit(limit)
+        .getDocuments();
+    _appendL2CommentList(query);
   }
 
   Future<void> fetchLikes() async {
@@ -187,44 +211,40 @@ class CommentProvider with ChangeNotifier {
     _addL2CommentToList(docRef.documentID, comment);
   }
 
-  void _setL2CommentList(QuerySnapshot query) {
-    children = [];
+  void _appendL2CommentList(QuerySnapshot query) {
+    List<DocumentSnapshot> docs = query.documents;
     query.documents.forEach((data) {
-      children.add(CommentProvider(
-          id: data.documentID,
-          articleId: data[fCommentArticleId],
-          content: data[fCommentContent],
-          creatorUid: data[fCommentCreatorUid],
-          creatorName: data[fCommentCreatorName],
-          creatorImage: data[fCommentCreatorImage],
-          createDate: (data[fCreatedDate] as Timestamp).toDate(),
-          parent: data[fCommentParent],
-          replyTo: data[fCommentReplyTo],
-          childrenCount: data[fCommentChildrenCount],
-          likes: List<String>.from(data[fCommentReplyLikes]),
-          likesCount: data[fCommentLikesCount]));
+      children.add(_buildL2CommentByMap(data.documentID, data.data));
     });
+    if (docs.length == 0) {
+      _noMoreChild = true;
+      notifyListeners();
+      return;
+    }
+    _lastVisibleChild = query.documents[query.documents.length - 1];
     notifyListeners();
   }
 
   void _addL2CommentToList(String cid, Map<String, dynamic> data) {
     if (parent != null) return; // Level 2 cannot have children
-    children.insert(
-        0,
-        CommentProvider(
-            id: cid,
-            articleId: data[fCommentArticleId],
-            content: data[fCommentContent],
-            creatorUid: data[fCommentCreatorUid],
-            creatorName: data[fCommentCreatorName],
-            creatorImage: data[fCommentCreatorImage],
-            createDate: (data[fCreatedDate] as Timestamp).toDate(),
-            parent: data[fCommentParent],
-            replyTo: data[fCommentReplyTo],
-            childrenCount: data[fCommentChildrenCount],
-            likes: List<String>.from(data[fCommentReplyLikes]),
-            likesCount: data[fCommentLikesCount]));
+    children.insert(0, _buildL2CommentByMap(cid, data));
     childrenCount += 1;
     notifyListeners();
+  }
+
+  CommentProvider _buildL2CommentByMap(String id, Map<String, dynamic> data) {
+    return CommentProvider(
+        id: id,
+        articleId: data[fCommentArticleId],
+        content: data[fCommentContent],
+        creatorUid: data[fCommentCreatorUid],
+        creatorName: data[fCommentCreatorName],
+        creatorImage: data[fCommentCreatorImage],
+        createDate: (data[fCreatedDate] as Timestamp).toDate(),
+        parent: data[fCommentParent],
+        replyTo: data[fCommentReplyTo],
+        childrenCount: data[fCommentChildrenCount],
+        likes: List<String>.from(data[fCommentReplyLikes]),
+        likesCount: data[fCommentLikesCount]);
   }
 }
