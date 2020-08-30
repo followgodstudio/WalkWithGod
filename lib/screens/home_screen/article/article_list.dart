@@ -129,6 +129,8 @@ class ArticleList extends StatelessWidget {
                     ])))),
           );
         },
+        childCount:
+            articlesData.articles == null ? 0 : articlesData.articles.length,
       ),
     );
   }

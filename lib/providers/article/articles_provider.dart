@@ -14,7 +14,7 @@ class ArticlesProvider with ChangeNotifier {
   Future<void> fetchAll() async {
     QuerySnapshot query = await Firestore.instance
         .collection(cArticles)
-        .orderBy(fCreateDate, descending: true)
+        .orderBy(fCreatedDate, descending: true)
         .getDocuments();
     setArticles(query);
   }
@@ -22,7 +22,7 @@ class ArticlesProvider with ChangeNotifier {
   Future<void> fetchLatest([int n = 10]) async {
     QuerySnapshot query = await Firestore.instance
         .collection(cArticles)
-        .orderBy(fCreateDate, descending: true)
+        .orderBy(fCreatedDate, descending: true)
         .limit(n)
         .getDocuments();
     setArticles(query);
@@ -33,7 +33,7 @@ class ArticlesProvider with ChangeNotifier {
         .collection(cArticles)
         .where(FieldPath.documentId, whereIn: aids)
         // .orderBy(FieldPath.documentId)
-        // .orderBy(fCreateDate, descending: true)
+        // .orderBy(fCreatedDate, descending: true)
         .getDocuments();
     setArticles(query);
   }
@@ -43,8 +43,8 @@ class ArticlesProvider with ChangeNotifier {
 
     QuerySnapshot query = await Firestore.instance
         .collection(cArticles)
-        .where(fCreateDate, isGreaterThanOrEqualTo: dateTime)
-        .orderBy(fCreateDate, descending: true)
+        .where(fCreatedDate, isGreaterThanOrEqualTo: dateTime)
+        .orderBy(fCreatedDate, descending: true)
         .limit(n)
         .getDocuments();
     setArticles(query);
@@ -53,17 +53,17 @@ class ArticlesProvider with ChangeNotifier {
   void setArticles(QuerySnapshot query) {
     _articles = [];
     query.documents.forEach((data) {
-      Timestamp createdDateTimeStamp = data[fCreateDate];
+      Timestamp createdDateTimeStamp = data[fCreatedDate];
       DateTime createdDate = createdDateTimeStamp.toDate();
       _articles.add(ArticleProvider(
           id: data.documentID,
-          title: data['title'],
-          description: data['description'],
-          imageUrl: data['image_url'],
-          author: data['author'],
-          content: data['content'],
+          title: data[fArticleTitle],
+          description: data[fArticleDescription],
+          imageUrl: data[fArticleImageUrl],
+          author: data[fArticleAuthor],
+          content: data[fArticleContent],
           createdDate: createdDate,
-          icon: data['icon']));
+          icon: data[fArticleIcon]));
     });
     notifyListeners();
   }
