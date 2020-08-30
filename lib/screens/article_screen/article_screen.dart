@@ -124,14 +124,25 @@ class _ArticleScreen extends State<ArticleScreen> {
                           Hero(
                             tag: loadedArticle.id,
                             child: Container(
-                              height: 200.0,
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: NetworkImage(loadedArticle.imageUrl ??
-                                      "https://blog.sevenponds.com/wp-content/uploads/2018/12/800px-Vincent_van_Gogh_-_Self-Portrait_-_Google_Art_Project_454045.jpg"),
-                                  fit: BoxFit.cover,
-                                ),
-                                color: Color.fromARGB(255, 255, 235, 133),
+                              height: 200,
+                              child: Stack(
+                                children: <Widget>[
+                                  Center(
+                                    child: FadeInImage(
+                                      width: MediaQuery.of(context).size.width,
+                                      height: 200,
+                                      placeholder: AssetImage(
+                                          'assets/images/placeholder.png'),
+                                      image: loadedArticle.imageUrl == null
+                                          ? AssetImage(
+                                              'assets/images/placeholder.png')
+                                          : NetworkImage(
+                                              loadedArticle.imageUrl),
+                                      // "https://blog.sevenponds.com/wp-content/uploads/2018/12/800px-Vincent_van_Gogh_-_Self-Portrait_-_Google_Art_Project_454045.jpg"),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
