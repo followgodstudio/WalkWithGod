@@ -17,6 +17,42 @@ class ArticleList extends StatelessWidget {
   final Firestore firestore;
   final Color textColor;
 
+  String getCreatedTime(DateTime createdDate) {
+    int timeDiffInHours =
+        DateTime.now().toUtc().difference(createdDate).inHours;
+    int timeDiffInDays = 0;
+    int timeDiffInMonths = 0;
+    int timeDiffInYears = 0;
+    if (timeDiffInHours > 24 * 365) {
+      timeDiffInYears = timeDiffInHours ~/ 24;
+      //timeDiffInHours %= timeDiffInHours;
+    } else if (timeDiffInHours > 24 * 30) {
+      timeDiffInMonths = timeDiffInHours ~/ 24;
+      //timeDiffInHours %= timeDiffInHours;
+    } else if (timeDiffInHours > 24) {
+      timeDiffInDays = timeDiffInHours ~/ 24;
+      //timeDiffInHours %= timeDiffInHours;
+    }
+
+    return timeDiffInYears > 1
+        ? timeDiffInYears.toString() + " years ago"
+        : timeDiffInYears > 0
+            ? timeDiffInYears.toString() + " year ago"
+            : timeDiffInMonths > 1
+                ? timeDiffInMonths.toString() + " months ago"
+                : timeDiffInMonths > 0
+                    ? timeDiffInMonths.toString() + " month ago"
+                    : timeDiffInDays > 1
+                        ? timeDiffInDays.toString() + " days ago"
+                        : timeDiffInDays > 0
+                            ? timeDiffInDays.toString() + " day ago"
+                            : timeDiffInHours > 1
+                                ? timeDiffInHours.toString() + " hours ago"
+                                : timeDiffInHours > 0
+                                    ? timeDiffInHours.toString() + " hour ago"
+                                    : null;
+  }
+
   @override
   Widget build(BuildContext context) {
     final articlesData = Provider.of<ArticlesProvider>(context);
@@ -38,95 +74,86 @@ class ArticleList extends StatelessWidget {
                   ),
                 ),
                 child: FlatButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ArticleScreen()),
-                      );
-                    },
-                    child: Container(
-                        child: Stack(children: [
-                      Positioned(
-                        bottom: 0,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ArticleScreen()),
+                    );
+                  },
+                  //child: Container(
+                  //child: Stack(children: [
+                  //Positioned(
+                  //bottom: 0,
+
+                  //child:
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        //Divider(),
+                        Container(
+                          //width: 400,
+                          child: Text(
+                            articlesData.articles[index].title,
+                            style: TextStyle(
+                                fontFamily: "Jinling", color: Colors.white),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            articlesData.articles[index].description,
+                            style:
+                                Theme.of(context).textTheme.captionSmallWhite,
+                          ),
+                        ),
+                        Divider(
+                          color: Colors.white,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Divider(),
-                            Container(
-                              width: 300,
-                              child: Text(
-                                articlesData.articles[index].title,
-                                style: TextStyle(
-                                    fontFamily: "Jinling", color: Colors.white),
-                              ),
+                            Icon(Icons.bookmark_border,
+                                color: Colors.white,
+                                size: Theme.of(context)
+                                    .textTheme
+                                    .captionMedium1
+                                    .fontSize),
+                            SizedBox(
+                              width: 5.0,
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
+                            Expanded(
                               child: Text(
-                                articlesData.articles[index].description,
+                                articlesData.articles[index].author,
                                 style: Theme.of(context)
                                     .textTheme
-                                    .captionSmallWhite,
+                                    .captionMediumWhite,
                               ),
                             ),
-                            Divider(
-                              thickness: 20.0,
-                              color: Colors.white,
-                            ),
-                            SizedBox(
-                              height: 20.0,
-                              child: Center(
-                                child: Container(
-                                  margin: EdgeInsetsDirectional.only(
-                                      start: 1.0, end: 1.0),
-                                  height: 5.0,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Icon(Icons.bookmark_border,
-                                    color: Colors.white,
-                                    size: Theme.of(context)
-                                        .textTheme
-                                        .captionMedium1
-                                        .fontSize),
-                                SizedBox(
-                                  width: 5.0,
-                                ),
-                                Text(
-                                  articlesData.articles[index].author,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .captionMediumWhite,
-                                ),
-                                SizedBox(
-                                  width: 150.0,
-                                ),
-                                Text(
-                                  DateTime.now()
-                                      .toUtc()
-                                      .difference(articlesData
-                                          .articles[index].createdDate)
-                                      .inHours
-                                      .toString(),
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .captionMediumWhite,
-                                )
-                              ],
-                            ),
-                            SizedBox(
-                              height: 10.0,
+                            Text(
+                              getCreatedTime(
+                                  articlesData.articles[index].createdDate),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .captionMediumWhite,
                             ),
                           ],
                         ),
-                      )
-                    ])))),
+
+                        SizedBox(
+                          height: 10.0,
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  //)
+                  //]
+                  //)
+                  //)
+                )),
           );
         },
         childCount:
