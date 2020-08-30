@@ -9,6 +9,7 @@ import '../providers/article/comments_provider.dart';
 import '../providers/auth_provider.dart';
 import '../providers/user/message_provider.dart';
 import '../providers/user/messages_provider.dart';
+import '../providers/user/profile_provider.dart';
 
 // This screen is used to test the providers
 
@@ -24,7 +25,7 @@ class TestScreen extends StatelessWidget {
         ),
         body: SingleChildScrollView(
             child: Column(children: <Widget>[
-          TestLogout(),
+          TestUserProfile(),
           TestComments(),
           // TestArticles(),
           TestMessages(),
@@ -70,6 +71,7 @@ class TestComments extends StatelessWidget {
               } else {
                 list.add(Text("--------No more comments--------"));
               }
+              list.add(Divider(color: Colors.black));
               return Column(children: list);
             } else {
               return Text("None...");
@@ -141,6 +143,7 @@ class TestArticles extends StatelessWidget {
               child: TestArticle(),
             ));
           }
+          list.add(Divider(color: Colors.black));
           return Column(children: list);
         } else {
           return Text("None...");
@@ -191,6 +194,7 @@ class TestMessages extends StatelessWidget {
                     } else {
                       list.add(Text("--------No more messages--------"));
                     }
+                    list.add(Divider(color: Colors.black));
                     return Column(children: list);
                   } else {
                     return Text("None...");
@@ -212,25 +216,50 @@ class TestMessage extends StatelessWidget {
   }
 }
 
-class TestLogout extends StatelessWidget {
+class TestUserProfile extends StatelessWidget {
+  final myController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     String userId =
         Provider.of<AuthProvider>(context, listen: false).currentUser;
-    return Consumer<AuthProvider>(
-        builder: (context, data, child) => Column(children: [
-              Text("User ID:"),
-              Text(userId != null ? userId : ""),
-              FlatButton(
-                child: Row(children: <Widget>[
-                  Icon(Icons.exit_to_app),
-                  Text('Logout')
-                ]),
-                onPressed: () {
-                  Provider.of<AuthProvider>(context, listen: false).logout();
-                  Navigator.of(context).pushReplacementNamed('/');
-                },
-              ),
-            ]));
+    return Column(children: [
+      Text("User ID:"),
+      Text(userId != null ? userId : ""),
+      FutureBuilder(
+        future: Provider.of<ProfileProvider>(context, listen: false)
+            .fetchProfileByUid(userId),
+        builder: (ctx, _) => Consumer<ProfileProvider>(
+          builder: (context, data, child) => Column(
+            children: [
+              Text("Name:" + (data.name == null ? "" : data.name)),
+              Row(
+                children: [
+                  Container(
+                    width: 200,
+                    child: TextField(
+                      decoration: InputDecoration(hintText: 'rename'),
+                      controller: myController,
+                    ),
+                  ),
+                  RaisedButton(
+                      child: Text("Save"),
+                      onPressed: () async {
+                        data.updateProfile(newName: myController.text);
+                      }),
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
+      FlatButton(
+        child: Row(children: <Widget>[Icon(Icons.exit_to_app), Text('Logout')]),
+        onPressed: () {
+          Provider.of<AuthProvider>(context, listen: false).logout();
+          Navigator.of(context).pushReplacementNamed('/');
+        },
+      ),
+      Divider(color: Colors.black),
+    ]);
   }
 }

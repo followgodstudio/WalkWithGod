@@ -6,6 +6,7 @@ import 'providers/article/articles_provider.dart';
 import 'providers/article/comments_provider.dart';
 import 'providers/auth_provider.dart';
 import 'providers/user/messages_provider.dart';
+import 'providers/user/profile_provider.dart';
 import 'screens/auth_screen/email_auth_screen.dart';
 import 'screens/auth_screen/login_screen.dart';
 import 'screens/home_screen/home_screen.dart';
@@ -33,6 +34,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => MessagesProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ProfileProvider(),
         ),
       ],
       child: Consumer<AuthProvider>(
