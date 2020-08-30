@@ -42,12 +42,12 @@ class TestScreen extends StatelessWidget {
                 .fetchList(aids),
             builder: (ctx, _) =>
                 Consumer<ArticlesProvider>(builder: (context, data, child) {
-              print(data.items.length);
-              if (data.items.length > 0) {
+              print(data.articles.length);
+              if (data.articles.length > 0) {
                 List<Widget> list = [];
-                for (var i = 0; i < data.items.length; i++) {
+                for (var i = 0; i < data.articles.length; i++) {
                   list.add(ChangeNotifierProvider.value(
-                    value: data.items[i],
+                    value: data.articles[i],
                     child: TestArticle(),
                   ));
                 }

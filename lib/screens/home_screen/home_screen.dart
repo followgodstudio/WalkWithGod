@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:palette_generator/palette_generator.dart';
+import 'package:provider/provider.dart';
+import '../../providers/article/articles_provider.dart';
 
 import '../../configurations/theme.dart';
 import 'article/article_list.dart';
@@ -19,6 +21,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  var _showOnlyFavorites = false;
+  var _isInit = true;
+  var _isLoading = false;
+
   @override
   void initState() {
     super.initState();
@@ -33,6 +39,24 @@ class _HomeScreenState extends State<HomeScreen> {
         .toList();
     // .listen((data) => data.documents.forEach((doc) => print(doc["title"])));
     print(collection.toString());
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+      Provider.of<ArticlesProvider>(context)
+          .fetchArticlesByDate(new DateTime.utc(1989, 11, 9))
+          .then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
+    }
+    _isInit = false;
+    super.didChangeDependencies();
   }
 
   Future<bool> useWhiteTextColor(String imageUrl) async {

@@ -7,7 +7,7 @@ import 'article_provider.dart';
 class ArticlesProvider with ChangeNotifier {
   List<ArticleProvider> _articles = [];
 
-  List<ArticleProvider> get items {
+  List<ArticleProvider> get articles {
     return [..._articles];
   }
 
@@ -53,13 +53,16 @@ class ArticlesProvider with ChangeNotifier {
   void setArticles(QuerySnapshot query) {
     _articles = [];
     query.documents.forEach((data) {
+      Timestamp createdDateTimeStamp = data[fCreateDate];
+      DateTime createdDate = createdDateTimeStamp.toDate();
       _articles.add(ArticleProvider(
           id: data.documentID,
           title: data['title'],
           description: data['description'],
-          imageUrl: data['imageUrl'],
+          imageUrl: data['image_url'],
           author: data['author'],
           content: data['content'],
+          createdDate: createdDate,
           icon: data['icon']));
     });
     notifyListeners();

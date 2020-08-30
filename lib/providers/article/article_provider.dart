@@ -10,6 +10,7 @@ class ArticleProvider with ChangeNotifier {
   final String description;
   final String icon;
   final String author;
+  final DateTime createdDate;
   final List content;
 
   ArticleProvider(
@@ -19,6 +20,7 @@ class ArticleProvider with ChangeNotifier {
       @required this.description,
       @required this.icon,
       @required this.author,
+      @required this.createdDate,
       @required this.content});
 
   Future<void> save() async {

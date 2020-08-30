@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 
 import '../../../configurations/theme.dart';
 import '../../article_screen/article_screen.dart';
+import 'package:provider/provider.dart';
+import '../../../providers/article/articles_provider.dart';
 
 class ArticleList extends StatelessWidget {
   const ArticleList({
@@ -17,34 +19,7 @@ class ArticleList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return StreamBuilder<QuerySnapshot>(
-    //     stream: firestore
-    //         .collection("articles")
-    //         .orderBy("created_date", descending: true)
-    //         .snapshots(),
-    //     builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-    //       if (!snapshot.hasData) return const Text('Loading...');
-    //       final int articleCount = snapshot.data.documents.length;
-    //       return ListView.builder(
-    //         itemCount: articleCount,
-    //         itemBuilder: (_, int index) {
-    //           final DocumentSnapshot document = snapshot.data.documents[index];
-    //           final dynamic message = document['title'];
-    //           return ListTile(
-    //             trailing: IconButton(
-    //               onPressed: () => document.reference.delete(),
-    //               icon: Icon(Icons.delete),
-    //             ),
-    //             title: Text(
-    //               message != null
-    //                   ? message.toString()
-    //                   : '<No message retrieved>',
-    //             ),
-    //             subtitle: Text('Message ${index + 1} of $articleCount'),
-    //           );
-    //         },
-    //       );
-    //     });
+    final articlesData = Provider.of<ArticlesProvider>(context);
 
     return SliverFixedExtentList(
       itemExtent: MediaQuery.of(context).size.width,
@@ -55,8 +30,10 @@ class ArticleList extends StatelessWidget {
             child: Container(
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: NetworkImage(
-                        "https://blog.sevenponds.com/wp-content/uploads/2018/12/800px-Vincent_van_Gogh_-_Self-Portrait_-_Google_Art_Project_454045.jpg"),
+                    image: NetworkImage(articlesData.articles[index].imageUrl ==
+                            null
+                        ? "https://blog.sevenponds.com/wp-content/uploads/2018/12/800px-Vincent_van_Gogh_-_Self-Portrait_-_Google_Art_Project_454045.jpg"
+                        : articlesData.articles[index].imageUrl),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -76,13 +53,11 @@ class ArticleList extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            //Flexible(
-                            //flex: 2,
                             Divider(),
                             Container(
                               width: 300,
                               child: Text(
-                                "梵高逝世130年，他的书信仍旧对你我说话",
+                                articlesData.articles[index].title,
                                 style: TextStyle(
                                     fontFamily: "Jinling", color: Colors.white),
                               ),
@@ -90,7 +65,7 @@ class ArticleList extends StatelessWidget {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                "梵高不仅是一位画家，还是一位传道人。",
+                                articlesData.articles[index].description,
                                 style: Theme.of(context)
                                     .textTheme
                                     .captionSmallWhite,
@@ -124,7 +99,7 @@ class ArticleList extends StatelessWidget {
                                   width: 5.0,
                                 ),
                                 Text(
-                                  "今日佳音",
+                                  articlesData.articles[index].author,
                                   style: Theme.of(context)
                                       .textTheme
                                       .captionMediumWhite,
@@ -133,7 +108,12 @@ class ArticleList extends StatelessWidget {
                                   width: 150.0,
                                 ),
                                 Text(
-                                  "2小时前",
+                                  DateTime.now()
+                                      .toUtc()
+                                      .difference(articlesData
+                                          .articles[index].createdDate)
+                                      .inHours
+                                      .toString(),
                                   style: Theme.of(context)
                                       .textTheme
                                       .captionMediumWhite,
