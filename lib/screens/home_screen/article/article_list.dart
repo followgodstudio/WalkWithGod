@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:palette_generator/palette_generator.dart';
 
 import '../../../configurations/theme.dart';
 import '../../article_screen/article_screen.dart';
@@ -10,14 +11,15 @@ import '../../../providers/article/articles_provider.dart';
 class ArticleList extends StatelessWidget {
   const ArticleList({
     Key key,
-    @required this.textColor,
-    this.firestore,
+    // @required this.textColor,
+    // this.firestore,
   }) : super(key: key);
 
-  final Firestore firestore;
-  final Color textColor;
+  // final Firestore firestore;
+  // final Color textColor;
 
-  String getCreatedTime(DateTime createdDate) {
+  String getCreatedDuration(DateTime createdDate) {
+    createdDate ?? DateTime.now().toUtc();
     int timeDiffInHours =
         DateTime.now().toUtc().difference(createdDate).inHours;
     int timeDiffInDays = 0;
@@ -53,6 +55,52 @@ class ArticleList extends StatelessWidget {
                                     : null;
   }
 
+  // Future<bool> useWhiteTextColor(Image image) async {
+  //   PaletteGenerator paletteGenerator =
+  //       await PaletteGenerator.fromImage(image,
+
+  //     // Images are square
+  //     //size: Size(300, 300),
+
+  //     // I want the dominant color of the top left section of the image
+  //     region: Offset.zero & Size(40, 40),
+  //   );
+
+  //   Color dominantColor = paletteGenerator.dominantColor?.color;
+
+  //   // Here's the problem
+  //   // Sometimes dominantColor returns null
+  //   // With black and white background colors in my tests
+  //   if (dominantColor == null) print('Dominant Color null');
+
+  //   return useWhiteForeground(dominantColor);
+  // }
+
+  Future<bool> useWhiteTextColor(NetworkImage image) async {
+    PaletteGenerator paletteGenerator =
+        await PaletteGenerator.fromImageProvider(
+      //NetworkImage(imageUrl),
+      image,
+      // Images are square
+      size: Size(300, 300),
+
+      // I want the dominant color of the top left section of the image
+      region: Offset.zero & Size(40, 40),
+    );
+
+    Color dominantColor = paletteGenerator.dominantColor?.color;
+
+    // Here's the problem
+    // Sometimes dominantColor returns null
+    // With black and white background colors in my tests
+    if (dominantColor == null) print('Dominant Color null');
+
+    return useWhiteForeground(dominantColor);
+  }
+
+  bool useWhiteForeground(Color backgroundColor) =>
+      1.05 / (backgroundColor.computeLuminance() + 0.05) > 4.5;
+
   @override
   Widget build(BuildContext context) {
     final articlesData = Provider.of<ArticlesProvider>(context);
@@ -61,50 +109,51 @@ class ArticleList extends StatelessWidget {
       itemExtent: MediaQuery.of(context).size.width,
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {
+          NetworkImage backgroundImage = NetworkImage(articlesData
+                      .articles[index].imageUrl ==
+                  null
+              ? "https://blog.sevenponds.com/wp-content/uploads/2018/12/800px-Vincent_van_Gogh_-_Self-Portrait_-_Google_Art_Project_454045.jpg"
+              : articlesData.articles[index].imageUrl);
+          Color textColor;
+          useWhiteTextColor(backgroundImage).then((value) =>
+              {value ? textColor = Colors.white : textColor = Colors.black});
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 12.5),
             child: Container(
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: NetworkImage(articlesData.articles[index].imageUrl ==
-                            null
-                        ? "https://blog.sevenponds.com/wp-content/uploads/2018/12/800px-Vincent_van_Gogh_-_Self-Portrait_-_Google_Art_Project_454045.jpg"
-                        : articlesData.articles[index].imageUrl),
+                    image: backgroundImage,
                     fit: BoxFit.cover,
                   ),
                 ),
                 child: FlatButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => ArticleScreen()),
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(builder: (context) => ArticleScreen(), settings: articlesData.articles[index].id.toString()),
+                    // );
+                    Navigator.of(context).pushNamed(
+                      ArticleScreen.routeName,
+                      arguments: articlesData.articles[index].id,
                     );
                   },
-                  //child: Container(
-                  //child: Stack(children: [
-                  //Positioned(
-                  //bottom: 0,
-
-                  //child:
                   child: Align(
                     alignment: Alignment.bottomCenter,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        //Divider(),
                         Container(
-                          //width: 400,
                           child: Text(
-                            articlesData.articles[index].title,
+                            articlesData.articles[index].title ?? "",
                             style: TextStyle(
-                                fontFamily: "Jinling", color: Colors.white),
+                                fontFamily: "Jinling", color: textColor),
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            articlesData.articles[index].description,
+                            articlesData.articles[index].description ?? "",
                             style:
                                 Theme.of(context).textTheme.captionSmallWhite,
                           ),
@@ -126,36 +175,32 @@ class ArticleList extends StatelessWidget {
                             ),
                             Expanded(
                               child: Text(
-                                articlesData.articles[index].author,
+                                articlesData.articles[index].author ?? "匿名",
                                 style: Theme.of(context)
                                     .textTheme
                                     .captionMediumWhite,
                               ),
                             ),
                             Text(
-                              getCreatedTime(
-                                  articlesData.articles[index].createdDate),
+                              getCreatedDuration(
+                                  articlesData.articles[index].createdDate ??
+                                      DateTime.now().toUtc()),
                               style: Theme.of(context)
                                   .textTheme
                                   .captionMediumWhite,
                             ),
                           ],
                         ),
-
                         SizedBox(
                           height: 10.0,
                         ),
                       ],
                     ),
                   ),
-
-                  //)
-                  //]
-                  //)
-                  //)
                 )),
           );
         },
+        childCount: articlesData.articles.length,
       ),
     );
   }

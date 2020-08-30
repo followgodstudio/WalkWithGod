@@ -1,7 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
+//import 'package:walk_with_god/model/slide.dart';
 
 import '../../model/constants.dart';
+
+class Paragraph {
+  final String subtitle;
+  final String body;
+
+  Paragraph({
+    @required this.subtitle,
+    @required this.body,
+  });
+}
 
 class ArticleProvider with ChangeNotifier {
   final String id;
@@ -12,6 +23,7 @@ class ArticleProvider with ChangeNotifier {
   final String author;
   final DateTime createdDate;
   final List content;
+  final String publisher;
 
   ArticleProvider(
       {@required this.id,
@@ -21,7 +33,8 @@ class ArticleProvider with ChangeNotifier {
       @required this.icon,
       @required this.author,
       @required this.createdDate,
-      @required this.content});
+      @required this.content,
+      this.publisher});
 
   Future<void> save() async {
     //TODO

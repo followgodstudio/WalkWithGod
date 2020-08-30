@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'screens/article_screen/article_screen.dart';
 
 import 'configurations/theme.dart';
 import 'providers/article/articles_provider.dart';
@@ -55,6 +56,7 @@ class MyApp extends StatelessWidget {
             LoginScreen.routeName: (ctx) => LoginScreen(),
             HomeScreen.routeName: (ctx) => HomeScreen(),
             MainScreen.routeName: (ctx) => MainScreen(),
+            ArticleScreen.routeName: (ctx) => ArticleScreen(),
           },
         ),
       ),

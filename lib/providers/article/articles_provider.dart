@@ -55,16 +55,28 @@ class ArticlesProvider with ChangeNotifier {
     query.documents.forEach((data) {
       Timestamp createdDateTimeStamp = data[fCreateDate];
       DateTime createdDate = createdDateTimeStamp.toDate();
+
+      List<Paragraph> content = new List();
+      List paragraphList = data['content'];
+      paragraphList.forEach((p) {
+        content.add(Paragraph(subtitle: p['subtitle'], body: p['body']));
+      });
+
       _articles.add(ArticleProvider(
           id: data.documentID,
           title: data['title'],
           description: data['description'],
           imageUrl: data['image_url'],
           author: data['author'],
-          content: data['content'],
+          content: content,
           createdDate: createdDate,
-          icon: data['icon']));
+          icon: data['icon'],
+          publisher: data['publisher']));
     });
     notifyListeners();
+  }
+
+  ArticleProvider findById(String id) {
+    return _articles.firstWhere((a) => a.id == id);
   }
 }

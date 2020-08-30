@@ -59,42 +59,16 @@ class _HomeScreenState extends State<HomeScreen> {
     super.didChangeDependencies();
   }
 
-  Future<bool> useWhiteTextColor(String imageUrl) async {
-    PaletteGenerator paletteGenerator =
-        await PaletteGenerator.fromImageProvider(
-      NetworkImage(
-          "https://cdn.britannica.com/78/43678-050-F4DC8D93/Starry-Night-canvas-Vincent-van-Gogh-New-1889.jpg"),
-
-      // Images are square
-      size: Size(300, 300),
-
-      // I want the dominant color of the top left section of the image
-      region: Offset.zero & Size(40, 40),
-    );
-
-    Color dominantColor = paletteGenerator.dominantColor?.color;
-
-    // Here's the problem
-    // Sometimes dominantColor returns null
-    // With black and white background colors in my tests
-    if (dominantColor == null) print('Dominant Color null');
-
-    return useWhiteForeground(dominantColor);
-  }
-
-  bool useWhiteForeground(Color backgroundColor) =>
-      1.05 / (backgroundColor.computeLuminance() + 0.05) > 4.5;
-
   @override
   Widget build(BuildContext context) {
     var now = new DateTime.now();
     var formatter = new DateFormat('MMM dd, yyyy');
     String formatted = formatter.format(now);
     //Color textColor = color.computeLuminance() > 0.5 ? Colors.black : Colors.white;
-    Color textColor = Colors.black;
-    useWhiteTextColor(
-            "https://blog.sevenponds.com/wp-content/uploads/2018/12/800px-Vincent_van_Gogh_-_Self-Portrait_-_Google_Art_Project_454045.jpg")
-        .then((value) => {textColor = value ? Colors.white : Colors.black});
+    // Color textColor = Colors.black;
+    // useWhiteTextColor(
+    //         "https://blog.sevenponds.com/wp-content/uploads/2018/12/800px-Vincent_van_Gogh_-_Self-Portrait_-_Google_Art_Project_454045.jpg")
+    //     .then((value) => {textColor = value ? Colors.white : Colors.black});
 
     return Scaffold(
       body: SafeArea(
@@ -142,9 +116,9 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
             ArticleList(
-              textColor: textColor,
-              firestore: Firestore.instance,
-            ),
+                //textColor: textColor,
+                //firestore: Firestore.instance,
+                ),
           ],
         ),
       ),
