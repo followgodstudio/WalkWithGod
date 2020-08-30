@@ -115,10 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 )
               ],
             ),
-            ArticleList(
-                //textColor: textColor,
-                //firestore: Firestore.instance,
-                ),
+            ArticleList(),
           ],
         ),
       ),

@@ -119,85 +119,84 @@ class ArticleList extends StatelessWidget {
               {value ? textColor = Colors.white : textColor = Colors.black});
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 12.5),
-            child: Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: backgroundImage,
-                    fit: BoxFit.cover,
+            child: Hero(
+              tag: articlesData.articles[index].id,
+              child: Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: backgroundImage,
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                ),
-                child: FlatButton(
-                  onPressed: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) => ArticleScreen(), settings: articlesData.articles[index].id.toString()),
-                    // );
-                    Navigator.of(context).pushNamed(
-                      ArticleScreen.routeName,
-                      arguments: articlesData.articles[index].id,
-                    );
-                  },
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          child: Text(
-                            articlesData.articles[index].title ?? "",
-                            style: TextStyle(
-                                fontFamily: "Jinling", color: textColor),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            articlesData.articles[index].description ?? "",
-                            style:
-                                Theme.of(context).textTheme.captionSmallWhite,
-                          ),
-                        ),
-                        Divider(
-                          color: Colors.white,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Icon(Icons.bookmark_border,
-                                color: Colors.white,
-                                size: Theme.of(context)
-                                    .textTheme
-                                    .captionMedium1
-                                    .fontSize),
-                            SizedBox(
-                              width: 5.0,
+                  child: FlatButton(
+                    onPressed: () {
+                      Navigator.of(context).pushNamed(
+                        ArticleScreen.routeName,
+                        arguments: articlesData.articles[index].id,
+                      );
+                    },
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            child: Text(
+                              articlesData.articles[index].title ?? "",
+                              style: TextStyle(
+                                  fontFamily: "Jinling", color: textColor),
                             ),
-                            Expanded(
-                              child: Text(
-                                articlesData.articles[index].author ?? "匿名",
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              articlesData.articles[index].description ?? "",
+                              style:
+                                  Theme.of(context).textTheme.captionSmallWhite,
+                            ),
+                          ),
+                          Divider(
+                            color: Colors.white,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Icon(Icons.bookmark_border,
+                                  color: Colors.white,
+                                  size: Theme.of(context)
+                                      .textTheme
+                                      .captionMedium1
+                                      .fontSize),
+                              SizedBox(
+                                width: 5.0,
+                              ),
+                              Expanded(
+                                child: Text(
+                                  articlesData.articles[index].author ?? "匿名",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .captionMediumWhite,
+                                ),
+                              ),
+                              Text(
+                                getCreatedDuration(
+                                    articlesData.articles[index].createdDate ??
+                                        DateTime.now().toUtc()),
                                 style: Theme.of(context)
                                     .textTheme
                                     .captionMediumWhite,
                               ),
-                            ),
-                            Text(
-                              getCreatedDuration(
-                                  articlesData.articles[index].createdDate ??
-                                      DateTime.now().toUtc()),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .captionMediumWhite,
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10.0,
-                        ),
-                      ],
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                )),
+                  )),
+            ),
           );
         },
         childCount:
