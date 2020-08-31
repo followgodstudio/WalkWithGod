@@ -15,6 +15,7 @@ import 'screens/loading_screen.dart';
 import 'screens/main_screen.dart';
 import 'screens/test_screen.dart';
 import 'screens/personal_management_screen/personal_management_screen.dart';
+import 'screens/splash_screen.dart';
 
 void main() => runApp(MyApp());
 
