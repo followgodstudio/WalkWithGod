@@ -12,7 +12,7 @@ class ProfileProvider with ChangeNotifier {
   Future<void> fetchProfileByUid(String userId) async {
     DocumentSnapshot doc =
         await Firestore.instance.collection(cUsers).document(userId).get();
-    if (doc.data.isNotEmpty) {
+    if (doc?.data?.isNotEmpty) {
       uid = userId;
       name = doc.data[fUserName];
       imageUrl = doc.data[fUserImageUrl];
