@@ -114,6 +114,9 @@ flutter:
     - family: Lanting
       fonts:
         - asset: fonts/FZLTZHK_GBK1_0.ttf
+    - family: LantingXianHei
+      fonts:
+        - asset: fonts/FZLTXHK--GBK1-0.TTF      
     - family: FangzhengTeYaSong
       fonts:
         - asset: fonts/FZTYSFW--GB1-0.ttf        

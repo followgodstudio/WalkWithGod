@@ -82,12 +82,12 @@ extension CustomStyles on TextTheme {
   TextStyle get captionSmall2 => const TextStyle(
         fontSize: 10.0,
         color: Color.fromARGB(255, 128, 128, 128),
-        fontFamily: 'LantingHeiXianHei',
+        fontFamily: 'LantingXianHei',
       );
   TextStyle get captionSmallWhite => const TextStyle(
-        fontSize: 10.0,
+        fontSize: 12.0,
         color: Color.fromARGB(255, 255, 255, 255),
-        fontFamily: 'Lanting',
+        fontFamily: 'LantingXianHei',
       );
   TextStyle get captionMedium1 => const TextStyle(
         fontSize: 14.0,
