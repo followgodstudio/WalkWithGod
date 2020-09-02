@@ -77,9 +77,9 @@ class ArticlesProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<List<Paragraph>> fetchArticleConentById(String aid) async {
-    List<Paragraph> _content = [];
-    await Firestore.instance
+  Future<void> fetchArticleConentById(String aid) async {
+    List<Paragraph> content = [];
+    await _fdb
         .collection(cArticles)
         .document(aid)
         .collection(cArticleContent)
@@ -87,15 +87,19 @@ class ArticlesProvider with ChangeNotifier {
         .then((querySnapshot) {
       if (querySnapshot != null) {
         querySnapshot.documents.forEach((element) {
-          _content.add(Paragraph(
-              subtitle: element.data["subtitle"], body: element.data["body"]));
+          content.add(Paragraph(
+              subtitle: element.data[fContentSubtitle],
+              body: element.data[fContentBody]));
         });
+
+        _articles.firstWhere((a) => a.id == aid).content = content;
       }
     }).catchError((error) {
       throw (error);
     });
 
-    return _content;
+    notifyListeners();
+    //return _content;
   }
 
   ArticleProvider findById(String id) {

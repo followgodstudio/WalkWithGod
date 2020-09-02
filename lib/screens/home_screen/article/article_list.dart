@@ -126,7 +126,7 @@ class _ArticleListState extends State<ArticleList> {
                             padding: const EdgeInsets.only(bottom: 0.0),
                             child: Text(
                               articlesData.articles[index].title ?? "",
-                              maxLines: 3,
+                              maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                   fontFamily: "Jinling", color: textColor),

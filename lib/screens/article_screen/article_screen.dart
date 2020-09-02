@@ -32,7 +32,7 @@ class _ArticleScreen extends State<ArticleScreen> {
         _isLoading = true;
       });
       _articleId = ModalRoute.of(context).settings.arguments as String;
-      Provider.of<ArticlesProvider>(context)
+      Provider.of<ArticlesProvider>(context, listen: true)
           .fetchArticleConentById(_articleId)
           .catchError((err) {
         return showDialog(
@@ -54,7 +54,6 @@ class _ArticleScreen extends State<ArticleScreen> {
         setState(() {
           _isLoading = false;
         });
-        _content = content;
       });
     }
     _isInit = false;
@@ -241,18 +240,24 @@ class _ArticleScreen extends State<ArticleScreen> {
                     ),
                     Divider(),
                     Center(
-                      child: _isLoading
-                          ? Center(
-                              child: CircularProgressIndicator(),
-                            )
-                          : _content.isEmpty
-                              ? Center(
-                                  child: Text("content is missing"),
-                                )
-                              : Column(children: [
-                                  ..._content.map((e) => ArticleParagraph(e))
-                                ]),
-                    ),
+                        child: _isLoading
+                            ? Center(
+                                child: CircularProgressIndicator(),
+                              )
+                            : Consumer<ArticlesProvider>(
+                                builder: (context, data, _) {
+                                _content = data.articles
+                                    .firstWhere((e) => e.id == _articleId)
+                                    .content;
+                                return _content.isEmpty
+                                    ? Center(
+                                        child: Text("content is missing"),
+                                      )
+                                    : Column(children: [
+                                        ..._content
+                                            .map((e) => ArticleParagraph(e))
+                                      ]);
+                              })),
                     Comments(),
                   ],
                 ),
