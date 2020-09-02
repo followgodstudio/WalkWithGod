@@ -152,7 +152,9 @@ class _ArticleListState extends State<ArticleList> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                articlesData.articles[index].icon == null
+                                articlesData.articles[index].icon == null ||
+                                        articlesData
+                                            .articles[index].icon.isEmpty
                                     ? Icon(Icons.album)
                                     : Image(
                                         image: NetworkImage(

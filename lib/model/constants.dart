@@ -46,8 +46,8 @@ const String fMessageIsRead = "is_read";
 const String fArticleTitle = 'title';
 const String fArticleDescription = 'description';
 const String fArticleImageUrl = 'image_url';
-const String fArticleAuthor = 'author';
-const String fArticleContent = 'content';
+const String fArticleAuthorName = 'author_name';
+const String cArticleContent = 'content';
 const String fArticleIcon = 'icon';
 const String fArticlePublisher = 'publisher';
 

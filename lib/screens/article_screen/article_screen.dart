@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:walk_with_god/providers/article/article_provider.dart';
 
 import '../../configurations/theme.dart';
 import '../../model/comment.dart';
@@ -14,8 +15,51 @@ class ArticleScreen extends StatefulWidget {
 }
 
 class _ArticleScreen extends State<ArticleScreen> {
-  int _currentPage = 0;
-  final PageController _pageController = PageController(initialPage: 0);
+  var _isLoading = false;
+  var _isInit = true;
+  String _articleId;
+  List<Paragraph> _content = [];
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+      _articleId = ModalRoute.of(context).settings.arguments as String;
+      Provider.of<ArticlesProvider>(context)
+          .fetchArticleConentById(_articleId)
+          .catchError((err) {
+        return showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text('An error occurred!'),
+            content: Text('Something went wrong.'),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Okay'),
+                onPressed: () {
+                  Navigator.of(ctx).pop();
+                },
+              )
+            ],
+          ),
+        );
+      }).then((content) {
+        setState(() {
+          _isLoading = false;
+        });
+        _content = content;
+      });
+    }
+    _isInit = false;
+    super.didChangeDependencies();
+  }
 
   String getCreatedDuration(DateTime createdDate) {
     int timeDiffInHours =
@@ -55,11 +99,11 @@ class _ArticleScreen extends State<ArticleScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final articleId = ModalRoute.of(context).settings.arguments as String;
     final loadedArticle = Provider.of<ArticlesProvider>(
       context,
       listen: false,
-    ).findById(articleId);
+    ).findById(_articleId);
+
     return Scaffold(
       body: SafeArea(
         child: CustomScrollView(
@@ -196,10 +240,17 @@ class _ArticleScreen extends State<ArticleScreen> {
                     ),
                     Divider(),
                     Center(
-                      child: Column(children: [
-                        ...loadedArticle.content
-                            .map((e) => ArticleParagraph(e)),
-                      ]),
+                      child: _isLoading
+                          ? Center(
+                              child: CircularProgressIndicator(),
+                            )
+                          : _content.isEmpty
+                              ? Center(
+                                  child: Text("content is missing"),
+                                )
+                              : Column(children: [
+                                  ..._content.map((e) => ArticleParagraph(e))
+                                ]),
                     ),
                     Comments(),
                   ],

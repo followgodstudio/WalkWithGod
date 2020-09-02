@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
-//import 'package:walk_with_god/model/slide.dart';
 
 import '../../model/constants.dart';
 
@@ -15,6 +14,7 @@ class Paragraph {
 }
 
 class ArticleProvider with ChangeNotifier {
+  var _fdb = Firestore.instance;
   final String id;
   final String imageUrl;
   final String title;
@@ -22,7 +22,7 @@ class ArticleProvider with ChangeNotifier {
   final String icon;
   final String author;
   final DateTime createdDate;
-  final List<Paragraph> content;
+  List<Paragraph> content;
   final String publisher;
 
   ArticleProvider(
@@ -33,7 +33,7 @@ class ArticleProvider with ChangeNotifier {
       @required this.icon,
       @required this.author,
       @required this.createdDate,
-      @required this.content,
+      this.content,
       this.publisher});
 
   Future<void> save() async {
