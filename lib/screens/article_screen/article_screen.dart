@@ -200,7 +200,8 @@ class _ArticleScreen extends State<ArticleScreen> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                loadedArticle.icon == null
+                                loadedArticle.icon == null ||
+                                        loadedArticle.icon.isEmpty
                                     ? Icon(Icons.album)
                                     : Image(
                                         image: NetworkImage(
@@ -223,7 +224,7 @@ class _ArticleScreen extends State<ArticleScreen> {
                                         color: Color.fromARGB(
                                             255, 128, 128, 128))),
                                 Text(
-                                  loadedArticle.author,
+                                  loadedArticle.author ?? "匿名",
                                   style:
                                       Theme.of(context).textTheme.captionSmall2,
                                 ),
