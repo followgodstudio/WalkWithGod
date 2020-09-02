@@ -123,7 +123,7 @@ class _ArticleListState extends State<ArticleList> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(bottom: 0.0),
+                            padding: const EdgeInsets.only(bottom: 8.0),
                             child: Text(
                               articlesData.articles[index].title ?? "",
                               maxLines: 2,
@@ -180,7 +180,7 @@ class _ArticleListState extends State<ArticleList> {
                                     articlesData.articles[index].author ?? "匿名",
                                     style: Theme.of(context)
                                         .textTheme
-                                        .captionMediumWhite,
+                                        .captionSmallWhite,
                                   ),
                                 ),
                                 Text(
@@ -189,7 +189,7 @@ class _ArticleListState extends State<ArticleList> {
                                       DateTime.now().toUtc()),
                                   style: Theme.of(context)
                                       .textTheme
-                                      .captionMediumWhite,
+                                      .captionSmallWhite,
                                 ),
                               ],
                             ),

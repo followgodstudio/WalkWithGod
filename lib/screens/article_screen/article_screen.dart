@@ -121,9 +121,12 @@ class _ArticleScreen extends State<ArticleScreen> {
               title: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(
-                      loadedArticle.title ?? "",
-                      style: Theme.of(context).textTheme.headerSmall1,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 5.0),
+                      child: Text(
+                        loadedArticle.title ?? "",
+                        style: Theme.of(context).textTheme.headerSmall1,
+                      ),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -148,7 +151,7 @@ class _ArticleScreen extends State<ArticleScreen> {
               actions: [
                 Placeholder(
                   color: Theme.of(context).appBarTheme.color,
-                  fallbackWidth: 40,
+                  fallbackWidth: 60,
                 ),
               ],
             ),
@@ -195,9 +198,10 @@ class _ArticleScreen extends State<ArticleScreen> {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(bottom: 10.0),
+                            padding: const EdgeInsets.only(
+                                bottom: 10.0, left: 3, right: 3),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 loadedArticle.icon == null ||
                                         loadedArticle.icon.isEmpty
@@ -212,20 +216,27 @@ class _ArticleScreen extends State<ArticleScreen> {
                                         fit: BoxFit.scaleDown,
                                         alignment: Alignment.center,
                                       ),
-                                Text(
-                                  loadedArticle.publisher ?? "随行",
-                                  style:
-                                      Theme.of(context).textTheme.captionSmall2,
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 5.0),
+                                  child: Text(
+                                    loadedArticle.publisher ?? "随行",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .captionSmall2,
+                                  ),
                                 ),
                                 Container(
-                                    height: 20,
+                                    height: 12,
                                     child: VerticalDivider(
                                         color: Color.fromARGB(
                                             255, 128, 128, 128))),
-                                Text(
-                                  loadedArticle.author ?? "匿名",
-                                  style:
-                                      Theme.of(context).textTheme.captionSmall2,
+                                Expanded(
+                                  child: Text(
+                                    loadedArticle.author ?? "匿名",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .captionSmall2,
+                                  ),
                                 ),
                                 Text(
                                   getCreatedDuration(loadedArticle.createdDate),
@@ -249,7 +260,7 @@ class _ArticleScreen extends State<ArticleScreen> {
                                 _content = data.articles
                                     .firstWhere((e) => e.id == _articleId)
                                     .content;
-                                return _content.isEmpty
+                                return _content == null || _content.isEmpty
                                     ? Center(
                                         child: Text("content is missing"),
                                       )

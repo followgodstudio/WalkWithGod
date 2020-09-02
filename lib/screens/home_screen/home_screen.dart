@@ -57,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     var now = new DateTime.now();
     var formatter = new DateFormat('MMM dd, yyyy');
-    String formatted = formatter.format(now);
+    String formattedDate = formatter.format(now);
 
     return Scaffold(
         body: SafeArea(
@@ -80,7 +80,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               builder: (context, data, child) {
                             return CustomScrollView(slivers: <Widget>[
                               SliverAppBar(
-                                shadowColor: Colors.white,
+                                toolbarHeight: 48.0,
+                                shadowColor: Theme.of(context).canvasColor,
                                 backgroundColor: Theme.of(context).canvasColor,
                                 pinned: true,
                                 automaticallyImplyLeading: false,
@@ -99,17 +100,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     .textTheme
                                                     .captionMedium2,
                                               )),
-                                          Container(
-                                              width: 30.0,
-                                              height: 5.0,
-                                              color: Colors.yellow),
                                         ],
                                       ),
                                     ),
                                     FlatButton(
                                       onPressed: () {},
                                       child: Text(
-                                        formatted,
+                                        formattedDate,
                                         style: Theme.of(context)
                                             .textTheme
                                             .captionMain,

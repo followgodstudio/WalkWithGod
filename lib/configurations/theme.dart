@@ -70,7 +70,7 @@ extension CustomStyles on TextTheme {
         letterSpacing: -0.1,
       );
   TextStyle get captionMain => const TextStyle(
-        fontSize: 16.0,
+        fontSize: 14.0,
         color: Color.fromARGB(255, 128, 128, 128),
         fontFamily: 'Avenir',
       );
