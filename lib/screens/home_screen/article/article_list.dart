@@ -1,7 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:palette_generator/palette_generator.dart';
+import '../../../utils/utils.dart';
 
 import '../../../configurations/theme.dart';
 import '../../article_screen/article_screen.dart';
@@ -20,43 +20,6 @@ class ArticleList extends StatefulWidget {
 }
 
 class _ArticleListState extends State<ArticleList> {
-  String getCreatedDuration(DateTime createdDate) {
-    createdDate ?? DateTime.now().toUtc();
-    int timeDiffInHours =
-        DateTime.now().toUtc().difference(createdDate).inHours;
-    int timeDiffInDays = 0;
-    int timeDiffInMonths = 0;
-    int timeDiffInYears = 0;
-    if (timeDiffInHours > 24 * 365) {
-      timeDiffInYears = timeDiffInHours ~/ (24 * 365);
-      //timeDiffInHours %= timeDiffInHours;
-    } else if (timeDiffInHours > 24 * 30) {
-      timeDiffInMonths = timeDiffInHours ~/ (24 * 30);
-      //timeDiffInHours %= timeDiffInHours;
-    } else if (timeDiffInHours > 24) {
-      timeDiffInDays = timeDiffInHours ~/ 24;
-      //timeDiffInHours %= timeDiffInHours;
-    }
-
-    return timeDiffInYears > 1
-        ? timeDiffInYears.toString() + " years ago"
-        : timeDiffInYears > 0
-            ? timeDiffInYears.toString() + " year ago"
-            : timeDiffInMonths > 1
-                ? timeDiffInMonths.toString() + " months ago"
-                : timeDiffInMonths > 0
-                    ? timeDiffInMonths.toString() + " month ago"
-                    : timeDiffInDays > 1
-                        ? timeDiffInDays.toString() + " days ago"
-                        : timeDiffInDays > 0
-                            ? timeDiffInDays.toString() + " day ago"
-                            : timeDiffInHours > 1
-                                ? timeDiffInHours.toString() + " hours ago"
-                                : timeDiffInHours > 0
-                                    ? timeDiffInHours.toString() + " hour ago"
-                                    : null;
-  }
-
   Future<bool> useWhiteTextColor(NetworkImage image) async {
     PaletteGenerator paletteGenerator =
         await PaletteGenerator.fromImageProvider(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:walk_with_god/providers/article/article_provider.dart';
-
+import '../../providers/article/article_provider.dart';
+import '../../utils/utils.dart';
 import '../../configurations/theme.dart';
 import '../../model/comment.dart';
 import '../../providers/article/articles_provider.dart';
@@ -58,42 +58,6 @@ class _ArticleScreen extends State<ArticleScreen> {
     }
     _isInit = false;
     super.didChangeDependencies();
-  }
-
-  String getCreatedDuration(DateTime createdDate) {
-    int timeDiffInHours =
-        DateTime.now().toUtc().difference(createdDate).inHours;
-    int timeDiffInDays = 0;
-    int timeDiffInMonths = 0;
-    int timeDiffInYears = 0;
-    if (timeDiffInHours > 24 * 365) {
-      timeDiffInYears = timeDiffInHours ~/ (24 * 365);
-      //timeDiffInHours %= timeDiffInHours;
-    } else if (timeDiffInHours > 24 * 30) {
-      timeDiffInMonths = timeDiffInHours ~/ (24 * 30);
-      //timeDiffInHours %= timeDiffInHours;
-    } else if (timeDiffInHours > 24) {
-      timeDiffInDays = timeDiffInHours ~/ 24;
-      //timeDiffInHours %= timeDiffInHours;
-    }
-
-    return timeDiffInYears > 1
-        ? timeDiffInYears.toString() + " years ago"
-        : timeDiffInYears > 0
-            ? timeDiffInYears.toString() + " year ago"
-            : timeDiffInMonths > 1
-                ? timeDiffInMonths.toString() + " months ago"
-                : timeDiffInMonths > 0
-                    ? timeDiffInMonths.toString() + " month ago"
-                    : timeDiffInDays > 1
-                        ? timeDiffInDays.toString() + " days ago"
-                        : timeDiffInDays > 0
-                            ? timeDiffInDays.toString() + " day ago"
-                            : timeDiffInHours > 1
-                                ? timeDiffInHours.toString() + " hours ago"
-                                : timeDiffInHours > 0
-                                    ? timeDiffInHours.toString() + " hour ago"
-                                    : null;
   }
 
   @override
