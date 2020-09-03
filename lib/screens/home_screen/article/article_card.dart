@@ -120,9 +120,12 @@ class ArticleCard extends StatelessWidget {
                                             article.description ?? "",
                                             maxLines: 2,
                                             overflow: TextOverflow.ellipsis,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .captionSmallWhite,
+                                            style: TextStyle(
+                                                fontFamily: "LantingXianHei",
+                                                color: snapshot.data
+                                                    ? Colors.white
+                                                    : Colors.black,
+                                                fontSize: 12),
                                           ),
                                         ),
                                         Divider(
@@ -155,18 +158,26 @@ class ArticleCard extends StatelessWidget {
                                               Expanded(
                                                 child: Text(
                                                   article.author ?? "匿名",
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .captionSmallWhite,
+                                                  style: TextStyle(
+                                                      fontFamily:
+                                                          "LantingXianHei",
+                                                      color: snapshot.data
+                                                          ? Colors.white
+                                                          : Colors.black,
+                                                      fontSize: 12),
                                                 ),
                                               ),
                                               Text(
                                                 getCreatedDuration(
                                                     article.createdDate ??
                                                         DateTime.now().toUtc()),
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .captionSmallWhite,
+                                                style: TextStyle(
+                                                    fontFamily:
+                                                        "LantingXianHei",
+                                                    color: snapshot.data
+                                                        ? Colors.white
+                                                        : Colors.black,
+                                                    fontSize: 12),
                                               ),
                                             ],
                                           ),
