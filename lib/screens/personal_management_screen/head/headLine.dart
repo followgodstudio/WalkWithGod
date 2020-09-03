@@ -5,7 +5,7 @@ import 'summary.dart';
 class Introduction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
       children: <Widget>[
         FlatButton(
             onPressed: null,
@@ -48,7 +48,7 @@ class _HeadLineState extends State<HeadLine> {
       child: Column(
         children: <Widget>[
           Introduction(),
-          Summary(),
+//          Summary(),
         ],
       ),
     );

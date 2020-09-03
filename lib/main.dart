@@ -50,15 +50,15 @@ class MyApp extends StatelessWidget {
               builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
                 if (snapshot.connectionState == ConnectionState.active) {
                   final bool isLoggedIn = snapshot.hasData;
-                  return isLoggedIn ? HomeScreen() : EmailAuthScreen();
+                  return isLoggedIn ? PersonalManagementScreen() : EmailAuthScreen();
                 }
                 return LoadingScreen();
               }),
           routes: {
             //LoginScreengi.routeName: (ctx) => LoginScreen(),
             //SignupScreen.routeName: (ctx) => SignupScreen(),
-            // PersonalManagementScreen.routeName: (ctx) =>
-            //     PersonalManagementScreen(),
+             PersonalManagementScreen.routeName: (ctx) =>
+                 PersonalManagementScreen(),
             EmailAuthScreen.routeName: (ctx) => EmailAuthScreen(),
             LoginScreen.routeName: (ctx) => LoginScreen(),
             HomeScreen.routeName: (ctx) => HomeScreen(),

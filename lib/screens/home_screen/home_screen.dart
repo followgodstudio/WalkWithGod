@@ -75,7 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: CustomScrollView(
           slivers: <Widget>[
             SliverAppBar(
-              shadowColor: Colors.white,
+//              shadowColor: Colors.white,
               backgroundColor: Theme.of(context).canvasColor,
               pinned: true,
               automaticallyImplyLeading: false,
