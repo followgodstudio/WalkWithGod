@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'screens/article_screen/article_screen.dart';
 
 import 'configurations/theme.dart';
 import 'providers/article/articles_provider.dart';
@@ -8,12 +7,12 @@ import 'providers/article/comments_provider.dart';
 import 'providers/auth_provider.dart';
 import 'providers/user/messages_provider.dart';
 import 'providers/user/profile_provider.dart';
+import 'screens/article_screen/article_screen.dart';
 import 'screens/auth_screen/email_auth_screen.dart';
 import 'screens/auth_screen/login_screen.dart';
 import 'screens/home_screen/home_screen.dart';
 import 'screens/loading_screen.dart';
 import 'screens/main_screen.dart';
-import 'screens/test_screen.dart';
 import 'screens/personal_management_screen/personal_management_screen.dart';
 
 void main() => runApp(MyApp());
@@ -58,8 +57,8 @@ class MyApp extends StatelessWidget {
           routes: {
             //LoginScreengi.routeName: (ctx) => LoginScreen(),
             //SignupScreen.routeName: (ctx) => SignupScreen(),
-            // PersonalManagementScreen.routeName: (ctx) =>
-            //     PersonalManagementScreen(),
+            PersonalManagementScreen.routeName: (ctx) =>
+                PersonalManagementScreen(),
             EmailAuthScreen.routeName: (ctx) => EmailAuthScreen(),
             LoginScreen.routeName: (ctx) => LoginScreen(),
             HomeScreen.routeName: (ctx) => HomeScreen(),
