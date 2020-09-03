@@ -256,7 +256,9 @@ class _ArticleScreen extends State<ArticleScreen> {
                                             .map((e) => ArticleParagraph(e))
                                       ]);
                               })),
-                    Comments(),
+                    Comments(
+                      articleId: _articleId,
+                    ),
                   ],
                 ),
               ),
