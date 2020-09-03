@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../../configurations/theme.dart';
 import '../../providers/article/articles_provider.dart';
 import '../../providers/user/profile_provider.dart';
+import '../../screens/personal_management_screen/personal_management_screen.dart';
 import 'article/article_list.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -126,7 +127,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                       backgroundImage:
                                           AssetImage("assets/images/logo.png"),
                                     ),
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      Navigator.of(context).pushNamed(
+                                        PersonalManagementScreen.routeName,
+                                      );
+                                    },
                                   )
                                 ],
                               ),

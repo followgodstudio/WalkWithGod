@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import '../../providers/article/article_provider.dart';
 import '../../utils/utils.dart';
 import '../../configurations/theme.dart';
-import '../../providers/article/article_provider.dart';
 import '../../providers/article/articles_provider.dart';
 import '../../widgets/aricle_paragraph.dart';
 import 'bottom_bar.dart';
@@ -32,6 +31,7 @@ class _ArticleScreen extends State<ArticleScreen> {
       if (_hideButtonController.position.userScrollDirection ==
           ScrollDirection.reverse) {
         if (_isVisible)
+          //TODO: each time user scroll, the whole screen will be rebuilt, but we only want the bottom bar to be rebuilt
           setState(() {
             _isVisible = false;
           });
@@ -256,9 +256,8 @@ class _ArticleScreen extends State<ArticleScreen> {
                                             .map((e) => ArticleParagraph(e))
                                       ]);
                               })),
-                    Comments(
-                      articleId: _articleId,
-                    ),
+                    //TODO: comment widget cannot be scrolled together with articles
+                    Comments(articleId: _articleId),
                   ],
                 ),
               ),
