@@ -53,11 +53,10 @@ class _ArticleListState extends State<ArticleList> {
       itemExtent: MediaQuery.of(context).size.width,
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {
-          NetworkImage backgroundImage = NetworkImage(articlesData
-                      .articles[index].imageUrl ==
-                  null
-              ? "https://blog.sevenponds.com/wp-content/uploads/2018/12/800px-Vincent_van_Gogh_-_Self-Portrait_-_Google_Art_Project_454045.jpg"
-              : articlesData.articles[index].imageUrl);
+          var backgroundImage = articlesData.articles[index].imageUrl == null ||
+                  articlesData.articles[index].imageUrl.isEmpty
+              ? AssetImage('assets/images/placeholder.png')
+              : NetworkImage(articlesData.articles[index].imageUrl);
           Color textColor = Colors.white;
           useWhiteTextColor(backgroundImage).then((value) =>
               {value ? textColor = Colors.white : textColor = Colors.black});
@@ -100,7 +99,7 @@ class _ArticleListState extends State<ArticleList> {
                                 vertical: 8.0, horizontal: 3.0),
                             child: Text(
                               articlesData.articles[index].description ?? "",
-                              maxLines: 3,
+                              maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                               style:
                                   Theme.of(context).textTheme.captionSmallWhite,
