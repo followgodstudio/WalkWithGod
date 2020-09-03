@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
+
 import '../../providers/article/article_provider.dart';
 import '../../utils/utils.dart';
 import '../../configurations/theme.dart';
-import '../../model/comment.dart';
+import '../../providers/article/article_provider.dart';
 import '../../providers/article/articles_provider.dart';
 import '../../widgets/aricle_paragraph.dart';
-import '../../widgets/comment.dart' as widget;
+import 'bottom_bar.dart';
+import 'comments.dart';
 
 class ArticleScreen extends StatefulWidget {
   static const routeName = '/article_screen';
@@ -19,10 +22,28 @@ class _ArticleScreen extends State<ArticleScreen> {
   var _isInit = true;
   String _articleId;
   List<Paragraph> _content = [];
+  ScrollController _hideButtonController = new ScrollController();
+  var _isVisible = true;
 
   @override
   void initState() {
     super.initState();
+    _hideButtonController.addListener(() {
+      if (_hideButtonController.position.userScrollDirection ==
+          ScrollDirection.reverse) {
+        if (_isVisible)
+          setState(() {
+            _isVisible = false;
+          });
+      }
+      if (_hideButtonController.position.userScrollDirection ==
+          ScrollDirection.forward) {
+        if (!_isVisible)
+          setState(() {
+            _isVisible = true;
+          });
+      }
+    });
   }
 
   @override
@@ -70,6 +91,7 @@ class _ArticleScreen extends State<ArticleScreen> {
     return Scaffold(
       body: SafeArea(
         child: CustomScrollView(
+          controller: _hideButtonController,
           slivers: <Widget>[
             SliverAppBar(
               backgroundColor: Theme.of(context).appBarTheme.color,
@@ -140,7 +162,8 @@ class _ArticleScreen extends State<ArticleScreen> {
                                       height: 200,
                                       placeholder: AssetImage(
                                           'assets/images/placeholder.png'),
-                                      image: loadedArticle.imageUrl == null
+                                      image: (loadedArticle.imageUrl == null ||
+                                              loadedArticle.imageUrl == "")
                                           ? AssetImage(
                                               'assets/images/placeholder.png')
                                           : NetworkImage(
@@ -241,38 +264,15 @@ class _ArticleScreen extends State<ArticleScreen> {
           ],
         ),
       ),
-    );
-  }
-}
-
-class Comments extends StatelessWidget {
-  //List<Comment> commentList;
-  Comments({
-    Key key,
-  }) : super(key: key);
-  //Comment(List<Comment> commentList) {}
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 30.0),
-        child: Container(
-          height: 500,
-          child: ListView.separated(
-            itemBuilder: (ctx, i) => widget.Comment(
-                i,
-                commentList[i].author.user_name,
-                commentList[i].author.avatar_url,
-                commentList[i].content,
-                commentList[i].createdDate,
-                commentList[i].number_of_likes,
-                commentList[i].list_of_comment),
-            separatorBuilder: (BuildContext context, int index) =>
-                const Divider(),
-            itemCount: commentList.length,
-          ),
-        ),
+      bottomNavigationBar: AnimatedContainer(
+        duration: Duration(milliseconds: 300),
+        height: _isVisible ? 60.0 : 0.0,
+        child: _isVisible
+            ? BottomBar(_articleId)
+            : Container(
+                color: Colors.white,
+                width: MediaQuery.of(context).size.width,
+              ),
       ),
     );
   }

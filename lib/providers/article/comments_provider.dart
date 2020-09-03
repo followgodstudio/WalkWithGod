@@ -18,8 +18,12 @@ class CommentsProvider with ChangeNotifier {
     return _noMore;
   }
 
-  Future<void> fetchL1CommentListByAid(String articleId,
+  Future<void> fetchL1CommentListByAid(String articleId, String userId,
       [int limit = loadLimit]) async {
+    // Restart data
+    _items = [];
+    _lastVisible = null;
+    _noMore = false;
     QuerySnapshot query = await Firestore.instance
         .collection(cArticles)
         .document(articleId)
@@ -29,11 +33,12 @@ class CommentsProvider with ChangeNotifier {
         .getDocuments();
     _items = [];
     _articleId = articleId;
-    _appendL1CommentList(query);
+    await _appendL1CommentList(query, articleId, userId);
   }
 
-  Future<void> fetchMoreL1Comments([int limit = loadLimit]) async {
-    if (_articleId == null) return;
+  Future<void> fetchMoreL1Comments(String userId,
+      [int limit = loadLimit]) async {
+    if (_articleId == null || _noMore) return;
     QuerySnapshot query = await Firestore.instance
         .collection(cArticles)
         .document(_articleId)
@@ -42,7 +47,7 @@ class CommentsProvider with ChangeNotifier {
         .startAfterDocument(_lastVisible)
         .limit(limit)
         .getDocuments();
-    _appendL1CommentList(query);
+    await _appendL1CommentList(query, _articleId, userId);
   }
 
   Future<void> addL1Comment(String articleId, String content, String creatorUid,
@@ -61,19 +66,33 @@ class CommentsProvider with ChangeNotifier {
         .document(articleId)
         .collection(cArticleComments)
         .add(comment);
+    comment['like'] = false;
     _addL1CommentToList(docRef.documentID, comment);
   }
 
-  void _appendL1CommentList(QuerySnapshot query) {
+  Future<void> _appendL1CommentList(
+      QuerySnapshot query, String articleId, String userId) async {
     List<DocumentSnapshot> docs = query.documents;
-    docs.forEach((data) {
-      _items.add(_buildL1CommentByMap(data.documentID, data.data));
-    });
     if (docs.length == 0) {
       _noMore = true;
       notifyListeners();
       return;
     }
+    // Fetch if current user like, will it be slow???
+    for (int i = 0; i < docs.length; i++) {
+      DocumentSnapshot docRef = await Firestore.instance
+          .collection(cArticles)
+          .document(articleId)
+          .collection(cArticleComments)
+          .document(docs[i].documentID)
+          .collection(cArticleCommentLikes)
+          .document(userId)
+          .get();
+      docs[i].data['like'] = docRef.exists;
+    }
+    docs.forEach((data) {
+      _items.add(_buildL1CommentByMap(data.documentID, data.data));
+    });
     _lastVisible = query.documents[query.documents.length - 1];
     notifyListeners();
   }
@@ -91,8 +110,9 @@ class CommentsProvider with ChangeNotifier {
         creatorUid: data[fCommentCreatorUid],
         creatorName: data[fCommentCreatorName],
         creatorImage: data[fCommentCreatorImage],
-        createDate: (data[fCreatedDate] as Timestamp).toDate(),
+        createdDate: (data[fCreatedDate] as Timestamp).toDate(),
         childrenCount: data[fCommentChildrenCount],
-        likesCount: data[fCommentLikesCount]);
+        likesCount: data[fCommentLikesCount],
+        like: data['like']);
   }
 }

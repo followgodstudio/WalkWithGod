@@ -215,22 +215,22 @@ class Comments extends StatelessWidget {
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 30.0),
-        child: Container(
-          height: 500,
-          child: ListView.separated(
-            itemBuilder: (ctx, i) => widget.Comment(
-                i,
-                commentList[i].author.user_name,
-                commentList[i].author.avatar_url,
-                commentList[i].content,
-                commentList[i].createdDate,
-                commentList[i].number_of_likes,
-                commentList[i].list_of_comment),
-            separatorBuilder: (BuildContext context, int index) =>
-                const Divider(),
-            itemCount: commentList.length,
-          ),
-        ),
+        // child: Container(
+        //   height: 500,
+        //   child: ListView.separated(
+        //     itemBuilder: (ctx, i) => widget.Comment(
+        //         i,
+        //         commentList[i].author.user_name,
+        //         commentList[i].author.avatar_url,
+        //         commentList[i].content,
+        //         commentList[i].createdDate,
+        //         commentList[i].number_of_likes,
+        //         commentList[i].list_of_comment.length),
+        //     separatorBuilder: (BuildContext context, int index) =>
+        //         const Divider(),
+        //     itemCount: commentList.length,
+        //   ),
+        // ),
       ),
     );
   }

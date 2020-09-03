@@ -55,7 +55,7 @@ class TestComments extends StatelessWidget {
             }),
         FutureBuilder(
           future: Provider.of<CommentsProvider>(context, listen: false)
-              .fetchL1CommentListByAid(aid),
+              .fetchL1CommentListByAid(aid, uid),
           builder: (ctx, _) =>
               Consumer<CommentsProvider>(builder: (context, data, child) {
             List<CommentProvider> commentProvider = data.items;
@@ -71,7 +71,7 @@ class TestComments extends StatelessWidget {
                 list.add(RaisedButton(
                     child: Text("Load more..."),
                     onPressed: () async {
-                      await data.fetchMoreL1Comments();
+                      await data.fetchMoreL1Comments(uid);
                     }));
               } else {
                 list.add(Text("--------No more comments--------"));
@@ -231,8 +231,8 @@ class TestUserProfile extends StatelessWidget {
       Text("User ID:"),
       Text(userId != null ? userId : ""),
       FutureBuilder(
-        future: Provider.of<ProfileProvider>(context, listen: false)
-            .fetchProfileByUid(userId),
+        future:
+            Provider.of<ProfileProvider>(context, listen: false).fetchProfile(),
         builder: (ctx, _) => Consumer<ProfileProvider>(
           builder: (context, data, child) => Column(
             children: [

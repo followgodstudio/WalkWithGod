@@ -2,116 +2,127 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:provider/provider.dart';
 
+import '../providers/article/comment_provider.dart';
+import '../providers/user/profile_provider.dart';
 import '../widgets/popup_comment.dart';
 
 class Comment extends StatelessWidget {
-  final int id;
-  final String author;
-  final String avatarUrl;
-  final String content;
-  final DateTime createdTime;
-  final int num_of_likes;
-  final List<int> list_of_comments;
-
-  Comment(this.id, this.author, this.avatarUrl, this.content, this.createdTime,
-      this.num_of_likes, this.list_of_comments);
-
-  void openCommentPage() {}
   @override
   Widget build(BuildContext context) {
+    ProfileProvider profile =
+        Provider.of<ProfileProvider>(context, listen: false);
     return Padding(
       padding: EdgeInsets.only(top: 5, left: 20, right: 20),
-      child: Column(
-        children: [
-          Row(
-            //avatar and title / created time
-            children: [
-              Column(
-                //avatar
-                children: [
-                  CircleAvatar(
-                    backgroundImage: NetworkImage(this.avatarUrl),
-                    backgroundColor: Colors.brown.shade800,
-                  )
-                ],
-              ),
-              Column(
-                //title and time
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Text(
-                        this.author,
-                        style: Theme.of(context).textTheme.headline6,
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 4.0),
-                        child: Text(
-                          DateFormat('yyyy-MM-dd H:m:s')
-                              .format(this.createdTime),
-                          style: Theme.of(context).textTheme.overline,
-                        ),
-                      ),
-                    ],
-                  )
-                ],
-              )
-            ],
-          ),
-          Row(
-            children: [
-              SizedBox(
-                width: 60,
-              ),
-              Flexible(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Text(
-                    this.content,
-                    style: Theme.of(context).textTheme.bodyText2,
-                  ),
+      child: Consumer<CommentProvider>(
+        builder: (context, data, child) => Column(
+          children: [
+            Row(
+              //avatar and title / created time
+              children: [
+                Column(
+                  //avatar
+                  children: [
+                    CircleAvatar(
+                      backgroundImage: NetworkImage(data.creatorImage),
+                      backgroundColor: Colors.brown.shade800,
+                    )
+                  ],
                 ),
-              )
-            ],
-          ),
-          Row(
-            children: [
-              SizedBox(width: 50),
-              IconButton(icon: Icon(Icons.favorite), onPressed: null),
-              Text(
-                this.num_of_likes.toString(),
-                style: Theme.of(context).textTheme.overline,
-              ),
-              SizedBox(width: 50),
-              IconButton(
-                icon: Icon(Icons.comment),
-                onPressed: () {
-                  showMaterialModalBottomSheet(
-                      context: context,
-                      builder: (context, scrollController) => PopUpComment());
-                },
-              ),
-              Text(
-                this.list_of_comments.length.toString(),
-                style: Theme.of(context).textTheme.overline,
-              )
-            ],
-          ),
-        ],
+                Column(
+                  //title and time
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Text(
+                          data.creatorName,
+                          style: Theme.of(context).textTheme.headline6,
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4.0),
+                          child: Text(
+                            DateFormat('yyyy-MM-dd H:m:s')
+                                .format(data.createdDate),
+                            style: Theme.of(context).textTheme.overline,
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                )
+              ],
+            ),
+            Row(
+              children: [
+                SizedBox(
+                  width: 60,
+                ),
+                Flexible(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Text(
+                      data.content,
+                      style: Theme.of(context).textTheme.bodyText2,
+                    ),
+                  ),
+                )
+              ],
+            ),
+            Row(
+              children: [
+                SizedBox(width: 50),
+                if (!data.like)
+                  IconButton(
+                      icon: Icon(Icons.favorite_border),
+                      onPressed: () => data.addLike(
+                          profile.uid, profile.name, profile.imageUrl)),
+                if (data.like)
+                  IconButton(
+                      icon: Icon(Icons.favorite, color: Colors.pink[300]),
+                      onPressed: () => data.cancelLike(profile.uid)),
+                Text(
+                  data.likesCount.toString(),
+                  style: Theme.of(context).textTheme.overline,
+                ),
+                SizedBox(width: 50),
+                IconButton(
+                  icon: Icon(Icons.comment),
+                  onPressed: () {
+                    showMaterialModalBottomSheet(
+                        context: context,
+                        builder: (context, scrollController) => PopUpComment(
+                              onPressFunc: (String content) {
+                                data.addL2Comment(content, profile.uid,
+                                    profile.name, profile.imageUrl);
+                              },
+                            ));
+                  },
+                ),
+                Text(
+                  data.childrenCount.toString(),
+                  style: Theme.of(context).textTheme.overline,
+                )
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
+
+  //TODO
+  void openCommentPage() {}
 }

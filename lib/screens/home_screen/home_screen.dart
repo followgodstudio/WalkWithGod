@@ -2,11 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:palette_generator/palette_generator.dart';
 import 'package:provider/provider.dart';
-import '../../providers/article/articles_provider.dart';
 
 import '../../configurations/theme.dart';
+import '../../providers/article/articles_provider.dart';
+import '../../providers/user/profile_provider.dart';
 import 'article/article_list.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -62,8 +62,12 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
         body: SafeArea(
             child: FutureBuilder(
-                future: Provider.of<ArticlesProvider>(context, listen: false)
-                    .fetchArticlesByDate(new DateTime.utc(1989, 11, 9)),
+                future: Future.wait([
+                  Provider.of<ArticlesProvider>(context, listen: false)
+                      .fetchArticlesByDate(new DateTime.utc(1989, 11, 9)),
+                  Provider.of<ProfileProvider>(context, listen: false)
+                      .fetchProfile()
+                ]),
                 builder: (ctx, asyncSnapshot) {
                   if (asyncSnapshot.connectionState ==
                       ConnectionState.waiting) {
