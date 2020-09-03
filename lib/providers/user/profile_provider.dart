@@ -9,11 +9,13 @@ class ProfileProvider with ChangeNotifier {
   String imageUrl;
   DateTime createdDate;
 
-  Future<void> fetchProfileByUid(String userId) async {
+  ProfileProvider([this.uid]);
+
+  Future<void> fetchProfile() async {
+    if (uid == null || uid == "") return;
     DocumentSnapshot doc =
-        await Firestore.instance.collection(cUsers).document(userId).get();
+        await Firestore.instance.collection(cUsers).document(uid).get();
     if (doc?.data?.isNotEmpty) {
-      uid = userId;
       name = doc.data[fUserName];
       imageUrl = doc.data[fUserImageUrl];
       createdDate = (doc.data[fCreatedDate] as Timestamp).toDate();
@@ -24,7 +26,7 @@ class ProfileProvider with ChangeNotifier {
   Future<void> initProfile(String userId) async {
     uid = userId;
     await Firestore.instance.collection(cUsers).document(uid).setData({});
-    String newName = "弟兄姐妹"; // TODO: Random name
+    String newName = "弟兄姊妹"; // TODO: Random name
     String defaultUrl = "https://photo.sohu.com/88/60/Img214056088.jpg";
     await updateProfile(
         newName: newName,

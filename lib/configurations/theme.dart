@@ -5,6 +5,7 @@ final ThemeData dayTheme = new ThemeData(
   backgroundColor: Colors.white,
   appBarTheme: AppBarTheme(color: Colors.white),
   accentColor: Color.fromARGB(255, 0, 169, 157),
+  buttonColor: Color.fromARGB(255, 239, 239, 239),
   textTheme: TextTheme(
     headline1:
         TextStyle(color: Colors.black87, fontSize: 30.0, fontFamily: 'Jinling'),
@@ -82,6 +83,11 @@ extension CustomStyles on TextTheme {
   TextStyle get captionSmall2 => const TextStyle(
         fontSize: 10.0,
         color: Color.fromARGB(255, 128, 128, 128),
+        fontFamily: 'LantingXianHei',
+      );
+  TextStyle get captionSmall3 => const TextStyle(
+        fontSize: 14.0,
+        color: Color.fromARGB(255, 194, 194, 194),
         fontFamily: 'LantingXianHei',
       );
   TextStyle get captionSmallWhite => const TextStyle(

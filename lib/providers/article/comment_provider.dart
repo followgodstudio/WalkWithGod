@@ -11,11 +11,11 @@ class CommentProvider with ChangeNotifier {
   final String creatorUid;
   final String creatorName;
   final String creatorImage;
-  final DateTime createDate;
+  final DateTime createdDate;
   final String parent;
   final String replyTo;
+  bool like;
   int likesCount;
-  List<String> likes = [];
   int childrenCount; // level 1 comment will have this field
   List<CommentProvider> children = []; // level 1 comment will have this field
   DocumentSnapshot _lastVisibleChild; // level 1 comment will have this field
@@ -28,19 +28,20 @@ class CommentProvider with ChangeNotifier {
     @required this.creatorUid,
     @required this.creatorName,
     @required this.creatorImage,
-    @required this.createDate,
+    @required this.createdDate,
     @required this.likesCount,
+    @required this.like,
     this.childrenCount, // level 1 comment will have this field
     this.parent, // level 2/3 comment will have this field
-    this.likes, // level 2/3 comment will have this field
-    this.replyTo, // level 3 comment will have this field
+    this.replyTo, // level 2/3 comment will have this field
   });
 
   bool get noMoreChild {
     return _noMoreChild;
   }
 
-  Future<void> fetchL2ChildrenCommentList([int limit = loadLimit]) async {
+  Future<void> fetchL2ChildrenCommentList(String userId,
+      [int limit = loadLimit]) async {
     // level 1 comment will call this method
     if (parent != null) return;
     QuerySnapshot query = await Firestore.instance
@@ -53,12 +54,13 @@ class CommentProvider with ChangeNotifier {
         .limit(limit)
         .getDocuments();
     children = [];
-    _appendL2CommentList(query);
+    _appendL2CommentList(query, userId);
   }
 
-  Future<void> fetchMoreL2ChildrenComments([int limit = loadLimit]) async {
+  Future<void> fetchMoreL2ChildrenComments(String userId,
+      [int limit = loadLimit]) async {
     // level 1 comment will call this method
-    if (parent != null) return;
+    if (parent != null || _noMoreChild) return;
     QuerySnapshot query = await Firestore.instance
         .collection(cArticles)
         .document(articleId)
@@ -69,26 +71,10 @@ class CommentProvider with ChangeNotifier {
         .startAfterDocument(_lastVisibleChild)
         .limit(limit)
         .getDocuments();
-    _appendL2CommentList(query);
-  }
-
-  Future<void> fetchLikes() async {
-    // Only used for level 1 comment, level 2 will be fetched automatically
-    if (likes == null) likes = [];
-    if (likesCount == likes.length) return;
-    QuerySnapshot query = await Firestore.instance
-        .collection(cArticles)
-        .document(articleId)
-        .collection(cArticleComments)
-        .document(id)
-        .collection(cArticleCommentLikes)
-        .getDocuments();
-    likes = query.documents.map((doc) => doc.documentID).toList();
+    _appendL2CommentList(query, userId);
   }
 
   Future<void> addLike(String userId, String userName, String userImage) async {
-    await fetchLikes();
-    if (likes.contains(userId)) return;
     // Add user to like list
     if (parent == null) {
       // Level 1
@@ -126,14 +112,12 @@ class CommentProvider with ChangeNotifier {
     MessagesProvider().sendMessage(
         eMessageTypeLike, userId, userName, userImage, creatorUid, articleId);
     // Change local variables
-    likes.add(userId);
+    like = true;
     likesCount += 1;
     notifyListeners();
   }
 
-  Future<void> cancelLike(String user) async {
-    await fetchLikes();
-    if (!likes.contains(user)) return;
+  Future<void> cancelLike(String userId) async {
     // Remove user from like list
     if (parent == null) {
       // Level 1
@@ -144,7 +128,7 @@ class CommentProvider with ChangeNotifier {
           .collection(cArticleComments)
           .document(id)
           .collection(cArticleCommentLikes)
-          .document(user)
+          .document(userId)
           .delete();
       // Decrease like count by 1
       await Firestore.instance
@@ -164,18 +148,21 @@ class CommentProvider with ChangeNotifier {
           .document(id)
           .updateData({
         fCommentLikesCount: FieldValue.increment(-1),
-        fCommentReplyLikes: FieldValue.arrayRemove([user])
+        fCommentReplyLikes: FieldValue.arrayRemove([userId])
       });
     }
-    // revoke message?
-    likes.remove(user);
+    // revoke message???
+    like = false;
     likesCount -= 1;
     notifyListeners();
   }
 
-  Future<void> addL2Comment(String l2content, String l2creatorUid,
-      String l2creatorName, String l2creatorImage,
-      [String l2replyTo]) async {
+  Future<void> addL2Comment(
+    String l2content,
+    String l2creatorUid,
+    String l2creatorName,
+    String l2creatorImage,
+  ) async {
     Map<String, dynamic> comment = {};
     comment[fCommentArticleId] = articleId;
     comment[fCommentContent] = l2content;
@@ -186,9 +173,7 @@ class CommentProvider with ChangeNotifier {
     comment[fCommentParent] = id;
     comment[fCommentReplyLikes] = [];
     comment[fCommentLikesCount] = 0;
-    if (l2replyTo != null)
-      // This is a third level comment
-      comment[fCommentReplyTo] = l2replyTo;
+    comment[fCommentReplyTo] = creatorUid;
     // Add a document
     DocumentReference docRef = await Firestore.instance
         .collection(cArticles)
@@ -205,22 +190,29 @@ class CommentProvider with ChangeNotifier {
         .document(id)
         .updateData({fCommentChildrenCount: FieldValue.increment(1)});
     // Send the creator/replyTo a message
-    String receiver = (l2replyTo == null) ? creatorUid : l2replyTo;
     MessagesProvider().sendMessage(eMessageTypeReply, l2creatorUid,
-        l2creatorName, l2creatorImage, receiver, articleId);
+        l2creatorName, l2creatorImage, creatorUid, articleId);
+    comment['like'] = false;
     _addL2CommentToList(docRef.documentID, comment);
   }
 
-  void _appendL2CommentList(QuerySnapshot query) {
+  void _appendL2CommentList(QuerySnapshot query, String userId) {
     List<DocumentSnapshot> docs = query.documents;
-    query.documents.forEach((data) {
-      children.add(_buildL2CommentByMap(data.documentID, data.data));
-    });
     if (docs.length == 0) {
       _noMoreChild = true;
       notifyListeners();
       return;
     }
+    query.documents.forEach((data) {
+      // Fetch if current user like
+      if (data[fCommentReplyLikes] == null) {
+        data.data['like'] = false;
+      } else {
+        data.data['like'] =
+            (data[fCommentReplyLikes] as List<String>).contains(userId);
+      }
+      children.add(_buildL2CommentByMap(data.documentID, data.data));
+    });
     _lastVisibleChild = query.documents[query.documents.length - 1];
     notifyListeners();
   }
@@ -240,11 +232,11 @@ class CommentProvider with ChangeNotifier {
         creatorUid: data[fCommentCreatorUid],
         creatorName: data[fCommentCreatorName],
         creatorImage: data[fCommentCreatorImage],
-        createDate: (data[fCreatedDate] as Timestamp).toDate(),
+        createdDate: (data[fCreatedDate] as Timestamp).toDate(),
         parent: data[fCommentParent],
         replyTo: data[fCommentReplyTo],
         childrenCount: data[fCommentChildrenCount],
-        likes: List<String>.from(data[fCommentReplyLikes]),
-        likesCount: data[fCommentLikesCount]);
+        likesCount: data[fCommentLikesCount],
+        like: data['like']);
   }
 }
