@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
+import '../../providers/article/article_provider.dart';
+import '../../utils/utils.dart';
 import '../../configurations/theme.dart';
 import '../../providers/article/article_provider.dart';
 import '../../providers/article/articles_provider.dart';
@@ -51,7 +53,7 @@ class _ArticleScreen extends State<ArticleScreen> {
         _isLoading = true;
       });
       _articleId = ModalRoute.of(context).settings.arguments as String;
-      Provider.of<ArticlesProvider>(context)
+      Provider.of<ArticlesProvider>(context, listen: true)
           .fetchArticleConentById(_articleId)
           .catchError((err) {
         return showDialog(
@@ -73,47 +75,10 @@ class _ArticleScreen extends State<ArticleScreen> {
         setState(() {
           _isLoading = false;
         });
-        _content = content;
       });
     }
     _isInit = false;
     super.didChangeDependencies();
-  }
-
-  String getCreatedDuration(DateTime createdDate) {
-    int timeDiffInHours =
-        DateTime.now().toUtc().difference(createdDate).inHours;
-    int timeDiffInDays = 0;
-    int timeDiffInMonths = 0;
-    int timeDiffInYears = 0;
-    if (timeDiffInHours > 24 * 365) {
-      timeDiffInYears = timeDiffInHours ~/ (24 * 365);
-      //timeDiffInHours %= timeDiffInHours;
-    } else if (timeDiffInHours > 24 * 30) {
-      timeDiffInMonths = timeDiffInHours ~/ (24 * 30);
-      //timeDiffInHours %= timeDiffInHours;
-    } else if (timeDiffInHours > 24) {
-      timeDiffInDays = timeDiffInHours ~/ 24;
-      //timeDiffInHours %= timeDiffInHours;
-    }
-
-    return timeDiffInYears > 1
-        ? timeDiffInYears.toString() + " years ago"
-        : timeDiffInYears > 0
-            ? timeDiffInYears.toString() + " year ago"
-            : timeDiffInMonths > 1
-                ? timeDiffInMonths.toString() + " months ago"
-                : timeDiffInMonths > 0
-                    ? timeDiffInMonths.toString() + " month ago"
-                    : timeDiffInDays > 1
-                        ? timeDiffInDays.toString() + " days ago"
-                        : timeDiffInDays > 0
-                            ? timeDiffInDays.toString() + " day ago"
-                            : timeDiffInHours > 1
-                                ? timeDiffInHours.toString() + " hours ago"
-                                : timeDiffInHours > 0
-                                    ? timeDiffInHours.toString() + " hour ago"
-                                    : null;
   }
 
   @override
@@ -142,10 +107,13 @@ class _ArticleScreen extends State<ArticleScreen> {
               title: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    // Text(
-                    //   loadedArticle.title ?? "",
-                    //   style: Theme.of(context).textTheme.headerSmall1,
-                    // ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 5.0),
+                      child: Text(
+                        loadedArticle.title ?? "",
+                        style: Theme.of(context).textTheme.headerSmall1,
+                      ),
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -169,7 +137,7 @@ class _ArticleScreen extends State<ArticleScreen> {
               actions: [
                 Placeholder(
                   color: Theme.of(context).appBarTheme.color,
-                  fallbackWidth: 40,
+                  fallbackWidth: 60,
                 ),
               ],
             ),
@@ -217,12 +185,13 @@ class _ArticleScreen extends State<ArticleScreen> {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(bottom: 10.0),
+                            padding: const EdgeInsets.only(
+                                bottom: 10.0, left: 3, right: 3),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                (loadedArticle.icon == null ||
-                                        loadedArticle.icon == "")
+                                loadedArticle.icon == null ||
+                                        loadedArticle.icon.isEmpty
                                     ? Icon(Icons.album)
                                     : Image(
                                         image: NetworkImage(
@@ -234,21 +203,28 @@ class _ArticleScreen extends State<ArticleScreen> {
                                         fit: BoxFit.scaleDown,
                                         alignment: Alignment.center,
                                       ),
-                                Text(
-                                  loadedArticle.publisher ?? "随行",
-                                  style:
-                                      Theme.of(context).textTheme.captionSmall2,
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 5.0),
+                                  child: Text(
+                                    loadedArticle.publisher ?? "随行",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .captionSmall2,
+                                  ),
                                 ),
                                 Container(
-                                    height: 20,
+                                    height: 12,
                                     child: VerticalDivider(
                                         color: Color.fromARGB(
                                             255, 128, 128, 128))),
-                                // Text(
-                                //   loadedArticle.author,
-                                //   style:
-                                //       Theme.of(context).textTheme.captionSmall2,
-                                // ),
+                                Expanded(
+                                  child: Text(
+                                    loadedArticle.author ?? "匿名",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .captionSmall2,
+                                  ),
+                                ),
                                 Text(
                                   getCreatedDuration(loadedArticle.createdDate),
                                   style:
@@ -262,19 +238,25 @@ class _ArticleScreen extends State<ArticleScreen> {
                     ),
                     Divider(),
                     Center(
-                      child: _isLoading
-                          ? Center(
-                              child: CircularProgressIndicator(),
-                            )
-                          : _content.isEmpty
-                              ? Center(
-                                  child: Text("content is missing"),
-                                )
-                              : Column(children: [
-                                  ..._content.map((e) => ArticleParagraph(e))
-                                ]),
-                    ),
-                    Comments(articleId: _articleId),
+                        child: _isLoading
+                            ? Center(
+                                child: CircularProgressIndicator(),
+                              )
+                            : Consumer<ArticlesProvider>(
+                                builder: (context, data, _) {
+                                _content = data.articles
+                                    .firstWhere((e) => e.id == _articleId)
+                                    .content;
+                                return _content == null || _content.isEmpty
+                                    ? Center(
+                                        child: Text("content is missing"),
+                                      )
+                                    : Column(children: [
+                                        ..._content
+                                            .map((e) => ArticleParagraph(e))
+                                      ]);
+                              })),
+                    Comments(),
                   ],
                 ),
               ),

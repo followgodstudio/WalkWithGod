@@ -1,7 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:palette_generator/palette_generator.dart';
+import '../../../utils/utils.dart';
 
 import '../../../configurations/theme.dart';
 import '../../article_screen/article_screen.dart';
@@ -20,43 +20,6 @@ class ArticleList extends StatefulWidget {
 }
 
 class _ArticleListState extends State<ArticleList> {
-  String getCreatedDuration(DateTime createdDate) {
-    createdDate ?? DateTime.now().toUtc();
-    int timeDiffInHours =
-        DateTime.now().toUtc().difference(createdDate).inHours;
-    int timeDiffInDays = 0;
-    int timeDiffInMonths = 0;
-    int timeDiffInYears = 0;
-    if (timeDiffInHours > 24 * 365) {
-      timeDiffInYears = timeDiffInHours ~/ (24 * 365);
-      //timeDiffInHours %= timeDiffInHours;
-    } else if (timeDiffInHours > 24 * 30) {
-      timeDiffInMonths = timeDiffInHours ~/ (24 * 30);
-      //timeDiffInHours %= timeDiffInHours;
-    } else if (timeDiffInHours > 24) {
-      timeDiffInDays = timeDiffInHours ~/ 24;
-      //timeDiffInHours %= timeDiffInHours;
-    }
-
-    return timeDiffInYears > 1
-        ? timeDiffInYears.toString() + " years ago"
-        : timeDiffInYears > 0
-            ? timeDiffInYears.toString() + " year ago"
-            : timeDiffInMonths > 1
-                ? timeDiffInMonths.toString() + " months ago"
-                : timeDiffInMonths > 0
-                    ? timeDiffInMonths.toString() + " month ago"
-                    : timeDiffInDays > 1
-                        ? timeDiffInDays.toString() + " days ago"
-                        : timeDiffInDays > 0
-                            ? timeDiffInDays.toString() + " day ago"
-                            : timeDiffInHours > 1
-                                ? timeDiffInHours.toString() + " hours ago"
-                                : timeDiffInHours > 0
-                                    ? timeDiffInHours.toString() + " hour ago"
-                                    : null;
-  }
-
   Future<bool> useWhiteTextColor(NetworkImage image) async {
     PaletteGenerator paletteGenerator =
         await PaletteGenerator.fromImageProvider(
@@ -90,11 +53,10 @@ class _ArticleListState extends State<ArticleList> {
       itemExtent: MediaQuery.of(context).size.width,
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {
-          NetworkImage backgroundImage = NetworkImage(articlesData
-                      .articles[index].imageUrl ==
-                  null
-              ? "https://blog.sevenponds.com/wp-content/uploads/2018/12/800px-Vincent_van_Gogh_-_Self-Portrait_-_Google_Art_Project_454045.jpg"
-              : articlesData.articles[index].imageUrl);
+          var backgroundImage = articlesData.articles[index].imageUrl == null ||
+                  articlesData.articles[index].imageUrl.isEmpty
+              ? AssetImage('assets/images/placeholder.png')
+              : NetworkImage(articlesData.articles[index].imageUrl);
           Color textColor = Colors.white;
           useWhiteTextColor(backgroundImage).then((value) =>
               {value ? textColor = Colors.white : textColor = Colors.black});
@@ -123,10 +85,10 @@ class _ArticleListState extends State<ArticleList> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(bottom: 0.0),
+                            padding: const EdgeInsets.only(bottom: 8.0),
                             child: Text(
                               articlesData.articles[index].title ?? "",
-                              maxLines: 3,
+                              maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                   fontFamily: "Jinling", color: textColor),
@@ -137,7 +99,7 @@ class _ArticleListState extends State<ArticleList> {
                                 vertical: 8.0, horizontal: 3.0),
                             child: Text(
                               articlesData.articles[index].description ?? "",
-                              maxLines: 3,
+                              maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                               style:
                                   Theme.of(context).textTheme.captionSmallWhite,
@@ -180,7 +142,7 @@ class _ArticleListState extends State<ArticleList> {
                                     articlesData.articles[index].author ?? "匿名",
                                     style: Theme.of(context)
                                         .textTheme
-                                        .captionMediumWhite,
+                                        .captionSmallWhite,
                                   ),
                                 ),
                                 Text(
@@ -189,7 +151,7 @@ class _ArticleListState extends State<ArticleList> {
                                       DateTime.now().toUtc()),
                                   style: Theme.of(context)
                                       .textTheme
-                                      .captionMediumWhite,
+                                      .captionSmallWhite,
                                 ),
                               ],
                             ),

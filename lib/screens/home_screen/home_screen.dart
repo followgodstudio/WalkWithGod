@@ -48,11 +48,16 @@ class _HomeScreenState extends State<HomeScreen> {
     super.didChangeDependencies();
   }
 
+  Future<void> _refreshArticles(BuildContext ctx) async {
+    await Provider.of<ArticlesProvider>(context, listen: false)
+        .fetchArticlesByDate(new DateTime.utc(1989, 11, 9));
+  }
+
   @override
   Widget build(BuildContext context) {
     var now = new DateTime.now();
     var formatter = new DateFormat('MMM dd, yyyy');
-    String formatted = formatter.format(now);
+    String formattedDate = formatter.format(now);
 
     return Scaffold(
         body: SafeArea(
@@ -73,61 +78,61 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Text('An error occurred!'),
                       );
                     } else {
-                      return Consumer<ArticlesProvider>(
-                          builder: (context, data, child) {
-                        return CustomScrollView(slivers: <Widget>[
-                          SliverAppBar(
-                            shadowColor: Colors.white,
-                            backgroundColor: Theme.of(context).canvasColor,
-                            pinned: true,
-                            automaticallyImplyLeading: false,
-                            flexibleSpace: Row(
-                              children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0),
-                                  child: Column(
-                                    children: [
-                                      FlatButton(
-                                          onPressed: () {},
-                                          child: Text(
-                                            "今日",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .captionMedium2,
-                                          )),
-                                      Container(
-                                          width: 30.0,
-                                          height: 5.0,
-                                          color: Colors.yellow),
-                                    ],
-                                  ),
+                      return RefreshIndicator(
+                          onRefresh: () => _refreshArticles(context),
+                          child: Consumer<ArticlesProvider>(
+                              builder: (context, data, child) {
+                            return CustomScrollView(slivers: <Widget>[
+                              SliverAppBar(
+                                toolbarHeight: 48.0,
+                                shadowColor: Theme.of(context).canvasColor,
+                                backgroundColor: Theme.of(context).canvasColor,
+                                pinned: true,
+                                automaticallyImplyLeading: false,
+                                flexibleSpace: Row(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8.0),
+                                      child: Column(
+                                        children: [
+                                          FlatButton(
+                                              onPressed: () {},
+                                              child: Text(
+                                                "今日",
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .captionMedium2,
+                                              )),
+                                        ],
+                                      ),
+                                    ),
+                                    FlatButton(
+                                      onPressed: () {},
+                                      child: Text(
+                                        formattedDate,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .captionMain,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                FlatButton(
-                                  onPressed: () {},
-                                  child: Text(
-                                    formatted,
-                                    style:
-                                        Theme.of(context).textTheme.captionMain,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            actions: [
-                              FlatButton(
-                                child: CircleAvatar(
-                                  backgroundColor:
-                                      Theme.of(context).canvasColor,
-                                  backgroundImage:
-                                      AssetImage("assets/images/logo.png"),
-                                ),
-                                onPressed: () {},
-                              )
-                            ],
-                          ),
-                          ArticleList(),
-                        ]);
-                      });
+                                actions: [
+                                  FlatButton(
+                                    child: CircleAvatar(
+                                      backgroundColor:
+                                          Theme.of(context).canvasColor,
+                                      backgroundImage:
+                                          AssetImage("assets/images/logo.png"),
+                                    ),
+                                    onPressed: () {},
+                                  )
+                                ],
+                              ),
+                              ArticleList(),
+                            ]);
+                          }));
                     }
                   }
                 })));

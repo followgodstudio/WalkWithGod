@@ -20,24 +20,17 @@ class ArticleParagraph extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 10.0),
           child: Row(
             children: [
-              // Padding(
-              //   padding: const EdgeInsets.only(top: 10.0),
-              //   child: Icon(
-              //     Icons.label_outline,
-              //     color: Colors.amber[200],
-              //     size: 24.0,
-              //     semanticLabel: 'Subtitle Icon',
-              //   ),
-              // ),
               _paragraph.subtitle == null
                   ? Container(
-                      width: 200,
-                      child: Text(
-                        _paragraph.body,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                        style: Theme.of(context).textTheme.subtitle1,
-                      ),
+                      width: 30,
+                      height: 4,
+                      color: Colors.yellow,
+                      // child: Text(
+                      //   _paragraph.body,
+                      //   overflow: TextOverflow.ellipsis,
+                      //   maxLines: 1,
+                      //   style: Theme.of(context).textTheme.subtitle1,
+                      // ),
                     )
                   : Text(
                       _paragraph.subtitle,
@@ -46,7 +39,11 @@ class ArticleParagraph extends StatelessWidget {
             ],
           ),
         ),
-        Text(_paragraph.body, style: Theme.of(context).textTheme.bodyText1),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 20.0),
+          child: Text(_paragraph.body,
+              style: Theme.of(context).textTheme.bodyText1),
+        ),
       ]),
     );
   }
