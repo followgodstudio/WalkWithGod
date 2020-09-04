@@ -1,3 +1,6 @@
+import 'package:flutter/widgets.dart';
+import 'package:palette_generator/palette_generator.dart';
+
 String getCreatedDuration(DateTime createdDate) {
   int timeDiffInMins = DateTime.now().toUtc().difference(createdDate).inMinutes;
 
@@ -38,3 +41,27 @@ String getCreatedDuration(DateTime createdDate) {
                                   ? timeDiffInHours.toString() + " 小时前"
                                   : null;
 }
+
+Future<bool> useWhiteTextColor(NetworkImage image) async {
+  PaletteGenerator paletteGenerator = await PaletteGenerator.fromImageProvider(
+    //NetworkImage(imageUrl),
+    image,
+    // Images are square
+    size: Size(300, 300),
+
+    // I want the dominant color of the top left section of the image
+    region: Offset.zero & Size(40, 40),
+  );
+
+  Color dominantColor = paletteGenerator.dominantColor?.color;
+
+  // Here's the problem
+  // Sometimes dominantColor returns null
+  // With black and white background colors in my tests
+  if (dominantColor == null) print('Dominant Color null');
+
+  return useWhiteForeground(dominantColor);
+}
+
+bool useWhiteForeground(Color backgroundColor) =>
+    1.05 / (backgroundColor.computeLuminance() + 0.05) > 4.5;

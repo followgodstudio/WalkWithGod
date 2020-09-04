@@ -14,7 +14,6 @@ class Paragraph {
 }
 
 class ArticleProvider with ChangeNotifier {
-  var _fdb = Firestore.instance;
   final String id;
   final String imageUrl;
   final String title;
