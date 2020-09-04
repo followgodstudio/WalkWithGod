@@ -23,29 +23,11 @@ class _ArticleScreen extends State<ArticleScreen> {
   var _isInit = true;
   String _articleId;
   List<Paragraph> _content = [];
-  ScrollController _hideButtonController = new ScrollController();
-  var _isVisible = true;
+  final HideNavbar hiding = HideNavbar();
 
   @override
   void initState() {
     super.initState();
-    _hideButtonController.addListener(() {
-      if (_hideButtonController.position.userScrollDirection ==
-          ScrollDirection.reverse) {
-        if (_isVisible)
-          //TODO: each time user scroll, the whole screen will be rebuilt, but we only want the bottom bar to be rebuilt
-          setState(() {
-            _isVisible = false;
-          });
-      }
-      if (_hideButtonController.position.userScrollDirection ==
-          ScrollDirection.forward) {
-        if (!_isVisible)
-          setState(() {
-            _isVisible = true;
-          });
-      }
-    });
   }
 
   @override
@@ -103,7 +85,7 @@ class _ArticleScreen extends State<ArticleScreen> {
             return true;
           },
           child: CustomScrollView(
-            controller: _hideButtonController,
+            controller: hiding.controller,
             slivers: <Widget>[
               SliverAppBar(
                 backgroundColor: Theme.of(context).appBarTheme.color,
@@ -281,16 +263,45 @@ class _ArticleScreen extends State<ArticleScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: AnimatedContainer(
-        duration: Duration(milliseconds: 300),
-        height: _isVisible ? 60.0 : 0.0,
-        child: _isVisible
-            ? BottomBar(_articleId)
-            : Container(
-                color: Colors.white,
-                width: MediaQuery.of(context).size.width,
-              ),
+      bottomNavigationBar: ValueListenableBuilder(
+        valueListenable: hiding.visible,
+        builder: (context, bool value, child) => AnimatedContainer(
+          duration: Duration(milliseconds: 300),
+          height: value ? 60.0 : 0.0,
+          child: value
+              ? BottomBar(_articleId)
+              : Container(
+                  color: Colors.white,
+                  width: MediaQuery.of(context).size.width,
+                ),
+        ),
       ),
+    );
+  }
+}
+
+class HideNavbar {
+  final ScrollController controller = ScrollController();
+  ValueNotifier<bool> visible = ValueNotifier<bool>(true);
+
+  HideNavbar() {
+    visible.value = true;
+    controller.addListener(
+      () {
+        if (controller.position.userScrollDirection ==
+            ScrollDirection.reverse) {
+          if (visible.value) {
+            visible.value = false;
+          }
+        }
+
+        if (controller.position.userScrollDirection ==
+            ScrollDirection.forward) {
+          if (!visible.value) {
+            visible.value = true;
+          }
+        }
+      },
     );
   }
 }
