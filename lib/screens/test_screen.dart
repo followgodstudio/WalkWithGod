@@ -105,7 +105,8 @@ class TestComment extends StatelessWidget {
                     child: Text("Reply"),
                     onPressed: () {
                       Provider.of<CommentProvider>(context, listen: false)
-                          .addL2Comment("你说的对", uid, userName, userImage);
+                          .addL2Comment(
+                              "你说的对", uid, userName, userImage, false);
                     }),
               ]),
               Row(

@@ -6,6 +6,7 @@ import '../../model/constants.dart';
 class MessageProvider with ChangeNotifier {
   final String id;
   final String articleId;
+  final String commentId;
   final String senderUid;
   final String senderName;
   final String senderImage;
@@ -17,6 +18,7 @@ class MessageProvider with ChangeNotifier {
   MessageProvider({
     @required this.id,
     @required this.articleId,
+    @required this.commentId,
     @required this.senderUid,
     @required this.senderName,
     @required this.senderImage,

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
+import 'package:walk_with_god/providers/article/comments_provider.dart';
+import 'package:walk_with_god/providers/user/profile_provider.dart';
 
 import '../../providers/article/article_provider.dart';
 import '../../utils/utils.dart';
@@ -90,179 +92,193 @@ class _ArticleScreen extends State<ArticleScreen> {
 
     return Scaffold(
       body: SafeArea(
-        child: CustomScrollView(
-          controller: _hideButtonController,
-          slivers: <Widget>[
-            SliverAppBar(
-              backgroundColor: Theme.of(context).appBarTheme.color,
-              leading: IconButton(
-                icon: Icon(
-                  Icons.arrow_back_ios,
-                  color: Colors.black,
+        child: NotificationListener<ScrollNotification>(
+          onNotification: (ScrollNotification scrollInfo) {
+            if (scrollInfo.metrics.pixels ==
+                scrollInfo.metrics.maxScrollExtent) {
+              Provider.of<CommentsProvider>(context, listen: false)
+                  .fetchMoreL1Comments(
+                      Provider.of<ProfileProvider>(context, listen: false).uid);
+            }
+            return true;
+          },
+          child: CustomScrollView(
+            controller: _hideButtonController,
+            slivers: <Widget>[
+              SliverAppBar(
+                backgroundColor: Theme.of(context).appBarTheme.color,
+                leading: IconButton(
+                  icon: Icon(
+                    Icons.arrow_back_ios,
+                    color: Colors.black,
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
                 ),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-              title: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 5.0),
-                      child: Text(
-                        loadedArticle.title ?? "",
-                        style: Theme.of(context).textTheme.headerSmall1,
+                title: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5.0),
+                        child: Text(
+                          loadedArticle.title ?? "",
+                          style: Theme.of(context).textTheme.headerSmall1,
+                        ),
                       ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          loadedArticle.publisher ?? "随行",
-                          style: Theme.of(context).textTheme.captionSmall2,
-                        ),
-                        Container(
-                            height: 10,
-                            child: VerticalDivider(
-                                color: Color.fromARGB(255, 128, 128, 128))),
-                        Text(
-                          loadedArticle.author ?? "匿名",
-                          style: Theme.of(context).textTheme.captionSmall2,
-                        ),
-                      ],
-                    ),
-                  ]),
-              floating: true,
-              expandedHeight: 50,
-              actions: [
-                Placeholder(
-                  color: Theme.of(context).appBarTheme.color,
-                  fallbackWidth: 60,
-                ),
-              ],
-            ),
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Hero(
-                            tag: loadedArticle.id,
-                            child: Container(
-                              height: 200,
-                              child: Stack(
-                                children: <Widget>[
-                                  Center(
-                                    child: FadeInImage(
-                                      width: MediaQuery.of(context).size.width,
-                                      height: 200,
-                                      placeholder: AssetImage(
-                                          'assets/images/placeholder.png'),
-                                      image: (loadedArticle.imageUrl == null ||
-                                              loadedArticle.imageUrl == "")
-                                          ? AssetImage(
-                                              'assets/images/placeholder.png')
-                                          : NetworkImage(
-                                              loadedArticle.imageUrl),
-                                      // "https://blog.sevenponds.com/wp-content/uploads/2018/12/800px-Vincent_van_Gogh_-_Self-Portrait_-_Google_Art_Project_454045.jpg"),
-                                      fit: BoxFit.cover,
+                          Text(
+                            loadedArticle.publisher ?? "随行",
+                            style: Theme.of(context).textTheme.captionSmall2,
+                          ),
+                          Container(
+                              height: 10,
+                              child: VerticalDivider(
+                                  color: Color.fromARGB(255, 128, 128, 128))),
+                          Text(
+                            loadedArticle.author ?? "匿名",
+                            style: Theme.of(context).textTheme.captionSmall2,
+                          ),
+                        ],
+                      ),
+                    ]),
+                floating: true,
+                expandedHeight: 50,
+                actions: [
+                  Placeholder(
+                    color: Theme.of(context).appBarTheme.color,
+                    fallbackWidth: 60,
+                  ),
+                ],
+              ),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Hero(
+                              tag: loadedArticle.id,
+                              child: Container(
+                                height: 200,
+                                child: Stack(
+                                  children: <Widget>[
+                                    Center(
+                                      child: FadeInImage(
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        height: 200,
+                                        placeholder: AssetImage(
+                                            'assets/images/placeholder.png'),
+                                        image: (loadedArticle.imageUrl ==
+                                                    null ||
+                                                loadedArticle.imageUrl == "")
+                                            ? AssetImage(
+                                                'assets/images/placeholder.png')
+                                            : NetworkImage(
+                                                loadedArticle.imageUrl),
+                                        // "https://blog.sevenponds.com/wp-content/uploads/2018/12/800px-Vincent_van_Gogh_-_Self-Portrait_-_Google_Art_Project_454045.jpg"),
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 20.0, bottom: 10),
+                              child: Text(
+                                loadedArticle.title ?? "",
+                                style: Theme.of(context).textTheme.headline1,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  bottom: 10.0, left: 3, right: 3),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  loadedArticle.icon == null ||
+                                          loadedArticle.icon.isEmpty
+                                      ? Icon(Icons.album)
+                                      : Image(
+                                          image: NetworkImage(
+                                            loadedArticle.icon,
+                                          ),
+                                          width: 30,
+                                          height: 30,
+                                          color: null,
+                                          fit: BoxFit.scaleDown,
+                                          alignment: Alignment.center,
+                                        ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 5.0),
+                                    child: Text(
+                                      loadedArticle.publisher ?? "随行",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .captionSmall2,
+                                    ),
+                                  ),
+                                  Container(
+                                      height: 12,
+                                      child: VerticalDivider(
+                                          color: Color.fromARGB(
+                                              255, 128, 128, 128))),
+                                  Expanded(
+                                    child: Text(
+                                      loadedArticle.author ?? "匿名",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .captionSmall2,
+                                    ),
+                                  ),
+                                  Text(
+                                    getCreatedDuration(
+                                        loadedArticle.createdDate),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .captionSmall2,
                                   ),
                                 ],
                               ),
                             ),
-                          ),
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(top: 20.0, bottom: 10),
-                            child: Text(
-                              loadedArticle.title ?? "",
-                              style: Theme.of(context).textTheme.headline1,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                bottom: 10.0, left: 3, right: 3),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                loadedArticle.icon == null ||
-                                        loadedArticle.icon.isEmpty
-                                    ? Icon(Icons.album)
-                                    : Image(
-                                        image: NetworkImage(
-                                          loadedArticle.icon,
-                                        ),
-                                        width: 30,
-                                        height: 30,
-                                        color: null,
-                                        fit: BoxFit.scaleDown,
-                                        alignment: Alignment.center,
-                                      ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 5.0),
-                                  child: Text(
-                                    loadedArticle.publisher ?? "随行",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .captionSmall2,
-                                  ),
-                                ),
-                                Container(
-                                    height: 12,
-                                    child: VerticalDivider(
-                                        color: Color.fromARGB(
-                                            255, 128, 128, 128))),
-                                Expanded(
-                                  child: Text(
-                                    loadedArticle.author ?? "匿名",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .captionSmall2,
-                                  ),
-                                ),
-                                Text(
-                                  getCreatedDuration(loadedArticle.createdDate),
-                                  style:
-                                      Theme.of(context).textTheme.captionSmall2,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    Divider(),
-                    Center(
-                        child: _isLoading
-                            ? Center(
-                                child: CircularProgressIndicator(),
-                              )
-                            : Consumer<ArticlesProvider>(
-                                builder: (context, data, _) {
-                                _content = data.articles
-                                    .firstWhere((e) => e.id == _articleId)
-                                    .content;
-                                return _content == null || _content.isEmpty
-                                    ? Center(
-                                        child: Text("content is missing"),
-                                      )
-                                    : Column(children: [
-                                        ..._content
-                                            .map((e) => ArticleParagraph(e))
-                                      ]);
-                              })),
-                    //TODO: comment widget cannot be scrolled together with articles
-                    Comments(articleId: _articleId),
-                  ],
+                      Divider(),
+                      Center(
+                          child: _isLoading
+                              ? Center(
+                                  child: CircularProgressIndicator(),
+                                )
+                              : Consumer<ArticlesProvider>(
+                                  builder: (context, data, _) {
+                                  _content = data.articles
+                                      .firstWhere((e) => e.id == _articleId)
+                                      .content;
+                                  return _content == null || _content.isEmpty
+                                      ? Center(
+                                          child: Text("content is missing"),
+                                        )
+                                      : Column(children: [
+                                          ..._content
+                                              .map((e) => ArticleParagraph(e))
+                                        ]);
+                                })),
+                      Comments(articleId: _articleId),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: AnimatedContainer(

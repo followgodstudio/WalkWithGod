@@ -86,8 +86,8 @@ extension CustomStyles on TextTheme {
         fontFamily: 'LantingXianHei',
       );
   TextStyle get captionSmall3 => const TextStyle(
-        fontSize: 14.0,
-        color: Color.fromARGB(255, 194, 194, 194),
+        fontSize: 12.0,
+        color: Color.fromARGB(255, 128, 128, 128),
         fontFamily: 'LantingXianHei',
       );
   TextStyle get captionSmallWhite => const TextStyle(
@@ -110,6 +110,16 @@ extension CustomStyles on TextTheme {
         //color: Color.fromARGB(255, 0, 169, 157),
         color: Colors.black,
         fontFamily: 'FangzhengTeYaSong',
+      );
+  TextStyle get captionMedium3 => const TextStyle(
+        fontSize: 14.0,
+        color: Color.fromARGB(255, 194, 194, 194),
+        fontFamily: 'LantingXianHei',
+      );
+  TextStyle get captionMedium4 => const TextStyle(
+        fontSize: 14.0,
+        color: Color.fromARGB(255, 77, 77, 77),
+        fontFamily: 'LantingXianHei',
       );
   TextStyle get captionLarge1 => const TextStyle(
         fontSize: 18.0,

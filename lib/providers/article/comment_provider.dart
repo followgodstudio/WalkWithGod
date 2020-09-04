@@ -13,28 +13,33 @@ class CommentProvider with ChangeNotifier {
   final String creatorImage;
   final DateTime createdDate;
   final String parent;
-  final String replyTo;
+  final String replyToUid;
+  final String replyToName;
   bool like;
   int likesCount;
   int childrenCount; // level 1 comment will have this field
   List<CommentProvider> children = []; // level 1 comment will have this field
   DocumentSnapshot _lastVisibleChild; // level 1 comment will have this field
   bool _noMoreChild = false; // level 1 comment will have this field
+  CommentProvider parentPointer; // level 2/3 comment will have this field
+  bool _isFetching = false; // To avoid frequently request
 
-  CommentProvider({
-    @required this.id,
-    @required this.articleId,
-    @required this.content,
-    @required this.creatorUid,
-    @required this.creatorName,
-    @required this.creatorImage,
-    @required this.createdDate,
-    @required this.likesCount,
-    @required this.like,
-    this.childrenCount, // level 1 comment will have this field
-    this.parent, // level 2/3 comment will have this field
-    this.replyTo, // level 2/3 comment will have this field
-  });
+  CommentProvider(
+      {@required this.id,
+      @required this.articleId,
+      @required this.content,
+      @required this.creatorUid,
+      @required this.creatorName,
+      @required this.creatorImage,
+      @required this.createdDate,
+      @required this.likesCount,
+      @required this.like,
+      this.childrenCount, // level 1 comment will have this field
+      this.parent, // level 2/3 comment will have this field
+      this.replyToUid, // level 3 comment will have this field
+      this.replyToName, // level 3 comment will have this field
+      this.parentPointer // level 2/3 comment will have this field
+      });
 
   bool get noMoreChild {
     return _noMoreChild;
@@ -54,13 +59,15 @@ class CommentProvider with ChangeNotifier {
         .limit(limit)
         .getDocuments();
     children = [];
-    _appendL2CommentList(query, userId);
+    _appendL2CommentList(query, userId, limit);
   }
 
   Future<void> fetchMoreL2ChildrenComments(String userId,
       [int limit = loadLimit]) async {
     // level 1 comment will call this method
-    if (parent != null || _noMoreChild) return;
+    if (parent != null || _noMoreChild || _isFetching) return;
+    print("fetch2");
+    _isFetching = true;
     QuerySnapshot query = await Firestore.instance
         .collection(cArticles)
         .document(articleId)
@@ -71,7 +78,8 @@ class CommentProvider with ChangeNotifier {
         .startAfterDocument(_lastVisibleChild)
         .limit(limit)
         .getDocuments();
-    _appendL2CommentList(query, userId);
+    _isFetching = false;
+    _appendL2CommentList(query, userId, limit);
   }
 
   Future<void> addLike(String userId, String userName, String userImage) async {
@@ -109,8 +117,8 @@ class CommentProvider with ChangeNotifier {
       });
     }
     // Send the creator a message
-    MessagesProvider().sendMessage(
-        eMessageTypeLike, userId, userName, userImage, creatorUid, articleId);
+    MessagesProvider().sendMessage(eMessageTypeLike, userId, userName,
+        userImage, creatorUid, articleId, parent == null ? id : parent);
     // Change local variables
     like = true;
     likesCount += 1;
@@ -157,12 +165,8 @@ class CommentProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addL2Comment(
-    String l2content,
-    String l2creatorUid,
-    String l2creatorName,
-    String l2creatorImage,
-  ) async {
+  Future<void> addL2Comment(String l2content, String l2creatorUid,
+      String l2creatorName, String l2creatorImage, bool isL3Comment) async {
     Map<String, dynamic> comment = {};
     comment[fCommentArticleId] = articleId;
     comment[fCommentContent] = l2content;
@@ -173,13 +177,17 @@ class CommentProvider with ChangeNotifier {
     comment[fCommentParent] = id;
     comment[fCommentReplyLikes] = [];
     comment[fCommentLikesCount] = 0;
-    comment[fCommentReplyTo] = creatorUid;
+    if (isL3Comment) {
+      comment[fCommentReplyToUid] = this.creatorUid;
+      comment[fCommentReplyToName] = this.creatorName;
+      comment[fCommentParent] = parent;
+    }
     // Add a document
     DocumentReference docRef = await Firestore.instance
         .collection(cArticles)
         .document(articleId)
         .collection(cArticleComments)
-        .document(id)
+        .document(comment[fCommentParent])
         .collection(cArticleCommentReplies)
         .add(comment);
     // Increase parent's children count by 1
@@ -187,19 +195,29 @@ class CommentProvider with ChangeNotifier {
         .collection(cArticles)
         .document(articleId)
         .collection(cArticleComments)
-        .document(id)
+        .document(comment[fCommentParent])
         .updateData({fCommentChildrenCount: FieldValue.increment(1)});
     // Send the creator/replyTo a message
-    MessagesProvider().sendMessage(eMessageTypeReply, l2creatorUid,
-        l2creatorName, l2creatorImage, creatorUid, articleId);
+    MessagesProvider().sendMessage(
+        eMessageTypeReply,
+        l2creatorUid,
+        l2creatorName,
+        l2creatorImage,
+        creatorUid,
+        articleId,
+        comment[fCommentParent]);
     comment['like'] = false;
-    _addL2CommentToList(docRef.documentID, comment);
+    if (isL3Comment) {
+      parentPointer._addL2CommentToList(docRef.documentID, comment);
+    } else {
+      _addL2CommentToList(docRef.documentID, comment);
+    }
   }
 
-  void _appendL2CommentList(QuerySnapshot query, String userId) {
+  void _appendL2CommentList(QuerySnapshot query, String userId, int limit) {
     List<DocumentSnapshot> docs = query.documents;
+    if (docs.length < limit) _noMoreChild = true;
     if (docs.length == 0) {
-      _noMoreChild = true;
       notifyListeners();
       return;
     }
@@ -209,7 +227,7 @@ class CommentProvider with ChangeNotifier {
         data.data['like'] = false;
       } else {
         data.data['like'] =
-            (data[fCommentReplyLikes] as List<String>).contains(userId);
+            (List<String>.from(data[fCommentReplyLikes])).contains(userId);
       }
       children.add(_buildL2CommentByMap(data.documentID, data.data));
     });
@@ -234,9 +252,11 @@ class CommentProvider with ChangeNotifier {
         creatorImage: data[fCommentCreatorImage],
         createdDate: (data[fCreatedDate] as Timestamp).toDate(),
         parent: data[fCommentParent],
-        replyTo: data[fCommentReplyTo],
+        replyToUid: data[fCommentReplyToUid],
+        replyToName: data[fCommentReplyToName],
         childrenCount: data[fCommentChildrenCount],
         likesCount: data[fCommentLikesCount],
-        like: data['like']);
+        like: data['like'],
+        parentPointer: this);
   }
 }

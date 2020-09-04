@@ -8,6 +8,7 @@ import '../providers/article/comment_provider.dart';
 import '../providers/user/profile_provider.dart';
 import '../widgets/popup_comment.dart';
 
+// TODO: add personal info screen link to the names/images
 class Comment extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -74,7 +75,10 @@ class Comment extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.only(top: 8.0),
                     child: Text(
-                      data.content,
+                      (data.replyToName == null
+                              ? ""
+                              : "@" + data.replyToName + ": ") +
+                          data.content,
                       style: Theme.of(context).textTheme.bodyText2,
                     ),
                   ),
@@ -105,17 +109,25 @@ class Comment extends StatelessWidget {
                         context: context,
                         builder: (context, scrollController) => PopUpComment(
                               onPressFunc: (String content) {
-                                data.addL2Comment(content, profile.uid,
-                                    profile.name, profile.imageUrl);
+                                data.addL2Comment(
+                                    content,
+                                    profile.uid,
+                                    profile.name,
+                                    profile.imageUrl,
+                                    (data.parent != null));
                               },
                             ));
                   },
                 ),
-                Text(
-                  data.childrenCount.toString(),
-                  style: Theme.of(context).textTheme.overline,
-                )
+                if (data.childrenCount != null)
+                  Text(
+                    data.childrenCount.toString(),
+                    style: Theme.of(context).textTheme.overline,
+                  )
               ],
+            ),
+            Divider(
+              color: Color.fromARGB(255, 128, 128, 128),
             ),
           ],
         ),

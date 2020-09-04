@@ -9,6 +9,7 @@ class MessagesProvider with ChangeNotifier {
   String _userId;
   DocumentSnapshot _lastVisible;
   bool _noMore = false;
+  bool _isFetching = false; // To avoid frequently request
 
   List<MessageProvider> get items {
     return [..._items];
@@ -22,6 +23,7 @@ class MessagesProvider with ChangeNotifier {
 
   Future<void> fetchMessageListByUid(String userId,
       [int limit = loadLimit]) async {
+    if (userId == null) return;
     QuerySnapshot query = await Firestore.instance
         .collection(cUsers)
         .document(userId)
@@ -31,11 +33,12 @@ class MessagesProvider with ChangeNotifier {
         .getDocuments();
     _items = [];
     _userId = userId;
-    _appendMessageList(query);
+    _appendMessageList(query, limit);
   }
 
   Future<void> fetchMoreMessages([int limit = loadLimit]) async {
-    if (_userId == null) return;
+    if (_userId == null || _isFetching) return;
+    _isFetching = true;
     QuerySnapshot query = await Firestore.instance
         .collection(cUsers)
         .document(_userId)
@@ -44,14 +47,22 @@ class MessagesProvider with ChangeNotifier {
         .startAfterDocument(_lastVisible)
         .limit(limit)
         .getDocuments();
-    _appendMessageList(query);
+    _isFetching = false;
+    _appendMessageList(query, limit);
   }
 
   // Used by other classes
-  Future<void> sendMessage(String type, String senderUid, String senderName,
-      String senderImage, String receiverUid, String articleId) async {
+  Future<void> sendMessage(
+      String type,
+      String senderUid,
+      String senderName,
+      String senderImage,
+      String receiverUid,
+      String articleId,
+      String commentId) async {
     Map<String, dynamic> data = {};
     data[fMessageArticleId] = articleId;
+    data[fMessageCommentId] = commentId;
     data[fMessageType] = type;
     data[fMessageSenderUid] = senderUid;
     data[fMessageSenderName] = senderName;
@@ -66,17 +77,14 @@ class MessagesProvider with ChangeNotifier {
         .add(data);
   }
 
-  void _appendMessageList(QuerySnapshot query) {
+  void _appendMessageList(QuerySnapshot query, int limit) {
     List<DocumentSnapshot> docs = query.documents;
     docs.forEach((data) {
       _items.add(_buildMessageByMap(data.documentID, data.data));
     });
-    if (docs.length == 0) {
-      _noMore = true;
-      notifyListeners();
-      return;
-    }
-    _lastVisible = query.documents[query.documents.length - 1];
+    if (docs.length < limit) _noMore = true;
+    if (docs.length > 0)
+      _lastVisible = query.documents[query.documents.length - 1];
     notifyListeners();
   }
 
@@ -84,6 +92,7 @@ class MessagesProvider with ChangeNotifier {
     return MessageProvider(
         id: id,
         articleId: data[fMessageArticleId],
+        commentId: data[fMessageCommentId],
         senderUid: data[fMessageSenderUid],
         senderName: data[fMessageSenderName],
         senderImage: data[fMessageSenderImage],

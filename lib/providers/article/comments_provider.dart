@@ -9,6 +9,7 @@ class CommentsProvider with ChangeNotifier {
   String _articleId;
   DocumentSnapshot _lastVisible;
   bool _noMore = false;
+  bool _isFetching = false; // To avoid frequently request
 
   List<CommentProvider> get items {
     return [..._items];
@@ -18,12 +19,39 @@ class CommentsProvider with ChangeNotifier {
     return _noMore;
   }
 
+  Future<CommentProvider> fetchL1CommentByCid(
+      String articleId, String commentId, String userId) async {
+    // Fetch Comment
+    DocumentSnapshot doc = await Firestore.instance
+        .collection(cArticles)
+        .document(articleId)
+        .collection(cArticleComments)
+        .document(commentId)
+        .get();
+    // Fetch Likes
+    DocumentSnapshot docLikes = await Firestore.instance
+        .collection(cArticles)
+        .document(articleId)
+        .collection(cArticleComments)
+        .document(commentId)
+        .collection(cArticleCommentLikes)
+        .document(userId)
+        .get();
+    doc.data['like'] = docLikes.exists;
+    CommentProvider commentProvider = _buildL1CommentByMap(commentId, doc.data);
+    // Fetch it children list
+    await commentProvider.fetchL2ChildrenCommentList(userId);
+    return commentProvider;
+  }
+
   Future<void> fetchL1CommentListByAid(String articleId, String userId,
       [int limit = loadLimit]) async {
-    // Restart data
+    if (articleId == null || userId == null) return;
+    // Clear data
     _items = [];
     _lastVisible = null;
     _noMore = false;
+    _isFetching = true;
     QuerySnapshot query = await Firestore.instance
         .collection(cArticles)
         .document(articleId)
@@ -33,12 +61,14 @@ class CommentsProvider with ChangeNotifier {
         .getDocuments();
     _items = [];
     _articleId = articleId;
-    await _appendL1CommentList(query, articleId, userId);
+    await _appendL1CommentList(query, articleId, userId, limit);
   }
 
   Future<void> fetchMoreL1Comments(String userId,
       [int limit = loadLimit]) async {
-    if (_articleId == null || _noMore) return;
+    if (_articleId == null || userId == null || _noMore || _isFetching) return;
+    print("fetch1");
+    _isFetching = true;
     QuerySnapshot query = await Firestore.instance
         .collection(cArticles)
         .document(_articleId)
@@ -47,7 +77,7 @@ class CommentsProvider with ChangeNotifier {
         .startAfterDocument(_lastVisible)
         .limit(limit)
         .getDocuments();
-    await _appendL1CommentList(query, _articleId, userId);
+    await _appendL1CommentList(query, _articleId, userId, limit);
   }
 
   Future<void> addL1Comment(String articleId, String content, String creatorUid,
@@ -71,10 +101,10 @@ class CommentsProvider with ChangeNotifier {
   }
 
   Future<void> _appendL1CommentList(
-      QuerySnapshot query, String articleId, String userId) async {
+      QuerySnapshot query, String articleId, String userId, int limit) async {
     List<DocumentSnapshot> docs = query.documents;
+    if (docs.length < limit) _noMore = true;
     if (docs.length == 0) {
-      _noMore = true;
       notifyListeners();
       return;
     }
@@ -90,6 +120,7 @@ class CommentsProvider with ChangeNotifier {
           .get();
       docs[i].data['like'] = docRef.exists;
     }
+    _isFetching = false;
     docs.forEach((data) {
       _items.add(_buildL1CommentByMap(data.documentID, data.data));
     });

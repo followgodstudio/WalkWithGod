@@ -40,6 +40,7 @@ const String fMessageSenderName = "sender_name";
 const String fMessageSenderImage = "sender_image";
 const String fMessageReceiverUid = "receiver_uid";
 const String fMessageArticleId = "article_id";
+const String fMessageCommentId = "comment_id";
 const String fMessageContent = "content";
 const String fMessageIsRead = "is_read";
 
@@ -60,7 +61,8 @@ const String fCommentCreatorUid = 'creator_uid';
 const String fCommentCreatorName = 'creator_name';
 const String fCommentCreatorImage = 'creator_image';
 const String fCommentParent = 'parent';
-const String fCommentReplyTo = 'reply_to';
+const String fCommentReplyToUid = 'reply_to_uid';
+const String fCommentReplyToName = 'reply_to_name';
 const String fCommentChildrenCount = 'children_count';
 const String fCommentLikesCount = 'likes_count';
 const String fCommentReplyLikes = 'likes';
