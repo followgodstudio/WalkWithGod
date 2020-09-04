@@ -58,12 +58,6 @@ class PopUpComment extends StatelessWidget {
                 ),
               ],
             ),
-//          Divider(
-//            color: Colors.grey,
-//            indent: 20.0,
-//            endIndent: 20.0,
-//            thickness: 1.0,
-//          ),
             Container(
                 decoration: DottedDecoration(
                   shape: Shape.line,

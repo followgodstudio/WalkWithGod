@@ -4,8 +4,10 @@ class LoadingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Text('Loading...'),
+      body: SafeArea(
+        child: Center(
+          child: Center(child: CircularProgressIndicator()),
+        ),
       ),
     );
   }

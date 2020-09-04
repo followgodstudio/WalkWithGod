@@ -19,8 +19,6 @@ class MessagesProvider with ChangeNotifier {
     return _noMore;
   }
 
-  // TODO: dynamic message stream update
-
   Future<void> fetchMessageListByUid(String userId,
       [int limit = loadLimit]) async {
     if (userId == null) return;
@@ -61,12 +59,13 @@ class MessagesProvider with ChangeNotifier {
       String articleId,
       String commentId) async {
     Map<String, dynamic> data = {};
-    data[fMessageArticleId] = articleId;
-    data[fMessageCommentId] = commentId;
     data[fMessageType] = type;
     data[fMessageSenderUid] = senderUid;
     data[fMessageSenderName] = senderName;
-    data[fMessageSenderImage] = senderImage;
+    if (senderImage != null) data[fMessageSenderImage] = senderImage;
+    data[fMessageReceiverUid] = receiverUid;
+    data[fMessageArticleId] = articleId;
+    data[fMessageCommentId] = commentId;
     data[fCreatedDate] = Timestamp.now();
     data[fMessageIsRead] = false;
     // Add document
@@ -75,6 +74,14 @@ class MessagesProvider with ChangeNotifier {
         .document(receiverUid)
         .collection(cUserMessages)
         .add(data);
+    // Increase message and unread message count by 1
+    await Firestore.instance
+        .collection(cUsers)
+        .document(receiverUid)
+        .updateData({
+      fUserMessagesCount: FieldValue.increment(1),
+      fUserUnreadMsgCount: FieldValue.increment(1)
+    });
   }
 
   void _appendMessageList(QuerySnapshot query, int limit) {

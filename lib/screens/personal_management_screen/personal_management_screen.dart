@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:walk_with_god/model/constants.dart';
+import 'package:walk_with_god/providers/user/profile_provider.dart';
+import 'package:walk_with_god/screens/loading_screen.dart';
 
 import '../../configurations/theme.dart';
 import 'messages/messages_list_screen.dart';
@@ -32,23 +36,16 @@ class _PersonalManagementScreen extends State<PersonalManagementScreen> {
           ),
           backgroundColor: Theme.of(context).canvasColor,
         ),
-        body: SingleChildScrollView(
-          child: Column(children: <Widget>[
-            Container(
-              height: MediaQuery.of(context).size.height -
-                  MediaQuery.of(context).padding.top,
-              child: ListView(
-                padding: EdgeInsets.all(8.0),
-                children: <Widget>[
-                  // HeadLine(),
-                  // Friendship(),
-                  // Reading(),
-                  // SavedPosts(),
-                  Messages(),
-                ],
-              ),
-            ),
-          ]),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Column(children: <Widget>[
+              // HeadLine(),
+              // Friendship(),
+              // Reading(),
+              // SavedPosts(),
+              Messages(),
+            ]),
+          ),
         ));
   }
 }
@@ -57,33 +54,44 @@ class Messages extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: FlatButton(
-        onPressed: () {
-          Navigator.of(context).pushNamed(MessagesListScreen.routeName);
-        },
-        child: Row(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "我的消息",
-                    style: Theme.of(context).textTheme.headline6,
-                  ),
-                  Text(
-                    "共48条消息",
-                    style: Theme.of(context).textTheme.captionMain,
-                  ),
-                ],
-              ),
-            ),
-            Icon(Icons.arrow_forward_ios,
-                size: 20.0, color: Color.fromARGB(255, 128, 128, 128)),
-          ],
-        ),
-      ),
-    );
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: StreamBuilder<Map<String, dynamic>>(
+            stream: Provider.of<ProfileProvider>(context, listen: false)
+                .fetchProfileStream(),
+            builder: (BuildContext context,
+                AsyncSnapshot<Map<String, dynamic>> snapshot) {
+              if (snapshot.connectionState != ConnectionState.active)
+                return Center(child: CircularProgressIndicator());
+              return FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed(MessagesListScreen.routeName);
+                },
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            "我的消息",
+                            style: Theme.of(context).textTheme.headline6,
+                          ),
+                          Text(
+                            "共" +
+                                snapshot.data[fUserMessagesCount].toString() +
+                                "条消息, " +
+                                snapshot.data[fUserUnreadMsgCount].toString() +
+                                "条未读",
+                            style: Theme.of(context).textTheme.captionMain,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Icon(Icons.arrow_forward_ios,
+                        size: 20.0, color: Color.fromARGB(255, 128, 128, 128)),
+                  ],
+                ),
+              );
+            }));
   }
 }

@@ -87,7 +87,7 @@ class CommentsProvider with ChangeNotifier {
     comment[fCommentContent] = content;
     comment[fCommentCreatorUid] = creatorUid;
     comment[fCommentCreatorName] = creatorName;
-    comment[fCommentCreatorImage] = creatorImage;
+    if (creatorImage != null) comment[fCommentCreatorImage] = creatorImage;
     comment[fCreatedDate] = Timestamp.now();
     comment[fCommentChildrenCount] = 0;
     comment[fCommentLikesCount] = 0;

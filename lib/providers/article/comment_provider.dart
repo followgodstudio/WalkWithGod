@@ -172,7 +172,7 @@ class CommentProvider with ChangeNotifier {
     comment[fCommentContent] = l2content;
     comment[fCommentCreatorUid] = l2creatorUid;
     comment[fCommentCreatorName] = l2creatorName;
-    comment[fCommentCreatorImage] = l2creatorImage;
+    if (l2creatorImage != null) comment[fCommentCreatorImage] = l2creatorImage;
     comment[fCreatedDate] = Timestamp.now();
     comment[fCommentParent] = id;
     comment[fCommentReplyLikes] = [];
@@ -198,7 +198,7 @@ class CommentProvider with ChangeNotifier {
         .document(comment[fCommentParent])
         .updateData({fCommentChildrenCount: FieldValue.increment(1)});
     // Send the creator/replyTo a message
-    MessagesProvider().sendMessage(
+    await MessagesProvider().sendMessage(
         eMessageTypeReply,
         l2creatorUid,
         l2creatorName,

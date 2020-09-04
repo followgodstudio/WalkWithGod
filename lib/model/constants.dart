@@ -31,6 +31,8 @@ const String cArticleCommentLikes = "likes";
 
 const String fUserName = "name";
 const String fUserImageUrl = "image_url";
+const String fUserMessagesCount = "messages_count";
+const String fUserUnreadMsgCount = "unread_msg_count";
 
 const String fMessageType = "type";
 const String eMessageTypeLike = "like";

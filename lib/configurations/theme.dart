@@ -90,6 +90,11 @@ extension CustomStyles on TextTheme {
         color: Color.fromARGB(255, 128, 128, 128),
         fontFamily: 'LantingXianHei',
       );
+  TextStyle get captionSmallBlack => const TextStyle(
+        fontSize: 12.0,
+        color: Colors.black87,
+        fontFamily: 'LantingXianHei',
+      );
   TextStyle get captionSmallWhite => const TextStyle(
         fontSize: 12.0,
         color: Color.fromARGB(255, 255, 255, 255),
@@ -134,6 +139,11 @@ extension CustomStyles on TextTheme {
   TextStyle get buttonMedium1 => const TextStyle(
         fontSize: 15.0,
         color: Color.fromARGB(255, 0, 0, 0),
+        fontFamily: 'Lanting',
+      );
+  TextStyle get buttonMediumGray => const TextStyle(
+        fontSize: 15.0,
+        color: Color.fromARGB(255, 194, 194, 194),
         fontFamily: 'Lanting',
       );
   TextStyle get buttonLarge1 => const TextStyle(

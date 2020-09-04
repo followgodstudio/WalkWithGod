@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../model/constants.dart';
@@ -10,6 +11,23 @@ class ProfileProvider with ChangeNotifier {
   DateTime createdDate;
 
   ProfileProvider([this.uid]);
+
+  Stream<Map<String, dynamic>> fetchProfileStream() {
+    if (uid == null || uid == "") return null;
+    Stream<DocumentSnapshot> stream =
+        Firestore.instance.collection(cUsers).document(uid).snapshots();
+    // watch message count stream
+    return stream.map((DocumentSnapshot doc) {
+      return {
+        fUserUnreadMsgCount: doc.data[fUserUnreadMsgCount] == null
+            ? 0
+            : doc.data[fUserUnreadMsgCount],
+        fUserMessagesCount: doc.data[fUserMessagesCount] == null
+            ? 0
+            : doc.data[fUserMessagesCount]
+      };
+    });
+  }
 
   Future<void> fetchProfile() async {
     if (uid == null || uid == "") return;
@@ -27,11 +45,7 @@ class ProfileProvider with ChangeNotifier {
     uid = userId;
     await Firestore.instance.collection(cUsers).document(uid).setData({});
     String newName = "弟兄姊妹"; // TODO: Random name
-    String defaultUrl = "https://photo.sohu.com/88/60/Img214056088.jpg";
-    await updateProfile(
-        newName: newName,
-        newImageUrl: defaultUrl,
-        newCreatedDate: Timestamp.now());
+    await updateProfile(newName: newName, newCreatedDate: Timestamp.now());
   }
 
   Future<void> updateProfile(

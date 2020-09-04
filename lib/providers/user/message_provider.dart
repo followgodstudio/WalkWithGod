@@ -30,12 +30,18 @@ class MessageProvider with ChangeNotifier {
 
   Future<void> markMessageAsRead(bool read) async {
     if (isRead == read) return;
+    // Update document
     await Firestore.instance
         .collection(cUsers)
         .document(receiverUid)
         .collection(cUserMessages)
         .document(id)
         .updateData({fMessageIsRead: read});
+    // Update unread count
+    await Firestore.instance
+        .collection(cUsers)
+        .document(receiverUid)
+        .updateData({fUserUnreadMsgCount: FieldValue.increment(-1)});
     isRead = read;
     notifyListeners();
   }
