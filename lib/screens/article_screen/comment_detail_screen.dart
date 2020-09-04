@@ -7,6 +7,8 @@ import '../../providers/article/comments_provider.dart';
 import '../../providers/user/profile_provider.dart';
 import '../../widgets/comment.dart' as widget;
 
+import '../../widgets/article_preview.dart';
+
 class CommentDetailScreen extends StatelessWidget {
   static const routeName = '/comment_detail';
 
@@ -62,6 +64,10 @@ class CommentDetailScreen extends StatelessWidget {
                       List<Widget> list = [];
                       list.add(SizedBox(height: 10.0));
                       list.add(widget.Comment());
+                      list.add(ArticlePreview(_articleId));
+                      list.add(Divider(
+                        color: Color.fromARGB(255, 128, 128, 128),
+                      ));
                       if (data.childrenCount == 0) {
                         list.add(Center(
                             child: Padding(

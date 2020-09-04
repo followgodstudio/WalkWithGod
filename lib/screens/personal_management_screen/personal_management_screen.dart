@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:walk_with_god/model/constants.dart';
-import 'package:walk_with_god/providers/user/profile_provider.dart';
-import 'package:walk_with_god/screens/loading_screen.dart';
 
 import '../../configurations/theme.dart';
+import '../../model/constants.dart';
+import '../../providers/user/profile_provider.dart';
 import 'messages/messages_list_screen.dart';
-import 'friend/friendship.dart';
-import 'head/headLine.dart';
-import 'posts/saved_posts.dart';
-import 'read/reading.dart';
+// import 'friend/friendship.dart';
+// import 'head/headLine.dart';
+// import 'posts/saved_posts.dart';
+// import 'read/reading.dart';
 
 class PersonalManagementScreen extends StatefulWidget {
   static const routeName = '/personal_management';

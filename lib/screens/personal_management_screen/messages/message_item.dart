@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:walk_with_god/screens/article_screen/comment_detail_screen.dart';
 
 import '../../../configurations/theme.dart';
 import '../../../model/constants.dart';
 import '../../../providers/user/message_provider.dart';
+import '../../../screens/article_screen/comment_detail_screen.dart';
 
 class MessageItem extends StatelessWidget {
   @override

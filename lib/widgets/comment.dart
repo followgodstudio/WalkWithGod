@@ -108,6 +108,7 @@ class Comment extends StatelessWidget {
                     showMaterialModalBottomSheet(
                         context: context,
                         builder: (context, scrollController) => PopUpComment(
+                              articleId: data.articleId,
                               onPressFunc: (String content) {
                                 data.addL2Comment(
                                     content,
@@ -134,7 +135,4 @@ class Comment extends StatelessWidget {
       ),
     );
   }
-
-  //TODO
-  void openCommentPage() {}
 }

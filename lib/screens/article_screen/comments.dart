@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:walk_with_god/screens/article_screen/comment_detail_screen.dart';
 
 import '../../configurations/theme.dart';
 import '../../providers/article/comment_provider.dart';
 import '../../providers/article/comments_provider.dart';
 import '../../providers/user/profile_provider.dart';
+import '../../screens/article_screen/comment_detail_screen.dart';
 import '../../widgets/comment.dart' as widget;
 
 class Comments extends StatelessWidget {

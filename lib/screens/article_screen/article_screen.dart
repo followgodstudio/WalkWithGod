@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
-import 'package:walk_with_god/providers/article/comments_provider.dart';
-import 'package:walk_with_god/providers/user/profile_provider.dart';
 
-import '../../providers/article/article_provider.dart';
-import '../../utils/utils.dart';
 import '../../configurations/theme.dart';
+import '../../providers/article/article_provider.dart';
 import '../../providers/article/articles_provider.dart';
+import '../../providers/article/comments_provider.dart';
+import '../../providers/user/profile_provider.dart';
+import '../../utils/utils.dart';
 import '../../widgets/aricle_paragraph.dart';
 import 'bottom_bar.dart';
 import 'comments.dart';

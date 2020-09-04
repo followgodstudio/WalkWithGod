@@ -55,23 +55,7 @@ class ArticlesProvider with ChangeNotifier {
   void setArticles(QuerySnapshot query, [bool isContentNeeded = false]) {
     _articles = [];
     query.documents.forEach((data) {
-      Timestamp createdDateTimeStamp = data[fCreatedDate];
-      DateTime createdDate = createdDateTimeStamp.toDate();
-      // List paragraphList = data[fArticleContent];
-      // paragraphList.forEach((p) {
-      //   content.add(Paragraph(subtitle: p['subtitle'], body: p['body']));
-      // });
-
-      _articles.add(ArticleProvider(
-          id: data.documentID,
-          title: data[fArticleTitle],
-          description: data[fArticleDescription],
-          imageUrl: data[fArticleImageUrl],
-          author: data[fArticleAuthorName],
-          //content: isContentNeeded ? content : null,
-          createdDate: createdDate,
-          icon: data[fArticleIcon],
-          publisher: data[fArticlePublisher]));
+      _articles.add(_buildArticleByMap(data.documentID, data.data));
     });
 
     notifyListeners();
@@ -102,7 +86,25 @@ class ArticlesProvider with ChangeNotifier {
     //return _content;
   }
 
+  Future<ArticleProvider> fetchArticlePreviewById(String aid) async {
+    DocumentSnapshot data =
+        await _fdb.collection(cArticles).document(aid).get();
+    return _buildArticleByMap(data.documentID, data.data);
+  }
+
   ArticleProvider findById(String id) {
     return _articles.firstWhere((a) => a.id == id);
+  }
+
+  ArticleProvider _buildArticleByMap(String id, Map<String, dynamic> data) {
+    return ArticleProvider(
+        id: id,
+        title: data[fArticleTitle],
+        description: data[fArticleDescription],
+        imageUrl: data[fArticleImageUrl],
+        author: data[fArticleAuthorName],
+        createdDate: (data[fCreatedDate] as Timestamp).toDate(),
+        icon: data[fArticleIcon],
+        publisher: data[fArticlePublisher]);
   }
 }

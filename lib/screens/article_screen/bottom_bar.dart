@@ -32,6 +32,7 @@ class BottomBar extends StatelessWidget {
                 showMaterialModalBottomSheet(
                     context: context,
                     builder: (context, scrollController) => PopUpComment(
+                          articleId: articleId,
                           onPressFunc: (String content) {
                             Provider.of<CommentsProvider>(context,
                                     listen: false)
