@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:walk_with_god/screens/personal_management_screen/network/network_screen.dart';
 
 import 'configurations/theme.dart';
 import 'providers/article/articles_provider.dart';
@@ -14,6 +15,7 @@ import 'screens/auth_screen/login_screen.dart';
 import 'screens/home_screen/home_screen.dart';
 import 'screens/loading_screen.dart';
 import 'screens/main_screen.dart';
+import 'screens/personal_management_screen/headline/edit_profile_screen.dart';
 import 'screens/personal_management_screen/messages/messages_list_screen.dart';
 import 'screens/personal_management_screen/personal_management_screen.dart';
 
@@ -62,6 +64,8 @@ class MyApp extends StatelessWidget {
             PersonalManagementScreen.routeName: (ctx) =>
                 PersonalManagementScreen(),
             MessagesListScreen.routeName: (ctx) => MessagesListScreen(),
+            EditProfileScreen.routeName: (ctx) => EditProfileScreen(),
+            NetworkScreen.routeName: (ctx) => NetworkScreen(),
             EmailAuthScreen.routeName: (ctx) => EmailAuthScreen(),
             LoginScreen.routeName: (ctx) => LoginScreen(),
             HomeScreen.routeName: (ctx) => HomeScreen(),

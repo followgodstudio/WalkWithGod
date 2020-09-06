@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
 
-import '../../model/constants.dart';
+import '../../configurations/constants.dart';
 import '../user/messages_provider.dart';
 
 class CommentProvider with ChangeNotifier {
@@ -66,7 +66,6 @@ class CommentProvider with ChangeNotifier {
       [int limit = loadLimit]) async {
     // level 1 comment will call this method
     if (parent != null || _noMoreChild || _isFetching) return;
-    print("fetch2");
     _isFetching = true;
     QuerySnapshot query = await Firestore.instance
         .collection(cArticles)

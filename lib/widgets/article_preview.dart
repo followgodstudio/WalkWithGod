@@ -20,9 +20,7 @@ class ArticlePreview extends StatelessWidget {
             if (asyncSnapshot.connectionState == ConnectionState.waiting)
               return Center(child: CircularProgressIndicator());
             if (asyncSnapshot.error != null)
-              return Center(
-                child: Text('An error occurred!'),
-              );
+              return Center(child: Text('An error occurred!'));
             return FlatButton(
               onPressed: () {
                 Navigator.of(context).pushNamed(

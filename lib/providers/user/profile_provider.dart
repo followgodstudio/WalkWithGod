@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-import '../../model/constants.dart';
+import '../../configurations/constants.dart';
 
 class ProfileProvider with ChangeNotifier {
   String uid;
@@ -29,7 +29,7 @@ class ProfileProvider with ChangeNotifier {
     });
   }
 
-  Future<void> fetchProfile() async {
+  Future<void> fetchMyProfile() async {
     if (uid == null || uid == "") return;
     DocumentSnapshot doc =
         await Firestore.instance.collection(cUsers).document(uid).get();
@@ -37,8 +37,13 @@ class ProfileProvider with ChangeNotifier {
       name = doc.data[fUserName];
       imageUrl = doc.data[fUserImageUrl];
       createdDate = (doc.data[fCreatedDate] as Timestamp).toDate();
-      notifyListeners();
     }
+  }
+
+  Future<ProfileProvider> fetchProfileByUid(String userId) async {
+    ProfileProvider userProfile = ProfileProvider(userId);
+    await userProfile.fetchMyProfile();
+    return userProfile;
   }
 
   Future<void> initProfile(String userId) async {
@@ -51,8 +56,9 @@ class ProfileProvider with ChangeNotifier {
   Future<void> updateProfile(
       {String newName, String newImageUrl, Timestamp newCreatedDate}) async {
     Map<String, dynamic> data = {};
-    if (newName != null) name = data[fUserName] = newName;
-    if (newImageUrl != null) imageUrl = data[fUserImageUrl] = newImageUrl;
+    if (newName != null && newName.isNotEmpty) name = data[fUserName] = newName;
+    if (newImageUrl != null && newImageUrl.isNotEmpty)
+      imageUrl = data[fUserImageUrl] = newImageUrl;
     if (newCreatedDate != null) {
       createdDate = newCreatedDate.toDate();
       data[fCreatedDate] = newCreatedDate;

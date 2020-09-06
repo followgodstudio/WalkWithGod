@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
 
-import '../../model/constants.dart';
+import '../../configurations/constants.dart';
 import 'message_provider.dart';
 
 class MessagesProvider with ChangeNotifier {

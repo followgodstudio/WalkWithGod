@@ -3,9 +3,10 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../../configurations/theme.dart';
-import '../../../model/constants.dart';
+import '../../../configurations/constants.dart';
 import '../../../providers/user/message_provider.dart';
 import '../../../screens/article_screen/comment_detail_screen.dart';
+import '../../../widgets/profile_picture.dart';
 
 class MessageItem extends StatelessWidget {
   @override
@@ -27,9 +28,7 @@ class MessageItem extends StatelessWidget {
                   padding: const EdgeInsets.all(5.0),
                   child: Row(
                     children: [
-                      CircleAvatar(
-                        backgroundImage: NetworkImage(data.senderImage),
-                      ),
+                      ProfilePicture(data.senderImage, 20.0, data.senderUid),
                       SizedBox(width: 10),
                       Expanded(
                           child: Text(data.senderName,

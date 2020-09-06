@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
 
-import '../../model/constants.dart';
+import '../../configurations/constants.dart';
 import 'comment_provider.dart';
 
 class CommentsProvider with ChangeNotifier {
@@ -67,7 +67,6 @@ class CommentsProvider with ChangeNotifier {
   Future<void> fetchMoreL1Comments(String userId,
       [int limit = loadLimit]) async {
     if (_articleId == null || userId == null || _noMore || _isFetching) return;
-    print("fetch1");
     _isFetching = true;
     QuerySnapshot query = await Firestore.instance
         .collection(cArticles)

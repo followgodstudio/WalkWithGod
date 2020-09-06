@@ -56,6 +56,7 @@ const String fArticlePublisher = 'publisher';
 
 const String fContentSubtitle = 'subtitle';
 const String fContentBody = 'body';
+const String fContentIndex = 'index';
 
 const String fCommentArticleId = 'aid';
 const String fCommentContent = 'content';

@@ -70,6 +70,12 @@ extension CustomStyles on TextTheme {
         fontFamily: 'Lanting',
         letterSpacing: -0.1,
       );
+  TextStyle get bodyText4 => const TextStyle(
+        color: Color.fromARGB(255, 51, 102, 187),
+        fontSize: 14.0,
+        fontFamily: 'Lanting',
+        letterSpacing: -0.1,
+      );
   TextStyle get captionMain => const TextStyle(
         fontSize: 14.0,
         color: Color.fromARGB(255, 128, 128, 128),

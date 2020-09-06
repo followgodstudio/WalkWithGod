@@ -45,9 +45,7 @@ class MessagesListScreen extends StatelessWidget {
                         ConnectionState.waiting)
                       return Center(child: CircularProgressIndicator());
                     if (asyncSnapshot.error != null)
-                      return Center(
-                        child: Text('An error occurred!'),
-                      );
+                      return Center(child: Text('An error occurred!'));
                     return Consumer<MessagesProvider>(
                         builder: (context, data, child) {
                       if (data.items.length == 0) {
@@ -71,21 +69,12 @@ class MessagesListScreen extends StatelessWidget {
                           child: MessageItem(),
                         ));
                       }
-                      if (data.noMore) {
-                        list.add(Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text("到底啦",
-                              style:
-                                  Theme.of(context).textTheme.captionMedium3),
-                        ));
-                      } else {
-                        list.add(Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text("加载更多",
-                              style:
-                                  Theme.of(context).textTheme.captionMedium3),
-                        ));
-                      }
+
+                      list.add(Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(data.noMore ? "到底啦" : "加载更多",
+                            style: Theme.of(context).textTheme.captionMedium3),
+                      ));
                       return Column(children: list);
                     });
                   })),

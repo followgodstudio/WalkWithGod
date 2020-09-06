@@ -1,13 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:palette_generator/palette_generator.dart';
-import 'package:walk_with_god/screens/home_screen/article/article_card.dart';
-import '../../../utils/utils.dart';
-
-import '../../../configurations/theme.dart';
-import '../../article_screen/article_screen.dart';
 import 'package:provider/provider.dart';
+
 import '../../../providers/article/articles_provider.dart';
+import 'article_card.dart';
 
 class ArticleList extends StatefulWidget {
   const ArticleList({

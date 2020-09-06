@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
 
-import '../../model/constants.dart';
+import '../../configurations/constants.dart';
 import 'article_provider.dart';
 
 class ArticlesProvider with ChangeNotifier {
@@ -63,27 +63,20 @@ class ArticlesProvider with ChangeNotifier {
 
   Future<void> fetchArticleConentById(String aid) async {
     List<Paragraph> content = [];
-    await _fdb
+    QuerySnapshot querySnapshot = await _fdb
         .collection(cArticles)
         .document(aid)
         .collection(cArticleContent)
-        .getDocuments()
-        .then((querySnapshot) {
-      if (querySnapshot != null) {
-        querySnapshot.documents.forEach((element) {
-          content.add(Paragraph(
-              subtitle: element.data[fContentSubtitle],
-              body: element.data[fContentBody]));
-        });
-
-        _articles.firstWhere((a) => a.id == aid).content = content;
-      }
-    }).catchError((error) {
-      throw (error);
-    });
-
-    notifyListeners();
-    //return _content;
+        .orderBy(fContentIndex)
+        .getDocuments();
+    if (querySnapshot != null) {
+      querySnapshot.documents.forEach((element) {
+        content.add(Paragraph(
+            subtitle: element.data[fContentSubtitle],
+            body: element.data[fContentBody]));
+      });
+      _articles.firstWhere((a) => a.id == aid).content = content;
+    }
   }
 
   Future<ArticleProvider> fetchArticlePreviewById(String aid) async {
