@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import '../configurations/theme.dart';
 import '../providers/article/comment_provider.dart';
 import '../providers/user/profile_provider.dart';
-import '../screens/personal_management_screen/network/network_screen.dart';
+import '../screens/personal_management_screen/headline/network_screen.dart';
 import '../utils/utils.dart';
 import '../widgets/popup_comment.dart';
 import 'profile_picture.dart';

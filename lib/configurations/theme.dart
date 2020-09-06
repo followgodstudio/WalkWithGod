@@ -56,6 +56,7 @@ final ThemeData dayTheme = new ThemeData(
 );
 
 extension CustomStyles on TextTheme {
+  Color get buttonColor2 => const Color.fromARGB(255, 128, 128, 128);
   TextStyle get error => const TextStyle(
       fontSize: 15.0, color: Colors.red, fontWeight: FontWeight.bold);
   TextStyle get headerSmall1 => const TextStyle(
@@ -72,6 +73,12 @@ extension CustomStyles on TextTheme {
       );
   TextStyle get bodyText4 => const TextStyle(
         color: Color.fromARGB(255, 51, 102, 187),
+        fontSize: 14.0,
+        fontFamily: 'Lanting',
+        letterSpacing: -0.1,
+      );
+  TextStyle get bodyTextWhite => const TextStyle(
+        color: Colors.white,
         fontSize: 14.0,
         fontFamily: 'Lanting',
         letterSpacing: -0.1,
@@ -155,6 +162,11 @@ extension CustomStyles on TextTheme {
   TextStyle get buttonLarge1 => const TextStyle(
         fontSize: 20.0,
         color: Color.fromARGB(255, 0, 0, 0),
+        fontFamily: 'Lanting',
+      );
+  TextStyle get buttonLargeGray => const TextStyle(
+        fontSize: 20.0,
+        color: Color.fromARGB(255, 194, 194, 194),
         fontFamily: 'Lanting',
       );
 }

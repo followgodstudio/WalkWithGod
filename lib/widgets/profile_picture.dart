@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../screens/personal_management_screen/network/network_screen.dart';
+import '../screens/personal_management_screen/headline/network_screen.dart';
 
 class ProfilePicture extends StatelessWidget {
   final String uid;

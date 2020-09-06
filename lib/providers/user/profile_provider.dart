@@ -24,7 +24,13 @@ class ProfileProvider with ChangeNotifier {
             : doc.data[fUserUnreadMsgCount],
         fUserMessagesCount: doc.data[fUserMessagesCount] == null
             ? 0
-            : doc.data[fUserMessagesCount]
+            : doc.data[fUserMessagesCount],
+        fUserFollowingsCount: doc.data[fUserFollowingsCount] == null
+            ? 0
+            : doc.data[fUserFollowingsCount],
+        fUserFollowersCount: doc.data[fUserFollowersCount] == null
+            ? 0
+            : doc.data[fUserFollowersCount]
       };
     });
   }

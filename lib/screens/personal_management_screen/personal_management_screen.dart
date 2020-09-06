@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../configurations/theme.dart';
 import '../../configurations/constants.dart';
+import '../../configurations/theme.dart';
 import '../../providers/user/profile_provider.dart';
+import 'friends/friends_list_screen.dart';
 import 'headline/edit_profile_screen.dart';
 import 'headline/introduction.dart';
 import 'messages/messages_list_screen.dart';
-import 'network/network_screen.dart';
-// import 'friend/friendship.dart';
+import 'headline/network_screen.dart';
+import 'setting/setting_screen.dart';
 // import 'posts/saved_posts.dart';
 // import 'read/reading.dart';
 
@@ -23,11 +24,20 @@ class PersonalManagementScreen extends StatelessWidget {
           elevation: 0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back_ios),
-            color: Theme.of(context).buttonColor,
+            color: Theme.of(context).textTheme.buttonColor2,
             onPressed: () {
               Navigator.of(context).pop();
             },
           ),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.settings),
+              color: Theme.of(context).textTheme.buttonColor2,
+              onPressed: () {
+                Navigator.of(context).pushNamed(SettingScreen.routeName);
+              },
+            ),
+          ],
           backgroundColor: Theme.of(context).appBarTheme.color,
         ),
         body: SafeArea(
@@ -44,12 +54,9 @@ class PersonalManagementScreen extends StatelessWidget {
                       padding: const EdgeInsets.all(20.0),
                       child: Column(children: <Widget>[
                         HeadLine(),
-                        Divider(color: Color.fromARGB(255, 128, 128, 128)),
-                        // Friendship(),
                         // Reading(),
                         // SavedPosts(),
-                        Messages(),
-                        Divider(color: Color.fromARGB(255, 128, 128, 128)),
+                        FriendsMessages(),
                       ]),
                     ),
                   );
@@ -88,7 +95,99 @@ class HeadLine extends StatelessWidget {
   }
 }
 
-class Messages extends StatelessWidget {
+class FriendsMessages extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<Map<String, dynamic>>(
+        stream: Provider.of<ProfileProvider>(context, listen: false)
+            .fetchProfileStream(),
+        builder: (BuildContext context,
+            AsyncSnapshot<Map<String, dynamic>> snapshot) {
+          if (snapshot.connectionState != ConnectionState.active)
+            return Center(child: CircularProgressIndicator());
+          return Column(
+            children: [
+              Divider(color: Color.fromARGB(255, 128, 128, 128)),
+              FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed(FriendsListScreen.routeName);
+                },
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              "我的好友",
+                              style: Theme.of(context).textTheme.headline6,
+                            ),
+                            SizedBox(height: 8.0),
+                            Text(
+                              "共" +
+                                  snapshot.data[fUserFollowersCount]
+                                      .toString() +
+                                  "人关注我, 已关注" +
+                                  snapshot.data[fUserFollowingsCount]
+                                      .toString() +
+                                  "人",
+                              style: Theme.of(context).textTheme.captionMain,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Icon(Icons.arrow_forward_ios,
+                        size: 20.0, color: Color.fromARGB(255, 128, 128, 128)),
+                  ],
+                ),
+              ),
+              Divider(color: Color.fromARGB(255, 128, 128, 128)),
+              FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed(MessagesListScreen.routeName);
+                },
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              "我的消息",
+                              style: Theme.of(context).textTheme.headline6,
+                            ),
+                            SizedBox(height: 8.0),
+                            Text(
+                              "共" +
+                                  snapshot.data[fUserMessagesCount].toString() +
+                                  "条消息, " +
+                                  snapshot.data[fUserUnreadMsgCount]
+                                      .toString() +
+                                  "条未读",
+                              style: Theme.of(context).textTheme.captionMain,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Icon(Icons.arrow_forward_ios,
+                        size: 20.0, color: Color.fromARGB(255, 128, 128, 128)),
+                  ],
+                ),
+              ),
+              Divider(color: Color.fromARGB(255, 128, 128, 128)),
+            ],
+          );
+        });
+  }
+}
+
+class Friends extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<Map<String, dynamic>>(
@@ -100,7 +199,7 @@ class Messages extends StatelessWidget {
             return Center(child: CircularProgressIndicator());
           return FlatButton(
             onPressed: () {
-              Navigator.of(context).pushNamed(MessagesListScreen.routeName);
+              Navigator.of(context).pushNamed(FriendsListScreen.routeName);
             },
             child: Row(
               children: [
@@ -111,7 +210,7 @@ class Messages extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          "我的消息",
+                          "我的好友",
                           style: Theme.of(context).textTheme.headline6,
                         ),
                         SizedBox(height: 8.0),
@@ -128,7 +227,7 @@ class Messages extends StatelessWidget {
                   ),
                 ),
                 Icon(Icons.arrow_forward_ios,
-                    size: 20.0, color: Color.fromARGB(255, 128, 128, 128)),
+                    size: 20.0, color: Theme.of(context).buttonColor),
               ],
             ),
           );

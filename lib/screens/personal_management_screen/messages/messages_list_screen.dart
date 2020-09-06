@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../../../configurations/theme.dart';
 import '../../../providers/user/messages_provider.dart';
 import '../../../providers/user/profile_provider.dart';
-import '../../../screens/personal_management_screen/messages/message_item.dart';
+import 'message_item.dart';
 
 class MessagesListScreen extends StatelessWidget {
   static const routeName = '/messages_list';
@@ -17,7 +17,7 @@ class MessagesListScreen extends StatelessWidget {
           elevation: 0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back_ios),
-            color: Theme.of(context).buttonColor,
+            color: Theme.of(context).textTheme.buttonColor2,
             onPressed: () {
               Navigator.of(context).pop();
             },
