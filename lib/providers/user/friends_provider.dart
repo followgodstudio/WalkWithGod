@@ -5,6 +5,7 @@ import '../../configurations/constants.dart';
 import 'friend_provider.dart';
 
 class FriendsProvider with ChangeNotifier {
+  final Firestore _db = Firestore.instance;
   List<FriendProvider> _follower = [];
   List<FriendProvider> _following = [];
   String _userId;
@@ -45,7 +46,7 @@ class FriendsProvider with ChangeNotifier {
     } else {
       _following = [];
     }
-    QuerySnapshot query = await Firestore.instance
+    QuerySnapshot query = await _db
         .collection(cUsers)
         .document(userId)
         .collection(cUserFriends)
@@ -71,7 +72,7 @@ class FriendsProvider with ChangeNotifier {
       lastVisible = _lastVisibleFollower;
     }
     _isFetching = true;
-    QuerySnapshot query = await Firestore.instance
+    QuerySnapshot query = await _db
         .collection(cUsers)
         .document(_userId)
         .collection(cUserFriends)
@@ -88,7 +89,7 @@ class FriendsProvider with ChangeNotifier {
   Future<FriendProvider> fetchFriendStatusByUid(
       String curUserId, String userId) async {
     if (userId == null || userId.isEmpty) return null;
-    DocumentSnapshot doc = await Firestore.instance
+    DocumentSnapshot doc = await _db
         .collection(cUsers)
         .document(curUserId)
         .collection(cUserFriends)
@@ -98,20 +99,31 @@ class FriendsProvider with ChangeNotifier {
     return null;
   }
 
-  Future<void> addFollowing(
-    String uid,
-    String name,
-    String image,
-  ) async {
-    FriendProvider friend = FriendProvider(
-        friendUid: uid,
-        friendName: name,
-        friendImageUrl: image,
-        uid: _userId,
-        name: _userName,
-        imageUrl: _userImageUrl);
-    friend.follow();
-    _following.insert(0, friend); //???
+  Future<void> updateUnfollowInList(String uid) async {
+    _following.removeWhere((item) => item.friendUid == uid);
+    _follower
+        .firstWhere(
+          (element) => element.friendUid == uid,
+        )
+        .friendStatus = eFriendStatusFollower;
+    notifyListeners();
+  }
+
+  Future<void> addFollowInList(FriendProvider friend) async {
+    FriendProvider old = _following.firstWhere(
+        (element) => element.friendUid == friend.friendUid,
+        orElse: () => null);
+    if (old == null) {
+      _following.insert(0, friend);
+    } else {
+      old.friendStatus = friend.friendStatus;
+    }
+    _follower
+        .firstWhere(
+          (element) => element.friendUid == friend.friendUid,
+        )
+        .friendStatus = friend.friendStatus;
+    notifyListeners();
   }
 
   void _appendFriendsList(QuerySnapshot query, int limit, bool isFollower) {

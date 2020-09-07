@@ -23,6 +23,7 @@ class CommentProvider with ChangeNotifier {
   bool _noMoreChild = false; // level 1 comment will have this field
   CommentProvider parentPointer; // level 2/3 comment will have this field
   bool _isFetching = false; // To avoid frequently request
+  final Firestore _db = Firestore.instance;
 
   CommentProvider(
       {@required this.id,
@@ -49,7 +50,7 @@ class CommentProvider with ChangeNotifier {
       [int limit = loadLimit]) async {
     // level 1 comment will call this method
     if (parent != null) return;
-    QuerySnapshot query = await Firestore.instance
+    QuerySnapshot query = await _db
         .collection(cArticles)
         .document(articleId)
         .collection(cArticleComments)
@@ -67,7 +68,7 @@ class CommentProvider with ChangeNotifier {
     // level 1 comment will call this method
     if (parent != null || _noMoreChild || _isFetching) return;
     _isFetching = true;
-    QuerySnapshot query = await Firestore.instance
+    QuerySnapshot query = await _db
         .collection(cArticles)
         .document(articleId)
         .collection(cArticleComments)
@@ -82,28 +83,37 @@ class CommentProvider with ChangeNotifier {
   }
 
   Future<void> addLike(String userId, String userName, String userImage) async {
+    // Change local variables
+    like = true;
+    likesCount += 1;
+    notifyListeners();
+
     // Add user to like list
     if (parent == null) {
       // Level 1
+      WriteBatch batch = _db.batch();
       // Add a document
-      await Firestore.instance
-          .collection(cArticles)
-          .document(articleId)
-          .collection(cArticleComments)
-          .document(id)
-          .collection(cArticleCommentLikes)
-          .document(userId)
-          .setData({});
+      batch.setData(
+          _db
+              .collection(cArticles)
+              .document(articleId)
+              .collection(cArticleComments)
+              .document(id)
+              .collection(cArticleCommentLikes)
+              .document(userId),
+          {});
       // Increase like count by 1
-      await Firestore.instance
-          .collection(cArticles)
-          .document(articleId)
-          .collection(cArticleComments)
-          .document(id)
-          .updateData({fCommentLikesCount: FieldValue.increment(1)});
+      batch.updateData(
+          _db
+              .collection(cArticles)
+              .document(articleId)
+              .collection(cArticleComments)
+              .document(id),
+          {fCommentLikesCount: FieldValue.increment(1)});
+      await batch.commit();
     } else {
       // Level 2
-      await Firestore.instance
+      await _db
           .collection(cArticles)
           .document(articleId)
           .collection(cArticleComments)
@@ -116,37 +126,40 @@ class CommentProvider with ChangeNotifier {
       });
     }
     // Send the creator a message
-    MessagesProvider().sendMessage(eMessageTypeLike, userId, userName,
+    await MessagesProvider().sendMessage(eMessageTypeLike, userId, userName,
         userImage, creatorUid, articleId, parent == null ? id : parent);
-    // Change local variables
-    like = true;
-    likesCount += 1;
-    notifyListeners();
   }
 
   Future<void> cancelLike(String userId) async {
+    // revoke message???
+    like = false;
+    likesCount -= 1;
+    notifyListeners();
+
     // Remove user from like list
     if (parent == null) {
       // Level 1
+      WriteBatch batch = _db.batch();
       // Remove a document
-      await Firestore.instance
+      batch.delete(_db
           .collection(cArticles)
           .document(articleId)
           .collection(cArticleComments)
           .document(id)
           .collection(cArticleCommentLikes)
-          .document(userId)
-          .delete();
+          .document(userId));
       // Decrease like count by 1
-      await Firestore.instance
-          .collection(cArticles)
-          .document(articleId)
-          .collection(cArticleComments)
-          .document(id)
-          .updateData({fCommentLikesCount: FieldValue.increment(-1)});
+      batch.updateData(
+          _db
+              .collection(cArticles)
+              .document(articleId)
+              .collection(cArticleComments)
+              .document(id),
+          {fCommentLikesCount: FieldValue.increment(-1)});
+      await batch.commit();
     } else {
       // Level 2
-      await Firestore.instance
+      await _db
           .collection(cArticles)
           .document(articleId)
           .collection(cArticleComments)
@@ -158,10 +171,6 @@ class CommentProvider with ChangeNotifier {
         fCommentReplyLikes: FieldValue.arrayRemove([userId])
       });
     }
-    // revoke message???
-    like = false;
-    likesCount -= 1;
-    notifyListeners();
   }
 
   Future<void> addL2Comment(String l2content, String l2creatorUid,
@@ -181,21 +190,35 @@ class CommentProvider with ChangeNotifier {
       comment[fCommentReplyToName] = this.creatorName;
       comment[fCommentParent] = parent;
     }
+
+    WriteBatch batch = _db.batch();
     // Add a document
-    DocumentReference docRef = await Firestore.instance
+    DocumentReference newDocRef = _db
         .collection(cArticles)
         .document(articleId)
         .collection(cArticleComments)
         .document(comment[fCommentParent])
         .collection(cArticleCommentReplies)
-        .add(comment);
+        .document();
+    batch.setData(newDocRef, comment);
     // Increase parent's children count by 1
-    await Firestore.instance
-        .collection(cArticles)
-        .document(articleId)
-        .collection(cArticleComments)
-        .document(comment[fCommentParent])
-        .updateData({fCommentChildrenCount: FieldValue.increment(1)});
+    batch.updateData(
+        _db
+            .collection(cArticles)
+            .document(articleId)
+            .collection(cArticleComments)
+            .document(comment[fCommentParent]),
+        {fCommentChildrenCount: FieldValue.increment(1)});
+    await batch.commit();
+
+    // Update local variables
+    comment['like'] = false;
+    if (isL3Comment) {
+      parentPointer._addL2CommentToList(newDocRef.documentID, comment);
+    } else {
+      _addL2CommentToList(newDocRef.documentID, comment);
+    }
+
     // Send the creator/replyTo a message
     await MessagesProvider().sendMessage(
         eMessageTypeReply,
@@ -205,12 +228,6 @@ class CommentProvider with ChangeNotifier {
         creatorUid,
         articleId,
         comment[fCommentParent]);
-    comment['like'] = false;
-    if (isL3Comment) {
-      parentPointer._addL2CommentToList(docRef.documentID, comment);
-    } else {
-      _addL2CommentToList(docRef.documentID, comment);
-    }
   }
 
   void _appendL2CommentList(QuerySnapshot query, String userId, int limit) {

@@ -43,7 +43,7 @@ class PersonalManagementScreen extends StatelessWidget {
         body: SafeArea(
             child: FutureBuilder(
                 future: Provider.of<ProfileProvider>(context, listen: false)
-                    .fetchMyProfile(),
+                    .fetchBasicProfile(),
                 builder: (ctx, asyncSnapshot) {
                   if (asyncSnapshot.connectionState == ConnectionState.waiting)
                     return Center(child: CircularProgressIndicator());

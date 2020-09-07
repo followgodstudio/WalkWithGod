@@ -5,17 +5,22 @@ import 'package:flutter/widgets.dart';
 import '../../configurations/constants.dart';
 
 class ProfileProvider with ChangeNotifier {
+  final Firestore _db = Firestore.instance;
   String uid;
   String name;
   String imageUrl;
   DateTime createdDate;
+  int readsCount;
+  int followersCount;
+  int readDuration;
+  List<String> recentRead = [];
 
   ProfileProvider([this.uid]);
 
   Stream<Map<String, dynamic>> fetchProfileStream() {
     if (uid == null || uid == "") return null;
     Stream<DocumentSnapshot> stream =
-        Firestore.instance.collection(cUsers).document(uid).snapshots();
+        _db.collection(cUsers).document(uid).snapshots();
     // watch message count stream
     return stream.map((DocumentSnapshot doc) {
       return {
@@ -35,26 +40,53 @@ class ProfileProvider with ChangeNotifier {
     });
   }
 
-  Future<void> fetchMyProfile() async {
+  Future<void> fetchBasicProfile() async {
     if (uid == null || uid == "") return;
-    DocumentSnapshot doc =
-        await Firestore.instance.collection(cUsers).document(uid).get();
-    if (doc?.data?.isNotEmpty) {
-      name = doc.data[fUserName];
-      imageUrl = doc.data[fUserImageUrl];
-      createdDate = (doc.data[fCreatedDate] as Timestamp).toDate();
-    }
+    DocumentSnapshot doc = await _db.collection(cUsers).document(uid).get();
+    if (!doc.exists) return;
+    name = doc.data[fUserName];
+    imageUrl = doc.data[fUserImageUrl];
+    createdDate = (doc.data[fCreatedDate] as Timestamp).toDate();
+  }
+
+  Future<void> fetchNetworkProfile() async {
+    if (uid == null || uid == "") return;
+    DocumentSnapshot doc = await _db.collection(cUsers).document(uid).get();
+    if (!doc.exists) return;
+    name = doc.data[fUserName];
+    imageUrl = doc.data[fUserImageUrl];
+    createdDate = (doc.data[fCreatedDate] as Timestamp).toDate();
+    readDuration = (doc.data[fUserReadDuration] == null)
+        ? 0
+        : doc.data[fUserReadDuration].floor();
+    readsCount =
+        (doc.data[fUserReadsCount] == null) ? 0 : doc.data[fUserReadsCount];
+    followersCount = (doc.data[fUserFollowersCount] == null)
+        ? 0
+        : doc.data[fUserFollowersCount];
+    if (readsCount == 0) return;
+    QuerySnapshot query = await _db
+        .collection(cUsers)
+        .document(uid)
+        .collection(cUserReadHistory)
+        .where(fUpdatedDate,
+            isGreaterThanOrEqualTo: DateTime.now().subtract(Duration(days: 7)))
+        .orderBy(fUpdatedDate, descending: true)
+        .getDocuments();
+    query.documents.forEach((data) {
+      recentRead.add(data.documentID);
+    });
   }
 
   Future<ProfileProvider> fetchProfileByUid(String userId) async {
     ProfileProvider userProfile = ProfileProvider(userId);
-    await userProfile.fetchMyProfile();
+    await userProfile.fetchNetworkProfile();
     return userProfile;
   }
 
   Future<void> initProfile(String userId) async {
     uid = userId;
-    await Firestore.instance.collection(cUsers).document(uid).setData({});
+    await _db.collection(cUsers).document(uid).setData({});
     String newName = "弟兄姊妹"; // TODO: Random name
     await updateProfile(newName: newName, newCreatedDate: Timestamp.now());
   }
@@ -70,11 +102,38 @@ class ProfileProvider with ChangeNotifier {
       data[fCreatedDate] = newCreatedDate;
     }
     if (data.isNotEmpty) {
-      await Firestore.instance
-          .collection(cUsers)
-          .document(uid)
-          .updateData(data);
+      await _db.collection(cUsers).document(uid).updateData(data);
       notifyListeners();
     }
+  }
+
+  Future<void> updateReadByAid(
+      String articleId, DateTime start, DateTime end) async {
+    int timeDiffInSecond = end.difference(start).inSeconds;
+    print(uid + " " + articleId + " " + timeDiffInSecond.toString());
+    if (timeDiffInSecond < 5) return;
+
+    DocumentReference user = _db.collection(cUsers).document(uid);
+    DocumentReference history = _db
+        .collection(cUsers)
+        .document(uid)
+        .collection(cUserReadHistory)
+        .document(articleId);
+    DocumentSnapshot doc = await history.get();
+
+    WriteBatch batch = _db.batch();
+    if (doc.exists) {
+      // Update read history timestamp
+      batch.updateData(history, {fUpdatedDate: Timestamp.fromDate(end)});
+    } else {
+      // Create a new document in read history
+      batch.setData(history, {fUpdatedDate: Timestamp.fromDate(end)});
+      // Increase count
+      batch.updateData(user, {fUserReadsCount: FieldValue.increment(1)});
+    }
+    // Increase read duration
+    batch.updateData(user,
+        {fUserReadDuration: FieldValue.increment(timeDiffInSecond / 3600)});
+    await batch.commit();
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import '../../configurations/constants.dart';
 
 class MessageProvider with ChangeNotifier {
+  final Firestore _db = Firestore.instance;
   final String id;
   final String articleId;
   final String commentId;
@@ -30,19 +31,21 @@ class MessageProvider with ChangeNotifier {
 
   Future<void> markMessageAsRead(bool read) async {
     if (isRead == read) return;
-    // Update document
-    await Firestore.instance
-        .collection(cUsers)
-        .document(receiverUid)
-        .collection(cUserMessages)
-        .document(id)
-        .updateData({fMessageIsRead: read});
-    // Update unread count
-    await Firestore.instance
-        .collection(cUsers)
-        .document(receiverUid)
-        .updateData({fUserUnreadMsgCount: FieldValue.increment(-1)});
     isRead = read;
     notifyListeners();
+
+    // Update document
+    WriteBatch batch = _db.batch();
+    batch.updateData(
+        _db
+            .collection(cUsers)
+            .document(receiverUid)
+            .collection(cUserMessages)
+            .document(id),
+        {fMessageIsRead: read});
+    // Update unread count
+    batch.updateData(_db.collection(cUsers).document(receiverUid),
+        {fUserUnreadMsgCount: FieldValue.increment(-1)});
+    await batch.commit();
   }
 }

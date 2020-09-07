@@ -16,6 +16,7 @@ const String cUsers = "users";
 
 const String cArticleComments = "comments";
 
+const String cUserReadHistory = "read_history";
 const String cUserFriends = "friends";
 const String cUserMessages = "messages";
 const String cUserSavedarticles = "saved_articles";
@@ -33,6 +34,8 @@ const String fUserMessagesCount = "messages_count";
 const String fUserUnreadMsgCount = "unread_msg_count";
 const String fUserFollowingsCount = "followings_count";
 const String fUserFollowersCount = "followers_count";
+const String fUserReadsCount = "reads_count";
+const String fUserReadDuration = "read_duration";
 
 const String fMessageType = "type";
 const String eMessageTypeLike = "like";

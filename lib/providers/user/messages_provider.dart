@@ -10,6 +10,7 @@ class MessagesProvider with ChangeNotifier {
   DocumentSnapshot _lastVisible;
   bool _noMore = false;
   bool _isFetching = false; // To avoid frequently request
+  final Firestore _db = Firestore.instance;
 
   List<MessageProvider> get items {
     return [..._items];
@@ -22,7 +23,7 @@ class MessagesProvider with ChangeNotifier {
   Future<void> fetchMessageListByUid(String userId,
       [int limit = loadLimit]) async {
     if (userId == null) return;
-    QuerySnapshot query = await Firestore.instance
+    QuerySnapshot query = await _db
         .collection(cUsers)
         .document(userId)
         .collection(cUserMessages)
@@ -37,7 +38,7 @@ class MessagesProvider with ChangeNotifier {
   Future<void> fetchMoreMessages([int limit = loadLimit]) async {
     if (_userId == null || _isFetching) return;
     _isFetching = true;
-    QuerySnapshot query = await Firestore.instance
+    QuerySnapshot query = await _db
         .collection(cUsers)
         .document(_userId)
         .collection(cUserMessages)
@@ -68,20 +69,23 @@ class MessagesProvider with ChangeNotifier {
     data[fMessageCommentId] = commentId;
     data[fCreatedDate] = Timestamp.now();
     data[fMessageIsRead] = false;
+
+    WriteBatch batch = _db.batch();
+
     // Add document
-    await Firestore.instance
+    var newDocRef = _db
         .collection(cUsers)
         .document(receiverUid)
         .collection(cUserMessages)
-        .add(data);
+        .document();
+    batch.setData(newDocRef, data);
     // Increase message and unread message count by 1
-    await Firestore.instance
-        .collection(cUsers)
-        .document(receiverUid)
-        .updateData({
+    batch.updateData(_db.collection(cUsers).document(receiverUid), {
       fUserMessagesCount: FieldValue.increment(1),
       fUserUnreadMsgCount: FieldValue.increment(1)
     });
+
+    await batch.commit();
   }
 
   void _appendMessageList(QuerySnapshot query, int limit) {
