@@ -1,0 +1,113 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/widgets.dart';
+
+import '../../configurations/constants.dart';
+
+class SavedArticlesProvider with ChangeNotifier {
+  final Firestore _db = Firestore.instance;
+  List<String> _items = [];
+  String _userId;
+  DocumentSnapshot _lastVisible;
+  bool _noMore = false;
+  bool _isFetching = false; // To avoid frequently request
+  bool _currentLike = false; // for the article screen
+
+  List<String> get items {
+    return [..._items];
+  }
+
+  bool get noMore {
+    return _noMore;
+  }
+
+  bool get currentLike {
+    return _currentLike;
+  }
+
+  Future<void> fetchSavedListByUid(String userId,
+      [int limit = loadLimit]) async {
+    if (userId == null) return;
+    QuerySnapshot query = await _db
+        .collection(cUsers)
+        .document(userId)
+        .collection(cUserSavedarticles)
+        .orderBy(fCreatedDate, descending: true)
+        .limit(limit)
+        .getDocuments();
+    _items = [];
+    _userId = userId;
+    _appendSavedList(query, limit);
+  }
+
+  Future<void> fetchMoreSavedArticles([int limit = loadLimit]) async {
+    if (_userId == null || _isFetching) return;
+    _isFetching = true;
+    QuerySnapshot query = await _db
+        .collection(cUsers)
+        .document(_userId)
+        .collection(cUserSavedarticles)
+        .orderBy(fCreatedDate, descending: true)
+        .startAfterDocument(_lastVisible)
+        .limit(limit)
+        .getDocuments();
+    _isFetching = false;
+    _appendSavedList(query, limit);
+  }
+
+  Future<void> fetchSavedStatusByAid(String userId, String articleId) async {
+    _userId = userId;
+    DocumentSnapshot doc = await _db
+        .collection(cUsers)
+        .document(_userId)
+        .collection(cUserSavedarticles)
+        .document(articleId)
+        .get();
+    _currentLike = doc.exists;
+  }
+
+  Future<void> removeSavedByAid(String articleId) async {
+    _items.removeWhere((item) => item == articleId);
+    _currentLike = false;
+    notifyListeners();
+    // Update remote database
+    WriteBatch batch = _db.batch();
+    batch.delete(_db
+        .collection(cUsers)
+        .document(_userId)
+        .collection(cUserSavedarticles)
+        .document(articleId));
+    batch.updateData(_db.collection(cUsers).document(_userId),
+        {fUserSavedArticlesCount: FieldValue.increment(-1)});
+    await batch.commit();
+  }
+
+  Future<void> addSavedByAid(String articleId) async {
+    _items.removeWhere((item) => item == articleId);
+    _items.insert(0, articleId);
+    _currentLike = true;
+    notifyListeners();
+    // Update remote database
+    WriteBatch batch = _db.batch();
+    batch.setData(
+        _db
+            .collection(cUsers)
+            .document(_userId)
+            .collection(cUserSavedarticles)
+            .document(articleId),
+        {fCreatedDate: Timestamp.now()});
+    batch.updateData(_db.collection(cUsers).document(_userId),
+        {fUserSavedArticlesCount: FieldValue.increment(1)});
+    await batch.commit();
+  }
+
+  void _appendSavedList(QuerySnapshot query, int limit) {
+    List<DocumentSnapshot> docs = query.documents;
+    docs.forEach((data) {
+      _items.add(data.documentID);
+    });
+    if (docs.length < limit) _noMore = true;
+    if (docs.length > 0)
+      _lastVisible = query.documents[query.documents.length - 1];
+    notifyListeners();
+  }
+}

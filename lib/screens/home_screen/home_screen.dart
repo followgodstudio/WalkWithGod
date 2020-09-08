@@ -67,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Provider.of<ArticlesProvider>(context, listen: false)
                       .fetchArticlesByDate(new DateTime.utc(1989, 11, 9)),
                   Provider.of<ProfileProvider>(context, listen: false)
-                      .fetchMyProfile()
+                      .fetchBasicProfile()
                 ]),
                 builder: (ctx, asyncSnapshot) {
                   if (asyncSnapshot.connectionState ==

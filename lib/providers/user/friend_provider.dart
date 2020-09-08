@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import '../../configurations/constants.dart';
 
 class FriendProvider with ChangeNotifier {
+  final Firestore _db = Firestore.instance;
   final String uid;
   final String name;
   final String imageUrl;
@@ -30,43 +31,50 @@ class FriendProvider with ChangeNotifier {
     friendStatus = (friendStatus == eFriendStatusFollower)
         ? eFriendStatusFriend
         : eFriendStatusFollowing;
-    notifyListeners(); //???
-    Map<String, dynamic> data = {};
-    data[fFriendName] = friendName;
-    data[fFriendImageUrl] = friendImageUrl;
-    data[fFriendFollowingDate] = Timestamp.fromDate(followingDate);
-    data[fFriendStatus] = friendStatus;
+    notifyListeners();
+
+    // Update remote database
+    WriteBatch batch = _db.batch();
+
     // Update current user's document
-    await Firestore.instance
-        .collection(cUsers)
-        .document(uid)
-        .collection(cUserFriends)
-        .document(friendUid)
-        .setData(data, merge: true);
+    batch.setData(
+        _db
+            .collection(cUsers)
+            .document(uid)
+            .collection(cUserFriends)
+            .document(friendUid),
+        {
+          fFriendName: friendName,
+          fFriendImageUrl: friendImageUrl,
+          fFriendFollowingDate: Timestamp.fromDate(followingDate),
+          fFriendStatus: friendStatus
+        },
+        merge: true);
     // Update following count
-    await Firestore.instance
-        .collection(cUsers)
-        .document(uid)
-        .updateData({fUserFollowingsCount: FieldValue.increment(1)});
-    data = {};
-    data[fFriendName] = name;
-    data[fFriendImageUrl] = imageUrl;
-    data[fFriendFollowerDate] = Timestamp.fromDate(followingDate);
-    data[fFriendStatus] = friendStatus == eFriendStatusFollower
-        ? eFriendStatusFriend
-        : eFriendStatusFollower;
+    batch.updateData(_db.collection(cUsers).document(uid),
+        {fUserFollowingsCount: FieldValue.increment(1)});
+
     // Update followed user's document
-    await Firestore.instance
-        .collection(cUsers)
-        .document(friendUid)
-        .collection(cUserFriends)
-        .document(uid)
-        .setData(data, merge: true);
+    batch.setData(
+        _db
+            .collection(cUsers)
+            .document(friendUid)
+            .collection(cUserFriends)
+            .document(uid),
+        {
+          fFriendName: name,
+          fFriendImageUrl: imageUrl,
+          fFriendFollowerDate: Timestamp.fromDate(followingDate),
+          fFriendStatus: (friendStatus == eFriendStatusFriend
+              ? eFriendStatusFriend
+              : eFriendStatusFollower)
+        },
+        merge: true);
     // Update follower count
-    await Firestore.instance
-        .collection(cUsers)
-        .document(friendUid)
-        .updateData({fUserFollowersCount: FieldValue.increment(1)});
+    batch.updateData(_db.collection(cUsers).document(friendUid),
+        {fUserFollowersCount: FieldValue.increment(1)});
+
+    await batch.commit();
   }
 
   Future<void> unfollow() async {
@@ -75,53 +83,52 @@ class FriendProvider with ChangeNotifier {
     friendStatus =
         (friendStatus == eFriendStatusFriend) ? eFriendStatusFollower : null;
     notifyListeners();
+
+    // Update remote database
+    WriteBatch batch = _db.batch();
+
     // Update current user's document
     if (friendStatus != null) {
-      Map<String, dynamic> data = {};
-      data[fFriendStatus] = friendStatus;
-      data[fFriendFollowingDate] = null; //???
-      await Firestore.instance
-          .collection(cUsers)
-          .document(uid)
-          .collection(cUserFriends)
-          .document(friendUid)
-          .setData(data, merge: true);
+      batch.setData(
+          _db
+              .collection(cUsers)
+              .document(uid)
+              .collection(cUserFriends)
+              .document(friendUid),
+          {fFriendStatus: friendStatus},
+          merge: true);
     } else {
-      await Firestore.instance
+      batch.delete(_db
           .collection(cUsers)
           .document(uid)
           .collection(cUserFriends)
-          .document(friendUid)
-          .delete();
+          .document(friendUid));
     }
     // Update following count
-    await Firestore.instance
-        .collection(cUsers)
-        .document(uid)
-        .updateData({fUserFollowingsCount: FieldValue.increment(-1)});
+    batch.updateData(_db.collection(cUsers).document(uid),
+        {fUserFollowingsCount: FieldValue.increment(-1)});
+
     // Update followed user's document
     if (friendStatus != null) {
-      Map<String, dynamic> data = {};
-      data[fFriendStatus] = eFriendStatusFollowing;
-      data[fFriendFollowerDate] = null; //???
-      await Firestore.instance
-          .collection(cUsers)
-          .document(friendUid)
-          .collection(cUserFriends)
-          .document(uid)
-          .setData(data, merge: true);
+      batch.setData(
+          _db
+              .collection(cUsers)
+              .document(friendUid)
+              .collection(cUserFriends)
+              .document(uid),
+          {fFriendStatus: eFriendStatusFollowing},
+          merge: true);
     } else {
-      await Firestore.instance
+      batch.delete(_db
           .collection(cUsers)
           .document(friendUid)
           .collection(cUserFriends)
-          .document(uid)
-          .delete();
+          .document(uid));
     }
     // Update follower count
-    await Firestore.instance
-        .collection(cUsers)
-        .document(friendUid)
-        .updateData({fUserFollowersCount: FieldValue.increment(-1)});
+    batch.updateData(_db.collection(cUsers).document(friendUid),
+        {fUserFollowersCount: FieldValue.increment(-1)});
+
+    await batch.commit();
   }
 }

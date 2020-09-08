@@ -10,6 +10,7 @@ class CommentsProvider with ChangeNotifier {
   DocumentSnapshot _lastVisible;
   bool _noMore = false;
   bool _isFetching = false; // To avoid frequently request
+  final Firestore _db = Firestore.instance;
 
   List<CommentProvider> get items {
     return [..._items];
@@ -19,17 +20,18 @@ class CommentsProvider with ChangeNotifier {
     return _noMore;
   }
 
+  // Will be called by comment detail screen
   Future<CommentProvider> fetchL1CommentByCid(
       String articleId, String commentId, String userId) async {
     // Fetch Comment
-    DocumentSnapshot doc = await Firestore.instance
+    DocumentSnapshot doc = await _db
         .collection(cArticles)
         .document(articleId)
         .collection(cArticleComments)
         .document(commentId)
         .get();
     // Fetch Likes
-    DocumentSnapshot docLikes = await Firestore.instance
+    DocumentSnapshot docLikes = await _db
         .collection(cArticles)
         .document(articleId)
         .collection(cArticleComments)
@@ -52,7 +54,7 @@ class CommentsProvider with ChangeNotifier {
     _lastVisible = null;
     _noMore = false;
     _isFetching = true;
-    QuerySnapshot query = await Firestore.instance
+    QuerySnapshot query = await _db
         .collection(cArticles)
         .document(articleId)
         .collection(cArticleComments)
@@ -68,7 +70,7 @@ class CommentsProvider with ChangeNotifier {
       [int limit = loadLimit]) async {
     if (_articleId == null || userId == null || _noMore || _isFetching) return;
     _isFetching = true;
-    QuerySnapshot query = await Firestore.instance
+    QuerySnapshot query = await _db
         .collection(cArticles)
         .document(_articleId)
         .collection(cArticleComments)
@@ -90,7 +92,7 @@ class CommentsProvider with ChangeNotifier {
     comment[fCreatedDate] = Timestamp.now();
     comment[fCommentChildrenCount] = 0;
     comment[fCommentLikesCount] = 0;
-    DocumentReference docRef = await Firestore.instance
+    DocumentReference docRef = await _db
         .collection(cArticles)
         .document(articleId)
         .collection(cArticleComments)
@@ -109,7 +111,7 @@ class CommentsProvider with ChangeNotifier {
     }
     // Fetch if current user like, will it be slow???
     for (int i = 0; i < docs.length; i++) {
-      DocumentSnapshot docRef = await Firestore.instance
+      DocumentSnapshot docRef = await _db
           .collection(cArticles)
           .document(articleId)
           .collection(cArticleComments)

@@ -4,11 +4,12 @@ import 'package:provider/provider.dart';
 import '../../configurations/constants.dart';
 import '../../configurations/theme.dart';
 import '../../providers/user/profile_provider.dart';
+import '../../providers/user/saved_articles_provider.dart';
 import 'friends/friends_list_screen.dart';
 import 'headline/edit_profile_screen.dart';
 import 'headline/introduction.dart';
-import 'messages/messages_list_screen.dart';
 import 'headline/network_screen.dart';
+import 'messages/messages_list_screen.dart';
 import 'setting/setting_screen.dart';
 // import 'posts/saved_posts.dart';
 // import 'read/reading.dart';
@@ -43,7 +44,7 @@ class PersonalManagementScreen extends StatelessWidget {
         body: SafeArea(
             child: FutureBuilder(
                 future: Provider.of<ProfileProvider>(context, listen: false)
-                    .fetchMyProfile(),
+                    .fetchBasicProfile(),
                 builder: (ctx, asyncSnapshot) {
                   if (asyncSnapshot.connectionState == ConnectionState.waiting)
                     return Center(child: CircularProgressIndicator());
@@ -56,6 +57,7 @@ class PersonalManagementScreen extends StatelessWidget {
                         HeadLine(),
                         // Reading(),
                         // SavedPosts(),
+                        SavedArticles(),
                         FriendsMessages(),
                       ]),
                     ),
@@ -187,50 +189,33 @@ class FriendsMessages extends StatelessWidget {
   }
 }
 
-class Friends extends StatelessWidget {
+class SavedArticles extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<Map<String, dynamic>>(
-        stream: Provider.of<ProfileProvider>(context, listen: false)
-            .fetchProfileStream(),
-        builder: (BuildContext context,
-            AsyncSnapshot<Map<String, dynamic>> snapshot) {
-          if (snapshot.connectionState != ConnectionState.active)
-            return Center(child: CircularProgressIndicator());
-          return FlatButton(
-            onPressed: () {
-              Navigator.of(context).pushNamed(FriendsListScreen.routeName);
-            },
-            child: Row(
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          "我的好友",
-                          style: Theme.of(context).textTheme.headline6,
-                        ),
-                        SizedBox(height: 8.0),
-                        Text(
-                          "共" +
-                              snapshot.data[fUserMessagesCount].toString() +
-                              "条消息, " +
-                              snapshot.data[fUserUnreadMsgCount].toString() +
-                              "条未读",
-                          style: Theme.of(context).textTheme.captionMain,
-                        ),
-                      ],
-                    ),
-                  ),
+    ProfileProvider profile =
+        Provider.of<ProfileProvider>(context, listen: false);
+    return Column(
+      children: [
+        Divider(color: Color.fromARGB(255, 128, 128, 128)),
+        Text("我的收藏"),
+        Text("共" + profile.savedArticlesCount.toString() + "篇收藏"),
+        FutureBuilder(
+            future: Provider.of<SavedArticlesProvider>(context, listen: false)
+                .fetchSavedListByUid(profile.uid),
+            builder: (ctx, asyncSnapshot) {
+              if (asyncSnapshot.connectionState == ConnectionState.waiting)
+                return Center(child: CircularProgressIndicator());
+              if (asyncSnapshot.error != null)
+                return Center(child: Text('An error occurred!'));
+              return Consumer<SavedArticlesProvider>(
+                builder: (context, value, child) => Column(
+                  children: [
+                    ...value.items.map((e) => Text(e)).toList(),
+                  ],
                 ),
-                Icon(Icons.arrow_forward_ios,
-                    size: 20.0, color: Theme.of(context).buttonColor),
-              ],
-            ),
-          );
-        });
+              );
+            }),
+      ],
+    );
   }
 }

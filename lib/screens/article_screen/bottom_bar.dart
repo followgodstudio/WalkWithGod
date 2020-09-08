@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../configurations/theme.dart';
 import '../../providers/article/comments_provider.dart';
 import '../../providers/user/profile_provider.dart';
+import '../../providers/user/saved_articles_provider.dart';
 import '../../widgets/popup_comment.dart';
 
 class BottomBar extends StatelessWidget {
@@ -61,15 +62,39 @@ class BottomBar extends StatelessWidget {
       ),
       SizedBox(
         width: 55.0,
-        child: FlatButton(
-          onPressed: () {},
-          child: Icon(
-            Icons.star_border,
-            size: 20.0,
-          ),
-          color: Theme.of(context).buttonColor,
-          shape: CircleBorder(),
-        ),
+        child: FutureBuilder(
+            future: Provider.of<SavedArticlesProvider>(context, listen: false)
+                .fetchSavedStatusByAid(profile.uid, articleId),
+            builder: (ctx, asyncSnapshot) {
+              if (asyncSnapshot.connectionState == ConnectionState.waiting ||
+                  asyncSnapshot.error != null)
+                // return a button without function
+                FlatButton(
+                  onPressed: () {},
+                  child: Icon(
+                    Icons.star_border,
+                    size: 20.0,
+                  ),
+                  color: Theme.of(context).buttonColor,
+                  shape: CircleBorder(),
+                );
+              return Consumer<SavedArticlesProvider>(
+                  builder: (context, value, child) => FlatButton(
+                        onPressed: () {
+                          if (value.currentLike) {
+                            value.removeSavedByAid(articleId);
+                          } else {
+                            value.addSavedByAid(articleId);
+                          }
+                        },
+                        child: Icon(
+                          value.currentLike ? Icons.star : Icons.star_border,
+                          size: 20.0,
+                        ),
+                        color: Theme.of(context).buttonColor,
+                        shape: CircleBorder(),
+                      ));
+            }),
       ),
     ]));
   }
