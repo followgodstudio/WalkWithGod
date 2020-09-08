@@ -25,13 +25,14 @@ class BottomBar extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   Text("您可以在此添加想法",
-                      style: Theme.of(context).textTheme.captionSmall3),
+                      style: Theme.of(context).textTheme.captionMedium3),
                 ],
               ),
               onPressed: () {
                 showMaterialModalBottomSheet(
                     context: context,
                     builder: (context, scrollController) => PopUpComment(
+                          articleId: articleId,
                           onPressFunc: (String content) {
                             Provider.of<CommentsProvider>(context,
                                     listen: false)

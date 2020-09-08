@@ -67,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Provider.of<ArticlesProvider>(context, listen: false)
                       .fetchArticlesByDate(new DateTime.utc(1989, 11, 9)),
                   Provider.of<ProfileProvider>(context, listen: false)
-                      .fetchProfile()
+                      .fetchMyProfile()
                 ]),
                 builder: (ctx, asyncSnapshot) {
                   if (asyncSnapshot.connectionState ==
@@ -117,13 +117,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 actions: [
                                   FlatButton(
-                                    child: CircleAvatar(
-                                      backgroundColor:
-                                          Theme.of(context).canvasColor,
-                                      // backgroundImage:
-                                      //     AssetImage("assets/images/logo.png"),
-                                      backgroundImage: NetworkImage(
-                                          "https://www.ccreadbible.org/Members/Bona/art-and-music/68b59ad85411798f97f376844e096b2181f4656c/p53052213.jpg"),
+                                    child: Consumer<ProfileProvider>(
+                                      builder: (ctx, profile, _) =>
+                                          CircleAvatar(
+                                              backgroundColor:
+                                                  Theme.of(context).canvasColor,
+                                              // backgroundImage:
+                                              //     AssetImage("assets/images/logo.png"),
+                                              // backgroundImage: NetworkImage(
+                                              //     "https://www.ccreadbible.org/Members/Bona/art-and-music/68b59ad85411798f97f376844e096b2181f4656c/p53052213.jpg"),
+                                              backgroundImage: NetworkImage(
+                                                  profile.imageUrl)),
                                     ),
                                     onPressed: () {
                                       Navigator.of(context).pushNamed(

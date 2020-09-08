@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../configurations/theme.dart';
+
 class SignupScreen extends StatelessWidget {
   static const routeName = '/signup';
   @override
@@ -10,6 +12,7 @@ class SignupScreen extends StatelessWidget {
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
+          color: Theme.of(context).textTheme.buttonColor2,
           onPressed: () {
             Navigator.of(context).pop();
           },

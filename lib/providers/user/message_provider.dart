@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
 
-import '../../model/constants.dart';
+import '../../configurations/constants.dart';
 
 class MessageProvider with ChangeNotifier {
   final String id;
   final String articleId;
+  final String commentId;
   final String senderUid;
   final String senderName;
   final String senderImage;
@@ -17,6 +18,7 @@ class MessageProvider with ChangeNotifier {
   MessageProvider({
     @required this.id,
     @required this.articleId,
+    @required this.commentId,
     @required this.senderUid,
     @required this.senderName,
     @required this.senderImage,
@@ -28,12 +30,18 @@ class MessageProvider with ChangeNotifier {
 
   Future<void> markMessageAsRead(bool read) async {
     if (isRead == read) return;
+    // Update document
     await Firestore.instance
         .collection(cUsers)
         .document(receiverUid)
         .collection(cUserMessages)
         .document(id)
         .updateData({fMessageIsRead: read});
+    // Update unread count
+    await Firestore.instance
+        .collection(cUsers)
+        .document(receiverUid)
+        .updateData({fUserUnreadMsgCount: FieldValue.increment(-1)});
     isRead = read;
     notifyListeners();
   }

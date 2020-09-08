@@ -16,9 +16,7 @@ const String cUsers = "users";
 
 const String cArticleComments = "comments";
 
-const String cUserProfile = "profile";
-const String cUserfollowers = "followers";
-const String cUserfollowings = "followings";
+const String cUserFriends = "friends";
 const String cUserMessages = "messages";
 const String cUserSavedarticles = "saved_articles";
 
@@ -31,6 +29,10 @@ const String cArticleCommentLikes = "likes";
 
 const String fUserName = "name";
 const String fUserImageUrl = "image_url";
+const String fUserMessagesCount = "messages_count";
+const String fUserUnreadMsgCount = "unread_msg_count";
+const String fUserFollowingsCount = "followings_count";
+const String fUserFollowersCount = "followers_count";
 
 const String fMessageType = "type";
 const String eMessageTypeLike = "like";
@@ -40,8 +42,18 @@ const String fMessageSenderName = "sender_name";
 const String fMessageSenderImage = "sender_image";
 const String fMessageReceiverUid = "receiver_uid";
 const String fMessageArticleId = "article_id";
+const String fMessageCommentId = "comment_id";
 const String fMessageContent = "content";
 const String fMessageIsRead = "is_read";
+
+const String fFriendStatus = "status";
+const String eFriendStatusFollowing = "following";
+const String eFriendStatusFollower = "follower";
+const String eFriendStatusFriend = "friend";
+const String fFriendName = "name";
+const String fFriendImageUrl = "image_url";
+const String fFriendFollowingDate = "following_date";
+const String fFriendFollowerDate = "follower_date";
 
 const String fArticleTitle = 'title';
 const String fArticleDescription = 'description';
@@ -53,6 +65,7 @@ const String fArticlePublisher = 'publisher';
 
 const String fContentSubtitle = 'subtitle';
 const String fContentBody = 'body';
+const String fContentIndex = 'index';
 
 const String fCommentArticleId = 'aid';
 const String fCommentContent = 'content';
@@ -60,7 +73,8 @@ const String fCommentCreatorUid = 'creator_uid';
 const String fCommentCreatorName = 'creator_name';
 const String fCommentCreatorImage = 'creator_image';
 const String fCommentParent = 'parent';
-const String fCommentReplyTo = 'reply_to';
+const String fCommentReplyToUid = 'reply_to_uid';
+const String fCommentReplyToName = 'reply_to_name';
 const String fCommentChildrenCount = 'children_count';
 const String fCommentLikesCount = 'likes_count';
 const String fCommentReplyLikes = 'likes';

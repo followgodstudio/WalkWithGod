@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../configurations/theme.dart';
 import '../../widgets/otp_input.dart';
 import '../home_screen/home_screen.dart';
 
@@ -184,7 +185,7 @@ class _LoginScreenState extends State<LoginScreen> {
           elevation: 0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back_ios),
-            color: Theme.of(context).buttonColor,
+            color: Theme.of(context).textTheme.buttonColor2,
             onPressed: () {
               Navigator.of(context).pop();
             },
