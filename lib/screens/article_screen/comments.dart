@@ -31,7 +31,8 @@ class Comments extends StatelessWidget {
             List<CommentProvider> comments = data.items;
             List<Widget> list = [];
             list.add(Divider(
-              color: Color.fromARGB(255, 128, 128, 128),
+              indent: 15.0,
+              endIndent: 15.0,
             ));
             if (comments.length == 0) {
               list.add(Center(

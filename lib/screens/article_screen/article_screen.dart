@@ -65,7 +65,7 @@ class ArticleScreen extends StatelessWidget {
                             ),
                             Padding(
                               padding:
-                                  const EdgeInsets.symmetric(horizontal: 5.0),
+                                  const EdgeInsets.symmetric(horizontal: 10.0),
                               child: Comments(articleId: _articleId),
                             ),
                           ],

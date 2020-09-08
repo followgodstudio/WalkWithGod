@@ -64,9 +64,7 @@ class CommentDetailScreen extends StatelessWidget {
                               List<Widget> list = [];
                               list.add(Comment());
                               list.add(ArticlePreview(_articleId));
-                              list.add(Divider(
-                                color: Color.fromARGB(255, 128, 128, 128),
-                              ));
+                              list.add(Divider());
                               if (data.childrenCount == 0) {
                                 list.add(Center(
                                     child: Padding(

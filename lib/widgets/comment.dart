@@ -24,7 +24,7 @@ class Comment extends StatelessWidget {
           Row(
             //avatar and title / created time
             children: [
-              ProfilePicture(data.creatorImage, 20.0, data.creatorUid),
+              ProfilePicture(data.creatorImage, 16.0, data.creatorUid),
               Column(
                 //title and time
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -33,7 +33,7 @@ class Comment extends StatelessWidget {
                   Row(
                     children: [
                       SizedBox(
-                        width: 20,
+                        width: 20.0,
                       ),
                       GestureDetector(
                           onTap: () {
@@ -107,7 +107,10 @@ class Comment extends StatelessWidget {
               SizedBox(width: 50),
               if (!data.like)
                 IconButton(
-                    icon: Icon(Icons.favorite_border),
+                    icon: Icon(
+                      Icons.favorite_border,
+                      color: Color.fromARGB(255, 160, 160, 160),
+                    ),
                     onPressed: () => data.addLike(
                         profile.uid, profile.name, profile.imageUrl)),
               if (data.like)
@@ -116,11 +119,14 @@ class Comment extends StatelessWidget {
                     onPressed: () => data.cancelLike(profile.uid)),
               Text(
                 data.likesCount.toString(),
-                style: Theme.of(context).textTheme.overline,
+                style: Theme.of(context).textTheme.captionSmall1,
               ),
               SizedBox(width: 50),
               IconButton(
-                icon: Icon(Icons.comment),
+                icon: Icon(
+                  Icons.comment,
+                  color: Color.fromARGB(255, 160, 160, 160),
+                ),
                 onPressed: () {
                   showMaterialModalBottomSheet(
                       context: context,
@@ -140,13 +146,11 @@ class Comment extends StatelessWidget {
               if (data.childrenCount != null)
                 Text(
                   data.childrenCount.toString(),
-                  style: Theme.of(context).textTheme.overline,
+                  style: Theme.of(context).textTheme.captionSmall1,
                 )
             ],
           ),
-          Divider(
-            color: Color.fromARGB(255, 128, 128, 128),
-          ),
+          Divider(),
         ],
       ),
     );
