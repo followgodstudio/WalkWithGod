@@ -92,30 +92,26 @@ class _HomeScreenState extends State<HomeScreen> {
                                 automaticallyImplyLeading: false,
                                 flexibleSpace: Row(
                                   children: <Widget>[
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8.0),
-                                      child: Column(
-                                        children: [
-                                          FlatButton(
-                                              onPressed: () {},
-                                              child: Text(
-                                                "今日",
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .captionMedium2,
-                                              )),
-                                        ],
-                                      ),
-                                    ),
-                                    FlatButton(
-                                      onPressed: () {},
-                                      child: Text(
-                                        formattedDate,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .captionMain,
-                                      ),
+                                    RawMaterialButton(
+                                        constraints: BoxConstraints(),
+                                        padding: EdgeInsets.only(left: 20),
+                                        onPressed: () {},
+                                        child: Text(
+                                          "今日",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .captionMedium2,
+                                        )),
+                                    Container(
+                                        height: 10,
+                                        child: VerticalDivider(
+                                            color: Color.fromARGB(
+                                                255, 128, 128, 128))),
+                                    Text(
+                                      formattedDate,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .captionMain,
                                     ),
                                   ],
                                 ),
@@ -124,8 +120,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                     child: CircleAvatar(
                                       backgroundColor:
                                           Theme.of(context).canvasColor,
-                                      backgroundImage:
-                                          AssetImage("assets/images/logo.png"),
+                                      // backgroundImage:
+                                      //     AssetImage("assets/images/logo.png"),
+                                      backgroundImage: NetworkImage(
+                                          "https://www.ccreadbible.org/Members/Bona/art-and-music/68b59ad85411798f97f376844e096b2181f4656c/p53052213.jpg"),
                                     ),
                                     onPressed: () {
                                       Navigator.of(context).pushNamed(

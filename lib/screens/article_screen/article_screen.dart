@@ -168,7 +168,6 @@ class _ArticleScreen extends State<ArticleScreen> {
                                               'assets/images/placeholder.png')
                                           : NetworkImage(
                                               loadedArticle.imageUrl),
-                                      // "https://blog.sevenponds.com/wp-content/uploads/2018/12/800px-Vincent_van_Gogh_-_Self-Portrait_-_Google_Art_Project_454045.jpg"),
                                       fit: BoxFit.cover,
                                     ),
                                   ),
