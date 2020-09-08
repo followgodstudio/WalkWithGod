@@ -36,6 +36,7 @@ const String fUserFollowingsCount = "followings_count";
 const String fUserFollowersCount = "followers_count";
 const String fUserReadsCount = "reads_count";
 const String fUserReadDuration = "read_duration";
+const String fUserSavedArticlesCount = "saved_articles_count";
 
 const String fMessageType = "type";
 const String eMessageTypeLike = "like";

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:walk_with_god/providers/user/friend_provider.dart';
-import 'package:walk_with_god/providers/user/friends_provider.dart';
 
 import '../../../configurations/theme.dart';
+import '../../../providers/user/friend_provider.dart';
+import '../../../providers/user/friends_provider.dart';
 import '../../../providers/user/profile_provider.dart';
 import 'friend_item.dart';
 
-// TODO: add wechat and facebook friends
+// TODO: add wechat and facebook friends, add friends search
 class FriendsListScreen extends StatefulWidget {
   static const routeName = '/friends_list';
 

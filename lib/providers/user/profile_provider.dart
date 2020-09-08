@@ -11,8 +11,9 @@ class ProfileProvider with ChangeNotifier {
   String imageUrl;
   DateTime createdDate;
   int readsCount;
-  int followersCount;
   int readDuration;
+  int followersCount;
+  int savedArticlesCount;
   List<String> recentRead = [];
 
   ProfileProvider([this.uid]);
@@ -47,15 +48,6 @@ class ProfileProvider with ChangeNotifier {
     name = doc.data[fUserName];
     imageUrl = doc.data[fUserImageUrl];
     createdDate = (doc.data[fCreatedDate] as Timestamp).toDate();
-  }
-
-  Future<void> fetchNetworkProfile() async {
-    if (uid == null || uid == "") return;
-    DocumentSnapshot doc = await _db.collection(cUsers).document(uid).get();
-    if (!doc.exists) return;
-    name = doc.data[fUserName];
-    imageUrl = doc.data[fUserImageUrl];
-    createdDate = (doc.data[fCreatedDate] as Timestamp).toDate();
     readDuration = (doc.data[fUserReadDuration] == null)
         ? 0
         : doc.data[fUserReadDuration].floor();
@@ -64,6 +56,12 @@ class ProfileProvider with ChangeNotifier {
     followersCount = (doc.data[fUserFollowersCount] == null)
         ? 0
         : doc.data[fUserFollowersCount];
+    savedArticlesCount = (doc.data[fUserSavedArticlesCount] == null)
+        ? 0
+        : doc.data[fUserSavedArticlesCount];
+  }
+
+  Future<void> fetchRecentRead() async {
     if (readsCount == 0) return;
     QuerySnapshot query = await _db
         .collection(cUsers)
@@ -80,7 +78,8 @@ class ProfileProvider with ChangeNotifier {
 
   Future<ProfileProvider> fetchProfileByUid(String userId) async {
     ProfileProvider userProfile = ProfileProvider(userId);
-    await userProfile.fetchNetworkProfile();
+    await userProfile.fetchBasicProfile();
+    await userProfile.fetchRecentRead();
     return userProfile;
   }
 

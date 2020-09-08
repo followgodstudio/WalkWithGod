@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:walk_with_god/widgets/profile_picture.dart';
+
+import '../../../widgets/profile_picture.dart';
 
 class Introduction extends StatelessWidget {
   final String name;
