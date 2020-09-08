@@ -46,7 +46,7 @@ class Comment extends StatelessWidget {
                           },
                           child: Text(
                             data.creatorName,
-                            style: Theme.of(context).textTheme.headline6,
+                            style: Theme.of(context).textTheme.captionMedium1,
                           )),
                     ],
                   ),
@@ -59,7 +59,7 @@ class Comment extends StatelessWidget {
                         padding: const EdgeInsets.only(top: 4.0),
                         child: Text(
                           getStringByDate(data.createdDate),
-                          style: Theme.of(context).textTheme.overline,
+                          style: Theme.of(context).textTheme.captionSmall1,
                         ),
                       ),
                     ],
@@ -93,7 +93,7 @@ class Comment extends StatelessWidget {
                                 }),
                         TextSpan(
                           text: data.content,
-                          style: Theme.of(context).textTheme.bodyText2,
+                          style: Theme.of(context).textTheme.bodyText1,
                         )
                       ],
                     ),

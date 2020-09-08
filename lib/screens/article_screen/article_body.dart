@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../screens/personal_management_screen/headline/network_screen.dart';
 
 import '../../configurations/theme.dart';
 import '../../providers/article/article_provider.dart';
@@ -53,15 +54,20 @@ class ArticleBody extends StatelessWidget {
           children: [
             loadedArticle.icon == null || loadedArticle.icon.isEmpty
                 ? Icon(Icons.album)
-                : Image(
-                    image: NetworkImage(
-                      loadedArticle.icon,
+                : GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pushNamed(
+                        NetworkScreen.routeName,
+                        arguments: loadedArticle.author,
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 2.0),
+                      child: CircleAvatar(
+                          radius: 12.0,
+                          backgroundColor: Theme.of(context).canvasColor,
+                          backgroundImage: NetworkImage(loadedArticle.icon)),
                     ),
-                    width: 30,
-                    height: 30,
-                    color: null,
-                    fit: BoxFit.scaleDown,
-                    alignment: Alignment.center,
                   ),
             Padding(
               padding: const EdgeInsets.only(left: 5.0),

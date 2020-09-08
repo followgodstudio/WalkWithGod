@@ -118,16 +118,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                 actions: [
                                   FlatButton(
                                     child: Consumer<ProfileProvider>(
-                                      builder: (ctx, profile, _) =>
-                                          CircleAvatar(
-                                              backgroundColor:
-                                                  Theme.of(context).canvasColor,
-                                              // backgroundImage:
-                                              //     AssetImage("assets/images/logo.png"),
-                                              // backgroundImage: NetworkImage(
-                                              //     "https://www.ccreadbible.org/Members/Bona/art-and-music/68b59ad85411798f97f376844e096b2181f4656c/p53052213.jpg"),
-                                              backgroundImage: NetworkImage(
-                                                  profile.imageUrl)),
+                                      builder: (ctx, profile, _) => CircleAvatar(
+                                          radius: 18.0,
+                                          backgroundColor:
+                                              Theme.of(context).canvasColor,
+                                          backgroundImage: profile.imageUrl ==
+                                                      null ||
+                                                  profile.imageUrl.isEmpty
+                                              ? AssetImage(
+                                                  'assets/images/placeholder.png')
+                                              : NetworkImage(profile.imageUrl)),
                                     ),
                                     onPressed: () {
                                       Navigator.of(context).pushNamed(

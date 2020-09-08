@@ -25,12 +25,6 @@ class ArticleParagraph extends StatelessWidget {
                       width: 30,
                       height: 4,
                       color: Colors.yellow,
-                      // child: Text(
-                      //   _paragraph.body,
-                      //   overflow: TextOverflow.ellipsis,
-                      //   maxLines: 1,
-                      //   style: Theme.of(context).textTheme.subtitle1,
-                      // ),
                     )
                   : Text(
                       _paragraph.subtitle,

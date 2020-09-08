@@ -32,7 +32,7 @@ final ThemeData dayTheme = new ThemeData(
     bodyText1: TextStyle(
         color: Color.fromARGB(255, 77, 77, 77),
         fontSize: 16.0,
-        fontFamily: 'Jinling',
+        fontFamily: 'LantingXianHei',
         letterSpacing: 1.4,
         height: 1.8),
     bodyText2: TextStyle(
@@ -90,8 +90,8 @@ extension CustomStyles on TextTheme {
       );
   TextStyle get captionSmall1 => const TextStyle(
         fontSize: 10.0,
-        color: Color.fromARGB(255, 0, 169, 157),
-        fontFamily: 'Lanting',
+        color: Color.fromARGB(255, 128, 128, 128),
+        fontFamily: 'LantingXianHei',
       );
   TextStyle get captionSmall2 => const TextStyle(
         fontSize: 10.0,
@@ -114,8 +114,8 @@ extension CustomStyles on TextTheme {
         fontFamily: 'LantingXianHei',
       );
   TextStyle get captionMedium1 => const TextStyle(
-        fontSize: 14.0,
-        color: Color.fromARGB(255, 0, 169, 157),
+        fontSize: 16.0,
+        color: Color.fromARGB(255, 0, 0, 0),
         fontFamily: 'Lanting',
       );
   TextStyle get captionMediumWhite => const TextStyle(
