@@ -70,9 +70,7 @@ class MessageItem extends StatelessWidget {
                     ),
                   ],
                 ),
-                Divider(
-                  color: Color.fromARGB(255, 128, 128, 128),
-                ),
+                Divider(),
               ]),
             ));
   }

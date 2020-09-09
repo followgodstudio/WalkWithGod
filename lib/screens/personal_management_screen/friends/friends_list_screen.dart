@@ -102,9 +102,7 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
                         child: FriendItem(),
                       ));
                     }
-                    list.add(Divider(
-                      color: Color.fromARGB(255, 128, 128, 128),
-                    ));
+                    list.add(Divider());
                     list.add(Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(

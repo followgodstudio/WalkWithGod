@@ -52,7 +52,7 @@ class PersonalManagementScreen extends StatelessWidget {
                     return Center(child: Text('An error occurred!'));
                   return SingleChildScrollView(
                     child: Padding(
-                      padding: const EdgeInsets.all(20.0),
+                      padding: const EdgeInsets.all(30.0),
                       child: Column(children: <Widget>[
                         HeadLine(),
                         // Reading(),
@@ -87,7 +87,7 @@ class HeadLine extends StatelessWidget {
                   Navigator.of(context).pushNamed(EditProfileScreen.routeName);
                 },
                 child: Text("编辑个人资料",
-                    style: Theme.of(context).textTheme.captionMedium4),
+                    style: Theme.of(context).textTheme.captionSmall1),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(18.0),
                 ),
@@ -109,7 +109,7 @@ class FriendsMessages extends StatelessWidget {
             return Center(child: CircularProgressIndicator());
           return Column(
             children: [
-              Divider(color: Color.fromARGB(255, 128, 128, 128)),
+              Divider(),
               FlatButton(
                 onPressed: () {
                   Navigator.of(context).pushNamed(FriendsListScreen.routeName);
@@ -124,7 +124,7 @@ class FriendsMessages extends StatelessWidget {
                           children: <Widget>[
                             Text(
                               "我的好友",
-                              style: Theme.of(context).textTheme.headline6,
+                              style: Theme.of(context).textTheme.captionMedium1,
                             ),
                             SizedBox(height: 8.0),
                             Text(
@@ -146,7 +146,7 @@ class FriendsMessages extends StatelessWidget {
                   ],
                 ),
               ),
-              Divider(color: Color.fromARGB(255, 128, 128, 128)),
+              Divider(),
               FlatButton(
                 onPressed: () {
                   Navigator.of(context).pushNamed(MessagesListScreen.routeName);
@@ -161,7 +161,7 @@ class FriendsMessages extends StatelessWidget {
                           children: <Widget>[
                             Text(
                               "我的消息",
-                              style: Theme.of(context).textTheme.headline6,
+                              style: Theme.of(context).textTheme.captionMedium1,
                             ),
                             SizedBox(height: 8.0),
                             Text(
@@ -182,7 +182,7 @@ class FriendsMessages extends StatelessWidget {
                   ],
                 ),
               ),
-              Divider(color: Color.fromARGB(255, 128, 128, 128)),
+              Divider(),
             ],
           );
         });
@@ -196,9 +196,12 @@ class SavedArticles extends StatelessWidget {
         Provider.of<ProfileProvider>(context, listen: false);
     return Column(
       children: [
-        Divider(color: Color.fromARGB(255, 128, 128, 128)),
+        Divider(),
         Text("我的收藏"),
-        Text("共" + profile.savedArticlesCount.toString() + "篇收藏"),
+        Text(
+          "共" + profile.savedArticlesCount.toString() + "篇收藏",
+          style: Theme.of(context).textTheme.captionSmall1,
+        ),
         FutureBuilder(
             future: Provider.of<SavedArticlesProvider>(context, listen: false)
                 .fetchSavedListByUid(profile.uid),

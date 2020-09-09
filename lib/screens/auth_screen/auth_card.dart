@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../providers/auth_provider.dart';
+import '../../configurations/theme.dart';
 
 class AuthCard extends StatefulWidget {
   const AuthCard({
@@ -56,8 +58,7 @@ class _AuthCardState extends State<AuthCard> {
     } on PlatformException catch (error) {
       _showErrorDialog(error.message);
     } catch (error) {
-      const errorMessage =
-          'Could not authenticate you. Please try again later.';
+      const errorMessage = '无法正常登陆，请稍后再试';
       _showErrorDialog(errorMessage);
     }
     if (this.mounted) {
@@ -81,56 +82,92 @@ class _AuthCardState extends State<AuthCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      elevation: 8.0,
+    return Container(
       child: Form(
         key: _formKey,
         child: SingleChildScrollView(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              TextFormField(
-                decoration: InputDecoration(labelText: 'E-Mail'),
-                keyboardType: TextInputType.emailAddress,
-                validator: (value) {
-                  if (value.isEmpty || !value.contains('@')) {
-                    return 'Invalid email!';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _authData['email'] = value;
-                },
+              Title(
+                  color: Colors.black,
+                  child: Text(
+                    _authMode == AuthMode.signInWithEmail ? '电子邮箱登陆' : '电子邮箱注册',
+                    style: Theme.of(context).textTheme.headline3,
+                  )),
+              SizedBox(
+                height: 50,
               ),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Password'),
-                obscureText: true,
-                controller: _passwordController,
-                validator: (value) {
-                  if (value.isEmpty || value.length < 6) {
-                    return 'Password is too short!';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _authData['password'] = value;
-                },
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 25.0),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints.tight(Size(300, 25)),
+                  child: TextFormField(
+                    autofocus: true,
+                    decoration: InputDecoration(
+                        helperText: "邮箱",
+                        helperStyle: Theme.of(context).textTheme.captionMedium4,
+                        hintText: '请输入邮箱地址',
+                        hintStyle: Theme.of(context).textTheme.captionMedium3),
+                    keyboardType: TextInputType.emailAddress,
+                    validator: (value) {
+                      if (value.isEmpty || !value.contains('@')) {
+                        return 'Invalid email!';
+                      }
+                      return null;
+                    },
+                    onSaved: (value) {
+                      _authData['email'] = value;
+                    },
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 30.0),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints.tight(Size(300, 25)),
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                        helperText: "密码",
+                        helperStyle: Theme.of(context).textTheme.captionMedium4,
+                        hintText: '请输入密码',
+                        hintStyle: Theme.of(context).textTheme.captionMedium3),
+                    obscureText: true,
+                    controller: _passwordController,
+                    validator: (value) {
+                      if (value.isEmpty || value.length < 6) {
+                        return '密码长度不对！';
+                      }
+                      return null;
+                    },
+                    onSaved: (value) {
+                      _authData['password'] = value;
+                    },
+                  ),
+                ),
               ),
               if (_authMode == AuthMode.createUserWithEmail)
-                TextFormField(
-                  enabled: _authMode == AuthMode.createUserWithEmail,
-                  decoration: InputDecoration(labelText: 'Confirm Password'),
-                  obscureText: true,
-                  validator: _authMode == AuthMode.createUserWithEmail
-                      ? (value) {
-                          if (value != _passwordController.text) {
-                            return 'Passwords do not match!';
-                          }
-                          return null;
-                        }
-                      : null,
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints.tight(Size(300, 25)),
+                    child: TextFormField(
+                      enabled: _authMode == AuthMode.createUserWithEmail,
+                      decoration: InputDecoration(
+                          hintText: '请再次输入密码',
+                          hintStyle:
+                              Theme.of(context).textTheme.captionMedium3),
+                      obscureText: true,
+                      validator: _authMode == AuthMode.createUserWithEmail
+                          ? (value) {
+                              if (value != _passwordController.text) {
+                                return 'Passwords do not match!';
+                              }
+                              return null;
+                            }
+                          : null,
+                    ),
+                  ),
                 ),
               SizedBox(
                 height: 20,
@@ -138,26 +175,122 @@ class _AuthCardState extends State<AuthCard> {
               if (_isLoading)
                 CircularProgressIndicator()
               else
-                RaisedButton(
-                  child: Text(_authMode == AuthMode.signInWithEmail
-                      ? 'LOGIN'
-                      : 'SIGN UP'),
-                  onPressed: _submit,
+                FlatButton(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                    child: Text(
+                      '忘记密码',
+                      style: TextStyle(
+                        fontSize: 12.0,
+                        fontFamily: 'LantingXianHei',
+                      ),
+                    ),
+                  ),
+                  onPressed: () {},
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  textColor: Colors.red,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
                   ),
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 30.0, vertical: 8.0),
-                  color: Theme.of(context).primaryColor,
-                  textColor: Theme.of(context).primaryTextTheme.button.color,
+                  color: Colors.grey[100],
                 ),
+              SizedBox(
+                height: 20,
+              ),
+              Column(
+                children: <Widget>[
+                  Center(
+                    child: Text(
+                      "点击按钮表示您同意并遵守随行",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: 'LantingXianHei',
+                        fontSize: 10,
+                      ),
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      InkWell(
+                        child: Text("《使用协议》",
+                            style: TextStyle(
+                              fontFamily: 'LantingXianHei',
+                              fontSize: 10,
+                              color: Theme.of(context).accentColor,
+                            )),
+                        onTap: () async {
+                          if (await canLaunch("https://www.google.com")) {
+                            await launch("https://www.google.com");
+                          }
+                        },
+                      ),
+                      Text(
+                        "和",
+                        style: TextStyle(
+                          fontFamily: 'LantingXianHei',
+                          fontSize: 10,
+                        ),
+                      ),
+                      InkWell(
+                        child: Text("《隐私协议》",
+                            style: TextStyle(
+                              fontFamily: 'LantingXianHei',
+                              fontSize: 10,
+                              color: Theme.of(context).accentColor,
+                            )),
+                        onTap: () async {
+                          if (await canLaunch("https://www.google.com")) {
+                            await launch("https://www.google.com");
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 20.0,
+              ),
               FlatButton(
-                child: Text(
-                    '${_authMode == AuthMode.signInWithEmail ? 'SIGNUP' : 'LOGIN'} INSTEAD'),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 80.0),
+                  child: Text(
+                    _authMode == AuthMode.signInWithEmail ? '登陆' : '注册',
+                    style: TextStyle(
+                        fontSize: 14.0,
+                        fontFamily: 'LantingXianHei',
+                        color: Colors.white),
+                  ),
+                ),
+                onPressed: _submit,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 8.0),
+                color: Colors.lightBlue,
+                textColor: Theme.of(context).primaryTextTheme.button.color,
+              ),
+              SizedBox(height: 10.0),
+              FlatButton(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                  child: Text(
+                    '${_authMode == AuthMode.signInWithEmail ? '注册新邮箱' : '使用邮箱登陆'}',
+                    style: TextStyle(
+                      fontSize: 14.0,
+                      fontFamily: 'LantingXianHei',
+                    ),
+                  ),
+                ),
                 onPressed: _switchAuthMode,
                 padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                textColor: Theme.of(context).primaryColor,
+                textColor: Theme.of(context).accentColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                color: Colors.grey[100],
               ),
             ],
           ),

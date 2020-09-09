@@ -7,6 +7,12 @@ class EmailAuthScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Container(child: AuthCard()));
+    return Scaffold(
+        body: SafeArea(
+            child: Padding(
+                padding: const EdgeInsets.all(60),
+                child: Column(children: [
+                  AuthCard(),
+                ]))));
   }
 }

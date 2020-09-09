@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 final ThemeData dayTheme = new ThemeData(
-  primarySwatch: Colors.deepOrange,
+  primarySwatch: Colors.lightBlue,
   backgroundColor: Colors.white,
   appBarTheme: AppBarTheme(color: Colors.white),
   accentColor: Color.fromARGB(255, 0, 169, 157),
