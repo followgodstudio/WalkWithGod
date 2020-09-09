@@ -124,8 +124,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 controller: _controller,
                                 slivers: <Widget>[
                               SliverAppBar(
-//                                toolbarHeight: 48.0,
-//                                shadowColor: Theme.of(context).canvasColor,
+                                toolbarHeight: 48.0,
+                                shadowColor: Theme.of(context).canvasColor,
                                 backgroundColor: Theme.of(context).canvasColor,
                                 pinned: true,
                                 automaticallyImplyLeading: false,
