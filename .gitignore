@@ -32,6 +32,7 @@ pubspec.lock
 # Android related
 **/android/**/gradle-wrapper.jar
 **/android/.gradle
+**/android/gradle/
 **/android/captures/
 **/android/gradlew
 **/android/gradlew.bat
@@ -51,10 +52,12 @@ pubspec.lock
 **/ios/**/DerivedData/
 **/ios/**/Icon?
 **/ios/**/Pods/
+**/ios/**/Podfile*
 **/ios/**/.symlinks/
 **/ios/**/profile
 **/ios/**/xcuserdata
 **/ios/.generated/
+**/ios/Flutter/.last_build_id
 **/ios/Flutter/App.framework
 **/ios/Flutter/Flutter.framework
 **/ios/Flutter/Generated.xcconfig
