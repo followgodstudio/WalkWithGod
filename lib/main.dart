@@ -17,6 +17,7 @@ import 'screens/home_screen/home_screen.dart';
 import 'screens/loading_screen.dart';
 import 'screens/main_screen.dart';
 import 'screens/personal_management_screen/friends/friends_list_screen.dart';
+import 'screens/personal_management_screen/headline/edit_image_screen.dart';
 import 'screens/personal_management_screen/headline/edit_profile_screen.dart';
 import 'screens/personal_management_screen/headline/network_screen.dart';
 import 'screens/personal_management_screen/messages/messages_list_screen.dart';
@@ -82,6 +83,7 @@ class MyApp extends StatelessWidget {
             MessagesListScreen.routeName: (ctx) => MessagesListScreen(),
             FriendsListScreen.routeName: (ctx) => FriendsListScreen(),
             EditProfileScreen.routeName: (ctx) => EditProfileScreen(),
+            EditPictureScreen.routeName: (ctx) => EditPictureScreen(),
             NetworkScreen.routeName: (ctx) => NetworkScreen(),
             EmailAuthScreen.routeName: (ctx) => EmailAuthScreen(),
             LoginScreen.routeName: (ctx) => LoginScreen(),

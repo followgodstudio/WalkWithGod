@@ -41,7 +41,10 @@ class NetworkScreen extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: Column(children: <Widget>[
-                        Introduction(profile.name, profile.imageUrl),
+                        if (uid == curProfile.uid)
+                          Introduction(curProfile.name, curProfile.imageUrl),
+                        if (uid != curProfile.uid)
+                          Introduction(profile.name, profile.imageUrl),
                         if (uid != curProfile.uid)
                           FriendStatus(curProfile, profile),
                         ReadStatus(profile),

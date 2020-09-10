@@ -1,11 +1,16 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 
 import '../../configurations/constants.dart';
 
 class ProfileProvider with ChangeNotifier {
   final Firestore _db = Firestore.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
   String uid;
   String name;
   String imageUrl;
@@ -46,7 +51,7 @@ class ProfileProvider with ChangeNotifier {
     DocumentSnapshot doc = await _db.collection(cUsers).document(uid).get();
     if (!doc.exists) return;
     name = doc.data[fUserName];
-    imageUrl = doc.data[fUserImageUrl];
+    if (imageUrl == null) imageUrl = doc.data[fUserImageUrl];
     createdDate = (doc.data[fCreatedDate] as Timestamp).toDate();
     readDuration = (doc.data[fUserReadDuration] == null)
         ? 0
@@ -88,6 +93,27 @@ class ProfileProvider with ChangeNotifier {
     await _db.collection(cUsers).document(uid).setData({});
     String newName = "弟兄姊妹"; // TODO: Random name
     await updateProfile(newName: newName, newCreatedDate: Timestamp.now());
+  }
+
+  Future<void> updateProfilePicture(File file) async {
+    String path = sProfilePictures + "/$uid.jpeg";
+    StorageTaskSnapshot snapshot =
+        await _storage.ref().child(path).putFile(file).onComplete;
+    if (snapshot.error != null) return;
+    if (imageUrl == null) {
+      imageUrl = await snapshot.ref.getDownloadURL();
+      imageUrl = imageUrl.substring(0, imageUrl.indexOf('&token='));
+      print(imageUrl);
+      // update profile in database
+      await updateProfile(newImageUrl: imageUrl);
+    } else {
+      // To guarantee the image will be reloaded instead of using cache
+      String uniqueKey = DateFormat('yyyyMMddkkmmss').format(DateTime.now());
+      if (imageUrl.contains('&v='))
+        imageUrl = imageUrl.substring(0, imageUrl.indexOf('&'));
+      imageUrl = imageUrl + "&v=" + uniqueKey;
+      notifyListeners();
+    }
   }
 
   Future<void> updateProfile(

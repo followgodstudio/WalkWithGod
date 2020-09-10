@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:walk_with_god/screens/personal_management_screen/headline/edit_image_screen.dart';
 
 import '../../../providers/user/profile_provider.dart';
 import '../../../widgets/profile_picture.dart';
@@ -38,7 +39,15 @@ class EditProfileScreen extends StatelessWidget {
                       "头像",
                       style: Theme.of(context).textTheme.buttonMedium1,
                     ),
-                    ProfilePicture(profile.imageUrl, 30.0),
+                    FlatButton(
+                        onPressed: () {
+                          Navigator.of(context)
+                              .pushNamed(EditPictureScreen.routeName);
+                        },
+                        child: Consumer<ProfileProvider>(
+                          builder: (context, value, child) =>
+                              ProfilePicture(value.imageUrl, 30.0),
+                        )),
                   ],
                 ),
                 Padding(

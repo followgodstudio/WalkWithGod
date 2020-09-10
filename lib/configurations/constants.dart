@@ -7,6 +7,11 @@ const int loadLimit = 10;
 const String fCreatedDate = "created_date";
 const String fUpdatedDate = "updated_date";
 
+// collections in FirebaseStorage
+
+const String sProfilePictures = "profile_pictures";
+const String sArticlePictures = "article_pictures";
+
 // First Level collection names
 
 const String cArticles = "articles";
