@@ -29,7 +29,7 @@ class ArticleCard extends StatelessWidget {
 
     return Container(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12.5),
+        padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 12.5),
         child: Hero(
             tag: article.id,
             child: FutureBuilder(

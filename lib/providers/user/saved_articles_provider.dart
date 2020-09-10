@@ -2,18 +2,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../configurations/constants.dart';
+import '../article/article_provider.dart';
+import '../article/articles_provider.dart';
 
 class SavedArticlesProvider with ChangeNotifier {
   final Firestore _db = Firestore.instance;
-  List<String> _items = [];
+  List<ArticleProvider> _articles = [];
   String _userId;
   DocumentSnapshot _lastVisible;
   bool _noMore = false;
   bool _isFetching = false; // To avoid frequently request
   bool _currentLike = false; // for the article screen
 
-  List<String> get items {
-    return [..._items];
+  List<ArticleProvider> get articles {
+    return [..._articles];
   }
 
   bool get noMore {
@@ -26,7 +28,7 @@ class SavedArticlesProvider with ChangeNotifier {
 
   Future<void> fetchSavedListByUid(String userId,
       [int limit = loadLimit]) async {
-    if (userId == null) return;
+    if (userId == null) return [];
     QuerySnapshot query = await _db
         .collection(cUsers)
         .document(userId)
@@ -34,7 +36,7 @@ class SavedArticlesProvider with ChangeNotifier {
         .orderBy(fCreatedDate, descending: true)
         .limit(limit)
         .getDocuments();
-    _items = [];
+    _articles = [];
     _userId = userId;
     _appendSavedList(query, limit);
   }
@@ -66,7 +68,7 @@ class SavedArticlesProvider with ChangeNotifier {
   }
 
   Future<void> removeSavedByAid(String articleId) async {
-    _items.removeWhere((item) => item == articleId);
+    _articles.removeWhere((item) => item.id == articleId);
     _currentLike = false;
     notifyListeners();
     // Update remote database
@@ -82,9 +84,11 @@ class SavedArticlesProvider with ChangeNotifier {
   }
 
   Future<void> addSavedByAid(String articleId) async {
-    _items.removeWhere((item) => item == articleId);
-    _items.insert(0, articleId);
     _currentLike = true;
+    // Get article info
+    ArticleProvider article =
+        await ArticlesProvider().fetchArticlePreviewById(articleId);
+    _articles.insert(0, article);
     notifyListeners();
     // Update remote database
     WriteBatch batch = _db.batch();
@@ -100,14 +104,26 @@ class SavedArticlesProvider with ChangeNotifier {
     await batch.commit();
   }
 
-  void _appendSavedList(QuerySnapshot query, int limit) {
+  Future<void> _appendSavedList(QuerySnapshot query, int limit) async {
     List<DocumentSnapshot> docs = query.documents;
-    docs.forEach((data) {
-      _items.add(data.documentID);
-    });
+    if (docs.length == 0) return;
+    List<String> items = [];
+    Map<String, int> itemsMap = {};
+    for (var i = 0; i < docs.length; i++) {
+      items.add(docs[i].documentID);
+      itemsMap[docs[i].documentID] = i;
+    }
     if (docs.length < limit) _noMore = true;
-    if (docs.length > 0)
-      _lastVisible = query.documents[query.documents.length - 1];
+    _lastVisible = query.documents[query.documents.length - 1];
+    // Fetch Document's basic info, cannot be more than 10
+    List<ArticleProvider> articles = await ArticlesProvider().fetchList(items);
+    // Reorganize by update date (orginal sequence)
+    articles.sort((a, b) {
+      return itemsMap[a.id].compareTo(itemsMap[b.id]);
+    });
+    articles.forEach((element) {
+      _articles.add(element);
+    });
     notifyListeners();
   }
 }

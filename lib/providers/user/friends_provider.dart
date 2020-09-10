@@ -101,28 +101,29 @@ class FriendsProvider with ChangeNotifier {
 
   Future<void> updateUnfollowInList(String uid) async {
     _following.removeWhere((item) => item.friendUid == uid);
-    _follower
-        .firstWhere(
-          (element) => element.friendUid == uid,
-        )
-        .friendStatus = eFriendStatusFollower;
+    FriendProvider friend =
+        _follower.firstWhere((element) => element.friendUid == uid, orElse: () {
+      return null;
+    });
+    if (friend != null) friend.friendStatus = eFriendStatusFollower;
     notifyListeners();
   }
 
   Future<void> addFollowInList(FriendProvider friend) async {
     FriendProvider old = _following.firstWhere(
-        (element) => element.friendUid == friend.friendUid,
-        orElse: () => null);
+        (element) => element.friendUid == friend.friendUid, orElse: () {
+      return null;
+    });
     if (old == null) {
       _following.insert(0, friend);
     } else {
       old.friendStatus = friend.friendStatus;
     }
-    _follower
-        .firstWhere(
-          (element) => element.friendUid == friend.friendUid,
-        )
-        .friendStatus = friend.friendStatus;
+    FriendProvider follower = _follower.firstWhere(
+        (element) => element.friendUid == friend.friendUid, orElse: () {
+      return null;
+    });
+    if (follower != null) follower.friendStatus = friend.friendStatus;
     notifyListeners();
   }
 

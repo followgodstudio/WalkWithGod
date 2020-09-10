@@ -17,6 +17,9 @@ class ArticleScreen extends StatelessWidget {
     final String _articleId =
         ModalRoute.of(context).settings.arguments as String;
     final HideNavbar hiding = HideNavbar();
+    ProfileProvider profile =
+        Provider.of<ProfileProvider>(context, listen: false);
+    profile.updateRecentReadByAid(_articleId);
     return Scaffold(
       body: SafeArea(
         child: NotificationListener<ScrollNotification>(
@@ -24,9 +27,7 @@ class ArticleScreen extends StatelessWidget {
               if (scrollInfo.metrics.pixels ==
                   scrollInfo.metrics.maxScrollExtent) {
                 Provider.of<CommentsProvider>(context, listen: false)
-                    .fetchMoreL1Comments(
-                        Provider.of<ProfileProvider>(context, listen: false)
-                            .uid);
+                    .fetchMoreL1Comments(profile.uid);
               }
               return true;
             },

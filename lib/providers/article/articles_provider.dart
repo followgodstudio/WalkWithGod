@@ -33,14 +33,17 @@ class ArticlesProvider with ChangeNotifier {
     setArticles(query);
   }
 
-  Future<void> fetchList(List<String> aids) async {
+  // For other providers static call
+  Future<List<ArticleProvider>> fetchList(List<String> aids) async {
     QuerySnapshot query = await _fdb
         .collection(cArticles)
         .where(FieldPath.documentId, whereIn: aids)
-        // .orderBy(FieldPath.documentId)
-        // .orderBy(fCreatedDate, descending: true)
         .getDocuments();
-    setArticles(query);
+    List<ArticleProvider> result = [];
+    query.documents.forEach((data) {
+      result.add(_buildArticleByMap(data.documentID, data.data));
+    });
+    return result;
   }
 
   Future<void> fetchArticlesByDate(

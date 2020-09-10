@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:walk_with_god/screens/personal_management_screen/headline/edit_image_screen.dart';
 
+import '../../../configurations/theme.dart';
 import '../../../providers/user/profile_provider.dart';
 import '../../../widgets/profile_picture.dart';
-import '../../../configurations/theme.dart';
+import 'edit_image_screen.dart';
 
 class EditProfileScreen extends StatelessWidget {
   static const routeName = "/edit_profile";
@@ -52,7 +52,7 @@ class EditProfileScreen extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 5.0),
-                  child: Divider(color: Color.fromARGB(255, 128, 128, 128)),
+                  child: Divider(),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -76,7 +76,7 @@ class EditProfileScreen extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 5.0),
-                  child: Divider(color: Color.fromARGB(255, 128, 128, 128)),
+                  child: Divider(),
                 ),
                 FlatButton(
                     onPressed: () {

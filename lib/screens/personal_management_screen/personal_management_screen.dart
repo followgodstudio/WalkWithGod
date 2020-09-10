@@ -5,14 +5,14 @@ import '../../configurations/constants.dart';
 import '../../configurations/theme.dart';
 import '../../providers/user/profile_provider.dart';
 import '../../providers/user/saved_articles_provider.dart';
+import '../../widgets/article_card_small.dart';
 import 'friends/friends_list_screen.dart';
 import 'headline/edit_profile_screen.dart';
 import 'headline/introduction.dart';
 import 'headline/network_screen.dart';
 import 'messages/messages_list_screen.dart';
+import 'saved_articles/saved_articles_screen.dart';
 import 'setting/setting_screen.dart';
-// import 'posts/saved_posts.dart';
-// import 'read/reading.dart';
 
 class PersonalManagementScreen extends StatelessWidget {
   static const routeName = '/personal_management';
@@ -52,11 +52,9 @@ class PersonalManagementScreen extends StatelessWidget {
                     return Center(child: Text('An error occurred!'));
                   return SingleChildScrollView(
                     child: Padding(
-                      padding: const EdgeInsets.all(30.0),
+                      padding: const EdgeInsets.all(20.0),
                       child: Column(children: <Widget>[
                         HeadLine(),
-                        // Reading(),
-                        // SavedPosts(),
                         SavedArticles(),
                         FriendsMessages(),
                       ]),
@@ -87,7 +85,7 @@ class HeadLine extends StatelessWidget {
                   Navigator.of(context).pushNamed(EditProfileScreen.routeName);
                 },
                 child: Text("编辑个人资料",
-                    style: Theme.of(context).textTheme.captionSmall1),
+                    style: Theme.of(context).textTheme.captionMedium4),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(18.0),
                 ),
@@ -111,6 +109,7 @@ class FriendsMessages extends StatelessWidget {
             children: [
               Divider(),
               FlatButton(
+                padding: const EdgeInsets.all(0),
                 onPressed: () {
                   Navigator.of(context).pushNamed(FriendsListScreen.routeName);
                 },
@@ -148,6 +147,7 @@ class FriendsMessages extends StatelessWidget {
               ),
               Divider(),
               FlatButton(
+                padding: const EdgeInsets.all(0),
                 onPressed: () {
                   Navigator.of(context).pushNamed(MessagesListScreen.routeName);
                 },
@@ -194,31 +194,82 @@ class SavedArticles extends StatelessWidget {
   Widget build(BuildContext context) {
     ProfileProvider profile =
         Provider.of<ProfileProvider>(context, listen: false);
-    return Column(
-      children: [
-        Divider(),
-        Text("我的收藏"),
-        Text(
-          "共" + profile.savedArticlesCount.toString() + "篇收藏",
-          style: Theme.of(context).textTheme.captionSmall1,
-        ),
-        FutureBuilder(
-            future: Provider.of<SavedArticlesProvider>(context, listen: false)
-                .fetchSavedListByUid(profile.uid),
-            builder: (ctx, asyncSnapshot) {
-              if (asyncSnapshot.connectionState == ConnectionState.waiting)
-                return Center(child: CircularProgressIndicator());
-              if (asyncSnapshot.error != null)
-                return Center(child: Text('An error occurred!'));
-              return Consumer<SavedArticlesProvider>(
-                builder: (context, value, child) => Column(
-                  children: [
-                    ...value.items.map((e) => Text(e)).toList(),
-                  ],
+    return FutureBuilder(
+        future: Provider.of<SavedArticlesProvider>(context, listen: false)
+            .fetchSavedListByUid(profile.uid),
+        builder: (ctx, asyncSnapshot) {
+          if (asyncSnapshot.connectionState == ConnectionState.waiting)
+            return Center(child: CircularProgressIndicator());
+          if (asyncSnapshot.error != null)
+            return Center(child: Text('An error occurred!'));
+          return Consumer<SavedArticlesProvider>(
+              builder: (context, saved, child) {
+            Widget savedArticles;
+            if (saved.articles.length == 0) {
+              savedArticles = SizedBox(height: 8.0);
+            } else {
+              List<Widget> list = [];
+              saved.articles.forEach((element) {
+                list.add(ArticleCard(element, 4 / 5));
+              });
+              list.add(Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Container(
+                  width: 50,
+                  child: FlatButton(
+                    onPressed: () {
+                      Navigator.of(context)
+                          .pushNamed(SavedArticlesScreen.routeName);
+                    },
+                    child: Icon(
+                      Icons.more_horiz,
+                      size: 20.0,
+                    ),
+                    color: Theme.of(context).buttonColor,
+                    shape: CircleBorder(),
+                  ),
                 ),
+              ));
+              savedArticles = Container(
+                height: 200,
+                child:
+                    ListView(children: list, scrollDirection: Axis.horizontal),
               );
-            }),
-      ],
-    );
+            }
+            return Column(children: [
+              Divider(),
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 8.0),
+                        Text("我的收藏",
+                            style: Theme.of(context).textTheme.captionMedium1),
+                        SizedBox(height: 8.0),
+                        Text("共" + saved.articles.length.toString() + "篇收藏",
+                            style: Theme.of(context).textTheme.captionMain),
+                      ],
+                    ),
+                  ),
+                  if (saved.articles.length > 0)
+                    FlatButton(
+                        onPressed: () {
+                          Navigator.of(context)
+                              .pushNamed(SavedArticlesScreen.routeName);
+                        },
+                        child: Text("查看全部",
+                            style: Theme.of(context).textTheme.captionMedium4),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                        ),
+                        color: Theme.of(context).buttonColor),
+                ],
+              ),
+              savedArticles,
+            ]);
+          });
+        });
   }
 }
