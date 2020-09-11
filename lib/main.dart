@@ -59,41 +59,83 @@ class MyApp extends StatelessWidget {
           update: (context, auth, previou) => ProfileProvider(auth.currentUser),
         ),
       ],
-      child: Consumer<AuthProvider>(
-        builder: (ctx, auth, _) => MaterialApp(
-          title: 'Walk With God',
-          navigatorObservers: [routeObserver],
-          debugShowCheckedModeBanner: false,
-          theme: dayTheme,
-          home: StreamBuilder<String>(
-              stream: auth.onAuthStateChanged,
-              builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-                if (snapshot.connectionState == ConnectionState.active) {
-                  final bool isLoggedIn = snapshot.hasData;
-                  return isLoggedIn ? HomeScreen() : EmailAuthScreen();
-                }
-                return LoadingScreen();
-              }),
-          routes: {
-            //LoginScreengi.routeName: (ctx) => LoginScreen(),
-            //SignupScreen.routeName: (ctx) => SignupScreen(),
-            PersonalManagementScreen.routeName: (ctx) =>
-                PersonalManagementScreen(),
-            SettingScreen.routeName: (ctx) => SettingScreen(),
-            MessagesListScreen.routeName: (ctx) => MessagesListScreen(),
-            FriendsListScreen.routeName: (ctx) => FriendsListScreen(),
-            EditProfileScreen.routeName: (ctx) => EditProfileScreen(),
-            EditPictureScreen.routeName: (ctx) => EditPictureScreen(),
-            NetworkScreen.routeName: (ctx) => NetworkScreen(),
-            SavedArticlesScreen.routeName: (ctx) => SavedArticlesScreen(),
-            EmailAuthScreen.routeName: (ctx) => EmailAuthScreen(),
-            LoginScreen.routeName: (ctx) => LoginScreen(),
-            HomeScreen.routeName: (ctx) => HomeScreen(),
-            ArticleScreen.routeName: (ctx) => ArticleScreen(),
-            CommentDetailScreen.routeName: (ctx) => CommentDetailScreen(),
-          },
+      child: LifeCycleManager(
+        child: Consumer<AuthProvider>(
+          builder: (ctx, auth, _) => MaterialApp(
+            title: 'Walk With God',
+            navigatorObservers: [routeObserver],
+            debugShowCheckedModeBanner: false,
+            theme: dayTheme,
+            home: StreamBuilder<String>(
+                stream: auth.onAuthStateChanged,
+                builder:
+                    (BuildContext context, AsyncSnapshot<String> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.active) {
+                    final bool isLoggedIn = snapshot.hasData;
+                    return isLoggedIn ? HomeScreen() : EmailAuthScreen();
+                  }
+                  return LoadingScreen();
+                }),
+            routes: {
+              //LoginScreengi.routeName: (ctx) => LoginScreen(),
+              //SignupScreen.routeName: (ctx) => SignupScreen(),
+              PersonalManagementScreen.routeName: (ctx) =>
+                  PersonalManagementScreen(),
+              SettingScreen.routeName: (ctx) => SettingScreen(),
+              MessagesListScreen.routeName: (ctx) => MessagesListScreen(),
+              FriendsListScreen.routeName: (ctx) => FriendsListScreen(),
+              EditProfileScreen.routeName: (ctx) => EditProfileScreen(),
+              EditPictureScreen.routeName: (ctx) => EditPictureScreen(),
+              NetworkScreen.routeName: (ctx) => NetworkScreen(),
+              SavedArticlesScreen.routeName: (ctx) => SavedArticlesScreen(),
+              EmailAuthScreen.routeName: (ctx) => EmailAuthScreen(),
+              LoginScreen.routeName: (ctx) => LoginScreen(),
+              HomeScreen.routeName: (ctx) => HomeScreen(),
+              ArticleScreen.routeName: (ctx) => ArticleScreen(),
+              CommentDetailScreen.routeName: (ctx) => CommentDetailScreen(),
+            },
+          ),
         ),
       ),
+    );
+  }
+}
+
+// To monitor how many time a user are using this app
+class LifeCycleManager extends StatefulWidget {
+  final Widget child;
+  LifeCycleManager({Key key, this.child}) : super(key: key);
+  _LifeCycleManagerState createState() => _LifeCycleManagerState();
+}
+
+class _LifeCycleManagerState extends State<LifeCycleManager>
+    with WidgetsBindingObserver {
+  DateTime _start;
+  @override
+  void initState() {
+    super.initState();
+    _start = DateTime.now();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) _start = DateTime.now();
+    if (state == AppLifecycleState.paused)
+      Provider.of<ProfileProvider>(context, listen: false)
+          .updateReadDuration(_start);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: widget.child,
     );
   }
 }

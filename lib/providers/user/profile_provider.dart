@@ -23,7 +23,7 @@ class ProfileProvider with ChangeNotifier {
   int savedArticlesCount;
   List<String> _recentReadList = [];
   List<ArticleProvider> recentRead = [];
-  bool _noMoreRecentRead = false;
+  bool noMoreRecentRead = false;
   int _lastVisibleRecentRead = 0;
   bool _isFetching = false; // To avoid frequently request
 
@@ -89,6 +89,13 @@ class ProfileProvider with ChangeNotifier {
     await _appendRecentReadList();
   }
 
+  Future<void> fetchMoreRecentRead() async {
+    if (readsCount == 0 || noMoreRecentRead || _isFetching) return;
+    _isFetching = true;
+    await _appendRecentReadList();
+    _isFetching = false;
+  }
+
   Future<void> fetchNetworkProfile() async {
     await fetchBasicProfile();
     await fetchRecentRead();
@@ -138,25 +145,25 @@ class ProfileProvider with ChangeNotifier {
   }
 
   Future<void> updateRecentReadByAid(String articleId) async {
-    DocumentReference user = _db.collection(cUsers).document(uid);
     DocumentReference history = _db
         .collection(cUsers)
         .document(uid)
         .collection(cUserReadHistory)
         .document(articleId);
-    DocumentSnapshot doc = await history.get();
-
-    WriteBatch batch = _db.batch();
-    if (doc.exists) {
-      // Update read history timestamp
-      batch.updateData(history, {fUpdatedDate: Timestamp.now()});
-    } else {
-      // Create a new document in read history
-      batch.setData(history, {fUpdatedDate: Timestamp.now()});
-      // Increase count
-      batch.updateData(user, {fUserReadsCount: FieldValue.increment(1)});
-    }
-    await batch.commit();
+    _db.runTransaction((transaction) {
+      return transaction.get(history).then((DocumentSnapshot doc) {
+        if (doc.exists) {
+          // Update read history timestamp
+          history.updateData({fUpdatedDate: Timestamp.now()});
+        } else {
+          // Create a new document in read history
+          history.setData({fUpdatedDate: Timestamp.now()});
+          // Increase count
+          DocumentReference user = _db.collection(cUsers).document(uid);
+          user.updateData({fUserReadsCount: FieldValue.increment(1)});
+        }
+      });
+    });
   }
 
   Future<void> updateReadDuration(DateTime start) async {
@@ -169,9 +176,9 @@ class ProfileProvider with ChangeNotifier {
     if (_recentReadList.length == _lastVisibleRecentRead) return;
     Map<String, int> itemsMap = {};
     int end = 10 + _lastVisibleRecentRead;
-    if (end > _recentReadList.length) {
+    if (end >= _recentReadList.length) {
       end = _recentReadList.length;
-      _noMoreRecentRead = true;
+      noMoreRecentRead = true;
     }
     for (var i = _lastVisibleRecentRead; i < end; i++) {
       itemsMap[_recentReadList[i]] = i;

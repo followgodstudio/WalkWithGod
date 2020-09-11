@@ -37,12 +37,13 @@ class SavedArticlesProvider with ChangeNotifier {
         .limit(limit)
         .getDocuments();
     _articles = [];
+    _noMore = false;
     _userId = userId;
-    _appendSavedList(query, limit);
+    await _appendSavedList(query, limit);
   }
 
   Future<void> fetchMoreSavedArticles([int limit = loadLimit]) async {
-    if (_userId == null || _isFetching) return;
+    if (_userId == null || _noMore || _isFetching) return;
     _isFetching = true;
     QuerySnapshot query = await _db
         .collection(cUsers)
@@ -52,8 +53,8 @@ class SavedArticlesProvider with ChangeNotifier {
         .startAfterDocument(_lastVisible)
         .limit(limit)
         .getDocuments();
+    await _appendSavedList(query, limit);
     _isFetching = false;
-    _appendSavedList(query, limit);
   }
 
   Future<void> fetchSavedStatusByAid(String userId, String articleId) async {

@@ -212,28 +212,20 @@ class SavedArticles extends StatelessWidget {
               saved.articles.forEach((element) {
                 list.add(ArticleCard(element, 4 / 5));
               });
-              list.add(Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Container(
-                  width: 50,
-                  child: FlatButton(
-                    onPressed: () {
-                      Navigator.of(context)
-                          .pushNamed(SavedArticlesScreen.routeName);
-                    },
-                    child: Icon(
-                      Icons.more_horiz,
-                      size: 20.0,
-                    ),
-                    color: Theme.of(context).buttonColor,
-                    shape: CircleBorder(),
-                  ),
-                ),
-              ));
+              if (!saved.noMore)
+                list.add(Center(child: Icon(Icons.more_horiz)));
               savedArticles = Container(
                 height: 200,
-                child:
-                    ListView(children: list, scrollDirection: Axis.horizontal),
+                child: NotificationListener<ScrollNotification>(
+                    onNotification: (ScrollNotification scrollInfo) {
+                      if (scrollInfo.metrics.pixels ==
+                          scrollInfo.metrics.maxScrollExtent) {
+                        saved.fetchMoreSavedArticles();
+                      }
+                      return true;
+                    },
+                    child: ListView(
+                        children: list, scrollDirection: Axis.horizontal)),
               );
             }
             return Column(children: [
@@ -248,7 +240,8 @@ class SavedArticles extends StatelessWidget {
                         Text("我的收藏",
                             style: Theme.of(context).textTheme.captionMedium1),
                         SizedBox(height: 8.0),
-                        Text("共" + saved.articles.length.toString() + "篇收藏",
+                        Text(
+                            "共" + profile.savedArticlesCount.toString() + "篇收藏",
                             style: Theme.of(context).textTheme.captionMain),
                       ],
                     ),

@@ -5,6 +5,7 @@ import '../../../configurations/theme.dart';
 import '../../../providers/user/saved_articles_provider.dart';
 import '../../../widgets/article_card_small.dart';
 
+// TODO: add saved articles search
 class SavedArticlesScreen extends StatelessWidget {
   static const routeName = '/saved_articles';
   @override
