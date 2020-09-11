@@ -29,6 +29,8 @@ class _HomeScreenState extends State<HomeScreen> {
   ScrollController _controller = new ScrollController();
   var prevIndex = -1;
   ValueNotifier<String> title;
+  ValueNotifier<String> formattedDate;
+  var formatter = new DateFormat('MMM dd, yyyy');
 
   @override
   void initState() {
@@ -66,24 +68,26 @@ class _HomeScreenState extends State<HomeScreen> {
 
     var articleHeight = (MediaQuery.of(context).size.width - 40) / 7 * 8 + 25;
     title = ValueNotifier<String>("今日");
+    formattedDate = ValueNotifier<String>(formatter.format(new DateTime.now()));
     _controller.addListener(() {
       var index = (_controller.offset.floor() / articleHeight).floor();
-      if (index != prevIndex) {
-        print("index is " + index.toString());
-        var articles =
-            Provider.of<ArticlesProvider>(context, listen: false).articles;
+      var articles =
+          Provider.of<ArticlesProvider>(context, listen: false).articles;
+      if (index != prevIndex && index < articles.length) {
         title.value = diff(articles[index].createdDate);
+        formattedDate.value = formatter.format(articles[index].createdDate);
         prevIndex = index;
       }
     });
     super.didChangeDependencies();
   }
 
-  refreshTitle(articles) {
+  refreshHeader(articles) {
     if (articles.length < 1) {
       return;
     }
     title = ValueNotifier<String>(diff(articles[0].createdDate));
+    formattedDate = ValueNotifier<String>(formatter.format(articles[0].createdDate));
   }
 
   Future<void> _refreshArticles(BuildContext ctx) async {
@@ -93,10 +97,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var now = new DateTime.now();
-    var formatter = new DateFormat('MMM dd, yyyy');
-    String formattedDate = formatter.format(now);
-
     return Scaffold(
         body: SafeArea(
             child: FutureBuilder(
@@ -120,7 +120,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           onRefresh: () => _refreshArticles(context),
                           child: Consumer<ArticlesProvider>(
                               builder: (context, data, child) {
-                            refreshTitle(data.articles);
+                            refreshHeader(data.articles);
                             return CustomScrollView(
                                 controller: _controller,
                                 slivers: <Widget>[
@@ -154,12 +154,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                             child: VerticalDivider(
                                                 color: Color.fromARGB(
                                                     255, 128, 128, 128))),
-                                        Text(
-                                          formattedDate,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .captionMain,
+                                        ValueListenableBuilder(
+                                          valueListenable: formattedDate,
+                                          builder: (context, String value,
+                                              child) =>
+                                              Text(
+                                                value,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .captionMain,
+                                              ),
                                         ),
+//                                        Text(
+//                                          formattedDate.value,
+//                                          style: Theme.of(context)
+//                                              .textTheme
+//                                              .captionMain,
+//                                        ),
                                       ],
                                     ),
                                     actions: [
