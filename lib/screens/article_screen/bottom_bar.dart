@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
+import 'package:walk_with_god/screens/article_screen/share_article.dart';
 
 import '../../configurations/theme.dart';
 import '../../providers/article/comments_provider.dart';
@@ -51,7 +52,12 @@ class BottomBar extends StatelessWidget {
       SizedBox(
         width: 55.0,
         child: FlatButton(
-          onPressed: () {},
+          onPressed: () {
+            showMaterialModalBottomSheet(
+                context: context,
+                builder: (context, scrollController) =>
+                    ShareArticle(articleId));
+          },
           child: Icon(
             Icons.share,
             size: 20.0,
@@ -90,8 +96,12 @@ class BottomBar extends StatelessWidget {
                         child: Icon(
                           value.currentLike ? Icons.star : Icons.star_border,
                           size: 20.0,
+                          color:
+                              value.currentLike ? Colors.white : Colors.black87,
                         ),
-                        color: Theme.of(context).buttonColor,
+                        color: value.currentLike
+                            ? Colors.blue
+                            : Theme.of(context).buttonColor,
                         shape: CircleBorder(),
                       ));
             }),
