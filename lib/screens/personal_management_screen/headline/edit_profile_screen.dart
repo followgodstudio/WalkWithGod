@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../configurations/theme.dart';
 import '../../../providers/user/profile_provider.dart';
 import '../../../widgets/profile_picture.dart';
-import '../../../configurations/theme.dart';
+import 'edit_image_screen.dart';
 
 class EditProfileScreen extends StatelessWidget {
   static const routeName = "/edit_profile";
@@ -38,12 +39,20 @@ class EditProfileScreen extends StatelessWidget {
                       "头像",
                       style: Theme.of(context).textTheme.buttonMedium1,
                     ),
-                    ProfilePicture(profile.imageUrl, 30.0),
+                    FlatButton(
+                        onPressed: () {
+                          Navigator.of(context)
+                              .pushNamed(EditPictureScreen.routeName);
+                        },
+                        child: Consumer<ProfileProvider>(
+                          builder: (context, value, child) =>
+                              ProfilePicture(value.imageUrl, 30.0),
+                        )),
                   ],
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 5.0),
-                  child: Divider(color: Color.fromARGB(255, 128, 128, 128)),
+                  child: Divider(),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -67,7 +76,7 @@ class EditProfileScreen extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 5.0),
-                  child: Divider(color: Color.fromARGB(255, 128, 128, 128)),
+                  child: Divider(),
                 ),
                 FlatButton(
                     onPressed: () {

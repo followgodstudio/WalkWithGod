@@ -1,11 +1,18 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 
 import '../../configurations/constants.dart';
+import '../article/article_provider.dart';
+import '../article/articles_provider.dart';
 
 class ProfileProvider with ChangeNotifier {
   final Firestore _db = Firestore.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
   String uid;
   String name;
   String imageUrl;
@@ -14,7 +21,11 @@ class ProfileProvider with ChangeNotifier {
   int readDuration;
   int followersCount;
   int savedArticlesCount;
-  List<String> recentRead = [];
+  List<String> _recentReadList = [];
+  List<ArticleProvider> recentRead = [];
+  bool noMoreRecentRead = false;
+  int _lastVisibleRecentRead = 0;
+  bool _isFetching = false; // To avoid frequently request
 
   ProfileProvider([this.uid]);
 
@@ -46,7 +57,7 @@ class ProfileProvider with ChangeNotifier {
     DocumentSnapshot doc = await _db.collection(cUsers).document(uid).get();
     if (!doc.exists) return;
     name = doc.data[fUserName];
-    imageUrl = doc.data[fUserImageUrl];
+    if (imageUrl == null) imageUrl = doc.data[fUserImageUrl];
     createdDate = (doc.data[fCreatedDate] as Timestamp).toDate();
     readDuration = (doc.data[fUserReadDuration] == null)
         ? 0
@@ -72,15 +83,22 @@ class ProfileProvider with ChangeNotifier {
         .orderBy(fUpdatedDate, descending: true)
         .getDocuments();
     query.documents.forEach((data) {
-      recentRead.add(data.documentID);
+      _recentReadList.add(data.documentID);
     });
+    _lastVisibleRecentRead = 0;
+    await _appendRecentReadList();
   }
 
-  Future<ProfileProvider> fetchProfileByUid(String userId) async {
-    ProfileProvider userProfile = ProfileProvider(userId);
-    await userProfile.fetchBasicProfile();
-    await userProfile.fetchRecentRead();
-    return userProfile;
+  Future<void> fetchMoreRecentRead() async {
+    if (readsCount == 0 || noMoreRecentRead || _isFetching) return;
+    _isFetching = true;
+    await _appendRecentReadList();
+    _isFetching = false;
+  }
+
+  Future<void> fetchNetworkProfile() async {
+    await fetchBasicProfile();
+    await fetchRecentRead();
   }
 
   Future<void> initProfile(String userId) async {
@@ -88,6 +106,26 @@ class ProfileProvider with ChangeNotifier {
     await _db.collection(cUsers).document(uid).setData({});
     String newName = "弟兄姊妹"; // TODO: Random name
     await updateProfile(newName: newName, newCreatedDate: Timestamp.now());
+  }
+
+  Future<void> updateProfilePicture(File file) async {
+    String path = sProfilePictures + "/$uid.jpeg";
+    StorageTaskSnapshot snapshot =
+        await _storage.ref().child(path).putFile(file).onComplete;
+    if (snapshot.error != null) return;
+    if (imageUrl == null) {
+      imageUrl = await snapshot.ref.getDownloadURL();
+      imageUrl = imageUrl.substring(0, imageUrl.indexOf('&token='));
+      // update profile in database
+      await updateProfile(newImageUrl: imageUrl);
+    } else {
+      // To guarantee the image will be reloaded instead of using cache
+      String uniqueKey = DateFormat('yyyyMMddkkmmss').format(DateTime.now());
+      if (imageUrl.contains('&v='))
+        imageUrl = imageUrl.substring(0, imageUrl.indexOf('&'));
+      imageUrl = imageUrl + "&v=" + uniqueKey;
+      notifyListeners();
+    }
   }
 
   Future<void> updateProfile(
@@ -106,33 +144,56 @@ class ProfileProvider with ChangeNotifier {
     }
   }
 
-  Future<void> updateReadByAid(
-      String articleId, DateTime start, DateTime end) async {
-    int timeDiffInSecond = end.difference(start).inSeconds;
-    print(uid + " " + articleId + " " + timeDiffInSecond.toString());
-    if (timeDiffInSecond < 5) return;
-
-    DocumentReference user = _db.collection(cUsers).document(uid);
+  Future<void> updateRecentReadByAid(String articleId) async {
     DocumentReference history = _db
         .collection(cUsers)
         .document(uid)
         .collection(cUserReadHistory)
         .document(articleId);
-    DocumentSnapshot doc = await history.get();
+    _db.runTransaction((transaction) {
+      return transaction.get(history).then((DocumentSnapshot doc) {
+        if (doc.exists) {
+          // Update read history timestamp
+          history.updateData({fUpdatedDate: Timestamp.now()});
+        } else {
+          // Create a new document in read history
+          history.setData({fUpdatedDate: Timestamp.now()});
+          // Increase count
+          DocumentReference user = _db.collection(cUsers).document(uid);
+          user.updateData({fUserReadsCount: FieldValue.increment(1)});
+        }
+      });
+    });
+  }
 
-    WriteBatch batch = _db.batch();
-    if (doc.exists) {
-      // Update read history timestamp
-      batch.updateData(history, {fUpdatedDate: Timestamp.fromDate(end)});
-    } else {
-      // Create a new document in read history
-      batch.setData(history, {fUpdatedDate: Timestamp.fromDate(end)});
-      // Increase count
-      batch.updateData(user, {fUserReadsCount: FieldValue.increment(1)});
-    }
-    // Increase read duration
-    batch.updateData(user,
+  Future<void> updateReadDuration(DateTime start) async {
+    int timeDiffInSecond = DateTime.now().difference(start).inSeconds;
+    await _db.collection(cUsers).document(uid).updateData(
         {fUserReadDuration: FieldValue.increment(timeDiffInSecond / 3600)});
-    await batch.commit();
+  }
+
+  Future<void> _appendRecentReadList() async {
+    if (_recentReadList.length == _lastVisibleRecentRead) return;
+    Map<String, int> itemsMap = {};
+    int end = 10 + _lastVisibleRecentRead;
+    if (end >= _recentReadList.length) {
+      end = _recentReadList.length;
+      noMoreRecentRead = true;
+    }
+    for (var i = _lastVisibleRecentRead; i < end; i++) {
+      itemsMap[_recentReadList[i]] = i;
+    }
+    // Fetch Document's basic info, cannot be more than 10
+    List<ArticleProvider> articles = await ArticlesProvider()
+        .fetchList(_recentReadList.sublist(_lastVisibleRecentRead, end));
+    // Reorganize by update date (orginal sequence)
+    articles.sort((a, b) {
+      return itemsMap[a.id].compareTo(itemsMap[b.id]);
+    });
+    articles.forEach((element) {
+      recentRead.add(element);
+    });
+    _lastVisibleRecentRead = end;
+    notifyListeners();
   }
 }

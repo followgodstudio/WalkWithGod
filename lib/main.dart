@@ -16,12 +16,13 @@ import 'screens/auth_screen/email_auth_screen.dart';
 import 'screens/auth_screen/login_screen.dart';
 import 'screens/home_screen/home_screen.dart';
 import 'screens/loading_screen.dart';
-import 'screens/main_screen.dart';
 import 'screens/personal_management_screen/friends/friends_list_screen.dart';
+import 'screens/personal_management_screen/headline/edit_image_screen.dart';
 import 'screens/personal_management_screen/headline/edit_profile_screen.dart';
 import 'screens/personal_management_screen/headline/network_screen.dart';
 import 'screens/personal_management_screen/messages/messages_list_screen.dart';
 import 'screens/personal_management_screen/personal_management_screen.dart';
+import 'screens/personal_management_screen/saved_articles/saved_articles_screen.dart';
 import 'screens/personal_management_screen/setting/setting_screen.dart';
 
 void main() => runApp(MyApp());
@@ -59,115 +60,85 @@ class MyApp extends StatelessWidget {
           update: (context, auth, previou) => ProfileProvider(auth.currentUser),
         ),
       ],
-      child: Consumer<AuthProvider>(
-        builder: (ctx, auth, _) => MaterialApp(
-          title: 'Walk With God',
-          navigatorObservers: [routeObserver],
-          debugShowCheckedModeBanner: false,
-          theme: dayTheme,
-          home: StreamBuilder<String>(
-              stream: auth.onAuthStateChanged,
-              builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-                if (snapshot.connectionState == ConnectionState.active) {
-                  final bool isLoggedIn = snapshot.hasData;
-                  return isLoggedIn
-                      ? HomeScreen()
-                      //: EmailAuthScreen();
-                      : SignupScreen(authFormType: AuthFormType.signUp);
-                }
-                return LoadingScreen();
-              }),
-          routes: {
-            //LoginScreengi.routeName: (ctx) => LoginScreen(),
-            //SignupScreen.routeName: (ctx) => SignupScreen(),
-            PersonalManagementScreen.routeName: (ctx) =>
-                PersonalManagementScreen(),
-            SettingScreen.routeName: (ctx) => SettingScreen(),
-            MessagesListScreen.routeName: (ctx) => MessagesListScreen(),
-            FriendsListScreen.routeName: (ctx) => FriendsListScreen(),
-            EditProfileScreen.routeName: (ctx) => EditProfileScreen(),
-            NetworkScreen.routeName: (ctx) => NetworkScreen(),
-            EmailAuthScreen.routeName: (ctx) => EmailAuthScreen(),
-            LoginScreen.routeName: (ctx) => LoginScreen(),
-            HomeScreen.routeName: (ctx) => HomeScreen(),
-            MainScreen.routeName: (ctx) => MainScreen(),
-            ArticleScreen.routeName: (ctx) => RouteAwareWidget(ArticleScreen()),
-            CommentDetailScreen.routeName: (ctx) => CommentDetailScreen(),
-            SignupScreen.routeName: (ctx) =>
-                SignupScreen(authFormType: AuthFormType.signUp),
-          },
+      child: LifeCycleManager(
+        child: Consumer<AuthProvider>(
+          builder: (ctx, auth, _) => MaterialApp(
+            title: 'Walk With God',
+            navigatorObservers: [routeObserver],
+            debugShowCheckedModeBanner: false,
+            theme: dayTheme,
+            home: StreamBuilder<String>(
+                stream: auth.onAuthStateChanged,
+                builder:
+                    (BuildContext context, AsyncSnapshot<String> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.active) {
+                    final bool isLoggedIn = snapshot.hasData;
+                    return isLoggedIn ? HomeScreen() : EmailAuthScreen();
+                  }
+                  return LoadingScreen();
+                }),
+            routes: {
+              //LoginScreengi.routeName: (ctx) => LoginScreen(),
+              //SignupScreen.routeName: (ctx) => SignupScreen(),
+              PersonalManagementScreen.routeName: (ctx) =>
+                  PersonalManagementScreen(),
+              SettingScreen.routeName: (ctx) => SettingScreen(),
+              MessagesListScreen.routeName: (ctx) => MessagesListScreen(),
+              FriendsListScreen.routeName: (ctx) => FriendsListScreen(),
+              EditProfileScreen.routeName: (ctx) => EditProfileScreen(),
+              EditPictureScreen.routeName: (ctx) => EditPictureScreen(),
+              NetworkScreen.routeName: (ctx) => NetworkScreen(),
+              SavedArticlesScreen.routeName: (ctx) => SavedArticlesScreen(),
+              EmailAuthScreen.routeName: (ctx) => EmailAuthScreen(),
+              LoginScreen.routeName: (ctx) => LoginScreen(),
+              HomeScreen.routeName: (ctx) => HomeScreen(),
+              ArticleScreen.routeName: (ctx) => ArticleScreen(),
+              CommentDetailScreen.routeName: (ctx) => CommentDetailScreen(),
+              SignupScreen.routeName: (ctx) =>
+                  SignupScreen(authFormType: AuthFormType.signUp),
+            },
+          ),
         ),
       ),
     );
   }
 }
 
-// This widget is to observe the duration of reading articles
-class RouteAwareWidget extends StatefulWidget {
+// To monitor how many time a user are using this app
+class LifeCycleManager extends StatefulWidget {
   final Widget child;
-  RouteAwareWidget(this.child);
-
-  @override
-  State<RouteAwareWidget> createState() => RouteAwareWidgetState();
+  LifeCycleManager({Key key, this.child}) : super(key: key);
+  _LifeCycleManagerState createState() => _LifeCycleManagerState();
 }
 
-// Implement RouteAware in a widget's state and subscribe it to the RouteObserver.
-class RouteAwareWidgetState extends State<RouteAwareWidget> with RouteAware {
-  String _articleId;
-  ProfileProvider _profile;
+class _LifeCycleManagerState extends State<LifeCycleManager>
+    with WidgetsBindingObserver {
   DateTime _start;
-
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    routeObserver.subscribe(this, ModalRoute.of(context));
-    print('didChangeDependencies');
+  void initState() {
+    super.initState();
+    _start = DateTime.now();
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
-    routeObserver.unsubscribe(this);
-    print('dispose');
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
   @override
-  // Called when the current route has been pushed.
-  void didPush() {
-    print('didPush');
-    // Should start calculating time
-    _start = DateTime.now();
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) _start = DateTime.now();
+    if (state == AppLifecycleState.paused)
+      Provider.of<ProfileProvider>(context, listen: false)
+          .updateReadDuration(_start);
   }
 
-  @override
-  // Called when a new route has been pushed, and the current route is no longer visible.
-  void didPushNext() {
-    print('didPushNext');
-    // Should stop calculating time
-    _profile.updateReadByAid(_articleId, _start, DateTime.now());
-  }
-
-  @override
-  // Called when the current route has been popped off.
-  void didPop() {
-    print('didPop');
-    // Should stop calculating time
-    _profile.updateReadByAid(_articleId, _start, DateTime.now());
-  }
-
-  @override
-  // Called when the top route has been popped off, and the current route shows up.
-  void didPopNext() {
-    print('didPopNext');
-    // Should resume calculating time
-    _start = DateTime.now();
-  }
-
-  //TODO: Stop counting duration when the app is switched to background
   @override
   Widget build(BuildContext context) {
-    _profile = Provider.of<ProfileProvider>(context, listen: false);
-    _articleId = ModalRoute.of(context).settings.arguments as String;
-    return widget.child;
+    return Container(
+      child: widget.child,
+    );
   }
 }
