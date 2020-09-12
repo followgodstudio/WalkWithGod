@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:walk_with_god/screens/auth_screen/signup_screen.dart';
 
 import 'configurations/theme.dart';
 import 'providers/article/articles_provider.dart';
@@ -91,6 +92,9 @@ class MyApp extends StatelessWidget {
               LoginScreen.routeName: (ctx) => LoginScreen(),
               HomeScreen.routeName: (ctx) => HomeScreen(),
               ArticleScreen.routeName: (ctx) => ArticleScreen(),
+              CommentDetailScreen.routeName: (ctx) => CommentDetailScreen(),
+              SignupScreen.routeName: (ctx) =>
+                  SignupScreen(authFormType: AuthFormType.signUp),
             },
           ),
         ),
