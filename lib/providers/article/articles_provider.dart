@@ -5,7 +5,7 @@ import '../../configurations/constants.dart';
 import 'article_provider.dart';
 
 class ArticlesProvider with ChangeNotifier {
-  var _fdb = Firestore.instance;
+  var _fdb = FirebaseFirestore.instance;
   String uid;
 
   ArticlesProvider([this.uid]);
@@ -20,7 +20,7 @@ class ArticlesProvider with ChangeNotifier {
     QuerySnapshot query = await _fdb
         .collection(cArticles)
         .orderBy(fCreatedDate, descending: true)
-        .getDocuments();
+        .get();
     setArticles(query);
   }
 
@@ -29,7 +29,7 @@ class ArticlesProvider with ChangeNotifier {
         .collection(cArticles)
         .orderBy(fCreatedDate, descending: true)
         .limit(n)
-        .getDocuments();
+        .get();
     setArticles(query);
   }
 
@@ -38,10 +38,10 @@ class ArticlesProvider with ChangeNotifier {
     QuerySnapshot query = await _fdb
         .collection(cArticles)
         .where(FieldPath.documentId, whereIn: aids)
-        .getDocuments();
+        .get();
     List<ArticleProvider> result = [];
-    query.documents.forEach((data) {
-      result.add(_buildArticleByMap(data.documentID, data.data));
+    query.docs.forEach((data) {
+      result.add(_buildArticleByMap(data.id, data.data()));
     });
     return result;
   }
@@ -55,14 +55,14 @@ class ArticlesProvider with ChangeNotifier {
         .where(fCreatedDate, isGreaterThanOrEqualTo: dateTime)
         .orderBy(fCreatedDate, descending: true)
         .limit(n)
-        .getDocuments();
+        .get();
     setArticles(query, isContentNeeded);
   }
 
   void setArticles(QuerySnapshot query, [bool isContentNeeded = false]) {
     _articles = [];
-    query.documents.forEach((data) {
-      _articles.add(_buildArticleByMap(data.documentID, data.data));
+    query.docs.forEach((data) {
+      _articles.add(_buildArticleByMap(data.id, data.data()));
     });
 
     notifyListeners();
@@ -72,24 +72,23 @@ class ArticlesProvider with ChangeNotifier {
     List<Paragraph> content = [];
     QuerySnapshot querySnapshot = await _fdb
         .collection(cArticles)
-        .document(aid)
+        .doc(aid)
         .collection(cArticleContent)
         .orderBy(fContentIndex)
-        .getDocuments();
+        .get();
     if (querySnapshot != null) {
-      querySnapshot.documents.forEach((element) {
+      querySnapshot.docs.forEach((element) {
         content.add(Paragraph(
-            subtitle: element.data[fContentSubtitle],
-            body: element.data[fContentBody]));
+            subtitle: element.get(fContentSubtitle),
+            body: element.get(fContentBody)));
       });
       _articles.firstWhere((a) => a.id == aid).content = content;
     }
   }
 
   Future<ArticleProvider> fetchArticlePreviewById(String aid) async {
-    DocumentSnapshot data =
-        await _fdb.collection(cArticles).document(aid).get();
-    return _buildArticleByMap(data.documentID, data.data);
+    DocumentSnapshot data = await _fdb.collection(cArticles).doc(aid).get();
+    return _buildArticleByMap(data.id, data.data());
   }
 
   ArticleProvider findById(String id) {

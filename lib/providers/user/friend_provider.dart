@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 import '../../configurations/constants.dart';
 
 class FriendProvider with ChangeNotifier {
-  final Firestore _db = Firestore.instance;
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
   final String uid;
   final String name;
   final String imageUrl;
@@ -37,30 +37,24 @@ class FriendProvider with ChangeNotifier {
     WriteBatch batch = _db.batch();
 
     // Update current user's document
-    batch.setData(
-        _db
-            .collection(cUsers)
-            .document(uid)
-            .collection(cUserFriends)
-            .document(friendUid),
+    batch.set(
+        _db.collection(cUsers).doc(uid).collection(cUserFriends).doc(friendUid),
         {
           fFriendName: friendName,
           fFriendImageUrl: friendImageUrl,
           fFriendFollowingDate: Timestamp.fromDate(followingDate),
           fFriendStatus: friendStatus
         },
-        merge: true);
+        SetOptions(merge: true)
+        //merge: true
+        );
     // Update following count
-    batch.updateData(_db.collection(cUsers).document(uid),
+    batch.update(_db.collection(cUsers).doc(uid),
         {fUserFollowingsCount: FieldValue.increment(1)});
 
     // Update followed user's document
-    batch.setData(
-        _db
-            .collection(cUsers)
-            .document(friendUid)
-            .collection(cUserFriends)
-            .document(uid),
+    batch.set(
+        _db.collection(cUsers).doc(friendUid).collection(cUserFriends).doc(uid),
         {
           fFriendName: name,
           fFriendImageUrl: imageUrl,
@@ -69,9 +63,11 @@ class FriendProvider with ChangeNotifier {
               ? eFriendStatusFriend
               : eFriendStatusFollower)
         },
-        merge: true);
+        SetOptions(merge: true)
+        //merge: true
+        );
     // Update follower count
-    batch.updateData(_db.collection(cUsers).document(friendUid),
+    batch.update(_db.collection(cUsers).doc(friendUid),
         {fUserFollowersCount: FieldValue.increment(1)});
 
     await batch.commit();
@@ -89,44 +85,48 @@ class FriendProvider with ChangeNotifier {
 
     // Update current user's document
     if (friendStatus != null) {
-      batch.setData(
+      batch.set(
           _db
               .collection(cUsers)
-              .document(uid)
+              .doc(uid)
               .collection(cUserFriends)
-              .document(friendUid),
+              .doc(friendUid),
           {fFriendStatus: friendStatus},
-          merge: true);
+          SetOptions(merge: true)
+          //merge: true
+          );
     } else {
       batch.delete(_db
           .collection(cUsers)
-          .document(uid)
+          .doc(uid)
           .collection(cUserFriends)
-          .document(friendUid));
+          .doc(friendUid));
     }
     // Update following count
-    batch.updateData(_db.collection(cUsers).document(uid),
+    batch.update(_db.collection(cUsers).doc(uid),
         {fUserFollowingsCount: FieldValue.increment(-1)});
 
     // Update followed user's document
     if (friendStatus != null) {
-      batch.setData(
+      batch.set(
           _db
               .collection(cUsers)
-              .document(friendUid)
+              .doc(friendUid)
               .collection(cUserFriends)
-              .document(uid),
+              .doc(uid),
           {fFriendStatus: eFriendStatusFollowing},
-          merge: true);
+          SetOptions(merge: true)
+          //merge: true
+          );
     } else {
       batch.delete(_db
           .collection(cUsers)
-          .document(friendUid)
+          .doc(friendUid)
           .collection(cUserFriends)
-          .document(uid));
+          .doc(uid));
     }
     // Update follower count
-    batch.updateData(_db.collection(cUsers).document(friendUid),
+    batch.update(_db.collection(cUsers).doc(friendUid),
         {fUserFollowersCount: FieldValue.increment(-1)});
 
     await batch.commit();

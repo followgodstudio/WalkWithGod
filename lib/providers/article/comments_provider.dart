@@ -10,7 +10,7 @@ class CommentsProvider with ChangeNotifier {
   DocumentSnapshot _lastVisible;
   bool _noMore = false;
   bool _isFetching = false; // To avoid frequently request
-  final Firestore _db = Firestore.instance;
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   List<CommentProvider> get items {
     return [..._items];
@@ -26,21 +26,23 @@ class CommentsProvider with ChangeNotifier {
     // Fetch Comment
     DocumentSnapshot doc = await _db
         .collection(cArticles)
-        .document(articleId)
+        .doc(articleId)
         .collection(cArticleComments)
-        .document(commentId)
+        .doc(commentId)
         .get();
     // Fetch Likes
     DocumentSnapshot docLikes = await _db
         .collection(cArticles)
-        .document(articleId)
+        .doc(articleId)
         .collection(cArticleComments)
-        .document(commentId)
+        .doc(commentId)
         .collection(cArticleCommentLikes)
-        .document(userId)
+        .doc(userId)
         .get();
-    doc.data['like'] = docLikes.exists;
-    CommentProvider commentProvider = _buildL1CommentByMap(commentId, doc.data);
+    doc.data().update('like', (value) => docLikes.exists);
+    //doc.data['like'] = docLikes.exists;
+    CommentProvider commentProvider =
+        _buildL1CommentByMap(commentId, doc.data());
     // Fetch it children list
     await commentProvider.fetchL2ChildrenCommentList(userId);
     return commentProvider;
@@ -56,11 +58,11 @@ class CommentsProvider with ChangeNotifier {
     _isFetching = true;
     QuerySnapshot query = await _db
         .collection(cArticles)
-        .document(articleId)
+        .doc(articleId)
         .collection(cArticleComments)
         .orderBy(fCreatedDate, descending: true)
         .limit(limit)
-        .getDocuments();
+        .get();
     _items = [];
     _articleId = articleId;
     await _appendL1CommentList(query, articleId, userId, limit);
@@ -72,12 +74,12 @@ class CommentsProvider with ChangeNotifier {
     _isFetching = true;
     QuerySnapshot query = await _db
         .collection(cArticles)
-        .document(_articleId)
+        .doc(_articleId)
         .collection(cArticleComments)
         .orderBy(fCreatedDate, descending: true)
         .startAfterDocument(_lastVisible)
         .limit(limit)
-        .getDocuments();
+        .get();
     await _appendL1CommentList(query, _articleId, userId, limit);
   }
 
@@ -94,16 +96,16 @@ class CommentsProvider with ChangeNotifier {
     comment[fCommentLikesCount] = 0;
     DocumentReference docRef = await _db
         .collection(cArticles)
-        .document(articleId)
+        .doc(articleId)
         .collection(cArticleComments)
         .add(comment);
     comment['like'] = false;
-    _addL1CommentToList(docRef.documentID, comment);
+    _addL1CommentToList(docRef.id, comment);
   }
 
   Future<void> _appendL1CommentList(
       QuerySnapshot query, String articleId, String userId, int limit) async {
-    List<DocumentSnapshot> docs = query.documents;
+    List<DocumentSnapshot> docs = query.docs;
     if (docs.length < limit) _noMore = true;
     if (docs.length == 0) {
       notifyListeners();
@@ -113,19 +115,20 @@ class CommentsProvider with ChangeNotifier {
     for (int i = 0; i < docs.length; i++) {
       DocumentSnapshot docRef = await _db
           .collection(cArticles)
-          .document(articleId)
+          .doc(articleId)
           .collection(cArticleComments)
-          .document(docs[i].documentID)
+          .doc(docs[i].id)
           .collection(cArticleCommentLikes)
-          .document(userId)
+          .doc(userId)
           .get();
-      docs[i].data['like'] = docRef.exists;
+      docs[i].data().update('like', (value) => docRef.exists);
+      //docs[i].data['like'] = docRef.exists;
     }
     _isFetching = false;
     docs.forEach((data) {
-      _items.add(_buildL1CommentByMap(data.documentID, data.data));
+      _items.add(_buildL1CommentByMap(data.id, data.data()));
     });
-    _lastVisible = query.documents[query.documents.length - 1];
+    _lastVisible = query.docs[query.docs.length - 1];
     notifyListeners();
   }
 

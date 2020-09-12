@@ -39,9 +39,9 @@ class _LoginScreenState extends State<LoginScreen> {
         verificationCompleted: (AuthCredential credential) async {
           Navigator.of(context).pop();
 
-          AuthResult result = await _auth.signInWithCredential(credential);
+          UserCredential result = await _auth.signInWithCredential(credential);
 
-          FirebaseUser user = result.user;
+          User user = result.user;
 
           if (user != null) {
             Navigator.push(
@@ -56,7 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
           //This callback would gets called when verification is done auto maticlly
         },
-        verificationFailed: (AuthException exception) {
+        verificationFailed: (FirebaseAuthException exception) {
           print(exception);
         },
         codeSent: (String verificationId, [int forceResendingToken]) {

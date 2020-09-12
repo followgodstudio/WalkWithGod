@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:walk_with_god/screens/auth_screen/signup_screen.dart';
@@ -25,7 +26,11 @@ import 'screens/personal_management_screen/personal_management_screen.dart';
 import 'screens/personal_management_screen/saved_articles/saved_articles_screen.dart';
 import 'screens/personal_management_screen/setting/setting_screen.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
+}
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
@@ -73,7 +78,9 @@ class MyApp extends StatelessWidget {
                     (BuildContext context, AsyncSnapshot<String> snapshot) {
                   if (snapshot.connectionState == ConnectionState.active) {
                     final bool isLoggedIn = snapshot.hasData;
-                    return isLoggedIn ? HomeScreen() : EmailAuthScreen();
+                    return isLoggedIn
+                        ? HomeScreen()
+                        : SignupScreen(authFormType: AuthFormType.signIn);
                   }
                   return LoadingScreen();
                 }),
@@ -95,7 +102,7 @@ class MyApp extends StatelessWidget {
               ArticleScreen.routeName: (ctx) => ArticleScreen(),
               CommentDetailScreen.routeName: (ctx) => CommentDetailScreen(),
               SignupScreen.routeName: (ctx) =>
-                  SignupScreen(authFormType: AuthFormType.signUp),
+                  SignupScreen(authFormType: AuthFormType.signIn),
             },
           ),
         ),

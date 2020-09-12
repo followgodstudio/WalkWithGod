@@ -13,7 +13,7 @@ class AuthProvider with ChangeNotifier {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   Stream<String> get onAuthStateChanged {
-    return _auth.onAuthStateChanged.map((FirebaseUser user) {
+    return _auth.authStateChanges().map((User user) {
       _uid = user?.uid;
       return _uid;
     });
@@ -25,7 +25,7 @@ class AuthProvider with ChangeNotifier {
 
   Future<void> authenticate(
       String username, String password, AuthMode authMode) async {
-    AuthResult result;
+    UserCredential result;
     if (authMode == AuthMode.createUserWithEmail) {
       result = await _auth.createUserWithEmailAndPassword(
           email: username, password: password);
@@ -58,7 +58,7 @@ class AuthProvider with ChangeNotifier {
   Future<String> signInWithGoogle() async {
     final GoogleSignInAccount account = await _googleSignIn.signIn();
     final GoogleSignInAuthentication _googleAuth = await account.authentication;
-    final AuthCredential credential = GoogleAuthProvider.getCredential(
+    final AuthCredential credential = GoogleAuthProvider.credential(
       idToken: _googleAuth.idToken,
       accessToken: _googleAuth.accessToken,
     );
@@ -67,34 +67,36 @@ class AuthProvider with ChangeNotifier {
 
   Future convertUserWithEmail(
       String email, String password, String name) async {
-    final currentUser = await _auth.currentUser();
+    final currentUser = _auth.currentUser;
 
     final credential =
-        EmailAuthProvider.getCredential(email: email, password: password);
+        EmailAuthProvider.credential(email: email, password: password);
     await currentUser.linkWithCredential(credential);
     await updateUserName(name, currentUser);
   }
 
-  Future updateUserName(String name, FirebaseUser currentUser) async {
-    var userUpdateInfo = UserUpdateInfo();
-    userUpdateInfo.displayName = name;
-    await currentUser.updateProfile(userUpdateInfo);
+  Future updateUserName(String name, User currentUser) async {
+    // var userUpdateInfo = UserUpdateInfo();
+    // userUpdateInfo.displayName = name;
+    await currentUser.updateProfile(displayName: name);
     await currentUser.reload();
   }
 
   Future createUserWithPhone(String phone, BuildContext context) async {
     _auth.verifyPhoneNumber(
         phoneNumber: phone,
-        timeout: Duration(seconds: 0),
+        timeout: Duration(seconds: 60),
         verificationCompleted: (AuthCredential authCredential) {
-          _auth.signInWithCredential(authCredential).then((AuthResult result) {
+          _auth
+              .signInWithCredential(authCredential)
+              .then((UserCredential result) {
             Navigator.of(context).pop(); // to pop the dialog box
-            Navigator.of(context).pushReplacementNamed('/home');
+            // Navigator.of(context).pushReplacementNamed('/home');
           }).catchError((e) {
             return "error";
           });
         },
-        verificationFailed: (AuthException exception) {
+        verificationFailed: (FirebaseAuthException exception) {
           return "error";
         },
         codeSent: (String verificationId, [int forceResendingToken]) {
@@ -114,14 +116,14 @@ class AuthProvider with ChangeNotifier {
                   textColor: Colors.white,
                   color: Colors.green,
                   onPressed: () {
-                    var _credential = PhoneAuthProvider.getCredential(
+                    var _credential = PhoneAuthProvider.credential(
                         verificationId: verificationId,
                         smsCode: _codeController.text.trim());
                     _auth
                         .signInWithCredential(_credential)
-                        .then((AuthResult result) {
-                      Navigator.of(context).pop(); // to pop the dialog box
-                      Navigator.of(context).pushReplacementNamed('/home');
+                        .then((UserCredential result) {
+                      //Navigator.of(context).pop(); // to pop the dialog box
+                      //Navigator.of(context).pushReplacementNamed('/home');
                     }).catchError((e) {
                       return "error";
                     });
@@ -137,10 +139,10 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future convertWithGoogle() async {
-    final currentUser = await _auth.currentUser();
+    final currentUser = _auth.currentUser;
     final GoogleSignInAccount account = await _googleSignIn.signIn();
     final GoogleSignInAuthentication _googleAuth = await account.authentication;
-    final AuthCredential credential = GoogleAuthProvider.getCredential(
+    final AuthCredential credential = GoogleAuthProvider.credential(
       idToken: _googleAuth.idToken,
       accessToken: _googleAuth.accessToken,
     );

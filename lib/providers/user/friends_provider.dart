@@ -5,7 +5,7 @@ import '../../configurations/constants.dart';
 import 'friend_provider.dart';
 
 class FriendsProvider with ChangeNotifier {
-  final Firestore _db = Firestore.instance;
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
   List<FriendProvider> _follower = [];
   List<FriendProvider> _following = [];
   String _userId;
@@ -48,12 +48,12 @@ class FriendsProvider with ChangeNotifier {
     }
     QuerySnapshot query = await _db
         .collection(cUsers)
-        .document(userId)
+        .doc(userId)
         .collection(cUserFriends)
         .where(fFriendStatus, whereIn: whereIn)
         .orderBy(orderBy, descending: true)
         .limit(limit)
-        .getDocuments();
+        .get();
     _userId = userId;
     _userName = userName;
     _userImageUrl = userImageUrl;
@@ -74,14 +74,14 @@ class FriendsProvider with ChangeNotifier {
     _isFetching = true;
     QuerySnapshot query = await _db
         .collection(cUsers)
-        .document(_userId)
+        .doc(_userId)
         .collection(cUserFriends)
         .orderBy(fCreatedDate, descending: true)
         .where(fFriendStatus, whereIn: whereIn)
         .orderBy(orderBy, descending: true)
         .startAfterDocument(lastVisible)
         .limit(limit)
-        .getDocuments();
+        .get();
     _isFetching = false;
     _appendFriendsList(query, limit, isFollower);
   }
@@ -91,11 +91,11 @@ class FriendsProvider with ChangeNotifier {
     if (userId == null || userId.isEmpty) return null;
     DocumentSnapshot doc = await _db
         .collection(cUsers)
-        .document(curUserId)
+        .doc(curUserId)
         .collection(cUserFriends)
-        .document(userId)
+        .doc(userId)
         .get();
-    if (doc.exists) return _buildFriendByMap(doc.documentID, doc.data);
+    if (doc.exists) return _buildFriendByMap(doc.id, doc.data());
     return null;
   }
 
@@ -128,21 +128,21 @@ class FriendsProvider with ChangeNotifier {
   }
 
   void _appendFriendsList(QuerySnapshot query, int limit, bool isFollower) {
-    List<DocumentSnapshot> docs = query.documents;
+    List<DocumentSnapshot> docs = query.docs;
     if (isFollower) {
       docs.forEach((data) {
-        _follower.add(_buildFriendByMap(data.documentID, data.data));
+        _follower.add(_buildFriendByMap(data.id, data.data()));
       });
       if (docs.length < limit) _noMoreFollower = true;
       if (docs.length > 0)
-        _lastVisibleFollower = query.documents[query.documents.length - 1];
+        _lastVisibleFollower = query.docs[query.docs.length - 1];
     } else {
       docs.forEach((data) {
-        _following.add(_buildFriendByMap(data.documentID, data.data));
+        _following.add(_buildFriendByMap(data.id, data.data()));
       });
       if (docs.length < limit) _noMoreFollowing = true;
       if (docs.length > 0)
-        _lastVisibleFollowing = query.documents[query.documents.length - 1];
+        _lastVisibleFollowing = query.docs[query.docs.length - 1];
     }
     notifyListeners();
   }
