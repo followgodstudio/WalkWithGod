@@ -68,6 +68,38 @@ class _AuthCardState extends State<AuthCard> {
     }
   }
 
+  Future<dynamic> _reset() async {
+    try {
+      await Provider.of<AuthProvider>(context, listen: false)
+          .sendPasswordResetEmail(_authData['email'].trim());
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return Container(
+                child: AlertDialog(
+              content: Container(
+                  height: 100,
+                  width: 100,
+                  child: Text(
+                    "密码重置邮件已发送至 $_authData['email']",
+                    style: Theme.of(context).textTheme.captionMedium4,
+                  )),
+            ));
+          });
+    } on PlatformException catch (error) {
+      _showErrorDialog(error.message);
+    } catch (error) {
+      const errorMessage = '重置密码出错，稍后再试';
+      _showErrorDialog(errorMessage);
+    }
+
+    // if (this.mounted) {
+    //   setState(() {
+    //     _isLoading = false;
+    //   });
+    // }
+  }
+
   void _switchAuthMode() {
     if (_authMode == AuthMode.createUserWithEmail) {
       setState(() {
@@ -119,6 +151,9 @@ class _AuthCardState extends State<AuthCard> {
                     onSaved: (value) {
                       _authData['email'] = value;
                     },
+                    onChanged: (value) {
+                      _authData['email'] = value;
+                    },
                   ),
                 ),
               ),
@@ -154,6 +189,9 @@ class _AuthCardState extends State<AuthCard> {
                     child: TextFormField(
                       enabled: _authMode == AuthMode.createUserWithEmail,
                       decoration: InputDecoration(
+                          helperText: "再次输入密码",
+                          helperStyle:
+                              Theme.of(context).textTheme.captionMedium4,
                           hintText: '请再次输入密码',
                           hintStyle:
                               Theme.of(context).textTheme.captionMedium3),
@@ -186,7 +224,12 @@ class _AuthCardState extends State<AuthCard> {
                       ),
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    _reset();
+                    // Dialog(
+                    //   child: Text("testing"),
+                    // );
+                  },
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   textColor: Colors.red,
                   shape: RoundedRectangleBorder(

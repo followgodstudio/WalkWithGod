@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:walk_with_god/screens/auth_screen/signup_screen.dart';
 
 import 'configurations/theme.dart';
 import 'providers/article/articles_provider.dart';
@@ -69,7 +70,10 @@ class MyApp extends StatelessWidget {
               builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
                 if (snapshot.connectionState == ConnectionState.active) {
                   final bool isLoggedIn = snapshot.hasData;
-                  return isLoggedIn ? HomeScreen() : EmailAuthScreen();
+                  return isLoggedIn
+                      ? HomeScreen()
+                      //: EmailAuthScreen();
+                      : SignupScreen(authFormType: AuthFormType.signUp);
                 }
                 return LoadingScreen();
               }),
@@ -89,6 +93,8 @@ class MyApp extends StatelessWidget {
             MainScreen.routeName: (ctx) => MainScreen(),
             ArticleScreen.routeName: (ctx) => RouteAwareWidget(ArticleScreen()),
             CommentDetailScreen.routeName: (ctx) => CommentDetailScreen(),
+            SignupScreen.routeName: (ctx) =>
+                SignupScreen(authFormType: AuthFormType.signUp),
           },
         ),
       ),
