@@ -94,15 +94,23 @@ class ArticleBody extends StatelessWidget {
         ),
       ),
       Divider(),
-      Center(child: Consumer<ArticlesProvider>(builder: (context, data, _) {
-        List<Paragraph> _content =
-            data.articles.firstWhere((e) => e.id == articleId).content;
-        return _content == null || _content.isEmpty
-            ? Center(
-                child: Text("content is missing"),
-              )
-            : Column(children: [..._content.map((e) => ArticleParagraph(e))]);
-      }))
+      Center(
+          child: FutureBuilder(
+              future: Provider.of<ArticlesProvider>(context, listen: true)
+                  .fetchArticleConentById(articleId),
+              builder: (ctx, asyncSnapshot) {
+                if (asyncSnapshot.connectionState == ConnectionState.waiting)
+                  return Center(child: CircularProgressIndicator());
+                if (asyncSnapshot.error != null)
+                  return Center(child: Text('An error occurred'));
+                List<Paragraph> _content =
+                    Provider.of<ArticlesProvider>(context, listen: true)
+                        .articles
+                        .firstWhere((e) => e.id == articleId)
+                        .content;
+                return Column(
+                    children: [..._content.map((e) => ArticleParagraph(e))]);
+              }))
     ]);
   }
 }

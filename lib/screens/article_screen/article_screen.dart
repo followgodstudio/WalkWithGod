@@ -38,51 +38,27 @@ class ArticleScreen extends StatelessWidget {
               }
               return true;
             },
-            child: FutureBuilder(
-                future: Provider.of<ArticlesProvider>(context, listen: true)
-                    .fetchArticleConentById(_articleId),
-                builder: (ctx, asyncSnapshot) {
-                  if (asyncSnapshot.connectionState == ConnectionState.waiting)
-                    return Center(child: CircularProgressIndicator());
-                  if (asyncSnapshot.error != null)
-                    showDialog(
-                      context: context,
-                      builder: (ctx) => AlertDialog(
-                        title: Text('An error occurred!'),
-                        content: Text('Something went wrong.'),
-                        actions: <Widget>[
-                          FlatButton(
-                            child: Text('Okay'),
-                            onPressed: () {
-                              Navigator.of(ctx).pop();
-                            },
-                          )
-                        ],
+            child: CustomScrollView(
+              controller: hiding.controller,
+              slivers: <Widget>[
+                TopBar(_articleId),
+                SliverToBoxAdapter(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: ArticleBody(_articleId),
                       ),
-                    );
-                  return CustomScrollView(
-                    controller: hiding.controller,
-                    slivers: <Widget>[
-                      TopBar(_articleId),
-                      SliverToBoxAdapter(
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(20.0),
-                              child: ArticleBody(_articleId),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 10.0),
-                              child: Comments(
-                                  articleId: _articleId, commentId: _commentId),
-                            ),
-                          ],
-                        ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        child: Comments(
+                            articleId: _articleId, commentId: _commentId),
                       ),
                     ],
-                  );
-                })),
+                  ),
+                ),
+              ],
+            )),
       ),
       bottomNavigationBar: ValueListenableBuilder(
         valueListenable: hiding.visible,
