@@ -10,16 +10,23 @@ import 'bottom_bar.dart';
 import 'comments.dart';
 import 'top_bar.dart';
 
+//ignore: must_be_immutable
 class ArticleScreen extends StatelessWidget {
   static const routeName = '/article_screen';
+  bool _updatedRecentUsed = false;
   @override
   Widget build(BuildContext context) {
-    final String _articleId =
-        ModalRoute.of(context).settings.arguments as String;
+    final Map parameter = ModalRoute.of(context).settings.arguments as Map;
+    final String _articleId = parameter["articleId"];
+    final String _commentId = parameter["commentId"];
     final HideNavbar hiding = HideNavbar();
     ProfileProvider profile =
         Provider.of<ProfileProvider>(context, listen: false);
-    profile.updateRecentReadByAid(_articleId);
+    if (!_updatedRecentUsed) {
+      // update recently read history, run only once.
+      _updatedRecentUsed = true;
+      profile.updateRecentReadByAid(_articleId);
+    }
     return Scaffold(
       body: SafeArea(
         child: NotificationListener<ScrollNotification>(
@@ -67,7 +74,8 @@ class ArticleScreen extends StatelessWidget {
                             Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 10.0),
-                              child: Comments(articleId: _articleId),
+                              child: Comments(
+                                  articleId: _articleId, commentId: _commentId),
                             ),
                           ],
                         ),

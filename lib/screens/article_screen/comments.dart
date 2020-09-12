@@ -1,19 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 
 import '../../configurations/theme.dart';
 import '../../providers/article/comment_provider.dart';
 import '../../providers/article/comments_provider.dart';
 import '../../providers/user/profile_provider.dart';
-import '../../screens/article_screen/comment_detail_screen.dart';
 import '../../widgets/comment.dart';
+import 'comment_detail.dart';
 
-class Comments extends StatelessWidget {
+class Comments extends StatefulWidget {
   final String articleId;
+  final String commentId;
   Comments({
     @required this.articleId,
+    this.commentId,
     Key key,
   }) : super(key: key);
+
+  @override
+  _CommentsState createState() => _CommentsState();
+}
+
+class _CommentsState extends State<Comments> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // If this page comes from the message list, pop up comment detail. call once
+      if (widget.commentId != null) {
+        showMaterialModalBottomSheet(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            context: context,
+            builder: (context, scrollController) => CommentDetail(
+                articleId: widget.articleId, commentId: widget.commentId));
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +46,7 @@ class Comments extends StatelessWidget {
         Provider.of<ProfileProvider>(context, listen: false);
     return FutureBuilder(
         future: Provider.of<CommentsProvider>(context, listen: false)
-            .fetchL1CommentListByAid(articleId, profile.uid),
+            .fetchL1CommentListByAid(widget.articleId, profile.uid),
         builder: (ctx, asyncSnapshot) {
           if (asyncSnapshot.connectionState == ConnectionState.waiting)
             return Center(child: CircularProgressIndicator());
@@ -49,13 +74,14 @@ class Comments extends StatelessWidget {
                 value: comments[i],
                 child: FlatButton(
                     onPressed: () {
-                      Navigator.of(context).pushNamed(
-                        CommentDetailScreen.routeName,
-                        arguments: {
-                          "articleId": articleId,
-                          "commentId": comments[i].id
-                        },
-                      );
+                      showMaterialModalBottomSheet(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          context: context,
+                          builder: (context, scrollController) => CommentDetail(
+                              articleId: widget.articleId,
+                              commentId: comments[i].id));
                     },
                     child: Comment()),
               ));

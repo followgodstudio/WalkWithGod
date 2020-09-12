@@ -82,7 +82,11 @@ class ArticlesProvider with ChangeNotifier {
             subtitle: element.data[fContentSubtitle],
             body: element.data[fContentBody]));
       });
-      _articles.firstWhere((a) => a.id == aid).content = content;
+      ArticleProvider article =
+          _articles.firstWhere((a) => a.id == aid, orElse: () {
+        return null;
+      });
+      if (article != null) article.content = content;
     }
   }
 
@@ -93,7 +97,9 @@ class ArticlesProvider with ChangeNotifier {
   }
 
   ArticleProvider findById(String id) {
-    return _articles.firstWhere((a) => a.id == id);
+    return _articles.firstWhere((a) => a.id == id, orElse: () {
+      return null;
+    });
   }
 
   ArticleProvider _buildArticleByMap(String id, Map<String, dynamic> data) {

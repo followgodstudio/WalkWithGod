@@ -10,7 +10,6 @@ import 'providers/user/messages_provider.dart';
 import 'providers/user/profile_provider.dart';
 import 'providers/user/saved_articles_provider.dart';
 import 'screens/article_screen/article_screen.dart';
-import 'screens/article_screen/comment_detail_screen.dart';
 import 'screens/auth_screen/email_auth_screen.dart';
 import 'screens/auth_screen/login_screen.dart';
 import 'screens/home_screen/home_screen.dart';
@@ -92,7 +91,6 @@ class MyApp extends StatelessWidget {
               LoginScreen.routeName: (ctx) => LoginScreen(),
               HomeScreen.routeName: (ctx) => HomeScreen(),
               ArticleScreen.routeName: (ctx) => ArticleScreen(),
-              CommentDetailScreen.routeName: (ctx) => CommentDetailScreen(),
             },
           ),
         ),

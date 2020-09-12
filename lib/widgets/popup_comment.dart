@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../configurations/theme.dart';
-import '../widgets/article_preview.dart';
 
 class PopUpComment extends StatelessWidget {
   final String articleId;
@@ -71,7 +70,6 @@ class PopUpComment extends StatelessWidget {
             Divider(
               color: Color.fromARGB(255, 128, 128, 128),
             ),
-            ArticlePreview(articleId),
           ],
         ),
       ),
