@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
-import 'package:walk_with_god/screens/article_screen/share_article.dart';
 
 import '../../configurations/theme.dart';
 import '../../providers/article/comments_provider.dart';
 import '../../providers/user/profile_provider.dart';
 import '../../providers/user/saved_articles_provider.dart';
 import '../../widgets/popup_comment.dart';
+import 'share_article.dart';
 
 class BottomBar extends StatelessWidget {
   final String articleId;

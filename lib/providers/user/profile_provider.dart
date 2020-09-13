@@ -5,6 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:wakelock/wakelock.dart';
 
 import '../../configurations/constants.dart';
 import '../article/article_provider.dart';
@@ -13,14 +14,19 @@ import '../article/articles_provider.dart';
 class ProfileProvider with ChangeNotifier {
   final Firestore _db = Firestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
+  // Basic info
   String uid;
   String name;
   String imageUrl;
+  // Network info
   DateTime createdDate;
   int readsCount;
   int readDuration;
   int followersCount;
   int savedArticlesCount;
+  // Settings
+  bool keepScreenAwakeOnRead = false;
+  // For recent read
   List<String> _recentReadList = [];
   List<ArticleProvider> recentRead = [];
   bool noMoreRecentRead = false;
@@ -174,6 +180,19 @@ class ProfileProvider with ChangeNotifier {
     int timeDiffInSecond = DateTime.now().difference(start).inSeconds;
     await _db.collection(cUsers).document(uid).updateData(
         {fUserReadDuration: FieldValue.increment(timeDiffInSecond / 3600)});
+  }
+
+  Future<void> updateUserSetting({bool newKeepScreenAwakeOnRead}) async {
+    Map<String, dynamic> data = {};
+    if (newKeepScreenAwakeOnRead != null) {
+      keepScreenAwakeOnRead =
+          data[fUserSettingScreenAwake] = newKeepScreenAwakeOnRead;
+      Wakelock.toggle(on: newKeepScreenAwakeOnRead);
+    }
+    if (data.isNotEmpty) {
+      // await _db.collection(cUsers).document(uid).updateData(data);
+      notifyListeners();
+    }
   }
 
   Future<void> _appendRecentReadList() async {

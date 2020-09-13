@@ -30,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
   var prevIndex = -1;
   ValueNotifier<String> title;
   ValueNotifier<String> formattedDate;
-  var formatter = new DateFormat('MMM dd, yyyy');
+  var formatter = new DateFormat('yyyy年M月d日');
 
   @override
   void initState() {
@@ -73,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
       var index = (_controller.offset.floor() / articleHeight).floor();
       var articles =
           Provider.of<ArticlesProvider>(context, listen: false).articles;
-      if (index != prevIndex && index < articles.length) {
+      if (index != prevIndex && index < articles.length && index >= 0) {
         title.value = diff(articles[index].createdDate);
         formattedDate.value = formatter.format(articles[index].createdDate);
         prevIndex = index;
@@ -87,7 +87,8 @@ class _HomeScreenState extends State<HomeScreen> {
       return;
     }
     title = ValueNotifier<String>(diff(articles[0].createdDate));
-    formattedDate = ValueNotifier<String>(formatter.format(articles[0].createdDate));
+    formattedDate =
+        ValueNotifier<String>(formatter.format(articles[0].createdDate));
   }
 
   Future<void> _refreshArticles(BuildContext ctx) async {
@@ -156,14 +157,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     255, 128, 128, 128))),
                                         ValueListenableBuilder(
                                           valueListenable: formattedDate,
-                                          builder: (context, String value,
-                                              child) =>
-                                              Text(
-                                                value,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .captionMain,
-                                              ),
+                                          builder:
+                                              (context, String value, child) =>
+                                                  Text(
+                                            value,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .captionMain,
+                                          ),
                                         ),
 //                                        Text(
 //                                          formattedDate.value,

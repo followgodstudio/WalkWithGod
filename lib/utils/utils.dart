@@ -1,10 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:intl/intl.dart';
 import 'package:palette_generator/palette_generator.dart';
-
-String getStringByDate(DateTime date) {
-  return DateFormat('yyyy年M月d日 HH:mm a').format(date);
-}
 
 String getCreatedDuration(DateTime createdDate) {
   int timeDiffInMins = DateTime.now().toUtc().difference(createdDate).inMinutes;

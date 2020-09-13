@@ -24,32 +24,32 @@ class TopBar extends StatelessWidget {
           Navigator.pop(context);
         },
       ),
-      // title: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-      //   Padding(
-      //     padding: const EdgeInsets.symmetric(vertical: 5.0),
-      //     child: Text(
-      //       loadedArticle.title ?? "",
-      //       style: Theme.of(context).textTheme.headerSmall1,
-      //     ),
-      //   ),
-      //   Row(
-      //     mainAxisAlignment: MainAxisAlignment.center,
-      //     children: [
-      //       Text(
-      //         loadedArticle.publisher ?? "随行",
-      //         style: Theme.of(context).textTheme.captionSmall2,
-      //       ),
-      //       Container(
-      //           height: 10,
-      //           child:
-      //               VerticalDivider(color: Color.fromARGB(255, 128, 128, 128))),
-      //       Text(
-      //         loadedArticle.author ?? "匿名",
-      //         style: Theme.of(context).textTheme.captionSmall2,
-      //       ),
-      //     ],
-      //   ),
-      // ]),
+      title: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 5.0),
+          child: Text(
+            loadedArticle.title ?? "",
+            style: Theme.of(context).textTheme.headerSmall1,
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              loadedArticle.publisher ?? "随行",
+              style: Theme.of(context).textTheme.captionSmall2,
+            ),
+            Container(
+                height: 10,
+                child:
+                    VerticalDivider(color: Color.fromARGB(255, 128, 128, 128))),
+            Text(
+              loadedArticle.author ?? "匿名",
+              style: Theme.of(context).textTheme.captionSmall2,
+            ),
+          ],
+        ),
+      ]),
       floating: true,
       expandedHeight: 50,
       actions: [

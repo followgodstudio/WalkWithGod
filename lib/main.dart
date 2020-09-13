@@ -26,8 +26,6 @@ import 'screens/personal_management_screen/setting/setting_screen.dart';
 
 void main() => runApp(MyApp());
 
-final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
-
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
@@ -63,7 +61,6 @@ class MyApp extends StatelessWidget {
         child: Consumer<AuthProvider>(
           builder: (ctx, auth, _) => MaterialApp(
             title: 'Walk With God',
-            navigatorObservers: [routeObserver],
             debugShowCheckedModeBanner: false,
             theme: dayTheme,
             home: StreamBuilder<String>(

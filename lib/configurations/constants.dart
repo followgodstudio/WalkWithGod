@@ -42,6 +42,7 @@ const String fUserFollowersCount = "followers_count";
 const String fUserReadsCount = "reads_count";
 const String fUserReadDuration = "read_duration";
 const String fUserSavedArticlesCount = "saved_articles_count";
+const String fUserSettingScreenAwake = "screen_awake";
 
 const String fMessageType = "type";
 const String eMessageTypeLike = "like";
