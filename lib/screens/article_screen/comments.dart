@@ -42,7 +42,6 @@ class _CommentsState extends State<Comments> {
 
   @override
   Widget build(BuildContext context) {
-    print("Comments Rebuild");
     ProfileProvider profile =
         Provider.of<ProfileProvider>(context, listen: false);
     return FutureBuilder(
