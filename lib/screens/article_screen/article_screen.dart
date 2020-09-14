@@ -14,6 +14,12 @@ import 'top_bar.dart';
 class ArticleScreen extends StatelessWidget {
   static const routeName = '/article_screen';
   bool _updatedRecentUsed = false;
+  final dataKey = new GlobalKey();
+  void scrollToComment() {
+    Scrollable.ensureVisible(dataKey.currentContext,
+        duration: Duration(seconds: 1));
+  }
+
   @override
   Widget build(BuildContext context) {
     final Map parameter = ModalRoute.of(context).settings.arguments as Map;
@@ -50,6 +56,7 @@ class ArticleScreen extends StatelessWidget {
                         child: ArticleBody(_articleId),
                       ),
                       Padding(
+                        key: dataKey,
                         padding: const EdgeInsets.symmetric(horizontal: 10.0),
                         child: Comments(
                             articleId: _articleId, commentId: _commentId),
@@ -66,7 +73,7 @@ class ArticleScreen extends StatelessWidget {
           duration: Duration(milliseconds: 300),
           height: value ? 60.0 : 0.0,
           child: value
-              ? BottomBar(_articleId)
+              ? BottomBar(_articleId, scrollToComment)
               : Container(
                   color: Colors.white,
                   width: MediaQuery.of(context).size.width,

@@ -10,9 +10,12 @@ import '../providers/user/profile_provider.dart';
 import '../screens/personal_management_screen/headline/network_screen.dart';
 import '../utils/utils.dart';
 import '../widgets/popup_comment.dart';
+import 'comment_succeeded_dialog.dart';
 import 'profile_picture.dart';
 
 class Comment extends StatelessWidget {
+  final Function scrollToTop;
+  Comment({Key key, this.scrollToTop}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     ProfileProvider profile =
@@ -138,13 +141,23 @@ class Comment extends StatelessWidget {
                                 builder: (context, scrollController) =>
                                     PopUpComment(
                                       articleId: data.articleId,
-                                      onPressFunc: (String content) {
-                                        data.addL2Comment(
+                                      onPressFunc: (String content) async {
+                                        await data.addL2Comment(
                                             content,
                                             profile.uid,
                                             profile.name,
                                             profile.imageUrl,
                                             isLevel2Comment);
+                                        if (scrollToTop != null) scrollToTop();
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              Future.delayed(
+                                                  Duration(seconds: 1), () {
+                                                Navigator.of(context).pop(true);
+                                              });
+                                              return CommentSucceededDialog();
+                                            });
                                       },
                                     ));
                           },

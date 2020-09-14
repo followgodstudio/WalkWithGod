@@ -10,6 +10,12 @@ import '../../widgets/comment.dart';
 class CommentDetail extends StatelessWidget {
   final String articleId;
   final String commentId;
+  final dataKey = new GlobalKey();
+  void scrollToTop() {
+    Scrollable.ensureVisible(dataKey.currentContext,
+        duration: Duration(seconds: 1));
+  }
+
   CommentDetail({this.articleId, this.commentId});
   @override
   Widget build(BuildContext context) {
@@ -44,7 +50,7 @@ class CommentDetail extends StatelessWidget {
                         child: Consumer<CommentProvider>(
                             builder: (context, data, child) {
                           List<Widget> list = [];
-                          list.add(Comment());
+                          list.add(Comment(key: dataKey));
                           if (data.childrenCount == 0) {
                             list.add(Center(
                                 child: Padding(
@@ -62,7 +68,7 @@ class CommentDetail extends StatelessWidget {
                               value: data.children[i],
                               child: Padding(
                                 padding: const EdgeInsets.only(left: 30.0),
-                                child: Comment(),
+                                child: Comment(scrollToTop: scrollToTop),
                               ),
                             ));
                           }

@@ -6,12 +6,14 @@ import '../../configurations/theme.dart';
 import '../../providers/article/comments_provider.dart';
 import '../../providers/user/profile_provider.dart';
 import '../../providers/user/saved_articles_provider.dart';
+import '../../widgets/comment_succeeded_dialog.dart';
 import '../../widgets/popup_comment.dart';
 import 'share_article.dart';
 
 class BottomBar extends StatelessWidget {
   final String articleId;
-  BottomBar(this.articleId);
+  final Function onLeaveCommentScroll;
+  BottomBar(this.articleId, this.onLeaveCommentScroll);
 
   @override
   Widget build(BuildContext context) {
@@ -35,11 +37,20 @@ class BottomBar extends StatelessWidget {
                     context: context,
                     builder: (context, scrollController) => PopUpComment(
                           articleId: articleId,
-                          onPressFunc: (String content) {
-                            Provider.of<CommentsProvider>(context,
+                          onPressFunc: (String content) async {
+                            await Provider.of<CommentsProvider>(context,
                                     listen: false)
                                 .addL1Comment(articleId, content, profile.uid,
                                     profile.name, profile.imageUrl);
+                            onLeaveCommentScroll();
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  Future.delayed(Duration(seconds: 1), () {
+                                    Navigator.of(context).pop(true);
+                                  });
+                                  return CommentSucceededDialog();
+                                });
                           },
                         ));
               },

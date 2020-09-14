@@ -153,26 +153,27 @@ class ProfileProvider with ChangeNotifier {
 
   Future<void> updateRecentReadByAid(String articleId) async {
     if (_isUpdatingRecentRead) return;
+    _isUpdatingRecentRead = true;
+
+    DocumentReference user = _db.collection(cUsers).document(uid);
     DocumentReference history = _db
         .collection(cUsers)
         .document(uid)
         .collection(cUserReadHistory)
         .document(articleId);
-    _isUpdatingRecentRead = true;
-    await _db.runTransaction((transaction) {
-      return transaction.get(history).then((DocumentSnapshot doc) {
-        if (doc.exists) {
-          // Update read history timestamp
-          history.updateData({fUpdatedDate: Timestamp.now()});
-        } else {
-          // Create a new document in read history
-          history.setData({fUpdatedDate: Timestamp.now()});
-          // Increase count
-          DocumentReference user = _db.collection(cUsers).document(uid);
-          user.updateData({fUserReadsCount: FieldValue.increment(1)});
-        }
-      });
-    });
+    DocumentSnapshot doc = await history.get();
+
+    WriteBatch batch = _db.batch();
+    if (doc.exists) {
+      // Update read history timestamp
+      batch.updateData(history, {fUpdatedDate: Timestamp.now()});
+    } else {
+      // Create a new document in read history
+      batch.setData(history, {fUpdatedDate: Timestamp.now()});
+      // Increase count
+      batch.updateData(user, {fUserReadsCount: FieldValue.increment(1)});
+    }
+    await batch.commit();
     _isUpdatingRecentRead = false;
   }
 
