@@ -25,7 +25,8 @@ class ProfileProvider with ChangeNotifier {
   List<ArticleProvider> recentRead = [];
   bool noMoreRecentRead = false;
   int _lastVisibleRecentRead = 0;
-  bool _isFetching = false; // To avoid frequently request
+  bool _isFetchingRecentRead = false; // To avoid frequently request
+  bool _isUpdatingRecentRead = false; // To avoid frequently request
 
   ProfileProvider([this.uid]);
 
@@ -90,10 +91,10 @@ class ProfileProvider with ChangeNotifier {
   }
 
   Future<void> fetchMoreRecentRead() async {
-    if (readsCount == 0 || noMoreRecentRead || _isFetching) return;
-    _isFetching = true;
+    if (readsCount == 0 || noMoreRecentRead || _isFetchingRecentRead) return;
+    _isFetchingRecentRead = true;
     await _appendRecentReadList();
-    _isFetching = false;
+    _isFetchingRecentRead = false;
   }
 
   Future<void> fetchNetworkProfile() async {
@@ -145,12 +146,14 @@ class ProfileProvider with ChangeNotifier {
   }
 
   Future<void> updateRecentReadByAid(String articleId) async {
+    if (_isUpdatingRecentRead) return;
     DocumentReference history = _db
         .collection(cUsers)
         .doc(uid)
         .collection(cUserReadHistory)
         .doc(articleId);
-    _db.runTransaction((transaction) {
+    _isUpdatingRecentRead = true;
+    await _db.runTransaction((transaction) {
       return transaction.get(history).then((DocumentSnapshot doc) {
         if (doc.exists) {
           // Update read history timestamp
@@ -164,6 +167,7 @@ class ProfileProvider with ChangeNotifier {
         }
       });
     });
+    _isUpdatingRecentRead = false;
   }
 
   Future<void> updateReadDuration(DateTime start) async {

@@ -13,8 +13,8 @@ import 'article/article_list.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = '/home';
-  final FirebaseUser user;
-  final Firestore firestore;
+  final User user;
+  final FirebaseFirestore firestore;
 
   HomeScreen({this.user, this.firestore});
 
@@ -87,7 +87,8 @@ class _HomeScreenState extends State<HomeScreen> {
       return;
     }
     title = ValueNotifier<String>(diff(articles[0].createdDate));
-    formattedDate = ValueNotifier<String>(formatter.format(articles[0].createdDate));
+    formattedDate =
+        ValueNotifier<String>(formatter.format(articles[0].createdDate));
   }
 
   Future<void> _refreshArticles(BuildContext ctx) async {
@@ -97,7 +98,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print("bp");
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         body: SafeArea(
             child: FutureBuilder(
                 future: Future.wait([
@@ -156,14 +159,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     255, 128, 128, 128))),
                                         ValueListenableBuilder(
                                           valueListenable: formattedDate,
-                                          builder: (context, String value,
-                                              child) =>
-                                              Text(
-                                                value,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .captionMain,
-                                              ),
+                                          builder:
+                                              (context, String value, child) =>
+                                                  Text(
+                                            value,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .captionMain,
+                                          ),
                                         ),
 //                                        Text(
 //                                          formattedDate.value,

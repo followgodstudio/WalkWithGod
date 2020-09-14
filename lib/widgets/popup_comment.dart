@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../configurations/theme.dart';
-import '../widgets/article_preview.dart';
 
 class PopUpComment extends StatelessWidget {
   final String articleId;
@@ -63,6 +62,9 @@ class PopUpComment extends StatelessWidget {
             ),
             Expanded(
               child: TextField(
+                // showCursor: true,
+                // readOnly: true,
+                autofocus: true,
                 maxLines: 11,
                 controller: _commentController,
                 decoration: InputDecoration.collapsed(hintText: '请写下您的留言'),
@@ -71,7 +73,6 @@ class PopUpComment extends StatelessWidget {
             Divider(
               color: Color.fromARGB(255, 128, 128, 128),
             ),
-            ArticlePreview(articleId),
           ],
         ),
       ),

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
+//import 'package:the_gorgeous_login/configurations/constants.dart';
 
 import '../../configurations/constants.dart';
 import 'article_provider.dart';
@@ -48,6 +49,7 @@ class ArticlesProvider with ChangeNotifier {
 
   Future<void> fetchArticlesByDate(
       [DateTime dateTime, int n = 10, bool isContentNeeded = false]) async {
+    print("bp2");
     if (dateTime == null) dateTime = DateTime.now();
 
     QuerySnapshot query = await _fdb
@@ -78,11 +80,20 @@ class ArticlesProvider with ChangeNotifier {
         .get();
     if (querySnapshot != null) {
       querySnapshot.docs.forEach((element) {
-        content.add(Paragraph(
-            subtitle: element.get(fContentSubtitle),
-            body: element.get(fContentBody)));
+        var subtitle = "";
+        try {
+          subtitle = element.get(fContentSubtitle);
+        } catch (err) {
+          print("subtitle does not exist");
+        }
+        content.add(
+            Paragraph(subtitle: subtitle, body: element.get(fContentBody)));
       });
-      _articles.firstWhere((a) => a.id == aid).content = content;
+      ArticleProvider article =
+          _articles.firstWhere((a) => a.id == aid, orElse: () {
+        return null;
+      });
+      if (article != null) article.content = content;
     }
   }
 
@@ -92,7 +103,9 @@ class ArticlesProvider with ChangeNotifier {
   }
 
   ArticleProvider findById(String id) {
-    return _articles.firstWhere((a) => a.id == id);
+    return _articles.firstWhere((a) => a.id == id, orElse: () {
+      return null;
+    });
   }
 
   ArticleProvider _buildArticleByMap(String id, Map<String, dynamic> data) {

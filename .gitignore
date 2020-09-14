@@ -52,7 +52,7 @@ pubspec.lock
 **/ios/**/DerivedData/
 **/ios/**/Icon?
 **/ios/**/Pods/
-**/ios/**/Podfile*
+**/ios/Podfile*
 **/ios/**/.symlinks/
 **/ios/**/profile
 **/ios/**/xcuserdata

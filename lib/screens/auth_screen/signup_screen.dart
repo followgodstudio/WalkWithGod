@@ -5,11 +5,12 @@ import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:provider/provider.dart';
 import 'package:international_phone_input/international_phone_input.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import '../home_screen/home_screen.dart';
 import '../../providers/auth_provider.dart';
 import '../../utils/utils.dart';
 import '../../configurations/theme.dart';
 
-enum AuthFormType { signIn, signUp, reset, anonymous, convert, phone }
+enum AuthFormType { signIn, signUp, reset, anonymous, phone }
 
 class SignupScreen extends StatefulWidget {
   static const routeName = '/signup';
@@ -50,7 +51,10 @@ class _SignupScreenState extends State<SignupScreen> {
         authFormType = AuthFormType.signUp;
       });
     } else if (state == 'home') {
-      Navigator.of(context).pop();
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => HomeScreen()),
+      );
     } else {
       setState(() {
         authFormType = AuthFormType.signIn;
@@ -78,14 +82,18 @@ class _SignupScreenState extends State<SignupScreen> {
         final auth = Provider.of<AuthProvider>(context, listen: false);
         switch (authFormType) {
           case AuthFormType.signIn:
-            await auth.authenticate(
-                _email, _password, AuthMode.signInWithEmail);
-            //Navigator.of(context).pushReplacementNamed('/home');
+            await auth.signInWithEmailAndPassword(_email, _password);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => HomeScreen()),
+            );
             break;
           case AuthFormType.signUp:
-            await auth.authenticate(
-                _email, _password, AuthMode.createUserWithEmail);
-            //Navigator.of(context).pushReplacementNamed('/home');
+            await auth.createUserWithEmailAndPassword(_email, _password, _name);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => HomeScreen()),
+            );
             break;
           case AuthFormType.reset:
             await auth.sendPasswordResetEmail(_email);
@@ -96,11 +104,10 @@ class _SignupScreenState extends State<SignupScreen> {
             break;
           case AuthFormType.anonymous:
             await auth.singInAnonymously();
-            //Navigator.of(context).pushReplacementNamed('/home');
-            break;
-          case AuthFormType.convert:
-            await auth.convertUserWithEmail(_email, _password, _name);
-            Navigator.of(context).pop();
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => HomeScreen()),
+            );
             break;
           case AuthFormType.phone:
             var result = await auth.createUserWithPhone(_phone, context);
@@ -246,26 +253,9 @@ class _SignupScreenState extends State<SignupScreen> {
   List<Widget> buildInputs() {
     List<Widget> textFields = [];
 
-    // if were in the sign up state add name
-    // if ([AuthFormType.signUp, AuthFormType.convert].contains(authFormType)) {
-    //   textFields.add(
-    //     TextFormField(
-    //       validator: NameValidator.validate,
-    //       style: TextStyle(fontSize: 22.0),
-    //       decoration: buildSignUpInputDecoration("Name"),
-    //       onSaved: (value) => _name = value,
-    //     ),
-    //   );
-    //   textFields.add(SizedBox(height: 20));
-    // }
-
     // add email & password
-    if ([
-      AuthFormType.signUp,
-      AuthFormType.convert,
-      AuthFormType.reset,
-      AuthFormType.signIn
-    ].contains(authFormType)) {
+    if ([AuthFormType.signUp, AuthFormType.reset, AuthFormType.signIn]
+        .contains(authFormType)) {
       textFields.add(
         TextFormField(
           validator: EmailValidator.validate,
@@ -334,19 +324,15 @@ class _SignupScreenState extends State<SignupScreen> {
       _newFormState = "signIn";
       _submitButtonText = "发送链接";
       _showSocial = false;
-    } else if (authFormType == AuthFormType.convert) {
-      _switchButtonText = "Cancel";
-      _newFormState = "home";
-      _submitButtonText = "Sign Up";
     } else if (authFormType == AuthFormType.phone) {
       _switchButtonText = "使用邮箱登陆";
       _newFormState = "signIn";
       _submitButtonText = "获取验证码";
       _showSocial = false;
     } else {
-      _switchButtonText = "Have an Account? Sign In";
+      _switchButtonText = "使用邮箱登陆";
       _newFormState = "signIn";
-      _submitButtonText = "注册新邮箱";
+      _submitButtonText = "确认信息并注册";
     }
 
     return [
@@ -416,13 +402,12 @@ class _SignupScreenState extends State<SignupScreen> {
           GoogleSignInButton(
             onPressed: () async {
               try {
-                if (authFormType == AuthFormType.convert) {
-                  await _auth.convertWithGoogle();
-                  Navigator.of(context).pop();
-                } else {
-                  await _auth.signInWithGoogle();
-                  Navigator.of(context).pushReplacementNamed('/home');
-                }
+                await _auth.signInWithGoogle();
+                // Navigator.of(context).pushReplacementNamed('/home');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomeScreen()),
+                );
               } catch (e) {
                 setState(() {
                   _warning = e.message;
@@ -456,11 +441,16 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   Widget buildAppleSignIn(_auth) {
-    if (authFormType != AuthFormType.convert && _showAppleSignIn == true) {
+    final _auth = Provider.of<AuthProvider>(context, listen: false);
+    if (_showAppleSignIn == true) {
       return apple.AppleSignInButton(
         onPressed: () async {
           await _auth.signInWithApple();
-          Navigator.of(context).pushReplacementNamed('/home');
+          //Navigator.of(context).pushReplacementNamed('/home');
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => HomeScreen()),
+          );
         },
         style: apple.ButtonStyle.black,
       );

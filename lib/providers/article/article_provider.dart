@@ -37,8 +37,10 @@ class ArticleProvider with ChangeNotifier {
 
   Future<void> save() async {
     //TODO
-    DocumentSnapshot doc =
-        await Firestore.instance.collection(cArticles).document(this.id).get();
+    DocumentSnapshot doc = await FirebaseFirestore.instance
+        .collection(cArticles)
+        .doc(this.id)
+        .get();
     notifyListeners();
   }
 }

@@ -17,142 +17,157 @@ class Comment extends StatelessWidget {
   Widget build(BuildContext context) {
     ProfileProvider profile =
         Provider.of<ProfileProvider>(context, listen: false);
-    return Consumer<CommentProvider>(
-      builder: (context, data, child) => Column(
+    return Consumer<CommentProvider>(builder: (context, data, child) {
+      final bool isLevel2Comment = (data.parent != null);
+      return Column(
         children: [
-          SizedBox(height: 8.0),
+          SizedBox(height: 5.0),
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             //avatar and title / created time
             children: [
-              ProfilePicture(data.creatorImage, 16.0, data.creatorUid),
+              // Avatar
               Column(
-                //title and time
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 20.0,
-                      ),
-                      GestureDetector(
-                          onTap: () {
-                            if (data.creatorUid == null ||
-                                data.creatorUid.isEmpty) return;
-                            Navigator.of(context).pushNamed(
-                              NetworkScreen.routeName,
-                              arguments: data.creatorUid,
-                            );
-                          },
-                          child: Text(
-                            data.creatorName,
-                            style: Theme.of(context).textTheme.captionMedium1,
-                          )),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 4.0),
-                        child: Text(
-                          getStringByDate(data.createdDate),
-                          style: Theme.of(context).textTheme.captionSmall1,
-                        ),
-                      ),
-                    ],
-                  )
+                  ProfilePicture(data.creatorImage,
+                      isLevel2Comment ? 16.0 : 20.0, data.creatorUid),
+                  // TODO: add a vertical line here
                 ],
-              )
-            ],
-          ),
-          Row(
-            children: [
-              SizedBox(
-                width: 60,
               ),
-              Flexible(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: RichText(
-                    text: TextSpan(
-                      children: <TextSpan>[
-                        if (data.replyToName != null)
-                          TextSpan(
-                              text: "@" + data.replyToName + ": ",
-                              style: Theme.of(context).textTheme.bodyText4,
-                              recognizer: new TapGestureRecognizer()
-                                ..onTap = () {
-                                  if (data.replyToUid == null ||
-                                      data.replyToUid.isEmpty) return;
-                                  Navigator.of(context).pushNamed(
-                                      NetworkScreen.routeName,
-                                      arguments: data.replyToUid);
-                                }),
-                        TextSpan(
-                          text: data.content,
-                          style: Theme.of(context).textTheme.bodyText1,
+              // Others
+              SizedBox(width: 10.0),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 10),
+                    // title / created time
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        GestureDetector(
+                            onTap: () {
+                              if (data.creatorUid == null ||
+                                  data.creatorUid.isEmpty) return;
+                              Navigator.of(context).pushNamed(
+                                NetworkScreen.routeName,
+                                arguments: data.creatorUid,
+                              );
+                            },
+                            child: Text(
+                              data.creatorName,
+                              style: Theme.of(context).textTheme.captionMedium1,
+                            )),
+                        Text(
+                          getCreatedDuration(data.createdDate),
+                          style: Theme.of(context).textTheme.bodyTextGray,
                         )
                       ],
                     ),
-                  ),
-                ),
-              )
-            ],
-          ),
-          Row(
-            children: [
-              SizedBox(width: 50),
-              if (!data.like)
-                IconButton(
-                    icon: Icon(
-                      Icons.favorite_border,
-                      color: Color.fromARGB(255, 160, 160, 160),
+                    SizedBox(height: 8.0),
+                    // Comment body
+                    Row(
+                      children: [
+                        Flexible(
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: RichText(
+                              text: TextSpan(
+                                children: <TextSpan>[
+                                  if (data.replyToName != null)
+                                    TextSpan(
+                                        text: "@" + data.replyToName + " ",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .captionMedium1,
+                                        recognizer: new TapGestureRecognizer()
+                                          ..onTap = () {
+                                            if (data.replyToUid == null ||
+                                                data.replyToUid.isEmpty) return;
+                                            Navigator.of(context).pushNamed(
+                                                NetworkScreen.routeName,
+                                                arguments: data.replyToUid);
+                                          }),
+                                  TextSpan(
+                                    text: data.content,
+                                    style:
+                                        Theme.of(context).textTheme.bodyText1,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                    onPressed: () => data.addLike(
-                        profile.uid, profile.name, profile.imageUrl)),
-              if (data.like)
-                IconButton(
-                    icon: Icon(Icons.favorite, color: Colors.pink[300]),
-                    onPressed: () => data.cancelLike(profile.uid)),
-              Text(
-                data.likesCount.toString(),
-                style: Theme.of(context).textTheme.captionSmall1,
-              ),
-              SizedBox(width: 50),
-              IconButton(
-                icon: Icon(
-                  Icons.comment,
-                  color: Color.fromARGB(255, 160, 160, 160),
+                    // Icons
+                    Row(
+                      children: [
+                        if (!data.like)
+                          IconButton(
+                              icon: Icon(
+                                Icons.favorite_border,
+                                color: Color.fromARGB(255, 160, 160, 160),
+                              ),
+                              onPressed: () => data.addLike(
+                                  profile.uid, profile.name, profile.imageUrl)),
+                        if (data.like)
+                          IconButton(
+                              icon:
+                                  Icon(Icons.favorite, color: Colors.pink[300]),
+                              onPressed: () => data.cancelLike(profile.uid)),
+                        Text(
+                          data.likesCount.toString(),
+                          style: Theme.of(context).textTheme.captionMedium1,
+                        ),
+                        SizedBox(width: 50),
+                        FlatButton(
+                          child: Row(children: [
+                            Icon(
+                              Icons.comment,
+                              color: Color.fromARGB(255, 160, 160, 160),
+                            ),
+                            Text(
+                              " 回复",
+                              style: Theme.of(context).textTheme.captionMedium1,
+                            )
+                          ]),
+                          onPressed: () {
+                            showMaterialModalBottomSheet(
+                                context: context,
+                                builder: (context, scrollController) =>
+                                    PopUpComment(
+                                      articleId: data.articleId,
+                                      onPressFunc: (String content) {
+                                        data.addL2Comment(
+                                            content,
+                                            profile.uid,
+                                            profile.name,
+                                            profile.imageUrl,
+                                            isLevel2Comment);
+                                      },
+                                    ));
+                          },
+                        ),
+                      ],
+                    ),
+                    if (data.childrenCount != null)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5.0),
+                        child: Text(
+                          "共有" + data.childrenCount.toString() + "条回复",
+                          style: Theme.of(context).textTheme.buttonMedium1,
+                        ),
+                      ),
+                  ],
                 ),
-                onPressed: () {
-                  showMaterialModalBottomSheet(
-                      context: context,
-                      builder: (context, scrollController) => PopUpComment(
-                            articleId: data.articleId,
-                            onPressFunc: (String content) {
-                              data.addL2Comment(
-                                  content,
-                                  profile.uid,
-                                  profile.name,
-                                  profile.imageUrl,
-                                  (data.parent != null));
-                            },
-                          ));
-                },
               ),
-              if (data.childrenCount != null)
-                Text(
-                  data.childrenCount.toString(),
-                  style: Theme.of(context).textTheme.captionSmall1,
-                )
             ],
           ),
-          Divider(),
+          SizedBox(height: 5.0),
+          if (!isLevel2Comment) Divider(),
         ],
-      ),
-    );
+      );
+    });
   }
 }

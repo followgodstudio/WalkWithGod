@@ -1,3 +1,5 @@
+// import 'dart:html';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
 
@@ -39,10 +41,13 @@ class CommentsProvider with ChangeNotifier {
         .collection(cArticleCommentLikes)
         .doc(userId)
         .get();
-    doc.data().update('like', (value) => docLikes.exists);
+    var tmp = doc.data();
+    if (doc.data() != null) {
+      tmp.update('like', (value) => docLikes.exists, ifAbsent: () => false);
+    }
+
     //doc.data['like'] = docLikes.exists;
-    CommentProvider commentProvider =
-        _buildL1CommentByMap(commentId, doc.data());
+    CommentProvider commentProvider = _buildL1CommentByMap(commentId, tmp);
     // Fetch it children list
     await commentProvider.fetchL2ChildrenCommentList(userId);
     return commentProvider;
@@ -111,7 +116,9 @@ class CommentsProvider with ChangeNotifier {
       notifyListeners();
       return;
     }
+
     // Fetch if current user like, will it be slow???
+    List tmpList = List();
     for (int i = 0; i < docs.length; i++) {
       DocumentSnapshot docRef = await _db
           .collection(cArticles)
@@ -121,13 +128,24 @@ class CommentsProvider with ChangeNotifier {
           .collection(cArticleCommentLikes)
           .doc(userId)
           .get();
-      docs[i].data().update('like', (value) => docRef.exists);
-      //docs[i].data['like'] = docRef.exists;
+
+      docs[i]
+          .data()
+          .update("like", (value) => docRef.exists, ifAbsent: () => false);
+
+      var copyOfData = docs[i].data();
+      copyOfData.update("like", (value) => docRef.exists,
+          ifAbsent: () => false);
+      copyOfData.update("id", (value) => docs[i].id,
+          ifAbsent: () => docs[i].id);
+      tmpList.add(copyOfData);
     }
-    _isFetching = false;
-    docs.forEach((data) {
-      _items.add(_buildL1CommentByMap(data.id, data.data()));
+
+    tmpList.forEach((data) {
+      _items.add(_buildL1CommentByMap(data["id"], data));
     });
+
+    _isFetching = false;
     _lastVisible = query.docs[query.docs.length - 1];
     notifyListeners();
   }

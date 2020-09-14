@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../auth_screen/signup_screen.dart';
 
 import '../../../configurations/theme.dart';
 import '../../../providers/auth_provider.dart';
@@ -34,7 +35,13 @@ class SettingScreen extends StatelessWidget {
                       onPressed: () {
                         Provider.of<AuthProvider>(context, listen: false)
                             .logout();
-                        Navigator.of(context).pushReplacementNamed('/');
+                        //Navigator.of(context).pushReplacementNamed('/');
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SignupScreen(
+                                      authFormType: AuthFormType.signIn,
+                                    )));
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),

@@ -285,7 +285,7 @@ class ArticleCard extends StatelessWidget {
                           onPressed: () {
                             Navigator.of(context).pushNamed(
                               ArticleScreen.routeName,
-                              arguments: article.id,
+                              arguments: {'articleId': article.id},
                             );
                           },
                           child: Align(

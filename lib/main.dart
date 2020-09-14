@@ -1,7 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:walk_with_god/screens/auth_screen/signup_screen.dart';
 
 import 'configurations/theme.dart';
 import 'providers/article/articles_provider.dart';
@@ -12,9 +11,9 @@ import 'providers/user/messages_provider.dart';
 import 'providers/user/profile_provider.dart';
 import 'providers/user/saved_articles_provider.dart';
 import 'screens/article_screen/article_screen.dart';
-import 'screens/article_screen/comment_detail_screen.dart';
 import 'screens/auth_screen/email_auth_screen.dart';
 import 'screens/auth_screen/login_screen.dart';
+import 'screens/auth_screen/signup_screen.dart';
 import 'screens/home_screen/home_screen.dart';
 import 'screens/loading_screen.dart';
 import 'screens/personal_management_screen/friends/friends_list_screen.dart';
@@ -100,7 +99,6 @@ class MyApp extends StatelessWidget {
               LoginScreen.routeName: (ctx) => LoginScreen(),
               HomeScreen.routeName: (ctx) => HomeScreen(),
               ArticleScreen.routeName: (ctx) => ArticleScreen(),
-              CommentDetailScreen.routeName: (ctx) => CommentDetailScreen(),
               SignupScreen.routeName: (ctx) =>
                   SignupScreen(authFormType: AuthFormType.signIn),
             },

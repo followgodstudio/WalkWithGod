@@ -83,6 +83,12 @@ extension CustomStyles on TextTheme {
         fontFamily: 'Lanting',
         letterSpacing: -0.1,
       );
+  TextStyle get bodyTextGray => const TextStyle(
+        color: const Color.fromARGB(255, 128, 128, 128),
+        fontSize: 14.0,
+        fontFamily: 'Lanting',
+        letterSpacing: -0.1,
+      );
   TextStyle get captionMain => const TextStyle(
         fontSize: 14.0,
         color: Color.fromARGB(255, 128, 128, 128),

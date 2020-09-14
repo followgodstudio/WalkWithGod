@@ -19,7 +19,7 @@ class ArticleParagraph extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 10.0),
           child: Row(
             children: [
-              _paragraph.subtitle == null
+              _paragraph.subtitle == null || _paragraph.subtitle.isEmpty
                   ? Container(
                       width: 30,
                       height: 4,

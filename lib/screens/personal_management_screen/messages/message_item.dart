@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../../../configurations/theme.dart';
 import '../../../configurations/constants.dart';
+import '../../../configurations/theme.dart';
 import '../../../providers/user/message_provider.dart';
-import '../../../screens/article_screen/comment_detail_screen.dart';
 import '../../../widgets/profile_picture.dart';
+import '../../article_screen/article_screen.dart';
 
 class MessageItem extends StatelessWidget {
   @override
@@ -16,7 +16,7 @@ class MessageItem extends StatelessWidget {
               onPressed: () {
                 data.markMessageAsRead(true);
                 Navigator.of(context).pushNamed(
-                  CommentDetailScreen.routeName,
+                  ArticleScreen.routeName,
                   arguments: {
                     "articleId": data.articleId,
                     "commentId": data.commentId

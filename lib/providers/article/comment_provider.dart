@@ -241,14 +241,16 @@ class CommentProvider with ChangeNotifier {
     query.docs.forEach((doc) {
       // Fetch if current user like
       if (doc.data().containsKey(fCommentReplyLikes)) {
-        doc.data().update("like", (_) {
-          return false;
-        });
+        // doc.data().update("like", (_) {
+        //   return false;
+        // });
+
+        doc.data().update('like', (value) => false, ifAbsent: () => false);
       } else {
         doc.data().update("like", (_) {
           return (List<String>.from(doc.get(fCommentReplyLikes)))
               .contains(userId);
-        });
+        }, ifAbsent: () => false);
         // data.data['like'] =
         //     (List<String>.from(doc.[fCommentReplyLikes])).contains(userId);
       }
