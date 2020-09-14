@@ -19,6 +19,7 @@ class CommentDetail extends StatelessWidget {
   CommentDetail({this.articleId, this.commentId});
   @override
   Widget build(BuildContext context) {
+    print("Comment detail rebuild");
     String _userId = Provider.of<ProfileProvider>(context, listen: false).uid;
     return Container(
         height: 0.85 * MediaQuery.of(context).size.height,

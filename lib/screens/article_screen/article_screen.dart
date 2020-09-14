@@ -22,6 +22,7 @@ class ArticleScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("Article rebuild");
     final Map parameter = ModalRoute.of(context).settings.arguments as Map;
     final String _articleId = parameter["articleId"];
     final String _commentId = parameter["commentId"];

@@ -2,20 +2,26 @@ import 'package:flutter/material.dart';
 
 import '../configurations/theme.dart';
 
-class PopUpComment extends StatelessWidget {
+class PopUpComment extends StatefulWidget {
   final String articleId;
   final Function(String) onPressFunc;
-  final _commentController = TextEditingController();
-
   PopUpComment({
     @required this.articleId,
     @required this.onPressFunc,
-    Key key,
-  }) : super(key: key);
+  });
+
+  @override
+  _PopUpCommentState createState() => _PopUpCommentState();
+}
+
+class _PopUpCommentState extends State<PopUpComment> {
+  String _text = "";
+  static final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return Form(
+      key: formKey,
       child: Container(
         height: MediaQuery.of(context).size.height,
         child: Column(
@@ -48,8 +54,8 @@ class PopUpComment extends StatelessWidget {
                       style: Theme.of(context).textTheme.buttonLarge1,
                     ),
                     onPressed: () {
-                      if (_commentController.text != "") {
-                        onPressFunc(_commentController.text);
+                      if (_text != "") {
+                        widget.onPressFunc(_text);
                         Navigator.pop(context);
                       }
                     },
@@ -62,8 +68,11 @@ class PopUpComment extends StatelessWidget {
             ),
             Expanded(
               child: TextField(
+                autofocus: true,
+                onChanged: (newText) {
+                  _text = newText;
+                },
                 maxLines: 11,
-                controller: _commentController,
                 decoration: InputDecoration.collapsed(hintText: '请写下您的留言'),
               ),
             ),
