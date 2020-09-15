@@ -11,7 +11,6 @@ class ArticleParagraph extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Container(
       padding: const EdgeInsets.only(top: 20.0),
       width: MediaQuery.of(context).size.width * 160 / 188,
@@ -20,7 +19,7 @@ class ArticleParagraph extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 10.0),
           child: Row(
             children: [
-              _paragraph.subtitle == null
+              _paragraph.subtitle == null || _paragraph.subtitle.isEmpty
                   ? Container(
                       width: 30,
                       height: 4,

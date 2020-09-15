@@ -13,8 +13,8 @@ import 'article/article_list.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = '/home';
-  final FirebaseUser user;
-  final Firestore firestore;
+  final User user;
+  final FirebaseFirestore firestore;
 
   HomeScreen({this.user, this.firestore});
 
@@ -99,6 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        //resizeToAvoidBottomInset: false,
         body: SafeArea(
             child: FutureBuilder(
                 future: Future.wait([

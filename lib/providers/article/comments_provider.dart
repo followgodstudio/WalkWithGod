@@ -1,3 +1,5 @@
+// import 'dart:html';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
 
@@ -10,7 +12,7 @@ class CommentsProvider with ChangeNotifier {
   DocumentSnapshot _lastVisible;
   bool _noMore = false;
   bool _isFetching = false; // To avoid frequently request
-  final Firestore _db = Firestore.instance;
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   List<CommentProvider> get items {
     return [..._items];
@@ -26,21 +28,26 @@ class CommentsProvider with ChangeNotifier {
     // Fetch Comment
     DocumentSnapshot doc = await _db
         .collection(cArticles)
-        .document(articleId)
+        .doc(articleId)
         .collection(cArticleComments)
-        .document(commentId)
+        .doc(commentId)
         .get();
     // Fetch Likes
     DocumentSnapshot docLikes = await _db
         .collection(cArticles)
-        .document(articleId)
+        .doc(articleId)
         .collection(cArticleComments)
-        .document(commentId)
+        .doc(commentId)
         .collection(cArticleCommentLikes)
-        .document(userId)
+        .doc(userId)
         .get();
-    doc.data['like'] = docLikes.exists;
-    CommentProvider commentProvider = _buildL1CommentByMap(commentId, doc.data);
+    var tmp = doc.data();
+    if (doc.data() != null) {
+      tmp.update('like', (value) => docLikes.exists, ifAbsent: () => false);
+    }
+
+    //doc.data['like'] = docLikes.exists;
+    CommentProvider commentProvider = _buildL1CommentByMap(commentId, tmp);
     // Fetch it children list
     await commentProvider.fetchL2ChildrenCommentList(userId);
     return commentProvider;
@@ -56,11 +63,11 @@ class CommentsProvider with ChangeNotifier {
     _isFetching = true;
     QuerySnapshot query = await _db
         .collection(cArticles)
-        .document(articleId)
+        .doc(articleId)
         .collection(cArticleComments)
         .orderBy(fCreatedDate, descending: true)
         .limit(limit)
-        .getDocuments();
+        .get();
     _items = [];
     _articleId = articleId;
     await _appendL1CommentList(query, articleId, userId, limit);
@@ -72,12 +79,12 @@ class CommentsProvider with ChangeNotifier {
     _isFetching = true;
     QuerySnapshot query = await _db
         .collection(cArticles)
-        .document(_articleId)
+        .doc(_articleId)
         .collection(cArticleComments)
         .orderBy(fCreatedDate, descending: true)
         .startAfterDocument(_lastVisible)
         .limit(limit)
-        .getDocuments();
+        .get();
     await _appendL1CommentList(query, _articleId, userId, limit);
   }
 
@@ -94,38 +101,52 @@ class CommentsProvider with ChangeNotifier {
     comment[fCommentLikesCount] = 0;
     DocumentReference docRef = await _db
         .collection(cArticles)
-        .document(articleId)
+        .doc(articleId)
         .collection(cArticleComments)
         .add(comment);
     comment['like'] = false;
-    _addL1CommentToList(docRef.documentID, comment);
+    _addL1CommentToList(docRef.id, comment);
   }
 
   Future<void> _appendL1CommentList(
       QuerySnapshot query, String articleId, String userId, int limit) async {
-    List<DocumentSnapshot> docs = query.documents;
+    List<DocumentSnapshot> docs = query.docs;
     if (docs.length < limit) _noMore = true;
     if (docs.length == 0) {
       notifyListeners();
       return;
     }
+
     // Fetch if current user like, will it be slow???
+    List tmpList = List();
     for (int i = 0; i < docs.length; i++) {
       DocumentSnapshot docRef = await _db
           .collection(cArticles)
-          .document(articleId)
+          .doc(articleId)
           .collection(cArticleComments)
-          .document(docs[i].documentID)
+          .doc(docs[i].id)
           .collection(cArticleCommentLikes)
-          .document(userId)
+          .doc(userId)
           .get();
-      docs[i].data['like'] = docRef.exists;
+
+      // docs[i]
+      //     .data()
+      //     .update("like", (value) => docRef.exists, ifAbsent: () => false);
+
+      var copyOfData = docs[i].data();
+      copyOfData.update("like", (value) => docRef.exists,
+          ifAbsent: () => false);
+      copyOfData.update("id", (value) => docs[i].id,
+          ifAbsent: () => docs[i].id);
+      tmpList.add(copyOfData);
     }
-    _isFetching = false;
-    docs.forEach((data) {
-      _items.add(_buildL1CommentByMap(data.documentID, data.data));
+
+    tmpList.forEach((data) {
+      _items.add(_buildL1CommentByMap(data["id"], data));
     });
-    _lastVisible = query.documents[query.documents.length - 1];
+
+    _isFetching = false;
+    _lastVisible = query.docs[query.docs.length - 1];
     notifyListeners();
   }
 

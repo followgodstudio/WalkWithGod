@@ -425,8 +425,8 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
       setState(() {
         _text = _text.substring(0, widget.pinLength);
         _effectiveController.text = _text;
-        _effectiveController.selection =
-            TextSelection.collapsed(offset: _text.runes.length);
+        // _effectiveController.selection =
+        //     TextSelection.collapsed(offset: _text.runes.length);
       });
     }
   }
@@ -1078,9 +1078,10 @@ class _PinInputTextFormFieldState extends FormFieldState<String> {
       setState(() {
         setValue(value.substring(0, widget.pinLength));
         _effectiveController.text = value;
-        _effectiveController.selection = TextSelection.collapsed(
-          offset: value.runes.length,
-        );
+        // _effectiveController.selection = TextSelection.collapsed(
+        //   offset: value.runes.length,
+        // )
+        ;
       });
     }
   }

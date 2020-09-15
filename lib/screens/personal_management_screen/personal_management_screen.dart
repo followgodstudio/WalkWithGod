@@ -128,8 +128,10 @@ class FriendsMessages extends StatelessWidget {
                             SizedBox(height: 8.0),
                             Text(
                               "共" +
-                                  snapshot.data[fUserFollowersCount]
-                                      .toString() +
+                                  (snapshot.data[fUserFollowersCount] == null
+                                      ? 0
+                                      : snapshot.data[fUserFollowersCount]
+                                          .toString()) +
                                   "人关注我, 已关注" +
                                   snapshot.data[fUserFollowingsCount]
                                       .toString() +

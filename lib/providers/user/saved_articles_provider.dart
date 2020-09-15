@@ -6,7 +6,7 @@ import '../article/article_provider.dart';
 import '../article/articles_provider.dart';
 
 class SavedArticlesProvider with ChangeNotifier {
-  final Firestore _db = Firestore.instance;
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
   List<ArticleProvider> _articles = [];
   String _userId;
   DocumentSnapshot _lastVisible;
@@ -31,11 +31,11 @@ class SavedArticlesProvider with ChangeNotifier {
     if (userId == null) return [];
     QuerySnapshot query = await _db
         .collection(cUsers)
-        .document(userId)
+        .doc(userId)
         .collection(cUserSavedarticles)
         .orderBy(fCreatedDate, descending: true)
         .limit(limit)
-        .getDocuments();
+        .get();
     _articles = [];
     _noMore = false;
     _userId = userId;
@@ -47,12 +47,12 @@ class SavedArticlesProvider with ChangeNotifier {
     _isFetching = true;
     QuerySnapshot query = await _db
         .collection(cUsers)
-        .document(_userId)
+        .doc(_userId)
         .collection(cUserSavedarticles)
         .orderBy(fCreatedDate, descending: true)
         .startAfterDocument(_lastVisible)
         .limit(limit)
-        .getDocuments();
+        .get();
     await _appendSavedList(query, limit);
     _isFetching = false;
   }
@@ -61,9 +61,9 @@ class SavedArticlesProvider with ChangeNotifier {
     _userId = userId;
     DocumentSnapshot doc = await _db
         .collection(cUsers)
-        .document(_userId)
+        .doc(_userId)
         .collection(cUserSavedarticles)
-        .document(articleId)
+        .doc(articleId)
         .get();
     _currentLike = doc.exists;
   }
@@ -76,10 +76,10 @@ class SavedArticlesProvider with ChangeNotifier {
     WriteBatch batch = _db.batch();
     batch.delete(_db
         .collection(cUsers)
-        .document(_userId)
+        .doc(_userId)
         .collection(cUserSavedarticles)
-        .document(articleId));
-    batch.updateData(_db.collection(cUsers).document(_userId),
+        .doc(articleId));
+    batch.update(_db.collection(cUsers).doc(_userId),
         {fUserSavedArticlesCount: FieldValue.increment(-1)});
     await batch.commit();
   }
@@ -93,29 +93,29 @@ class SavedArticlesProvider with ChangeNotifier {
     notifyListeners();
     // Update remote database
     WriteBatch batch = _db.batch();
-    batch.setData(
+    batch.set(
         _db
             .collection(cUsers)
-            .document(_userId)
+            .doc(_userId)
             .collection(cUserSavedarticles)
-            .document(articleId),
+            .doc(articleId),
         {fCreatedDate: Timestamp.now()});
-    batch.updateData(_db.collection(cUsers).document(_userId),
+    batch.update(_db.collection(cUsers).doc(_userId),
         {fUserSavedArticlesCount: FieldValue.increment(1)});
     await batch.commit();
   }
 
   Future<void> _appendSavedList(QuerySnapshot query, int limit) async {
-    List<DocumentSnapshot> docs = query.documents;
+    List<DocumentSnapshot> docs = query.docs;
     if (docs.length == 0) return;
     List<String> items = [];
     Map<String, int> itemsMap = {};
     for (var i = 0; i < docs.length; i++) {
-      items.add(docs[i].documentID);
-      itemsMap[docs[i].documentID] = i;
+      items.add(docs[i].id);
+      itemsMap[docs[i].id] = i;
     }
     if (docs.length < limit) _noMore = true;
-    _lastVisible = query.documents[query.documents.length - 1];
+    _lastVisible = query.docs[query.docs.length - 1];
     // Fetch Document's basic info, cannot be more than 10
     List<ArticleProvider> articles = await ArticlesProvider().fetchList(items);
     // Reorganize by update date (orginal sequence)

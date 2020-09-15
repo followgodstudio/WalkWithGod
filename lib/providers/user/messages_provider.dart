@@ -10,7 +10,7 @@ class MessagesProvider with ChangeNotifier {
   DocumentSnapshot _lastVisible;
   bool _noMore = false;
   bool _isFetching = false; // To avoid frequently request
-  final Firestore _db = Firestore.instance;
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   List<MessageProvider> get items {
     return [..._items];
@@ -25,11 +25,11 @@ class MessagesProvider with ChangeNotifier {
     if (userId == null) return;
     QuerySnapshot query = await _db
         .collection(cUsers)
-        .document(userId)
+        .doc(userId)
         .collection(cUserMessages)
         .orderBy(fCreatedDate, descending: true)
         .limit(limit)
-        .getDocuments();
+        .get();
     _items = [];
     _userId = userId;
     _appendMessageList(query, limit);
@@ -40,12 +40,12 @@ class MessagesProvider with ChangeNotifier {
     _isFetching = true;
     QuerySnapshot query = await _db
         .collection(cUsers)
-        .document(_userId)
+        .doc(_userId)
         .collection(cUserMessages)
         .orderBy(fCreatedDate, descending: true)
         .startAfterDocument(_lastVisible)
         .limit(limit)
-        .getDocuments();
+        .get();
     _isFetching = false;
     _appendMessageList(query, limit);
   }
@@ -73,14 +73,11 @@ class MessagesProvider with ChangeNotifier {
     WriteBatch batch = _db.batch();
 
     // Add document
-    var newDocRef = _db
-        .collection(cUsers)
-        .document(receiverUid)
-        .collection(cUserMessages)
-        .document();
-    batch.setData(newDocRef, data);
+    var newDocRef =
+        _db.collection(cUsers).doc(receiverUid).collection(cUserMessages).doc();
+    batch.set(newDocRef, data);
     // Increase message and unread message count by 1
-    batch.updateData(_db.collection(cUsers).document(receiverUid), {
+    batch.update(_db.collection(cUsers).doc(receiverUid), {
       fUserMessagesCount: FieldValue.increment(1),
       fUserUnreadMsgCount: FieldValue.increment(1)
     });
@@ -89,13 +86,12 @@ class MessagesProvider with ChangeNotifier {
   }
 
   void _appendMessageList(QuerySnapshot query, int limit) {
-    List<DocumentSnapshot> docs = query.documents;
+    List<DocumentSnapshot> docs = query.docs;
     docs.forEach((data) {
-      _items.add(_buildMessageByMap(data.documentID, data.data));
+      _items.add(_buildMessageByMap(data.id, data.data()));
     });
     if (docs.length < limit) _noMore = true;
-    if (docs.length > 0)
-      _lastVisible = query.documents[query.documents.length - 1];
+    if (docs.length > 0) _lastVisible = query.docs[query.docs.length - 1];
     notifyListeners();
   }
 

@@ -23,7 +23,7 @@ class CommentProvider with ChangeNotifier {
   bool _noMoreChild = false; // level 1 comment will have this field
   CommentProvider parentPointer; // level 2/3 comment will have this field
   bool _isFetching = false; // To avoid frequently request
-  final Firestore _db = Firestore.instance;
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   CommentProvider(
       {@required this.id,
@@ -52,13 +52,13 @@ class CommentProvider with ChangeNotifier {
     if (parent != null) return;
     QuerySnapshot query = await _db
         .collection(cArticles)
-        .document(articleId)
+        .doc(articleId)
         .collection(cArticleComments)
-        .document(id)
+        .doc(id)
         .collection(cArticleCommentReplies)
         .orderBy(fCreatedDate, descending: true)
         .limit(limit)
-        .getDocuments();
+        .get();
     children = [];
     _appendL2CommentList(query, userId, limit);
   }
@@ -70,14 +70,14 @@ class CommentProvider with ChangeNotifier {
     _isFetching = true;
     QuerySnapshot query = await _db
         .collection(cArticles)
-        .document(articleId)
+        .doc(articleId)
         .collection(cArticleComments)
-        .document(id)
+        .doc(id)
         .collection(cArticleCommentReplies)
         .orderBy(fCreatedDate, descending: true)
         .startAfterDocument(_lastVisibleChild)
         .limit(limit)
-        .getDocuments();
+        .get();
     _isFetching = false;
     _appendL2CommentList(query, userId, limit);
   }
@@ -93,34 +93,34 @@ class CommentProvider with ChangeNotifier {
       // Level 1
       WriteBatch batch = _db.batch();
       // Add a document
-      batch.setData(
+      batch.set(
           _db
               .collection(cArticles)
-              .document(articleId)
+              .doc(articleId)
               .collection(cArticleComments)
-              .document(id)
+              .doc(id)
               .collection(cArticleCommentLikes)
-              .document(userId),
+              .doc(userId),
           {});
       // Increase like count by 1
-      batch.updateData(
+      batch.update(
           _db
               .collection(cArticles)
-              .document(articleId)
+              .doc(articleId)
               .collection(cArticleComments)
-              .document(id),
+              .doc(id),
           {fCommentLikesCount: FieldValue.increment(1)});
       await batch.commit();
     } else {
       // Level 2
       await _db
           .collection(cArticles)
-          .document(articleId)
+          .doc(articleId)
           .collection(cArticleComments)
-          .document(parent)
+          .doc(parent)
           .collection(cArticleCommentReplies)
-          .document(id)
-          .updateData({
+          .doc(id)
+          .update({
         fCommentLikesCount: FieldValue.increment(1),
         fCommentReplyLikes: FieldValue.arrayUnion([userId])
       });
@@ -143,30 +143,30 @@ class CommentProvider with ChangeNotifier {
       // Remove a document
       batch.delete(_db
           .collection(cArticles)
-          .document(articleId)
+          .doc(articleId)
           .collection(cArticleComments)
-          .document(id)
+          .doc(id)
           .collection(cArticleCommentLikes)
-          .document(userId));
+          .doc(userId));
       // Decrease like count by 1
-      batch.updateData(
+      batch.update(
           _db
               .collection(cArticles)
-              .document(articleId)
+              .doc(articleId)
               .collection(cArticleComments)
-              .document(id),
+              .doc(id),
           {fCommentLikesCount: FieldValue.increment(-1)});
       await batch.commit();
     } else {
       // Level 2
       await _db
           .collection(cArticles)
-          .document(articleId)
+          .doc(articleId)
           .collection(cArticleComments)
-          .document(parent)
+          .doc(parent)
           .collection(cArticleCommentReplies)
-          .document(id)
-          .updateData({
+          .doc(id)
+          .update({
         fCommentLikesCount: FieldValue.increment(-1),
         fCommentReplyLikes: FieldValue.arrayRemove([userId])
       });
@@ -195,28 +195,28 @@ class CommentProvider with ChangeNotifier {
     // Add a document
     DocumentReference newDocRef = _db
         .collection(cArticles)
-        .document(articleId)
+        .doc(articleId)
         .collection(cArticleComments)
-        .document(comment[fCommentParent])
+        .doc(comment[fCommentParent])
         .collection(cArticleCommentReplies)
-        .document();
-    batch.setData(newDocRef, comment);
+        .doc();
+    batch.set(newDocRef, comment);
     // Increase parent's children count by 1
-    batch.updateData(
+    batch.update(
         _db
             .collection(cArticles)
-            .document(articleId)
+            .doc(articleId)
             .collection(cArticleComments)
-            .document(comment[fCommentParent]),
+            .doc(comment[fCommentParent]),
         {fCommentChildrenCount: FieldValue.increment(1)});
     await batch.commit();
 
     // Update local variables
     comment['like'] = false;
     if (isL3Comment) {
-      parentPointer._addL2CommentToList(newDocRef.documentID, comment);
+      parentPointer._addL2CommentToList(newDocRef.id, comment);
     } else {
-      _addL2CommentToList(newDocRef.documentID, comment);
+      _addL2CommentToList(newDocRef.id, comment);
     }
 
     // Send the creator/replyTo a message
@@ -231,23 +231,43 @@ class CommentProvider with ChangeNotifier {
   }
 
   void _appendL2CommentList(QuerySnapshot query, String userId, int limit) {
-    List<DocumentSnapshot> docs = query.documents;
+    List<DocumentSnapshot> docs = query.docs;
+    //docs[0].data().update(key, (value) => null)
     if (docs.length < limit) _noMoreChild = true;
     if (docs.length == 0) {
       notifyListeners();
       return;
     }
-    query.documents.forEach((data) {
+    query.docs.forEach((doc) {
       // Fetch if current user like
-      if (data[fCommentReplyLikes] == null) {
-        data.data['like'] = false;
+
+      var copyOfData = doc.data();
+
+      if (doc.data().containsKey(fCommentReplyLikes)) {
+        if (doc.data() != null) {
+          copyOfData.update('like', (value) => false, ifAbsent: () => false);
+          copyOfData.update('id', (value) => doc.id, ifAbsent: () => doc.id);
+        }
+
+        //doc.data().update('like', (value) => false, ifAbsent: () => false);
       } else {
-        data.data['like'] =
-            (List<String>.from(data[fCommentReplyLikes])).contains(userId);
+        if (doc.data() != null) {
+          copyOfData.update('like', (_) {
+            return (List<String>.from(doc.get(fCommentReplyLikes)))
+                .contains(userId);
+          }, ifAbsent: () => false);
+          copyOfData.update('id', (value) => doc.id, ifAbsent: () => doc.id);
+        }
+        // doc.data().update("like", (_) {
+        //   return (List<String>.from(doc.get(fCommentReplyLikes)))
+        //       .contains(userId);
+        // }, ifAbsent: () => false);
+        // data.data['like'] =
+        //     (List<String>.from(doc.[fCommentReplyLikes])).contains(userId);
       }
-      children.add(_buildL2CommentByMap(data.documentID, data.data));
+      children.add(_buildL2CommentByMap(doc.id, copyOfData));
     });
-    _lastVisibleChild = query.documents[query.documents.length - 1];
+    _lastVisibleChild = query.docs[query.docs.length - 1];
     notifyListeners();
   }
 

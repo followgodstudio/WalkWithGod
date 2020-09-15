@@ -5,11 +5,12 @@ import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:provider/provider.dart';
 import 'package:international_phone_input/international_phone_input.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import '../home_screen/home_screen.dart';
 import '../../providers/auth_provider.dart';
 import '../../utils/utils.dart';
 import '../../configurations/theme.dart';
 
-enum AuthFormType { signIn, signUp, reset, anonymous, convert, phone }
+enum AuthFormType { signIn, signUp, reset, anonymous, phone }
 
 class SignupScreen extends StatefulWidget {
   static const routeName = '/signup';
@@ -50,7 +51,10 @@ class _SignupScreenState extends State<SignupScreen> {
         authFormType = AuthFormType.signUp;
       });
     } else if (state == 'home') {
-      Navigator.of(context).pop();
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => HomeScreen()),
+      );
     } else {
       setState(() {
         authFormType = AuthFormType.signIn;
@@ -78,14 +82,18 @@ class _SignupScreenState extends State<SignupScreen> {
         final auth = Provider.of<AuthProvider>(context, listen: false);
         switch (authFormType) {
           case AuthFormType.signIn:
-            await auth.authenticate(
-                _email, _password, AuthMode.signInWithEmail);
-            //Navigator.of(context).pushReplacementNamed('/home');
+            await auth.signInWithEmailAndPassword(_email, _password);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => HomeScreen()),
+            );
             break;
           case AuthFormType.signUp:
-            await auth.authenticate(
-                _email, _password, AuthMode.createUserWithEmail);
-            //Navigator.of(context).pushReplacementNamed('/home');
+            await auth.createUserWithEmailAndPassword(_email, _password, _name);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => HomeScreen()),
+            );
             break;
           case AuthFormType.reset:
             await auth.sendPasswordResetEmail(_email);
@@ -96,11 +104,10 @@ class _SignupScreenState extends State<SignupScreen> {
             break;
           case AuthFormType.anonymous:
             await auth.singInAnonymously();
-            //Navigator.of(context).pushReplacementNamed('/home');
-            break;
-          case AuthFormType.convert:
-            await auth.convertUserWithEmail(_email, _password, _name);
-            Navigator.of(context).pop();
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => HomeScreen()),
+            );
             break;
           case AuthFormType.phone:
             var result = await auth.createUserWithPhone(_phone, context);
@@ -133,7 +140,7 @@ class _SignupScreenState extends State<SignupScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 SpinKitDoubleBounce(
-                  color: Colors.white,
+                  color: Colors.black,
                 ),
                 Text(
                   "Loading",
@@ -217,13 +224,13 @@ class _SignupScreenState extends State<SignupScreen> {
   AutoSizeText buildHeaderText() {
     String _headerText;
     if (authFormType == AuthFormType.signIn) {
-      _headerText = "Sign In";
+      _headerText = "电子邮箱登陆";
     } else if (authFormType == AuthFormType.reset) {
-      _headerText = "Reset Password";
+      _headerText = "找回密码";
     } else if (authFormType == AuthFormType.phone) {
-      _headerText = "Phone Sign In";
+      _headerText = "手机号码登录";
     } else {
-      _headerText = "Create New Account";
+      _headerText = "注册新邮箱";
     }
     return AutoSizeText(
       _headerText,
@@ -231,7 +238,7 @@ class _SignupScreenState extends State<SignupScreen> {
       textAlign: TextAlign.center,
       style: TextStyle(
         fontSize: 35,
-        color: Colors.white,
+        color: Colors.black,
       ),
     );
   }
@@ -246,31 +253,14 @@ class _SignupScreenState extends State<SignupScreen> {
   List<Widget> buildInputs() {
     List<Widget> textFields = [];
 
-    // if were in the sign up state add name
-    if ([AuthFormType.signUp, AuthFormType.convert].contains(authFormType)) {
-      textFields.add(
-        TextFormField(
-          validator: NameValidator.validate,
-          style: TextStyle(fontSize: 22.0),
-          decoration: buildSignUpInputDecoration("Name"),
-          onSaved: (value) => _name = value,
-        ),
-      );
-      textFields.add(SizedBox(height: 20));
-    }
-
     // add email & password
-    if ([
-      AuthFormType.signUp,
-      AuthFormType.convert,
-      AuthFormType.reset,
-      AuthFormType.signIn
-    ].contains(authFormType)) {
+    if ([AuthFormType.signUp, AuthFormType.reset, AuthFormType.signIn]
+        .contains(authFormType)) {
       textFields.add(
         TextFormField(
           validator: EmailValidator.validate,
-          style: TextStyle(fontSize: 22.0),
-          decoration: buildSignUpInputDecoration("Email"),
+          style: TextStyle(fontSize: 16.0),
+          decoration: buildSignUpInputDecoration("请输入邮箱地址"),
           onSaved: (value) => _email = value,
         ),
       );
@@ -282,8 +272,8 @@ class _SignupScreenState extends State<SignupScreen> {
       textFields.add(
         TextFormField(
           validator: PasswordValidator.validate,
-          style: TextStyle(fontSize: 22.0),
-          decoration: buildSignUpInputDecoration("Password"),
+          style: TextStyle(fontSize: 16.0),
+          decoration: buildSignUpInputDecoration("请输入密码"),
           obscureText: true,
           onSaved: (value) => _password = value,
         ),
@@ -294,7 +284,7 @@ class _SignupScreenState extends State<SignupScreen> {
     if (authFormType == AuthFormType.phone) {
       textFields.add(
         InternationalPhoneInput(
-            decoration: buildSignUpInputDecoration("Enter Phone Number"),
+            decoration: buildSignUpInputDecoration("请输入手机号码"),
             onPhoneNumberChange: onPhoneNumberChange,
             initialPhoneNumber: _phone,
             initialSelection: 'US',
@@ -325,28 +315,24 @@ class _SignupScreenState extends State<SignupScreen> {
     bool _showSocial = true;
 
     if (authFormType == AuthFormType.signIn) {
-      _switchButtonText = "Create New Account";
+      _switchButtonText = "注册新邮箱";
       _newFormState = "signUp";
-      _submitButtonText = "Sign In";
+      _submitButtonText = "登陆";
       _showForgotPassword = true;
     } else if (authFormType == AuthFormType.reset) {
-      _switchButtonText = "Return to Sign In";
+      _switchButtonText = "使用邮箱登陆";
       _newFormState = "signIn";
-      _submitButtonText = "Submit";
+      _submitButtonText = "发送链接";
       _showSocial = false;
-    } else if (authFormType == AuthFormType.convert) {
-      _switchButtonText = "Cancel";
-      _newFormState = "home";
-      _submitButtonText = "Sign Up";
     } else if (authFormType == AuthFormType.phone) {
-      _switchButtonText = "Cancel";
+      _switchButtonText = "使用邮箱登陆";
       _newFormState = "signIn";
-      _submitButtonText = "Continue";
+      _submitButtonText = "获取验证码";
       _showSocial = false;
     } else {
-      _switchButtonText = "Have an Account? Sign In";
+      _switchButtonText = "使用邮箱登陆";
       _newFormState = "signIn";
-      _submitButtonText = "Sign Up";
+      _submitButtonText = "确认信息并注册";
     }
 
     return [
@@ -361,7 +347,10 @@ class _SignupScreenState extends State<SignupScreen> {
             padding: const EdgeInsets.all(8.0),
             child: Text(
               _submitButtonText,
-              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300),
+              style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.w300,
+                  color: Colors.black),
             ),
           ),
           onPressed: submit,
@@ -385,7 +374,7 @@ class _SignupScreenState extends State<SignupScreen> {
     return Visibility(
       child: FlatButton(
         child: Text(
-          "Forgot Password?",
+          "忘记密码?",
           style: TextStyle(color: Colors.white),
         ),
         onPressed: () {
@@ -413,13 +402,12 @@ class _SignupScreenState extends State<SignupScreen> {
           GoogleSignInButton(
             onPressed: () async {
               try {
-                if (authFormType == AuthFormType.convert) {
-                  await _auth.convertWithGoogle();
-                  Navigator.of(context).pop();
-                } else {
-                  await _auth.signInWithGoogle();
-                  Navigator.of(context).pushReplacementNamed('/home');
-                }
+                await _auth.signInWithGoogle();
+                // Navigator.of(context).pushReplacementNamed('/home');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomeScreen()),
+                );
               } catch (e) {
                 setState(() {
                   _warning = e.message;
@@ -436,8 +424,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 Padding(
                   padding: const EdgeInsets.only(
                       left: 14.0, top: 10.0, bottom: 10.0),
-                  child: Text("Sign in with Phone",
-                      style: TextStyle(fontSize: 18)),
+                  child: Text("使用手机号码登陆", style: TextStyle(fontSize: 18)),
                 )
               ],
             ),
@@ -454,11 +441,16 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   Widget buildAppleSignIn(_auth) {
-    if (authFormType != AuthFormType.convert && _showAppleSignIn == true) {
+    final _auth = Provider.of<AuthProvider>(context, listen: false);
+    if (_showAppleSignIn == true) {
       return apple.AppleSignInButton(
         onPressed: () async {
           await _auth.signInWithApple();
-          Navigator.of(context).pushReplacementNamed('/home');
+          //Navigator.of(context).pushReplacementNamed('/home');
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => HomeScreen()),
+          );
         },
         style: apple.ButtonStyle.black,
       );

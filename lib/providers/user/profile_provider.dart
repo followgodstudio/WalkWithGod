@@ -12,7 +12,7 @@ import '../article/article_provider.dart';
 import '../article/articles_provider.dart';
 
 class ProfileProvider with ChangeNotifier {
-  final Firestore _db = Firestore.instance;
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
   // Basic info
   String uid;
@@ -39,58 +39,58 @@ class ProfileProvider with ChangeNotifier {
   Stream<Map<String, dynamic>> fetchProfileStream() {
     if (uid == null || uid == "") return null;
     Stream<DocumentSnapshot> stream =
-        _db.collection(cUsers).document(uid).snapshots();
+        _db.collection(cUsers).doc(uid).snapshots();
     // watch message count stream
     return stream.map((DocumentSnapshot doc) {
       return {
-        fUserUnreadMsgCount: doc.data[fUserUnreadMsgCount] == null
+        fUserUnreadMsgCount: doc.data().containsKey(fUserUnreadMsgCount)
             ? 0
-            : doc.data[fUserUnreadMsgCount],
-        fUserMessagesCount: doc.data[fUserMessagesCount] == null
+            : doc.get(fUserUnreadMsgCount),
+        fUserMessagesCount: doc.get(fUserMessagesCount) == null
             ? 0
-            : doc.data[fUserMessagesCount],
-        fUserFollowingsCount: doc.data[fUserFollowingsCount] == null
+            : doc.get(fUserMessagesCount),
+        fUserFollowingsCount: doc.get(fUserFollowingsCount) == null
             ? 0
-            : doc.data[fUserFollowingsCount],
-        fUserFollowersCount: doc.data[fUserFollowersCount] == null
+            : doc.get(fUserFollowingsCount),
+        fUserFollowersCount: doc.get(fUserFollowersCount) == null
             ? 0
-            : doc.data[fUserFollowersCount]
+            : doc.get(fUserFollowersCount)
       };
     });
   }
 
   Future<void> fetchBasicProfile() async {
     if (uid == null || uid == "") return;
-    DocumentSnapshot doc = await _db.collection(cUsers).document(uid).get();
+    DocumentSnapshot doc = await _db.collection(cUsers).doc(uid).get();
     if (!doc.exists) return;
-    name = doc.data[fUserName];
-    if (imageUrl == null) imageUrl = doc.data[fUserImageUrl];
-    createdDate = (doc.data[fCreatedDate] as Timestamp).toDate();
-    readDuration = (doc.data[fUserReadDuration] == null)
+    name = doc.get(fUserName);
+    if (imageUrl == null) imageUrl = doc.get(fUserImageUrl);
+    createdDate = (doc.get(fCreatedDate) as Timestamp).toDate();
+    readDuration = (doc.get(fUserReadDuration) == null)
         ? 0
-        : doc.data[fUserReadDuration].floor();
+        : doc.get(fUserReadDuration).floor();
     readsCount =
-        (doc.data[fUserReadsCount] == null) ? 0 : doc.data[fUserReadsCount];
-    followersCount = (doc.data[fUserFollowersCount] == null)
+        (doc.get(fUserReadsCount) == null) ? 0 : doc.get(fUserReadsCount);
+    followersCount = (doc.get(fUserFollowersCount) == null)
         ? 0
-        : doc.data[fUserFollowersCount];
-    savedArticlesCount = (doc.data[fUserSavedArticlesCount] == null)
+        : doc.get(fUserFollowersCount);
+    savedArticlesCount = (doc.get(fUserSavedArticlesCount) == null)
         ? 0
-        : doc.data[fUserSavedArticlesCount];
+        : doc.get(fUserSavedArticlesCount);
   }
 
   Future<void> fetchRecentRead() async {
     if (readsCount == 0) return;
     QuerySnapshot query = await _db
         .collection(cUsers)
-        .document(uid)
+        .doc(uid)
         .collection(cUserReadHistory)
         .where(fUpdatedDate,
             isGreaterThanOrEqualTo: DateTime.now().subtract(Duration(days: 7)))
         .orderBy(fUpdatedDate, descending: true)
-        .getDocuments();
-    query.documents.forEach((data) {
-      _recentReadList.add(data.documentID);
+        .get();
+    query.docs.forEach((data) {
+      _recentReadList.add(data.id);
     });
     _lastVisibleRecentRead = 0;
     await _appendRecentReadList();
@@ -110,7 +110,7 @@ class ProfileProvider with ChangeNotifier {
 
   Future<void> initProfile(String userId) async {
     uid = userId;
-    await _db.collection(cUsers).document(uid).setData({});
+    await _db.collection(cUsers).doc(uid).set({});
     String newName = "弟兄姊妹"; // TODO: Random name
     await updateProfile(newName: newName, newCreatedDate: Timestamp.now());
   }
@@ -146,7 +146,7 @@ class ProfileProvider with ChangeNotifier {
       data[fCreatedDate] = newCreatedDate;
     }
     if (data.isNotEmpty) {
-      await _db.collection(cUsers).document(uid).updateData(data);
+      await _db.collection(cUsers).doc(uid).update(data);
       notifyListeners();
     }
   }
@@ -158,28 +158,30 @@ class ProfileProvider with ChangeNotifier {
     DocumentReference user = _db.collection(cUsers).document(uid);
     DocumentReference history = _db
         .collection(cUsers)
-        .document(uid)
+        .doc(uid)
         .collection(cUserReadHistory)
-        .document(articleId);
-    DocumentSnapshot doc = await history.get();
-
-    WriteBatch batch = _db.batch();
-    if (doc.exists) {
-      // Update read history timestamp
-      batch.updateData(history, {fUpdatedDate: Timestamp.now()});
-    } else {
-      // Create a new document in read history
-      batch.setData(history, {fUpdatedDate: Timestamp.now()});
-      // Increase count
-      batch.updateData(user, {fUserReadsCount: FieldValue.increment(1)});
-    }
-    await batch.commit();
+        .doc(articleId);
+    _isUpdatingRecentRead = true;
+    await _db.runTransaction((transaction) {
+      return transaction.get(history).then((DocumentSnapshot doc) {
+        if (doc.exists) {
+          // Update read history timestamp
+          history.update({fUpdatedDate: Timestamp.now()});
+        } else {
+          // Create a new document in read history
+          history.set({fUpdatedDate: Timestamp.now()});
+          // Increase count
+          DocumentReference user = _db.collection(cUsers).doc(uid);
+          user.update({fUserReadsCount: FieldValue.increment(1)});
+        }
+      });
+    });
     _isUpdatingRecentRead = false;
   }
 
   Future<void> updateReadDuration(DateTime start) async {
     int timeDiffInSecond = DateTime.now().difference(start).inSeconds;
-    await _db.collection(cUsers).document(uid).updateData(
+    await _db.collection(cUsers).doc(uid).update(
         {fUserReadDuration: FieldValue.increment(timeDiffInSecond / 3600)});
   }
 
