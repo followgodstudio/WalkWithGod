@@ -23,27 +23,46 @@ class Comments extends StatefulWidget {
 }
 
 class _CommentsState extends State<Comments> {
+  ProfileProvider profile;
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    profile = Provider.of<ProfileProvider>(context, listen: false);
+    if (widget.commentId != null) {
       // If this page comes from the message list, pop up comment detail. call once
-      if (widget.commentId != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        CommentProvider commentProvider =
+            await Provider.of<CommentsProvider>(context, listen: false)
+                .fetchL1CommentByCid(
+                    widget.articleId, widget.commentId, profile.uid);
         showMaterialModalBottomSheet(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10.0),
             ),
             context: context,
             builder: (context, scrollController) => CommentDetail(
-                articleId: widget.articleId, commentId: widget.commentId));
-      }
-    });
+                articleId: widget.articleId, commentProvider: commentProvider));
+      });
+    }
+  }
+
+  Future<void> goToCommentDetail(String uid, CommentProvider commentProvider,
+      [afterSubmit = false]) async {
+    await commentProvider.fetchL2ChildrenCommentList(uid);
+    showMaterialModalBottomSheet(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        context: context,
+        builder: (context, _) => CommentDetail(
+              articleId: widget.articleId,
+              commentProvider: commentProvider,
+              afterSubmit: afterSubmit,
+            ));
   }
 
   @override
   Widget build(BuildContext context) {
-    ProfileProvider profile =
-        Provider.of<ProfileProvider>(context, listen: false);
     return FutureBuilder(
         future: Provider.of<CommentsProvider>(context, listen: false)
             .fetchL1CommentListByAid(widget.articleId, profile.uid),
@@ -73,17 +92,15 @@ class _CommentsState extends State<Comments> {
               list.add(ChangeNotifierProvider.value(
                 value: comments[i],
                 child: FlatButton(
-                    onPressed: () {
-                      showMaterialModalBottomSheet(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          context: context,
-                          builder: (context, scrollController) => CommentDetail(
-                              articleId: widget.articleId,
-                              commentId: comments[i].id));
+                    onPressed: () async {
+                      await goToCommentDetail(profile.uid, comments[i]);
                     },
-                    child: Comment()),
+                    child: Comment(
+                      onSubmitComment: () async {
+                        await goToCommentDetail(profile.uid, comments[i], true);
+                      },
+                      isInCommentDetail: false,
+                    )),
               ));
             }
             list.add(Padding(

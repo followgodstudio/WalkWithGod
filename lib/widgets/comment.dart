@@ -14,8 +14,10 @@ import 'comment_succeeded_dialog.dart';
 import 'profile_picture.dart';
 
 class Comment extends StatelessWidget {
-  final Function scrollToTop;
-  Comment({Key key, this.scrollToTop}) : super(key: key);
+  final Function onSubmitComment;
+  final bool isInCommentDetail;
+  Comment({Key key, this.onSubmitComment, this.isInCommentDetail = true})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     ProfileProvider profile =
@@ -148,16 +150,19 @@ class Comment extends StatelessWidget {
                                             profile.name,
                                             profile.imageUrl,
                                             isLevel2Comment);
-                                        if (scrollToTop != null) scrollToTop();
-                                        showDialog(
-                                            context: context,
-                                            builder: (context) {
-                                              Future.delayed(
-                                                  Duration(seconds: 1), () {
-                                                Navigator.of(context).pop(true);
+                                        if (onSubmitComment != null)
+                                          await onSubmitComment();
+                                        if (isInCommentDetail)
+                                          showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                Future.delayed(
+                                                    Duration(seconds: 1), () {
+                                                  Navigator.of(context)
+                                                      .pop(true);
+                                                });
+                                                return CommentSucceededDialog();
                                               });
-                                              return CommentSucceededDialog();
-                                            });
                                       },
                                     ));
                           },
