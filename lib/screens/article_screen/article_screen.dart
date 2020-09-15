@@ -16,8 +16,11 @@ class ArticleScreen extends StatelessWidget {
   bool _updatedRecentUsed = false;
   final dataKey = new GlobalKey();
   void scrollToComment() {
-    Scrollable.ensureVisible(dataKey.currentContext,
-        duration: Duration(seconds: 1));
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (dataKey.currentContext != null)
+        Scrollable.ensureVisible(dataKey.currentContext,
+            duration: Duration(seconds: 1));
+    });
   }
 
   @override
@@ -76,7 +79,7 @@ class ArticleScreen extends StatelessWidget {
               ? BottomBar(_articleId, scrollToComment)
               : Container(
                   color: Colors.white,
-                  width: MediaQuery.of(context).size.width,
+                  // width: MediaQuery.of(context).size.width,
                 ),
         ),
       ),

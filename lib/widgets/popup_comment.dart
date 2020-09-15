@@ -49,8 +49,8 @@ class PopUpComment extends StatelessWidget {
                     ),
                     onPressed: () {
                       if (_commentController.text != "") {
-                        onPressFunc(_commentController.text);
                         Navigator.pop(context);
+                        onPressFunc(_commentController.text);
                       }
                     },
                   ),
