@@ -49,7 +49,6 @@ class ArticlesProvider with ChangeNotifier {
 
   Future<void> fetchArticlesByDate(
       [DateTime dateTime, int n = 10, bool isContentNeeded = false]) async {
-    print("bp2");
     if (dateTime == null) dateTime = DateTime.now();
 
     QuerySnapshot query = await _fdb

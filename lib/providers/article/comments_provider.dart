@@ -129,9 +129,9 @@ class CommentsProvider with ChangeNotifier {
           .doc(userId)
           .get();
 
-      docs[i]
-          .data()
-          .update("like", (value) => docRef.exists, ifAbsent: () => false);
+      // docs[i]
+      //     .data()
+      //     .update("like", (value) => docRef.exists, ifAbsent: () => false);
 
       var copyOfData = docs[i].data();
       copyOfData.update("like", (value) => docRef.exists,

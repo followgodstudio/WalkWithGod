@@ -98,9 +98,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print("bp");
     return Scaffold(
-        resizeToAvoidBottomInset: false,
+        //resizeToAvoidBottomInset: false,
         body: SafeArea(
             child: FutureBuilder(
                 future: Future.wait([

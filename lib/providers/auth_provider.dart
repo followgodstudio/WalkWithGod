@@ -107,7 +107,7 @@ class AuthProvider with ChangeNotifier {
         final AppleIdCredential _appleAuth = result.credential;
         final OAuthProvider oAuthProvider = new OAuthProvider("apple.com");
 
-        final AuthCredential credential = oAuthProvider.getCredential(
+        final AuthCredential credential = oAuthProvider.credential(
           idToken: String.fromCharCodes(_appleAuth.identityToken),
           accessToken: String.fromCharCodes(_appleAuth.authorizationCode),
         );

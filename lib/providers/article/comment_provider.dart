@@ -240,21 +240,32 @@ class CommentProvider with ChangeNotifier {
     }
     query.docs.forEach((doc) {
       // Fetch if current user like
-      if (doc.data().containsKey(fCommentReplyLikes)) {
-        // doc.data().update("like", (_) {
-        //   return false;
-        // });
 
-        doc.data().update('like', (value) => false, ifAbsent: () => false);
+      var copyOfData = doc.data();
+
+      if (doc.data().containsKey(fCommentReplyLikes)) {
+        if (doc.data() != null) {
+          copyOfData.update('like', (value) => false, ifAbsent: () => false);
+          copyOfData.update('id', (value) => doc.id, ifAbsent: () => doc.id);
+        }
+
+        //doc.data().update('like', (value) => false, ifAbsent: () => false);
       } else {
-        doc.data().update("like", (_) {
-          return (List<String>.from(doc.get(fCommentReplyLikes)))
-              .contains(userId);
-        }, ifAbsent: () => false);
+        if (doc.data() != null) {
+          copyOfData.update('like', (_) {
+            return (List<String>.from(doc.get(fCommentReplyLikes)))
+                .contains(userId);
+          }, ifAbsent: () => false);
+          copyOfData.update('id', (value) => doc.id, ifAbsent: () => doc.id);
+        }
+        // doc.data().update("like", (_) {
+        //   return (List<String>.from(doc.get(fCommentReplyLikes)))
+        //       .contains(userId);
+        // }, ifAbsent: () => false);
         // data.data['like'] =
         //     (List<String>.from(doc.[fCommentReplyLikes])).contains(userId);
       }
-      children.add(_buildL2CommentByMap(doc.id, doc.data()));
+      children.add(_buildL2CommentByMap(doc.id, copyOfData));
     });
     _lastVisibleChild = query.docs[query.docs.length - 1];
     notifyListeners();

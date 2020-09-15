@@ -64,7 +64,7 @@ class PopUpComment extends StatelessWidget {
               child: TextField(
                 // showCursor: true,
                 // readOnly: true,
-                autofocus: true,
+                //autofocus: true,
                 maxLines: 11,
                 controller: _commentController,
                 decoration: InputDecoration.collapsed(hintText: '请写下您的留言'),
