@@ -154,7 +154,7 @@ class _SignupScreenState extends State<SignupScreen> {
         body: SingleChildScrollView(
           child: Container(
             // color: Theme.of(context).canvasColor,
-            color: Colors.blue,
+            color: Theme.of(context).canvasColor,
             height: _height,
             width: _width,
             child: SafeArea(
@@ -166,7 +166,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   buildHeaderText(),
                   SizedBox(height: _height * 0.05),
                   Padding(
-                    padding: const EdgeInsets.all(00.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 50.0),
                     child: Form(
                       key: formKey,
                       child: Column(
@@ -236,10 +236,7 @@ class _SignupScreenState extends State<SignupScreen> {
       _headerText,
       maxLines: 1,
       textAlign: TextAlign.center,
-      style: TextStyle(
-        fontSize: 35,
-        color: Colors.black,
-      ),
+      style: Theme.of(context).textTheme.headline3,
     );
   }
 
@@ -259,7 +256,7 @@ class _SignupScreenState extends State<SignupScreen> {
       textFields.add(
         TextFormField(
           validator: EmailValidator.validate,
-          style: TextStyle(fontSize: 16.0),
+          style: Theme.of(context).textTheme.bodyText1,
           decoration: buildSignUpInputDecoration("请输入邮箱地址"),
           onSaved: (value) => _email = value,
         ),
@@ -272,9 +269,10 @@ class _SignupScreenState extends State<SignupScreen> {
       textFields.add(
         TextFormField(
           validator: PasswordValidator.validate,
-          style: TextStyle(fontSize: 16.0),
+          style: Theme.of(context).textTheme.bodyText1,
           decoration: buildSignUpInputDecoration("请输入密码"),
           obscureText: true,
+          keyboardType: TextInputType.emailAddress,
           onSaved: (value) => _password = value,
         ),
       );
@@ -304,8 +302,11 @@ class _SignupScreenState extends State<SignupScreen> {
       focusColor: Colors.white,
       enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.white, width: 0.0)),
-      contentPadding:
-          const EdgeInsets.only(left: 14.0, bottom: 10.0, top: 10.0),
+      contentPadding: const EdgeInsets.only(
+        left: 14.0,
+        bottom: 10.0,
+        top: 10.0,
+      ),
     );
   }
 
@@ -338,29 +339,42 @@ class _SignupScreenState extends State<SignupScreen> {
     return [
       Container(
         width: MediaQuery.of(context).size.width * 0.7,
-        child: RaisedButton(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-          color: Colors.white,
-          textColor: Theme.of(context).canvasColor,
+        child: FlatButton(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
               _submitButtonText,
               style: TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.w300,
-                  color: Colors.black),
+                  fontSize: 14.0,
+                  fontFamily: 'LantingXianHei',
+                  color: Colors.white),
             ),
           ),
           onPressed: submit,
+          color: Colors.lightBlue,
+          textColor: Theme.of(context).primaryTextTheme.button.color,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
         ),
       ),
       showForgotPassword(_showForgotPassword),
+      SizedBox(
+        height: 10,
+      ),
       FlatButton(
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30),
+        ),
+        color: Colors.grey[100],
+        textColor: Theme.of(context).accentColor,
         child: Text(
           _switchButtonText,
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(
+            fontSize: 14.0,
+            fontFamily: 'LantingXianHei',
+          ),
         ),
         onPressed: () {
           switchFormState(_newFormState);
@@ -372,16 +386,34 @@ class _SignupScreenState extends State<SignupScreen> {
 
   Widget showForgotPassword(bool visible) {
     return Visibility(
-      child: FlatButton(
-        child: Text(
-          "忘记密码?",
-          style: TextStyle(color: Colors.white),
-        ),
-        onPressed: () {
-          setState(() {
-            authFormType = AuthFormType.reset;
-          });
-        },
+      child: Column(
+        children: [
+          SizedBox(height: 15.0),
+          FlatButton(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 5.0),
+              child: Text(
+                "忘记密码?",
+                style: TextStyle(
+                  fontSize: 12.0,
+                  fontFamily: 'LantingXianHei',
+                ),
+              ),
+            ),
+            onPressed: () {
+              setState(() {
+                authFormType = AuthFormType.reset;
+              });
+            },
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            textColor: Colors.red,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
+            ),
+            color: Colors.grey[100],
+          ),
+          SizedBox(height: 15.0),
+        ],
       ),
       visible: visible,
     );
@@ -458,152 +490,4 @@ class _SignupScreenState extends State<SignupScreen> {
       return Container();
     }
   }
-
-// class SignupScreen extends StatelessWidget {
-//   static const routeName = '/signup';
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         // title: Text('Login'),
-//         elevation: 0,
-//         leading: IconButton(
-//           icon: Icon(Icons.arrow_back_ios),
-//           color: Theme.of(context).textTheme.buttonColor2,
-//           onPressed: () {
-//             Navigator.of(context).pop();
-//           },
-//         ),
-//       ),
-//       body: LayoutBuilder(
-//         builder: (BuildContext context, BoxConstraints viewportConstraints) {
-//           return Container(
-//             padding: const EdgeInsets.symmetric(
-//               horizontal: 30,
-//             ),
-//             color: Theme.of(context).primaryColor,
-//             width: double.infinity,
-//             child: SingleChildScrollView(
-//               child: ConstrainedBox(
-//                 constraints: BoxConstraints(
-//                   minHeight: viewportConstraints.maxHeight,
-//                 ),
-//                 child: Column(
-//                   mainAxisAlignment: MainAxisAlignment.center,
-//                   crossAxisAlignment: CrossAxisAlignment.stretch,
-//                   children: <Widget>[
-//                     Image.asset(
-//                       'assets/images/logo.png',
-//                       height: 130,
-//                     ),
-//                     SizedBox(
-//                       height: 20,
-//                     ),
-//                     TextField(
-//                       style: TextStyle(fontSize: 18, color: Colors.black54),
-//                       decoration: InputDecoration(
-//                         filled: true,
-//                         fillColor: Colors.white,
-//                         hintText: 'Email Address',
-//                         contentPadding: const EdgeInsets.all(15),
-//                         focusedBorder: OutlineInputBorder(
-//                           borderSide: BorderSide(color: Colors.white),
-//                           borderRadius: BorderRadius.circular(5),
-//                         ),
-//                         enabledBorder: UnderlineInputBorder(
-//                           borderSide: BorderSide(color: Colors.white),
-//                           borderRadius: BorderRadius.circular(5),
-//                         ),
-//                       ),
-//                     ),
-//                     SizedBox(
-//                       height: 20,
-//                     ),
-//                     TextField(
-//                       style: TextStyle(fontSize: 18, color: Colors.black54),
-//                       decoration: InputDecoration(
-//                         filled: true,
-//                         fillColor: Colors.white,
-//                         hintText: 'Username',
-//                         contentPadding: const EdgeInsets.all(15),
-//                         focusedBorder: OutlineInputBorder(
-//                           borderSide: BorderSide(color: Colors.white),
-//                           borderRadius: BorderRadius.circular(5),
-//                         ),
-//                         enabledBorder: UnderlineInputBorder(
-//                           borderSide: BorderSide(color: Colors.white),
-//                           borderRadius: BorderRadius.circular(5),
-//                         ),
-//                       ),
-//                     ),
-//                     SizedBox(
-//                       height: 20,
-//                     ),
-//                     TextField(
-//                       obscureText: true,
-//                       style: TextStyle(fontSize: 18, color: Colors.black54),
-//                       decoration: InputDecoration(
-//                         filled: true,
-//                         fillColor: Colors.white,
-//                         hintText: 'Password',
-//                         contentPadding: const EdgeInsets.all(15),
-//                         focusedBorder: OutlineInputBorder(
-//                           borderSide: BorderSide(color: Colors.white),
-//                           borderRadius: BorderRadius.circular(5),
-//                         ),
-//                         enabledBorder: UnderlineInputBorder(
-//                           borderSide: BorderSide(color: Colors.white),
-//                           borderRadius: BorderRadius.circular(5),
-//                         ),
-//                       ),
-//                     ),
-//                     SizedBox(
-//                       height: 20,
-//                     ),
-//                     TextField(
-//                       obscureText: true,
-//                       style: TextStyle(fontSize: 18, color: Colors.black54),
-//                       decoration: InputDecoration(
-//                         filled: true,
-//                         fillColor: Colors.white,
-//                         hintText: 'Confirm Password',
-//                         contentPadding: const EdgeInsets.all(15),
-//                         focusedBorder: OutlineInputBorder(
-//                           borderSide: BorderSide(color: Colors.white),
-//                           borderRadius: BorderRadius.circular(5),
-//                         ),
-//                         enabledBorder: UnderlineInputBorder(
-//                           borderSide: BorderSide(color: Colors.white),
-//                           borderRadius: BorderRadius.circular(5),
-//                         ),
-//                       ),
-//                     ),
-//                     SizedBox(
-//                       height: 20,
-//                     ),
-//                     FlatButton(
-//                       child: Text(
-//                         'Signup',
-//                         style: TextStyle(
-//                           fontSize: 20,
-//                         ),
-//                       ),
-//                       shape: OutlineInputBorder(
-//                         borderSide: BorderSide(color: Colors.white, width: 2),
-//                         borderRadius: BorderRadius.circular(5),
-//                       ),
-//                       padding: const EdgeInsets.all(15),
-//                       textColor: Colors.white,
-//                       onPressed: () {},
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//             ),
-//           );
-//         },
-//       ),
-//     );
-//   }
-// }
 }

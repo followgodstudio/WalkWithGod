@@ -155,7 +155,7 @@ class ProfileProvider with ChangeNotifier {
     if (_isUpdatingRecentRead) return;
     _isUpdatingRecentRead = true;
 
-    DocumentReference user = _db.collection(cUsers).document(uid);
+    DocumentReference user = _db.collection(cUsers).doc(uid);
     DocumentReference history = _db
         .collection(cUsers)
         .doc(uid)

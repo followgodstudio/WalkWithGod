@@ -401,6 +401,8 @@ PODS:
   - TOCropViewController (2.5.4)
   - url_launcher (0.0.1):
     - Flutter
+  - wakelock (0.0.1):
+    - Flutter
 
 DEPENDENCIES:
   - apple_sign_in (from `.symlinks/plugins/apple_sign_in/ios`)
@@ -416,6 +418,7 @@ DEPENDENCIES:
   - image_picker (from `.symlinks/plugins/image_picker/ios`)
   - libphonenumber (from `.symlinks/plugins/libphonenumber/ios`)
   - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
+  - wakelock (from `.symlinks/plugins/wakelock/ios`)
 
 SPEC REPOS:
   trunk:
@@ -473,6 +476,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/libphonenumber/ios"
   url_launcher:
     :path: ".symlinks/plugins/url_launcher/ios"
+  wakelock:
+    :path: ".symlinks/plugins/wakelock/ios"
 
 SPEC CHECKSUMS:
   abseil: 6c8eb7892aefa08d929b39f9bb108e5367e3228f
@@ -514,6 +519,7 @@ SPEC CHECKSUMS:
   PromisesObjC: b14b1c6b68e306650688599de8a45e49fae81151
   TOCropViewController: 2a1ae1242600b1f2d996fd91a5268b2309a33b5c
   url_launcher: 6fef411d543ceb26efce54b05a0a40bfd74cbbef
+  wakelock: 0d4a70faf8950410735e3f61fb15d517c8a6efc4
 
 PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
 
