@@ -63,13 +63,15 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: LifeCycleManager(
-        child: Consumer<AuthProvider>(
-          builder: (ctx, auth, _) => MaterialApp(
-            title: 'Walk With God',
-            debugShowCheckedModeBanner: false,
-            theme: dayTheme,
-            home: StreamBuilder<String>(
-                stream: auth.onAuthStateChanged,
+        child: MaterialApp(
+          title: 'Walk With God',
+          debugShowCheckedModeBanner: false,
+          theme: dayTheme,
+          home: Builder(builder: (BuildContext context) {
+            BuildContext rootContext = context;
+            return StreamBuilder<String>(
+                stream: Provider.of<AuthProvider>(rootContext, listen: false)
+                    .onAuthStateChanged,
                 builder:
                     (BuildContext context, AsyncSnapshot<String> snapshot) {
                   if (snapshot.connectionState == ConnectionState.active) {
@@ -79,27 +81,27 @@ class MyApp extends StatelessWidget {
                         : SignupScreen(authFormType: AuthFormType.signIn);
                   }
                   return LoadingScreen();
-                }),
-            routes: {
-              //LoginScreengi.routeName: (ctx) => LoginScreen(),
-              //SignupScreen.routeName: (ctx) => SignupScreen(),
-              PersonalManagementScreen.routeName: (ctx) =>
-                  PersonalManagementScreen(),
-              SettingScreen.routeName: (ctx) => SettingScreen(),
-              MessagesListScreen.routeName: (ctx) => MessagesListScreen(),
-              FriendsListScreen.routeName: (ctx) => FriendsListScreen(),
-              EditProfileScreen.routeName: (ctx) => EditProfileScreen(),
-              EditPictureScreen.routeName: (ctx) => EditPictureScreen(),
-              NetworkScreen.routeName: (ctx) => NetworkScreen(),
-              SavedArticlesScreen.routeName: (ctx) => SavedArticlesScreen(),
-              EmailAuthScreen.routeName: (ctx) => EmailAuthScreen(),
-              LoginScreen.routeName: (ctx) => LoginScreen(),
-              HomeScreen.routeName: (ctx) => HomeScreen(),
-              ArticleScreen.routeName: (ctx) => ArticleScreen(),
-              SignupScreen.routeName: (ctx) =>
-                  SignupScreen(authFormType: AuthFormType.signIn),
-            },
-          ),
+                });
+          }),
+          routes: {
+            //LoginScreengi.routeName: (ctx) => LoginScreen(),
+            //SignupScreen.routeName: (ctx) => SignupScreen(),
+            PersonalManagementScreen.routeName: (ctx) =>
+                PersonalManagementScreen(),
+            SettingScreen.routeName: (ctx) => SettingScreen(),
+            MessagesListScreen.routeName: (ctx) => MessagesListScreen(),
+            FriendsListScreen.routeName: (ctx) => FriendsListScreen(),
+            EditProfileScreen.routeName: (ctx) => EditProfileScreen(),
+            EditPictureScreen.routeName: (ctx) => EditPictureScreen(),
+            NetworkScreen.routeName: (ctx) => NetworkScreen(),
+            SavedArticlesScreen.routeName: (ctx) => SavedArticlesScreen(),
+            EmailAuthScreen.routeName: (ctx) => EmailAuthScreen(),
+            LoginScreen.routeName: (ctx) => LoginScreen(),
+            HomeScreen.routeName: (ctx) => HomeScreen(),
+            ArticleScreen.routeName: (ctx) => ArticleScreen(),
+            SignupScreen.routeName: (ctx) =>
+                SignupScreen(authFormType: AuthFormType.signIn),
+          },
         ),
       ),
     );

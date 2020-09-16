@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:walk_with_god/providers/auth_provider.dart';
 
 import '../../configurations/theme.dart';
 import '../../providers/article/articles_provider.dart';
@@ -98,6 +99,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print("home");
+    if (Provider.of<AuthProvider>(context, listen: false).currentUser == null)
+      return Text("User not logged in");
     return Scaffold(
         //resizeToAvoidBottomInset: false,
         body: SafeArea(
