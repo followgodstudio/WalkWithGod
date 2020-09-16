@@ -103,7 +103,8 @@ class FriendsMessages extends StatelessWidget {
             .fetchProfileStream(),
         builder: (BuildContext context,
             AsyncSnapshot<Map<String, dynamic>> snapshot) {
-          if (snapshot.connectionState != ConnectionState.active)
+          if (snapshot.connectionState != ConnectionState.active ||
+              snapshot.data == null)
             return Center(child: CircularProgressIndicator());
           return Column(
             children: [

@@ -43,7 +43,7 @@ class ProfileProvider with ChangeNotifier {
     // watch message count stream
     return stream.map((DocumentSnapshot doc) {
       return {
-        fUserUnreadMsgCount: doc.data().containsKey(fUserUnreadMsgCount)
+        fUserUnreadMsgCount: doc.get(fUserUnreadMsgCount) == null
             ? 0
             : doc.get(fUserUnreadMsgCount),
         fUserMessagesCount: doc.get(fUserMessagesCount) == null
@@ -161,21 +161,20 @@ class ProfileProvider with ChangeNotifier {
         .doc(uid)
         .collection(cUserReadHistory)
         .doc(articleId);
-    _isUpdatingRecentRead = true;
-    await _db.runTransaction((transaction) {
-      return transaction.get(history).then((DocumentSnapshot doc) {
-        if (doc.exists) {
-          // Update read history timestamp
-          history.update({fUpdatedDate: Timestamp.now()});
-        } else {
-          // Create a new document in read history
-          history.set({fUpdatedDate: Timestamp.now()});
-          // Increase count
-          DocumentReference user = _db.collection(cUsers).doc(uid);
-          user.update({fUserReadsCount: FieldValue.increment(1)});
-        }
-      });
-    });
+    DocumentSnapshot doc = await history.get();
+
+    WriteBatch batch = _db.batch();
+    if (doc.exists) {
+      // Update read history timestamp
+      batch.update(history, {fUpdatedDate: Timestamp.now()});
+    } else {
+      // Create a new document in read history
+      batch.set(history, {fUpdatedDate: Timestamp.now()});
+      // Increase count
+      batch.update(user, {fUserReadsCount: FieldValue.increment(1)});
+    }
+    await batch.commit();
+
     _isUpdatingRecentRead = false;
   }
 
