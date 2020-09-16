@@ -13,7 +13,7 @@ class FriendItem extends StatelessWidget {
         builder: (context, data, child) => Column(children: [
               Row(
                 children: [
-                  ProfilePicture(data.friendImageUrl, 20.0, data.friendUid),
+                  ProfilePicture(20.0, data.friendImageUrl, data.friendUid),
                   SizedBox(width: 10),
                   Expanded(
                       child: Text(data.friendName,

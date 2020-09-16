@@ -1,11 +1,10 @@
 import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:walk_with_god/screens/home_screen/home_screen.dart';
 
+import '../screens/home_screen/home_screen.dart';
 import 'user/profile_provider.dart';
 
 enum AuthMode { signInWithEmail, createUserWithEmail }

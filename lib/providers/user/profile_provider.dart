@@ -132,7 +132,7 @@ class ProfileProvider with ChangeNotifier {
     StorageTaskSnapshot snapshot =
         await _storage.ref().child(path).putFile(file).onComplete;
     if (snapshot.error != null) return;
-    if (imageUrl == null) {
+    if (imageUrl == null || imageUrl.isEmpty) {
       imageUrl = await snapshot.ref.getDownloadURL();
       imageUrl = imageUrl.substring(0, imageUrl.indexOf('&token='));
       // update profile in database
@@ -191,6 +191,7 @@ class ProfileProvider with ChangeNotifier {
   }
 
   Future<void> updateReadDuration(DateTime start) async {
+    if (uid == null || uid.isEmpty) return;
     int timeDiffInSecond = DateTime.now().difference(start).inSeconds;
     await _db.collection(cUsers).doc(uid).update(
         {fUserReadDuration: FieldValue.increment(timeDiffInSecond / 3600)});

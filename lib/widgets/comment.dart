@@ -10,7 +10,7 @@ import '../providers/user/profile_provider.dart';
 import '../screens/personal_management_screen/headline/network_screen.dart';
 import '../utils/utils.dart';
 import '../widgets/popup_comment.dart';
-import 'comment_succeeded_dialog.dart';
+import 'succeeded_dialog.dart';
 import 'profile_picture.dart';
 
 class Comment extends StatelessWidget {
@@ -34,8 +34,8 @@ class Comment extends StatelessWidget {
               // Avatar
               Column(
                 children: [
-                  ProfilePicture(data.creatorImage,
-                      isLevel2Comment ? 16.0 : 20.0, data.creatorUid),
+                  ProfilePicture(isLevel2Comment ? 16.0 : 20.0,
+                      data.creatorImage, data.creatorUid),
                   // TODO: add a vertical line here
                 ],
               ),
@@ -161,7 +161,8 @@ class Comment extends StatelessWidget {
                                                   Navigator.of(context)
                                                       .pop(true);
                                                 });
-                                                return CommentSucceededDialog();
+                                                return SucceededDialog(
+                                                    "你刚刚发布了留言");
                                               });
                                       },
                                     ));

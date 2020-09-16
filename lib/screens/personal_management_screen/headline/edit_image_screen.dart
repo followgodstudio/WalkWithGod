@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:provider/provider.dart';
 
 import '../../../configurations/theme.dart';
 import '../../../providers/user/profile_provider.dart';
+import '../../../widgets/succeeded_dialog.dart';
 
 class EditPictureScreen extends StatefulWidget {
   static const routeName = "/edit_picture";
@@ -18,7 +20,9 @@ class EditPictureScreen extends StatefulWidget {
 class _EditPictureScreenState extends State<EditPictureScreen> {
   /// Active image file
   File _imageFile;
+  bool _uploading = false;
   final picker = ImagePicker();
+  Timer _timer;
 
   /// Cropper plugin
   Future<void> _cropImage(File selectedImage) async {
@@ -63,18 +67,34 @@ class _EditPictureScreenState extends State<EditPictureScreen> {
                   style: Theme.of(context).textTheme.captionMedium4),
             if (_imageFile != null) ...[
               Image.file(_imageFile),
-              FlatButton(
-                  onPressed: () async {
-                    await Provider.of<ProfileProvider>(context, listen: false)
-                        .updateProfilePicture(_imageFile);
-                    Navigator.of(context).pop();
-                  },
-                  child: Text("保存",
-                      style: Theme.of(context).textTheme.captionMedium4),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18.0),
-                  ),
-                  color: Theme.of(context).buttonColor),
+              if (!_uploading)
+                FlatButton(
+                    onPressed: () async {
+                      setState(() {
+                        _uploading = true;
+                      });
+                      await Provider.of<ProfileProvider>(context, listen: false)
+                          .updateProfilePicture(_imageFile);
+                      setState(() {
+                        _uploading = false;
+                      });
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            Future.delayed(Duration(seconds: 1), () {
+                              Navigator.of(context).pop();
+                              Navigator.of(context).pop();
+                            });
+                            return SucceededDialog("上传成功");
+                          });
+                    },
+                    child: Text("上传",
+                        style: Theme.of(context).textTheme.captionMedium4),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18.0),
+                    ),
+                    color: Theme.of(context).buttonColor),
+              if (_uploading) Center(child: CircularProgressIndicator()),
             ]
           ],
         ),

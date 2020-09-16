@@ -6,7 +6,7 @@ class ProfilePicture extends StatelessWidget {
   final String uid;
   final String imageUrl;
   final double radius;
-  ProfilePicture(this.imageUrl, this.radius, [this.uid]);
+  ProfilePicture(this.radius, [this.imageUrl, this.uid]);
 
   @override
   Widget build(BuildContext context) {

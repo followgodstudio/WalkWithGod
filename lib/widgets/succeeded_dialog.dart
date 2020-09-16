@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 
 import '../configurations/theme.dart';
 
-class CommentSucceededDialog extends StatelessWidget {
+class SucceededDialog extends StatelessWidget {
+  final String message;
+  SucceededDialog(this.message);
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -23,7 +26,7 @@ class CommentSucceededDialog extends StatelessWidget {
               ),
               SizedBox(height: 4.0),
               Center(
-                  child: Text('你刚刚发布了留言',
+                  child: Text(message,
                       style: Theme.of(context).textTheme.captionMedium1)),
             ],
           ),

@@ -11,7 +11,7 @@ class Introduction extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        ProfilePicture(imageUrl, 30.0),
+        ProfilePicture(30.0, imageUrl),
         SizedBox(height: 10.0),
         Text(
           name,

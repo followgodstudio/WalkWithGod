@@ -46,7 +46,7 @@ class EditProfileScreen extends StatelessWidget {
                         },
                         child: Consumer<ProfileProvider>(
                           builder: (context, value, child) =>
-                              ProfilePicture(value.imageUrl, 30.0),
+                              ProfilePicture(30.0, value.imageUrl),
                         )),
                   ],
                 ),

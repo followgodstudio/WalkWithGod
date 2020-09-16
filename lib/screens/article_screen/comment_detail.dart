@@ -5,7 +5,7 @@ import '../../configurations/theme.dart';
 import '../../providers/article/comment_provider.dart';
 import '../../providers/user/profile_provider.dart';
 import '../../widgets/comment.dart';
-import '../../widgets/comment_succeeded_dialog.dart';
+import '../../widgets/succeeded_dialog.dart';
 
 class CommentDetail extends StatefulWidget {
   final String articleId;
@@ -31,7 +31,7 @@ class _CommentDetailState extends State<CommentDetail> {
               Future.delayed(Duration(seconds: 1), () {
                 Navigator.of(context).pop(true);
               });
-              return CommentSucceededDialog();
+              return SucceededDialog("你刚刚发布了留言");
             });
       });
   }

@@ -28,7 +28,7 @@ class MessageItem extends StatelessWidget {
                   padding: const EdgeInsets.all(5.0),
                   child: Row(
                     children: [
-                      ProfilePicture(data.senderImage, 20.0, data.senderUid),
+                      ProfilePicture(20.0, data.senderImage, data.senderUid),
                       SizedBox(width: 10),
                       Expanded(
                           child: Text(data.senderName,

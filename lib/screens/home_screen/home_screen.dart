@@ -3,10 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:walk_with_god/providers/auth_provider.dart';
 
 import '../../configurations/theme.dart';
 import '../../providers/article/articles_provider.dart';
+import '../../providers/auth_provider.dart';
 import '../../providers/user/profile_provider.dart';
 import '../../screens/personal_management_screen/personal_management_screen.dart';
 import '../../widgets/profile_picture.dart';
@@ -196,9 +196,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                           FlatButton(
                                             child: Consumer<ProfileProvider>(
                                                 builder: (ctx, profile, _) =>
-                                                    ProfilePicture(
-                                                        profile.imageUrl,
-                                                        18.0)),
+                                                    ProfilePicture(18.0,
+                                                        profile.imageUrl)),
                                             onPressed: () {
                                               Navigator.of(context).pushNamed(
                                                 PersonalManagementScreen
