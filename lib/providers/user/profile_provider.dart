@@ -43,18 +43,18 @@ class ProfileProvider with ChangeNotifier {
     // watch message count stream
     return stream.map((DocumentSnapshot doc) {
       return {
-        fUserUnreadMsgCount: doc.get(fUserUnreadMsgCount) == null
-            ? 0
-            : doc.get(fUserUnreadMsgCount),
-        fUserMessagesCount: doc.get(fUserMessagesCount) == null
-            ? 0
-            : doc.get(fUserMessagesCount),
-        fUserFollowingsCount: doc.get(fUserFollowingsCount) == null
-            ? 0
-            : doc.get(fUserFollowingsCount),
-        fUserFollowersCount: doc.get(fUserFollowersCount) == null
-            ? 0
-            : doc.get(fUserFollowersCount)
+        fUserUnreadMsgCount: doc.data().containsKey(fUserUnreadMsgCount)
+            ? doc.get(fUserUnreadMsgCount)
+            : 0,
+        fUserMessagesCount: doc.data().containsKey(fUserMessagesCount)
+            ? doc.get(fUserMessagesCount)
+            : 0,
+        fUserFollowingsCount: doc.data().containsKey(fUserFollowingsCount)
+            ? doc.get(fUserFollowingsCount)
+            : 0,
+        fUserFollowersCount: doc.data().containsKey(fUserFollowersCount)
+            ? doc.get(fUserFollowersCount)
+            : 0,
       };
     });
   }
@@ -64,19 +64,31 @@ class ProfileProvider with ChangeNotifier {
     DocumentSnapshot doc = await _db.collection(cUsers).doc(uid).get();
     if (!doc.exists) return;
     name = doc.get(fUserName);
-    if (imageUrl == null) imageUrl = doc.get(fUserImageUrl);
+
+    if (imageUrl == null) {
+      imageUrl =
+          doc.data().containsKey(fUserImageUrl) ? doc.get(fUserImageUrl) : null;
+      // try {
+      //   imageUrl = (doc.get(fUserImageUrl) == null)
+      //       ? imageUrl
+      //       : doc.get(fUserImageUrl);
+      // } catch (err) {
+      //   print(err);
+      // }
+    }
     createdDate = (doc.get(fCreatedDate) as Timestamp).toDate();
-    readDuration = (doc.get(fUserReadDuration) == null)
-        ? 0
-        : doc.get(fUserReadDuration).floor();
+
+    readDuration = doc.data().containsKey(fUserReadDuration)
+        ? doc.get(fUserReadDuration).floor()
+        : 0;
     readsCount =
-        (doc.get(fUserReadsCount) == null) ? 0 : doc.get(fUserReadsCount);
-    followersCount = (doc.get(fUserFollowersCount) == null)
-        ? 0
-        : doc.get(fUserFollowersCount);
-    savedArticlesCount = (doc.get(fUserSavedArticlesCount) == null)
-        ? 0
-        : doc.get(fUserSavedArticlesCount);
+        doc.data().containsKey(fUserReadsCount) ? doc.get(fUserReadsCount) : 0;
+    followersCount = doc.data().containsKey(fUserFollowersCount)
+        ? doc.get(fUserFollowersCount)
+        : 0;
+    savedArticlesCount = doc.data().containsKey(fUserSavedArticlesCount)
+        ? doc.get(fUserSavedArticlesCount)
+        : 0;
   }
 
   Future<void> fetchRecentRead() async {

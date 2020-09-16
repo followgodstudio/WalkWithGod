@@ -8,6 +8,9 @@ import 'article_provider.dart';
 class ArticlesProvider with ChangeNotifier {
   var _fdb = FirebaseFirestore.instance;
   String uid;
+  DocumentSnapshot _lastVisibleChild;
+  bool _noMoreChild = false;
+  bool _isFetching = false;
 
   ArticlesProvider([this.uid]);
 
@@ -48,7 +51,7 @@ class ArticlesProvider with ChangeNotifier {
   }
 
   Future<void> fetchArticlesByDate(
-      [DateTime dateTime, int n = 10, bool isContentNeeded = false]) async {
+      [DateTime dateTime, int n = 2, bool isContentNeeded = false]) async {
     if (dateTime == null) dateTime = DateTime.now();
 
     QuerySnapshot query = await _fdb
@@ -57,15 +60,36 @@ class ArticlesProvider with ChangeNotifier {
         .orderBy(fCreatedDate, descending: true)
         .limit(n)
         .get();
-    setArticles(query, isContentNeeded);
+    _articles = [];
+    setArticles(query, isContentNeeded, n);
   }
 
-  void setArticles(QuerySnapshot query, [bool isContentNeeded = false]) {
-    _articles = [];
+  Future<void> fetchMoreArticles(
+      [DateTime dateTime, int n = 10, bool isContentNeeded = false]) async {
+    if (_noMoreChild || _isFetching) return;
+    _isFetching = true;
+    if (dateTime == null) dateTime = DateTime.now();
+
+    QuerySnapshot query = await _fdb
+        .collection(cArticles)
+        .where(fCreatedDate, isGreaterThanOrEqualTo: dateTime)
+        .orderBy(fCreatedDate, descending: true)
+        .startAfterDocument(_lastVisibleChild)
+        .limit(n)
+        .get();
+    _isFetching = false;
+    setArticles(query, isContentNeeded, n);
+  }
+
+  void setArticles(QuerySnapshot query,
+      [bool isContentNeeded = false, int limit = 10]) {
+    //_articles = [];
     query.docs.forEach((data) {
       _articles.add(_buildArticleByMap(data.id, data.data()));
     });
-
+    if (query.docs.length < limit) _noMoreChild = true;
+    if (query.docs.length > 0)
+      _lastVisibleChild = query.docs[query.docs.length - 1];
     notifyListeners();
   }
 

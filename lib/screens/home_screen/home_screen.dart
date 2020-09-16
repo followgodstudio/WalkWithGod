@@ -99,12 +99,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print("home");
     if (Provider.of<AuthProvider>(context, listen: false).currentUser == null)
       return Text("User not logged in");
     return Scaffold(
         //resizeToAvoidBottomPadding: true,
-
         body: SafeArea(
             child: FutureBuilder(
                 future: Future.wait([
@@ -128,74 +126,90 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Consumer<ArticlesProvider>(
                               builder: (context, data, child) {
                             refreshHeader(data.articles);
-                            return CustomScrollView(
-                                controller: _controller,
-                                slivers: <Widget>[
-                                  SliverAppBar(
-                                    toolbarHeight: 48.0,
-                                    shadowColor: Theme.of(context).canvasColor,
-                                    backgroundColor:
-                                        Theme.of(context).canvasColor,
-                                    pinned: true,
-                                    automaticallyImplyLeading: false,
-                                    flexibleSpace: Row(
-                                      children: <Widget>[
-                                        RawMaterialButton(
-                                          constraints: BoxConstraints(),
-                                          padding: EdgeInsets.only(left: 20),
-                                          onPressed: () {},
-                                          child: ValueListenableBuilder(
-                                            valueListenable: title,
-                                            builder: (context, String value,
-                                                    child) =>
-                                                Text(
-                                              value,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .captionMedium2,
+                            return NotificationListener<ScrollNotification>(
+                                onNotification:
+                                    (ScrollNotification scrollInfo) {
+                                  if (scrollInfo.metrics.pixels ==
+                                      scrollInfo.metrics.maxScrollExtent) {
+                                    Provider.of<ArticlesProvider>(context,
+                                            listen: false)
+                                        .fetchMoreArticles(
+                                            new DateTime.utc(1989, 11, 9));
+                                  }
+                                  return true;
+                                },
+                                child: CustomScrollView(
+                                    controller: _controller,
+                                    slivers: <Widget>[
+                                      SliverAppBar(
+                                        toolbarHeight: 48.0,
+                                        shadowColor:
+                                            Theme.of(context).canvasColor,
+                                        backgroundColor:
+                                            Theme.of(context).canvasColor,
+                                        pinned: true,
+                                        automaticallyImplyLeading: false,
+                                        flexibleSpace: Row(
+                                          children: <Widget>[
+                                            RawMaterialButton(
+                                              constraints: BoxConstraints(),
+                                              padding:
+                                                  EdgeInsets.only(left: 20),
+                                              onPressed: () {},
+                                              child: ValueListenableBuilder(
+                                                valueListenable: title,
+                                                builder: (context, String value,
+                                                        child) =>
+                                                    Text(
+                                                  value,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .captionMedium2,
+                                                ),
+                                              ),
                                             ),
-                                          ),
-                                        ),
-                                        Container(
-                                            height: 10,
-                                            child: VerticalDivider(
-                                                color: Color.fromARGB(
-                                                    255, 128, 128, 128))),
-                                        ValueListenableBuilder(
-                                          valueListenable: formattedDate,
-                                          builder:
-                                              (context, String value, child) =>
+                                            Container(
+                                                height: 10,
+                                                child: VerticalDivider(
+                                                    color: Color.fromARGB(
+                                                        255, 128, 128, 128))),
+                                            ValueListenableBuilder(
+                                              valueListenable: formattedDate,
+                                              builder: (context, String value,
+                                                      child) =>
                                                   Text(
-                                            value,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .captionMain,
-                                          ),
-                                        ),
+                                                value,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .captionMain,
+                                              ),
+                                            ),
 //                                        Text(
 //                                          formattedDate.value,
 //                                          style: Theme.of(context)
 //                                              .textTheme
 //                                              .captionMain,
 //                                        ),
-                                      ],
-                                    ),
-                                    actions: [
-                                      FlatButton(
-                                        child: Consumer<ProfileProvider>(
-                                            builder: (ctx, profile, _) =>
-                                                ProfilePicture(
-                                                    profile.imageUrl, 18.0)),
-                                        onPressed: () {
-                                          Navigator.of(context).pushNamed(
-                                            PersonalManagementScreen.routeName,
-                                          );
-                                        },
-                                      )
-                                    ],
-                                  ),
-                                  ArticleList(),
-                                ]);
+                                          ],
+                                        ),
+                                        actions: [
+                                          FlatButton(
+                                            child: Consumer<ProfileProvider>(
+                                                builder: (ctx, profile, _) =>
+                                                    ProfilePicture(
+                                                        profile.imageUrl,
+                                                        18.0)),
+                                            onPressed: () {
+                                              Navigator.of(context).pushNamed(
+                                                PersonalManagementScreen
+                                                    .routeName,
+                                              );
+                                            },
+                                          )
+                                        ],
+                                      ),
+                                      ArticleList(),
+                                    ]));
                           }));
                     }
                   }

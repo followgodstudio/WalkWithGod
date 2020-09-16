@@ -1,8 +1,10 @@
 import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:walk_with_god/screens/home_screen/home_screen.dart';
 
 import 'user/profile_provider.dart';
 
@@ -64,7 +66,7 @@ class AuthProvider with ChangeNotifier {
   Future<void> signInWithEmailAndPassword(String email, String password) async {
     var result = await _auth.signInWithEmailAndPassword(
         email: email, password: password);
-    await ProfileProvider().initProfile(result.user.uid);
+
     _uid = result.user.uid;
     notifyListeners();
   }
@@ -98,14 +100,17 @@ class AuthProvider with ChangeNotifier {
 
     final authHeaders = _googleSignIn.currentUser.authHeaders;
 
-    // custom IOClient from below
-    //final httpClient = GoogleHttpClient(authHeaders);
-
     final AuthCredential credential = GoogleAuthProvider.credential(
       idToken: _googleAuth.idToken,
       accessToken: _googleAuth.accessToken,
     );
-    return (await _auth.signInWithCredential(credential)).user.uid;
+
+    var authResult = await _auth.signInWithCredential(credential);
+    if (authResult.additionalUserInfo.isNewUser) {
+      ProfileProvider().initProfile(authResult.user.uid);
+    }
+
+    return authResult.user.uid;
   }
 
   // APPLE
@@ -160,7 +165,11 @@ class AuthProvider with ChangeNotifier {
           _auth
               .signInWithCredential(authCredential)
               .then((UserCredential result) {
-            Navigator.of(context).pop(); // to pop the dialog box
+            ProfileProvider().initProfile(result.user.uid);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => HomeScreen()),
+            ); // to pop the dialog box
             // Navigator.of(context).pushReplacementNamed('/home');
           }).catchError((e) {
             return "error";
@@ -192,7 +201,11 @@ class AuthProvider with ChangeNotifier {
                     _auth
                         .signInWithCredential(_credential)
                         .then((UserCredential result) {
-                      Navigator.of(context).pop(); // to pop the dialog box
+                      ProfileProvider().initProfile(result.user.uid);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => HomeScreen()),
+                      ); // to pop the dialog box
                       //Navigator.of(context).pushReplacementNamed('/home');
                     }).catchError((e) {
                       return "error";
