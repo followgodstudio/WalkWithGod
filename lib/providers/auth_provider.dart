@@ -64,6 +64,7 @@ class AuthProvider with ChangeNotifier {
   Future<void> signInWithEmailAndPassword(String email, String password) async {
     var result = await _auth.signInWithEmailAndPassword(
         email: email, password: password);
+    await ProfileProvider().initProfile(result.user.uid);
     _uid = result.user.uid;
     notifyListeners();
   }
