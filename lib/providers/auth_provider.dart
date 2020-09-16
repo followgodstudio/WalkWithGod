@@ -11,7 +11,12 @@ enum AuthMode { signInWithEmail, createUserWithEmail }
 class AuthProvider with ChangeNotifier {
   FirebaseAuth _auth = FirebaseAuth.instance;
   String _uid;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: <String>[
+      'email',
+      'https://www.googleapis.com/auth/contacts.readonly',
+    ],
+  );
 
   Stream<String> get onAuthStateChanged {
     return _auth.authStateChanges().map((User user) {
@@ -81,7 +86,13 @@ class AuthProvider with ChangeNotifier {
 
   // GOOGLE
   Future<String> signInWithGoogle() async {
-    final GoogleSignInAccount account = await _googleSignIn.signIn();
+    GoogleSignInAccount account;
+    try {
+      account = await _googleSignIn.signIn();
+    } catch (error) {
+      print(error);
+    }
+
     final GoogleSignInAuthentication _googleAuth = await account.authentication;
 
     final authHeaders = _googleSignIn.currentUser.authHeaders;

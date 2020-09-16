@@ -422,52 +422,68 @@ class _SignupScreenState extends State<SignupScreen> {
   Widget buildSocialIcons(bool visible) {
     final _auth = Provider.of<AuthProvider>(context, listen: false);
     return Visibility(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          Divider(
-            color: Colors.white,
+      child: Row(children: [
+        Expanded(
+          flex: 1,
+          child: Container(),
+        ),
+        Expanded(
+          flex: 10,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Divider(
+                color: Colors.white,
+              ),
+              SizedBox(height: 10),
+              buildAppleSignIn(_auth),
+              SizedBox(height: 10),
+              GoogleSignInButton(
+                centered: true,
+                text: "Google账号登陆",
+                textStyle: Theme.of(context).textTheme.captionSmall3,
+                onPressed: () async {
+                  try {
+                    await _auth.signInWithGoogle();
+                    // Navigator.of(context).pushReplacementNamed('/home');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => HomeScreen()),
+                    );
+                  } catch (e) {
+                    setState(() {
+                      _warning = e.message + "。请使用其他方式登陆";
+                    });
+                  }
+                },
+              ),
+              RaisedButton(
+                color: Colors.green,
+                textColor: Colors.white,
+                child: Row(
+                  children: <Widget>[
+                    Icon(Icons.phone),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 14.0, top: 10.0, bottom: 10.0),
+                      child: Text("使用手机号码登陆", style: TextStyle(fontSize: 18)),
+                    )
+                  ],
+                ),
+                onPressed: () {
+                  setState(() {
+                    authFormType = AuthFormType.phone;
+                  });
+                },
+              ),
+            ],
           ),
-          SizedBox(height: 10),
-          buildAppleSignIn(_auth),
-          SizedBox(height: 10),
-          GoogleSignInButton(
-            onPressed: () async {
-              try {
-                await _auth.signInWithGoogle();
-                // Navigator.of(context).pushReplacementNamed('/home');
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => HomeScreen()),
-                );
-              } catch (e) {
-                setState(() {
-                  _warning = e.message;
-                });
-              }
-            },
-          ),
-          RaisedButton(
-            color: Colors.green,
-            textColor: Colors.white,
-            child: Row(
-              children: <Widget>[
-                Icon(Icons.phone),
-                Padding(
-                  padding: const EdgeInsets.only(
-                      left: 14.0, top: 10.0, bottom: 10.0),
-                  child: Text("使用手机号码登陆", style: TextStyle(fontSize: 18)),
-                )
-              ],
-            ),
-            onPressed: () {
-              setState(() {
-                authFormType = AuthFormType.phone;
-              });
-            },
-          ),
-        ],
-      ),
+        ),
+        Expanded(
+          flex: 1,
+          child: Container(),
+        ),
+      ]),
       visible: visible,
     );
   }
