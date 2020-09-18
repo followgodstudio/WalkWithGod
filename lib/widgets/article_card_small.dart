@@ -1,12 +1,11 @@
 import 'dart:async';
 import 'dart:ui' as ui;
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
-import '../screens/article_screen/article_screen.dart';
+
 import '../providers/article/article_provider.dart';
-import '../configurations/theme.dart';
+import '../screens/article_screen/article_screen.dart';
 import '../utils/utils.dart';
 
 class ArticleCard extends StatelessWidget {
@@ -18,13 +17,15 @@ class ArticleCard extends StatelessWidget {
   Widget build(BuildContext context) {
     Future<ui.Image> _getImage(String imgUrl) {
       Completer<ui.Image> completer = new Completer<ui.Image>();
-      NetworkImage(imgUrl).resolve(new ImageConfiguration()).addListener(
-          ImageStreamListener(
+      CachedNetworkImageProvider(imgUrl)
+          .resolve(new ImageConfiguration())
+          .addListener(ImageStreamListener(
               (ImageInfo info, bool _) => completer.complete(info.image)));
       return completer.future;
     }
 
-    NetworkImage backgroundImage = NetworkImage(article.imageUrl);
+    CachedNetworkImageProvider backgroundImage =
+        CachedNetworkImageProvider(article.imageUrl);
     Color textColor = Colors.black;
 
     return Container(
@@ -54,7 +55,7 @@ class ArticleCard extends StatelessWidget {
                           alignment: Alignment.bottomCenter,
                           child: FutureBuilder(
                             future: useWhiteTextColor(
-                                NetworkImage(article.imageUrl)),
+                                CachedNetworkImageProvider(article.imageUrl)),
                             builder: (BuildContext context,
                                 AsyncSnapshot<bool> snapshot) {
                               if (snapshot.connectionState ==
@@ -109,7 +110,7 @@ class ArticleCard extends StatelessWidget {
                                                 : CircleAvatar(
                                                     radius: 10,
                                                     backgroundImage:
-                                                        NetworkImage(
+                                                        CachedNetworkImageProvider(
                                                             article.icon),
                                                     backgroundColor:
                                                         Colors.transparent,
@@ -119,7 +120,7 @@ class ArticleCard extends StatelessWidget {
                                             ),
                                             Expanded(
                                               child: Text(
-                                                article.author ?? "匿名",
+                                                article.authorName ?? "匿名",
                                                 style: TextStyle(
                                                     fontFamily:
                                                         "LantingXianHei",

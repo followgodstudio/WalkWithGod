@@ -120,6 +120,11 @@ extension CustomStyles on TextTheme {
         color: Colors.black87,
         fontFamily: 'LantingXianHei',
       );
+  TextStyle get captionSmallBlue => const TextStyle(
+        fontSize: 12.0,
+        color: Color.fromARGB(255, 100, 181, 246),
+        fontFamily: 'Lanting',
+      );
   TextStyle get captionSmallWhite => const TextStyle(
         fontSize: 14.0,
         color: Color.fromARGB(255, 255, 255, 255),

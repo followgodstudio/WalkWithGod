@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:provider/provider.dart';
-import 'package:walk_with_god/providers/user/setting_provider.dart';
-import 'package:walk_with_god/screens/personal_management_screen/setting/black_list_screen.dart';
-import 'package:walk_with_god/screens/personal_management_screen/setting/delete_account_screen.dart';
 
 import '../../../configurations/theme.dart';
 import '../../../providers/auth_provider.dart';
-import '../../../providers/user/profile_provider.dart';
+import '../../../providers/user/setting_provider.dart';
+import 'black_list_screen.dart';
+import 'delete_account_screen.dart';
 
 class PrivacyScreen extends StatelessWidget {
   static const routeName = '/privacy';
@@ -40,7 +39,7 @@ class PrivacyScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("隐藏你最近的阅读内容",
+                          Text("隐藏你最近的阅读内容TODO",
                               style:
                                   Theme.of(context).textTheme.captionMedium1),
                           FlutterSwitch(
@@ -61,7 +60,7 @@ class PrivacyScreen extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text("关注你须获得你的同意",
+                            Text("关注你须获得你的同意TODO",
                                 style:
                                     Theme.of(context).textTheme.captionMedium1),
                             FlutterSwitch(
@@ -82,7 +81,7 @@ class PrivacyScreen extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text("不接受未关注人的私信",
+                            Text("不接受未关注人的私信TODO",
                                 style:
                                     Theme.of(context).textTheme.captionMedium1),
                             FlutterSwitch(
@@ -113,7 +112,7 @@ class PrivacyScreen extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("黑名单",
+                          Text("黑名单TODO",
                               style:
                                   Theme.of(context).textTheme.captionMedium1),
                           Icon(Icons.arrow_forward_ios,

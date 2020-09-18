@@ -54,20 +54,27 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => CommentsProvider(),
         ),
-        ChangeNotifierProvider(
+        ChangeNotifierProxyProvider<AuthProvider, ProfileProvider>(
           create: (_) => ProfileProvider(),
+          update: (context, auth, previou) => ProfileProvider(auth.currentUser),
         ),
-        ChangeNotifierProvider(
+        ChangeNotifierProxyProvider<AuthProvider, FriendsProvider>(
           create: (_) => FriendsProvider(),
+          update: (context, auth, previou) => FriendsProvider(auth.currentUser),
         ),
-        ChangeNotifierProvider(
+        ChangeNotifierProxyProvider<AuthProvider, MessagesProvider>(
           create: (_) => MessagesProvider(),
+          update: (context, auth, previou) =>
+              MessagesProvider(auth.currentUser),
         ),
-        ChangeNotifierProvider(
+        ChangeNotifierProxyProvider<AuthProvider, SavedArticlesProvider>(
           create: (_) => SavedArticlesProvider(),
+          update: (context, auth, previou) =>
+              SavedArticlesProvider(auth.currentUser),
         ),
-        ChangeNotifierProvider(
+        ChangeNotifierProxyProvider<AuthProvider, SettingProvider>(
           create: (_) => SettingProvider(),
+          update: (context, auth, previou) => SettingProvider(auth.currentUser),
         ),
       ],
       child: LifeCycleManager(

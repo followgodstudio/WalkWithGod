@@ -24,9 +24,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  var _showOnlyFavorites = false;
-  var _isInit = true;
-  var _isLoading = false;
   ScrollController _controller = new ScrollController();
   var prevIndex = -1;
   ValueNotifier<String> title;
@@ -109,7 +106,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Provider.of<ArticlesProvider>(context, listen: false)
                       .fetchArticlesByDate(new DateTime.utc(1989, 11, 9)),
                   Provider.of<ProfileProvider>(context, listen: false)
-                      .fetchBasicProfile(uid)
+                      .fetchBasicProfile()
                 ]),
                 builder: (ctx, asyncSnapshot) {
                   if (asyncSnapshot.connectionState ==

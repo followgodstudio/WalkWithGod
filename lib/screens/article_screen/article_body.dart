@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../screens/personal_management_screen/headline/network_screen.dart';
@@ -32,7 +33,7 @@ class ArticleBody extends StatelessWidget {
                   image: (loadedArticle.imageUrl == null ||
                           loadedArticle.imageUrl == "")
                       ? AssetImage('assets/images/placeholder.png')
-                      : NetworkImage(loadedArticle.imageUrl),
+                      : CachedNetworkImageProvider(loadedArticle.imageUrl),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -42,7 +43,7 @@ class ArticleBody extends StatelessWidget {
       ),
       Padding(
         padding: const EdgeInsets.only(top: 20.0, bottom: 10),
-        child: Text(
+        child: SelectableText(
           loadedArticle.title ?? "",
           style: Theme.of(context).textTheme.headline1,
         ),
@@ -58,7 +59,7 @@ class ArticleBody extends StatelessWidget {
                     onTap: () {
                       Navigator.of(context).pushNamed(
                         NetworkScreen.routeName,
-                        arguments: loadedArticle.author,
+                        arguments: loadedArticle.authorUid,
                       );
                     },
                     child: Padding(
@@ -66,12 +67,13 @@ class ArticleBody extends StatelessWidget {
                       child: CircleAvatar(
                           radius: 12.0,
                           backgroundColor: Theme.of(context).canvasColor,
-                          backgroundImage: NetworkImage(loadedArticle.icon)),
+                          backgroundImage:
+                              CachedNetworkImageProvider(loadedArticle.icon)),
                     ),
                   ),
             Padding(
               padding: const EdgeInsets.only(left: 5.0),
-              child: Text(
+              child: SelectableText(
                 loadedArticle.publisher ?? "随行",
                 style: Theme.of(context).textTheme.captionSmall2,
               ),
@@ -81,8 +83,8 @@ class ArticleBody extends StatelessWidget {
                 child:
                     VerticalDivider(color: Color.fromARGB(255, 128, 128, 128))),
             Expanded(
-              child: Text(
-                loadedArticle.author ?? "匿名",
+              child: SelectableText(
+                loadedArticle.authorName ?? "匿名",
                 style: Theme.of(context).textTheme.captionSmall2,
               ),
             ),

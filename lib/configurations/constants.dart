@@ -29,7 +29,8 @@ const String cUserSavedarticles = "saved_articles";
 
 // Second level document names
 
-const String dAboutUs = "about_us";
+const String dAppInfoAboutUs = "about_us";
+const String dAppInfoVersion = "version";
 
 // Third level collection names
 
@@ -38,8 +39,10 @@ const String cArticleCommentLikes = "likes";
 
 // Third level field names
 
-const String fOurMission = "our_mission";
-const String fWhoAreWe = "who_are_we";
+const String fAppInfoOurMission = "our_mission";
+const String fAppInfoWhoAreWe = "who_are_we";
+
+const String fAppInfoNewestVersion = "newest_version";
 
 const String fUserName = "name";
 const String fUserImageUrl = "image_url";
@@ -82,6 +85,7 @@ const String fArticleTitle = 'title';
 const String fArticleDescription = 'description';
 const String fArticleImageUrl = 'image_url';
 const String fArticleAuthorName = 'author_name';
+const String fArticleAuthorUid = 'author_uid';
 const String cArticleContent = 'content';
 const String fArticleIcon = 'icon';
 const String fArticlePublisher = 'publisher';

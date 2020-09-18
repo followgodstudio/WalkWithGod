@@ -27,7 +27,7 @@ class ArticlesProvider with ChangeNotifier {
     setArticles(query);
   }
 
-  Future<void> fetchLatest([int n = 10]) async {
+  Future<void> fetchLatest([int n = loadLimit]) async {
     QuerySnapshot query = await _fdb
         .collection(cArticles)
         .orderBy(fCreatedDate, descending: true)
@@ -50,7 +50,9 @@ class ArticlesProvider with ChangeNotifier {
   }
 
   Future<void> fetchArticlesByDate(
-      [DateTime dateTime, int n = 2, bool isContentNeeded = false]) async {
+      [DateTime dateTime,
+      int n = loadLimit,
+      bool isContentNeeded = false]) async {
     if (dateTime == null) dateTime = DateTime.now();
 
     QuerySnapshot query = await _fdb
@@ -64,7 +66,9 @@ class ArticlesProvider with ChangeNotifier {
   }
 
   Future<void> fetchMoreArticles(
-      [DateTime dateTime, int n = 10, bool isContentNeeded = false]) async {
+      [DateTime dateTime,
+      int n = loadLimit,
+      bool isContentNeeded = false]) async {
     if (_noMoreChild || _isFetching) return;
     _isFetching = true;
     if (dateTime == null) dateTime = DateTime.now();
@@ -136,7 +140,8 @@ class ArticlesProvider with ChangeNotifier {
         title: data[fArticleTitle],
         description: data[fArticleDescription],
         imageUrl: data[fArticleImageUrl],
-        author: data[fArticleAuthorName],
+        authorName: data[fArticleAuthorName],
+        authorUid: data[fArticleAuthorUid],
         createdDate: (data[fCreatedDate] as Timestamp).toDate(),
         icon: data[fArticleIcon],
         publisher: data[fArticlePublisher]);

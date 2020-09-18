@@ -21,7 +21,7 @@ class _ArticleListState extends State<ArticleList> {
   Future<bool> useWhiteTextColor(NetworkImage image) async {
     PaletteGenerator paletteGenerator =
         await PaletteGenerator.fromImageProvider(
-      //NetworkImage(imageUrl),
+      //CachedNetworkImageProvider(imageUrl),
       image,
       // Images are square
       size: Size(300, 300),
@@ -54,7 +54,7 @@ class _ArticleListState extends State<ArticleList> {
           // var backgroundImage = articlesData.articles[index].imageUrl == null ||
           //         articlesData.articles[index].imageUrl.isEmpty
           //     ? AssetImage('assets/images/placeholder.png')
-          //     : NetworkImage(articlesData.articles[index].imageUrl);
+          //     : CachedNetworkImageProvider(articlesData.articles[index].imageUrl);
           // Color textColor = Colors.white;
           // useWhiteTextColor(backgroundImage).then((value) =>
           //     {value ? textColor = Colors.white : textColor = Colors.black});
@@ -126,7 +126,7 @@ class _ArticleListState extends State<ArticleList> {
           //                                   .articles[index].icon.isEmpty
           //                           ? Icon(Icons.album)
           //                           : Image(
-          //                               image: NetworkImage(
+          //                               image: CachedNetworkImageProvider(
           //                                 articlesData.articles[index].icon,
           //                               ),
           //                               width: 30,

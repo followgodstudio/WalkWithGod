@@ -46,7 +46,7 @@ class CommentProvider with ChangeNotifier {
     return _noMoreChild;
   }
 
-  Future<void> fetchL2ChildrenCommentList(String userId,
+  Future<void> fetchLevel2ChildrenCommentList(String userId,
       [int limit = loadLimit]) async {
     // level 1 comment will call this method
     if (parent != null) return;
@@ -60,10 +60,10 @@ class CommentProvider with ChangeNotifier {
         .limit(limit)
         .get();
     children = [];
-    _appendL2CommentList(query, userId, limit);
+    _appendLevel2CommentList(query, userId, limit);
   }
 
-  Future<void> fetchMoreL2ChildrenComments(String userId,
+  Future<void> fetchMoreLevel2ChildrenComments(String userId,
       [int limit = loadLimit]) async {
     // level 1 comment will call this method
     if (parent != null || _noMoreChild || _isFetching) return;
@@ -79,7 +79,7 @@ class CommentProvider with ChangeNotifier {
         .limit(limit)
         .get();
     _isFetching = false;
-    _appendL2CommentList(query, userId, limit);
+    _appendLevel2CommentList(query, userId, limit);
   }
 
   Future<void> addLike(String userId, String userName, String userImage) async {
@@ -173,7 +173,7 @@ class CommentProvider with ChangeNotifier {
     }
   }
 
-  Future<void> addL2Comment(String l2content, String l2creatorUid,
+  Future<void> addLevel2Comment(String l2content, String l2creatorUid,
       String l2creatorName, String l2creatorImage, bool isL3Comment) async {
     Map<String, dynamic> comment = {};
     comment[fCommentArticleId] = articleId;
@@ -214,9 +214,9 @@ class CommentProvider with ChangeNotifier {
     // Update local variables
     comment['like'] = false;
     if (isL3Comment) {
-      parentPointer._addL2CommentToList(newDocRef.id, comment);
+      parentPointer._addLevel2CommentToList(newDocRef.id, comment);
     } else {
-      _addL2CommentToList(newDocRef.id, comment);
+      _addLevel2CommentToList(newDocRef.id, comment);
     }
 
     // Send the creator/replyTo a message
@@ -230,7 +230,7 @@ class CommentProvider with ChangeNotifier {
         comment[fCommentParent]);
   }
 
-  void _appendL2CommentList(QuerySnapshot query, String userId, int limit) {
+  void _appendLevel2CommentList(QuerySnapshot query, String userId, int limit) {
     List<DocumentSnapshot> docs = query.docs;
     //docs[0].data().update(key, (value) => null)
     if (docs.length < limit) _noMoreChild = true;
@@ -265,20 +265,21 @@ class CommentProvider with ChangeNotifier {
         // data.data['like'] =
         //     (List<String>.from(doc.[fCommentReplyLikes])).contains(userId);
       }
-      children.add(_buildL2CommentByMap(doc.id, copyOfData));
+      children.add(_buildLevel2CommentByMap(doc.id, copyOfData));
     });
     _lastVisibleChild = query.docs[query.docs.length - 1];
     notifyListeners();
   }
 
-  void _addL2CommentToList(String cid, Map<String, dynamic> data) {
+  void _addLevel2CommentToList(String cid, Map<String, dynamic> data) {
     if (parent != null) return; // Level 2 cannot have children
-    children.insert(0, _buildL2CommentByMap(cid, data));
+    children.insert(0, _buildLevel2CommentByMap(cid, data));
     childrenCount += 1;
     notifyListeners();
   }
 
-  CommentProvider _buildL2CommentByMap(String id, Map<String, dynamic> data) {
+  CommentProvider _buildLevel2CommentByMap(
+      String id, Map<String, dynamic> data) {
     return CommentProvider(
         id: id,
         articleId: data[fCommentArticleId],

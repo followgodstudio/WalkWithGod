@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:walk_with_god/providers/user/setting_provider.dart';
 
 import '../../../configurations/theme.dart';
+import '../../../providers/user/setting_provider.dart';
 
 class AboutUsScreen extends StatelessWidget {
   static const routeName = '/about_us';
@@ -29,7 +29,7 @@ class AboutUsScreen extends StatelessWidget {
               padding: const EdgeInsets.all(20.0),
               child: FutureBuilder(
                   future: Provider.of<SettingProvider>(context, listen: true)
-                      .fetchAppInfo(),
+                      .fetchAboutUs(),
                   builder: (ctx, asyncSnapshot) {
                     if (asyncSnapshot.connectionState ==
                         ConnectionState.waiting)

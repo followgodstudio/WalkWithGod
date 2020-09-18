@@ -190,7 +190,7 @@ class SavedArticles extends StatelessWidget {
         Provider.of<ProfileProvider>(context, listen: false);
     return FutureBuilder(
         future: Provider.of<SavedArticlesProvider>(context, listen: false)
-            .fetchSavedListByUid(profile.uid),
+            .fetchSavedList(),
         builder: (ctx, asyncSnapshot) {
           if (asyncSnapshot.connectionState == ConnectionState.waiting)
             return Center(child: CircularProgressIndicator());

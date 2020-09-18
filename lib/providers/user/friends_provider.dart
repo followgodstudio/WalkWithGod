@@ -6,16 +6,16 @@ import 'friend_provider.dart';
 
 class FriendsProvider with ChangeNotifier {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final String _userId;
   List<FriendProvider> _follower = [];
   List<FriendProvider> _following = [];
-  String _userId;
-  String _userName;
-  String _userImageUrl;
   DocumentSnapshot _lastVisibleFollower;
   DocumentSnapshot _lastVisibleFollowing;
   bool _noMoreFollower = false;
   bool _noMoreFollowing = false;
   bool _isFetching = false; // To avoid frequently request
+
+  FriendsProvider([this._userId]);
 
   List<FriendProvider> get follower {
     return [..._follower];
@@ -33,10 +33,7 @@ class FriendsProvider with ChangeNotifier {
     return _noMoreFollowing;
   }
 
-  Future<void> fetchFriendListByUid(
-      String userId, String userName, String userImageUrl, bool isFollower,
-      [int limit = loadLimit]) async {
-    if (userId == null) return;
+  Future<void> fetchFriendList(bool isFollower, [int limit = loadLimit]) async {
     List<String> whereIn = [eFriendStatusFollowing, eFriendStatusFriend];
     String orderBy = fFriendFollowingDate;
     if (isFollower) {
@@ -48,15 +45,12 @@ class FriendsProvider with ChangeNotifier {
     }
     QuerySnapshot query = await _db
         .collection(cUsers)
-        .doc(userId)
+        .doc(_userId)
         .collection(cUserFriends)
         .where(fFriendStatus, whereIn: whereIn)
         .orderBy(orderBy, descending: true)
         .limit(limit)
         .get();
-    _userId = userId;
-    _userName = userName;
-    _userImageUrl = userImageUrl;
     _appendFriendsList(query, limit, isFollower);
   }
 
@@ -86,14 +80,12 @@ class FriendsProvider with ChangeNotifier {
     _appendFriendsList(query, limit, isFollower);
   }
 
-  Future<FriendProvider> fetchFriendStatusByUid(
-      String curUserId, String userId) async {
-    if (userId == null || userId.isEmpty) return null;
+  Future<FriendProvider> fetchFriendStatusByUserId(String uid) async {
     DocumentSnapshot doc = await _db
         .collection(cUsers)
-        .doc(curUserId)
+        .doc(_userId)
         .collection(cUserFriends)
-        .doc(userId)
+        .doc(uid)
         .get();
     if (doc.exists) return _buildFriendByMap(doc.id, doc.data());
     return null;
@@ -149,9 +141,6 @@ class FriendsProvider with ChangeNotifier {
 
   FriendProvider _buildFriendByMap(String id, Map<String, dynamic> data) {
     return FriendProvider(
-      uid: _userId,
-      name: _userName,
-      imageUrl: _userImageUrl,
       friendUid: id,
       friendName: data[fFriendName],
       friendImageUrl: data[fFriendImageUrl],

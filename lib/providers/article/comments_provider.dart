@@ -23,7 +23,7 @@ class CommentsProvider with ChangeNotifier {
   }
 
   // Will be called by comment detail screen
-  Future<CommentProvider> fetchL1CommentByCid(
+  Future<CommentProvider> fetchLevel1CommentByCommentId(
       String articleId, String commentId, String userId) async {
     // Fetch Comment
     DocumentSnapshot doc = await _db
@@ -47,13 +47,14 @@ class CommentsProvider with ChangeNotifier {
     }
 
     //doc.data['like'] = docLikes.exists;
-    CommentProvider commentProvider = _buildL1CommentByMap(commentId, tmp);
+    CommentProvider commentProvider = _buildLevel1CommentByMap(commentId, tmp);
     // Fetch it children list
-    await commentProvider.fetchL2ChildrenCommentList(userId);
+    await commentProvider.fetchLevel2ChildrenCommentList(userId);
     return commentProvider;
   }
 
-  Future<void> fetchL1CommentListByAid(String articleId, String userId,
+  Future<void> fetchLevel1CommentListByArticleId(
+      String articleId, String userId,
       [int limit = loadLimit]) async {
     if (articleId == null || userId == null) return;
     // Clear data
@@ -70,10 +71,10 @@ class CommentsProvider with ChangeNotifier {
         .get();
     _items = [];
     _articleId = articleId;
-    await _appendL1CommentList(query, articleId, userId, limit);
+    await _appendLevel1CommentList(query, articleId, userId, limit);
   }
 
-  Future<void> fetchMoreL1Comments(String userId,
+  Future<void> fetchMoreLevel1Comments(String userId,
       [int limit = loadLimit]) async {
     if (_articleId == null || userId == null || _noMore || _isFetching) return;
     _isFetching = true;
@@ -85,11 +86,11 @@ class CommentsProvider with ChangeNotifier {
         .startAfterDocument(_lastVisible)
         .limit(limit)
         .get();
-    await _appendL1CommentList(query, _articleId, userId, limit);
+    await _appendLevel1CommentList(query, _articleId, userId, limit);
   }
 
-  Future<void> addL1Comment(String articleId, String content, String creatorUid,
-      String creatorName, String creatorImage) async {
+  Future<void> addLevel1Comment(String articleId, String content,
+      String creatorUid, String creatorName, String creatorImage) async {
     Map<String, dynamic> comment = {};
     comment[fCommentArticleId] = articleId;
     comment[fCommentContent] = content;
@@ -105,10 +106,10 @@ class CommentsProvider with ChangeNotifier {
         .collection(cArticleComments)
         .add(comment);
     comment['like'] = false;
-    _addL1CommentToList(docRef.id, comment);
+    _addLevel1CommentToList(docRef.id, comment);
   }
 
-  Future<void> _appendL1CommentList(
+  Future<void> _appendLevel1CommentList(
       QuerySnapshot query, String articleId, String userId, int limit) async {
     List<DocumentSnapshot> docs = query.docs;
     if (docs.length < limit) _noMore = true;
@@ -142,7 +143,7 @@ class CommentsProvider with ChangeNotifier {
     }
 
     tmpList.forEach((data) {
-      _items.add(_buildL1CommentByMap(data["id"], data));
+      _items.add(_buildLevel1CommentByMap(data["id"], data));
     });
 
     _isFetching = false;
@@ -150,12 +151,13 @@ class CommentsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void _addL1CommentToList(String cid, Map<String, dynamic> data) {
-    _items.insert(0, _buildL1CommentByMap(cid, data));
+  void _addLevel1CommentToList(String cid, Map<String, dynamic> data) {
+    _items.insert(0, _buildLevel1CommentByMap(cid, data));
     notifyListeners();
   }
 
-  CommentProvider _buildL1CommentByMap(String id, Map<String, dynamic> data) {
+  CommentProvider _buildLevel1CommentByMap(
+      String id, Map<String, dynamic> data) {
     return CommentProvider(
         id: id,
         articleId: data[fCommentArticleId],

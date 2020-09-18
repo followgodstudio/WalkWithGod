@@ -14,7 +14,7 @@ class ProfileProvider with ChangeNotifier {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
   // Basic info
-  String uid;
+  final String uid;
   String name;
   String imageUrl;
   // Network info
@@ -31,7 +31,7 @@ class ProfileProvider with ChangeNotifier {
   bool _isFetchingRecentRead = false; // To avoid frequently request
   bool _isUpdatingRecentRead = false; // To avoid frequently request
 
-  ProfileProvider();
+  ProfileProvider([this.uid]);
 
   Stream<Map<String, dynamic>> fetchProfileStream() {
     if (uid == null || uid == "") return null;
@@ -56,10 +56,9 @@ class ProfileProvider with ChangeNotifier {
     });
   }
 
-  Future<void> fetchBasicProfile(String userId) async {
-    if (userId != null || userId != "") uid = userId;
+  Future<bool> fetchBasicProfile() async {
     DocumentSnapshot doc = await _db.collection(cUsers).doc(uid).get();
-    if (!doc.exists) return;
+    if (!doc.exists) return false;
     name = doc.get(fUserName);
 
     if (imageUrl == null || imageUrl.isEmpty) {
@@ -79,6 +78,7 @@ class ProfileProvider with ChangeNotifier {
     savedArticlesCount = doc.data().containsKey(fUserSavedArticlesCount)
         ? doc.get(fUserSavedArticlesCount)
         : 0;
+    return true;
   }
 
   Future<void> fetchRecentRead() async {
@@ -105,16 +105,22 @@ class ProfileProvider with ChangeNotifier {
     _isFetchingRecentRead = false;
   }
 
-  Future<void> fetchNetworkProfile(String userId) async {
-    await fetchBasicProfile(userId);
-    await fetchRecentRead();
+  Future<bool> fetchNetworkProfile() async {
+    if (await fetchBasicProfile()) {
+      await fetchRecentRead();
+      return true;
+    }
+    return false;
   }
 
-  Future<void> initProfile(String userId) async {
-    uid = userId;
+  Future<void> initProfile() async {
     await _db.collection(cUsers).doc(uid).set({});
     String newName = "弟兄姊妹"; // TODO: Random name
     await updateProfile(newName: newName, newCreatedDate: Timestamp.now());
+  }
+
+  Future<void> deleteProfile() async {
+    await _db.collection(cUsers).doc(uid).delete();
   }
 
   Future<void> updateProfilePicture(File file) async {
@@ -153,7 +159,7 @@ class ProfileProvider with ChangeNotifier {
     }
   }
 
-  Future<void> updateRecentReadByAid(String articleId) async {
+  Future<void> updateRecentReadByArticleId(String articleId) async {
     if (_isUpdatingRecentRead) return;
     _isUpdatingRecentRead = true;
 

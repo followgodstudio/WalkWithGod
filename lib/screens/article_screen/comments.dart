@@ -33,7 +33,7 @@ class _CommentsState extends State<Comments> {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         CommentProvider commentProvider =
             await Provider.of<CommentsProvider>(context, listen: false)
-                .fetchL1CommentByCid(
+                .fetchLevel1CommentByCommentId(
                     widget.articleId, widget.commentId, profile.uid);
         showMaterialModalBottomSheet(
             shape: RoundedRectangleBorder(
@@ -48,7 +48,7 @@ class _CommentsState extends State<Comments> {
 
   Future<void> goToCommentDetail(String uid, CommentProvider commentProvider,
       [afterSubmit = false]) async {
-    await commentProvider.fetchL2ChildrenCommentList(uid);
+    await commentProvider.fetchLevel2ChildrenCommentList(uid);
     showMaterialModalBottomSheet(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
@@ -65,7 +65,7 @@ class _CommentsState extends State<Comments> {
   Widget build(BuildContext context) {
     return FutureBuilder(
         future: Provider.of<CommentsProvider>(context, listen: false)
-            .fetchL1CommentListByAid(widget.articleId, profile.uid),
+            .fetchLevel1CommentListByArticleId(widget.articleId, profile.uid),
         builder: (ctx, asyncSnapshot) {
           if (asyncSnapshot.connectionState == ConnectionState.waiting)
             return Center(child: CircularProgressIndicator());

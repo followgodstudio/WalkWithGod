@@ -7,12 +7,14 @@ import '../article/articles_provider.dart';
 
 class SavedArticlesProvider with ChangeNotifier {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final String _userId;
   List<ArticleProvider> _articles = [];
-  String _userId;
   DocumentSnapshot _lastVisible;
   bool _noMore = false;
   bool _isFetching = false; // To avoid frequently request
   bool _currentLike = false; // for the article screen
+
+  SavedArticlesProvider([this._userId]);
 
   List<ArticleProvider> get articles {
     return [..._articles];
@@ -26,19 +28,16 @@ class SavedArticlesProvider with ChangeNotifier {
     return _currentLike;
   }
 
-  Future<void> fetchSavedListByUid(String userId,
-      [int limit = loadLimit]) async {
-    if (userId == null) return [];
+  Future<void> fetchSavedList([int limit = loadLimit]) async {
     QuerySnapshot query = await _db
         .collection(cUsers)
-        .doc(userId)
+        .doc(_userId)
         .collection(cUserSavedarticles)
         .orderBy(fCreatedDate, descending: true)
         .limit(limit)
         .get();
     _articles = [];
     _noMore = false;
-    _userId = userId;
     await _appendSavedList(query, limit);
   }
 
@@ -57,8 +56,7 @@ class SavedArticlesProvider with ChangeNotifier {
     _isFetching = false;
   }
 
-  Future<void> fetchSavedStatusByAid(String userId, String articleId) async {
-    _userId = userId;
+  Future<void> fetchSavedStatusByArticleId(String articleId) async {
     DocumentSnapshot doc = await _db
         .collection(cUsers)
         .doc(_userId)
@@ -68,7 +66,7 @@ class SavedArticlesProvider with ChangeNotifier {
     _currentLike = doc.exists;
   }
 
-  Future<void> removeSavedByAid(String articleId) async {
+  Future<void> removeSavedByArticleId(String articleId) async {
     _articles.removeWhere((item) => item.id == articleId);
     _currentLike = false;
     notifyListeners();
@@ -84,7 +82,7 @@ class SavedArticlesProvider with ChangeNotifier {
     await batch.commit();
   }
 
-  Future<void> addSavedByAid(String articleId) async {
+  Future<void> addSavedByArticleId(String articleId) async {
     _currentLike = true;
     // Get article info
     ArticleProvider article =

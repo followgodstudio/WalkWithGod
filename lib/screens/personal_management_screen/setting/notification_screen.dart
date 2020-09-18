@@ -36,7 +36,7 @@ class NotificationScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("接受新关注提醒",
+                          Text("接受新关注提醒TODO",
                               style:
                                   Theme.of(context).textTheme.captionMedium1),
                           FlutterSwitch(
