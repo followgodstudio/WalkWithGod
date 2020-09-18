@@ -7,12 +7,11 @@ import 'article_provider.dart';
 
 class ArticlesProvider with ChangeNotifier {
   var _fdb = FirebaseFirestore.instance;
-  String uid;
   DocumentSnapshot _lastVisibleChild;
   bool _noMoreChild = false;
   bool _isFetching = false;
 
-  ArticlesProvider([this.uid]);
+  ArticlesProvider();
 
   List<ArticleProvider> _articles = [];
 

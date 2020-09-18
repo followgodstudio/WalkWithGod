@@ -33,9 +33,9 @@ class NetworkScreen extends StatelessWidget {
                 child: Padding(
                     padding: const EdgeInsets.all(20.0),
                     child: Builder(builder: (BuildContext context) {
-                      ProfileProvider profile = ProfileProvider(uid);
+                      ProfileProvider profile = ProfileProvider();
                       return FutureBuilder(
-                          future: profile.fetchNetworkProfile(),
+                          future: profile.fetchNetworkProfile(uid),
                           builder: (ctx, asyncSnapshot) {
                             if (asyncSnapshot.connectionState ==
                                 ConnectionState.waiting)

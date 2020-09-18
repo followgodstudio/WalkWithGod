@@ -10,6 +10,7 @@ import 'providers/user/friends_provider.dart';
 import 'providers/user/messages_provider.dart';
 import 'providers/user/profile_provider.dart';
 import 'providers/user/saved_articles_provider.dart';
+import 'providers/user/setting_provider.dart';
 import 'screens/article_screen/article_screen.dart';
 import 'screens/auth_screen/email_auth_screen.dart';
 import 'screens/auth_screen/login_screen.dart';
@@ -23,6 +24,13 @@ import 'screens/personal_management_screen/headline/network_screen.dart';
 import 'screens/personal_management_screen/messages/messages_list_screen.dart';
 import 'screens/personal_management_screen/personal_management_screen.dart';
 import 'screens/personal_management_screen/saved_articles/saved_articles_screen.dart';
+import 'screens/personal_management_screen/setting/about_us_screen.dart';
+import 'screens/personal_management_screen/setting/app_info_screen.dart';
+import 'screens/personal_management_screen/setting/black_list_screen.dart';
+import 'screens/personal_management_screen/setting/cache_clear_screen.dart';
+import 'screens/personal_management_screen/setting/delete_account_screen.dart';
+import 'screens/personal_management_screen/setting/notification_screen.dart';
+import 'screens/personal_management_screen/setting/privacy_screen.dart';
 import 'screens/personal_management_screen/setting/setting_screen.dart';
 
 void main() async {
@@ -40,13 +48,14 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => AuthProvider(),
         ),
-        ChangeNotifierProxyProvider<AuthProvider, ArticlesProvider>(
+        ChangeNotifierProvider(
           create: (_) => ArticlesProvider(),
-          update: (context, auth, previou) =>
-              ArticlesProvider(auth.currentUser),
         ),
         ChangeNotifierProvider(
           create: (_) => CommentsProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ProfileProvider(),
         ),
         ChangeNotifierProvider(
           create: (_) => FriendsProvider(),
@@ -57,9 +66,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => SavedArticlesProvider(),
         ),
-        ChangeNotifierProxyProvider<AuthProvider, ProfileProvider>(
-          create: (_) => ProfileProvider(),
-          update: (context, auth, previou) => ProfileProvider(auth.currentUser),
+        ChangeNotifierProvider(
+          create: (_) => SettingProvider(),
         ),
       ],
       child: LifeCycleManager(
@@ -89,6 +97,13 @@ class MyApp extends StatelessWidget {
             PersonalManagementScreen.routeName: (ctx) =>
                 PersonalManagementScreen(),
             SettingScreen.routeName: (ctx) => SettingScreen(),
+            PrivacyScreen.routeName: (ctx) => PrivacyScreen(),
+            NotificationScreen.routeName: (ctx) => NotificationScreen(),
+            CacheClearScreen.routeName: (ctx) => CacheClearScreen(),
+            AppInfoScreen.routeName: (ctx) => AppInfoScreen(),
+            AboutUsScreen.routeName: (ctx) => AboutUsScreen(),
+            BlackListScreen.routeName: (ctx) => BlackListScreen(),
+            DeleteAccountScreen.routeName: (ctx) => DeleteAccountScreen(),
             MessagesListScreen.routeName: (ctx) => MessagesListScreen(),
             FriendsListScreen.routeName: (ctx) => FriendsListScreen(),
             EditProfileScreen.routeName: (ctx) => EditProfileScreen(),

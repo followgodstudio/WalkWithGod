@@ -42,25 +42,16 @@ class PersonalManagementScreen extends StatelessWidget {
           backgroundColor: Theme.of(context).appBarTheme.color,
         ),
         body: SafeArea(
-            child: FutureBuilder(
-                future: Provider.of<ProfileProvider>(context, listen: false)
-                    .fetchBasicProfile(),
-                builder: (ctx, asyncSnapshot) {
-                  if (asyncSnapshot.connectionState == ConnectionState.waiting)
-                    return Center(child: CircularProgressIndicator());
-                  if (asyncSnapshot.error != null)
-                    return Center(child: Text('An error occurred!'));
-                  return SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Column(children: <Widget>[
-                        HeadLine(),
-                        SavedArticles(),
-                        FriendsMessages(),
-                      ]),
-                    ),
-                  );
-                })));
+            child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(children: <Widget>[
+              HeadLine(),
+              SavedArticles(),
+              FriendsMessages(),
+            ]),
+          ),
+        )));
   }
 }
 

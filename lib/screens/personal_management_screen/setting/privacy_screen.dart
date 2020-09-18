@@ -2,24 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:provider/provider.dart';
 import 'package:walk_with_god/providers/user/setting_provider.dart';
+import 'package:walk_with_god/screens/personal_management_screen/setting/black_list_screen.dart';
+import 'package:walk_with_god/screens/personal_management_screen/setting/delete_account_screen.dart';
 
 import '../../../configurations/theme.dart';
 import '../../../providers/auth_provider.dart';
-import 'about_us_screen.dart';
-import 'app_info_screen.dart';
-import 'cache_clear_screen.dart';
-import 'notification_screen.dart';
-import 'privacy_screen.dart';
+import '../../../providers/user/profile_provider.dart';
 
-class SettingScreen extends StatelessWidget {
-  static const routeName = '/setting';
+class PrivacyScreen extends StatelessWidget {
+  static const routeName = '/privacy';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text('设置', style: Theme.of(context).textTheme.headline2),
+          title: Text('隐私', style: Theme.of(context).textTheme.headline2),
           elevation: 0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back_ios),
@@ -42,7 +40,7 @@ class SettingScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("阅读时不自动锁屏",
+                          Text("隐藏你最近的阅读内容",
                               style:
                                   Theme.of(context).textTheme.captionMedium1),
                           FlutterSwitch(
@@ -50,64 +48,72 @@ class SettingScreen extends StatelessWidget {
                             height: 25.0,
                             toggleSize: 17.0,
                             activeColor: Colors.blue[300],
-                            value: setting.keepScreenAwakeOnRead,
+                            value: setting.hideRecentRead,
                             onToggle: (value) {
-                              setting.updateSetting(
-                                  newKeepScreenAwakeOnRead: value);
+                              setting.updateSetting(newHideRecentRead: value);
                             },
                           ),
                         ],
+                      ),
+                      Divider(),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("关注你须获得你的同意",
+                                style:
+                                    Theme.of(context).textTheme.captionMedium1),
+                            FlutterSwitch(
+                              width: 50.0,
+                              height: 25.0,
+                              toggleSize: 17.0,
+                              activeColor: Colors.blue[300],
+                              value: setting.allowFollowing,
+                              onToggle: (value) {
+                                setting.updateSetting(newAllowFollowing: value);
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("不接受未关注人的私信",
+                                style:
+                                    Theme.of(context).textTheme.captionMedium1),
+                            FlutterSwitch(
+                              width: 50.0,
+                              height: 25.0,
+                              toggleSize: 17.0,
+                              activeColor: Colors.blue[300],
+                              value: setting.rejectStrangerMessage,
+                              onToggle: (value) {
+                                setting.updateSetting(
+                                    newRejectStrangerMessage: value);
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
                 ),
                 Column(
                   children: [
-                    Divider(),
                     FlatButton(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                       onPressed: () {
                         Navigator.of(context)
-                            .pushNamed(PrivacyScreen.routeName);
+                            .pushNamed(BlackListScreen.routeName);
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("隐私",
-                              style:
-                                  Theme.of(context).textTheme.captionMedium1),
-                          Icon(Icons.arrow_forward_ios,
-                              size: 15.0, color: Colors.blue[300])
-                        ],
-                      ),
-                    ),
-                    FlatButton(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      onPressed: () {
-                        Navigator.of(context)
-                            .pushNamed(NotificationScreen.routeName);
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("通知",
-                              style:
-                                  Theme.of(context).textTheme.captionMedium1),
-                          Icon(Icons.arrow_forward_ios,
-                              size: 15.0, color: Colors.blue[300])
-                        ],
-                      ),
-                    ),
-                    FlatButton(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      onPressed: () {
-                        Navigator.of(context)
-                            .pushNamed(CacheClearScreen.routeName);
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("缓存清理",
+                          Text("黑名单",
                               style:
                                   Theme.of(context).textTheme.captionMedium1),
                           Icon(Icons.arrow_forward_ios,
@@ -120,29 +126,12 @@ class SettingScreen extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                       onPressed: () {
                         Navigator.of(context)
-                            .pushNamed(AppInfoScreen.routeName);
+                            .pushNamed(DeleteAccountScreen.routeName);
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("关于随行派",
-                              style:
-                                  Theme.of(context).textTheme.captionMedium1),
-                          Icon(Icons.arrow_forward_ios,
-                              size: 15.0, color: Colors.blue[300])
-                        ],
-                      ),
-                    ),
-                    FlatButton(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      onPressed: () {
-                        Navigator.of(context)
-                            .pushNamed(AboutUsScreen.routeName);
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("关于我们",
+                          Text("注销用户",
                               style:
                                   Theme.of(context).textTheme.captionMedium1),
                           Icon(Icons.arrow_forward_ios,

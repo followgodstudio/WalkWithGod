@@ -99,8 +99,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (Provider.of<AuthProvider>(context, listen: false).currentUser == null)
-      return Text("User not logged in");
+    String uid = Provider.of<AuthProvider>(context, listen: false).currentUser;
+    if (uid == null) return Text("User not logged in");
     return Scaffold(
         //resizeToAvoidBottomPadding: true,
         body: SafeArea(
@@ -109,7 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Provider.of<ArticlesProvider>(context, listen: false)
                       .fetchArticlesByDate(new DateTime.utc(1989, 11, 9)),
                   Provider.of<ProfileProvider>(context, listen: false)
-                      .fetchBasicProfile()
+                      .fetchBasicProfile(uid)
                 ]),
                 builder: (ctx, asyncSnapshot) {
                   if (asyncSnapshot.connectionState ==

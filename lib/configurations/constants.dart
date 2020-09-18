@@ -16,6 +16,7 @@ const String sArticlePictures = "article_pictures";
 
 const String cArticles = "articles";
 const String cUsers = "users";
+const String cAppInfo = "app_info";
 
 // Second level collection names
 
@@ -26,12 +27,19 @@ const String cUserFriends = "friends";
 const String cUserMessages = "messages";
 const String cUserSavedarticles = "saved_articles";
 
+// Second level document names
+
+const String dAboutUs = "about_us";
+
 // Third level collection names
 
 const String cArticleCommentReplies = "replies";
 const String cArticleCommentLikes = "likes";
 
 // Third level field names
+
+const String fOurMission = "our_mission";
+const String fWhoAreWe = "who_are_we";
 
 const String fUserName = "name";
 const String fUserImageUrl = "image_url";
@@ -42,7 +50,12 @@ const String fUserFollowersCount = "followers_count";
 const String fUserReadsCount = "reads_count";
 const String fUserReadDuration = "read_duration";
 const String fUserSavedArticlesCount = "saved_articles_count";
-const String fUserSettingScreenAwake = "screen_awake";
+
+const String fSettingScreenAwake = "screen_awake";
+const String fSettingHideRecentRead = "hide_recent_read";
+const String fSettingAllowFollowing = "allow_following";
+const String fSettingRejectStrangerMessage = "reject_stranger_message";
+const String fSettingFollowingNotification = "following_notification";
 
 const String fMessageType = "type";
 const String eMessageTypeLike = "like";
