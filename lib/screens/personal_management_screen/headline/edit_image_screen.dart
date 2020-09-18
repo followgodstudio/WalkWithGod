@@ -22,7 +22,6 @@ class _EditPictureScreenState extends State<EditPictureScreen> {
   File _imageFile;
   bool _uploading = false;
   final picker = ImagePicker();
-  Timer _timer;
 
   /// Cropper plugin
   Future<void> _cropImage(File selectedImage) async {

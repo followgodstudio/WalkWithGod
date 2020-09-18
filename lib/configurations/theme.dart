@@ -77,6 +77,12 @@ extension CustomStyles on TextTheme {
         fontFamily: 'Lanting',
         letterSpacing: -0.1,
       );
+  TextStyle get bodyTextBlack => const TextStyle(
+        color: Colors.black87,
+        fontSize: 16.0,
+        fontFamily: 'LantingXianHei',
+        letterSpacing: -0.1,
+      );
   TextStyle get bodyTextWhite => const TextStyle(
         color: Colors.white,
         fontSize: 14.0,
@@ -113,6 +119,11 @@ extension CustomStyles on TextTheme {
         fontSize: 12.0,
         color: Colors.black87,
         fontFamily: 'LantingXianHei',
+      );
+  TextStyle get captionSmallBlue => const TextStyle(
+        fontSize: 12.0,
+        color: Color.fromARGB(255, 100, 181, 246),
+        fontFamily: 'Lanting',
       );
   TextStyle get captionSmallWhite => const TextStyle(
         fontSize: 14.0,
@@ -181,14 +192,5 @@ final ThemeData nightTheme = new ThemeData(
   primarySwatch: Colors.deepOrange,
   backgroundColor: Color.fromARGB(255, 99, 12, 95),
   appBarTheme: AppBarTheme(color: Colors.white),
-  textTheme: TextTheme(
-    title: TextStyle(color: Colors.black87, fontSize: 31.0, fontFamily: 'Song'),
-    subtitle:
-        TextStyle(color: Colors.black54, fontSize: 28.0, fontFamily: 'Song'),
-    caption:
-        TextStyle(color: Colors.grey[500], fontSize: 23.0, fontFamily: 'Song'),
-    display2:
-        TextStyle(color: Colors.grey[500], fontSize: 16.0, fontFamily: 'Song'),
-  ),
   accentColor: Colors.grey,
 );

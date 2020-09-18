@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
+
 import '../providers/article/article_provider.dart';
-// import '../model/slide.dart';
 
 class ArticleParagraph extends StatelessWidget {
-  Paragraph _paragraph;
-
-  ArticleParagraph(Paragraph paragraph) {
-    this._paragraph = paragraph;
-  }
+  final Paragraph _paragraph;
+  ArticleParagraph(this._paragraph);
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +22,7 @@ class ArticleParagraph extends StatelessWidget {
                       height: 4,
                       color: Colors.yellow,
                     )
-                  : Text(
+                  : SelectableText(
                       _paragraph.subtitle,
                       style: Theme.of(context).textTheme.subtitle1,
                     )
@@ -34,7 +31,7 @@ class ArticleParagraph extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.only(bottom: 20.0),
-          child: Text(_paragraph.body,
+          child: SelectableText(_paragraph.body,
               style: Theme.of(context).textTheme.bodyText1),
         ),
       ]),

@@ -14,7 +14,7 @@ class Introduction extends StatelessWidget {
         ProfilePicture(30.0, imageUrl),
         SizedBox(height: 10.0),
         Text(
-          name,
+          (name == null || name.isEmpty) ? "弟兄姊妹" : name,
           style: Theme.of(context).textTheme.headline6,
         ),
       ],

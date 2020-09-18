@@ -5,7 +5,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
-import 'package:wakelock/wakelock.dart';
 
 import '../../configurations/constants.dart';
 import '../article/article_provider.dart';
@@ -15,7 +14,7 @@ class ProfileProvider with ChangeNotifier {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
   // Basic info
-  String uid;
+  final String uid;
   String name;
   String imageUrl;
   // Network info
@@ -24,8 +23,6 @@ class ProfileProvider with ChangeNotifier {
   int readDuration;
   int followersCount;
   int savedArticlesCount;
-  // Settings
-  bool keepScreenAwakeOnRead = false;
   // For recent read
   List<String> _recentReadList = [];
   List<ArticleProvider> recentRead = [];
@@ -59,22 +56,14 @@ class ProfileProvider with ChangeNotifier {
     });
   }
 
-  Future<void> fetchBasicProfile() async {
-    if (uid == null || uid == "") return;
+  Future<bool> fetchBasicProfile() async {
     DocumentSnapshot doc = await _db.collection(cUsers).doc(uid).get();
-    if (!doc.exists) return;
+    if (!doc.exists) return false;
     name = doc.get(fUserName);
 
-    if (imageUrl == null) {
+    if (imageUrl == null || imageUrl.isEmpty) {
       imageUrl =
           doc.data().containsKey(fUserImageUrl) ? doc.get(fUserImageUrl) : null;
-      // try {
-      //   imageUrl = (doc.get(fUserImageUrl) == null)
-      //       ? imageUrl
-      //       : doc.get(fUserImageUrl);
-      // } catch (err) {
-      //   print(err);
-      // }
     }
     createdDate = (doc.get(fCreatedDate) as Timestamp).toDate();
 
@@ -89,6 +78,7 @@ class ProfileProvider with ChangeNotifier {
     savedArticlesCount = doc.data().containsKey(fUserSavedArticlesCount)
         ? doc.get(fUserSavedArticlesCount)
         : 0;
+    return true;
   }
 
   Future<void> fetchRecentRead() async {
@@ -115,16 +105,22 @@ class ProfileProvider with ChangeNotifier {
     _isFetchingRecentRead = false;
   }
 
-  Future<void> fetchNetworkProfile() async {
-    await fetchBasicProfile();
-    await fetchRecentRead();
+  Future<bool> fetchNetworkProfile() async {
+    if (await fetchBasicProfile()) {
+      await fetchRecentRead();
+      return true;
+    }
+    return false;
   }
 
-  Future<void> initProfile(String userId) async {
-    uid = userId;
+  Future<void> initProfile() async {
     await _db.collection(cUsers).doc(uid).set({});
     String newName = "弟兄姊妹"; // TODO: Random name
     await updateProfile(newName: newName, newCreatedDate: Timestamp.now());
+  }
+
+  Future<void> deleteProfile() async {
+    await _db.collection(cUsers).doc(uid).delete();
   }
 
   Future<void> updateProfilePicture(File file) async {
@@ -163,7 +159,7 @@ class ProfileProvider with ChangeNotifier {
     }
   }
 
-  Future<void> updateRecentReadByAid(String articleId) async {
+  Future<void> updateRecentReadByArticleId(String articleId) async {
     if (_isUpdatingRecentRead) return;
     _isUpdatingRecentRead = true;
 
@@ -195,19 +191,6 @@ class ProfileProvider with ChangeNotifier {
     int timeDiffInSecond = DateTime.now().difference(start).inSeconds;
     await _db.collection(cUsers).doc(uid).update(
         {fUserReadDuration: FieldValue.increment(timeDiffInSecond / 3600)});
-  }
-
-  Future<void> updateUserSetting({bool newKeepScreenAwakeOnRead}) async {
-    Map<String, dynamic> data = {};
-    if (newKeepScreenAwakeOnRead != null) {
-      keepScreenAwakeOnRead =
-          data[fUserSettingScreenAwake] = newKeepScreenAwakeOnRead;
-      Wakelock.toggle(on: newKeepScreenAwakeOnRead);
-    }
-    if (data.isNotEmpty) {
-      // await _db.collection(cUsers).document(uid).updateData(data);
-      notifyListeners();
-    }
   }
 
   Future<void> _appendRecentReadList() async {

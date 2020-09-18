@@ -144,7 +144,7 @@ class Comment extends StatelessWidget {
                                     PopUpComment(
                                       articleId: data.articleId,
                                       onPressFunc: (String content) async {
-                                        await data.addL2Comment(
+                                        await data.addLevel2Comment(
                                             content,
                                             profile.uid,
                                             profile.name,

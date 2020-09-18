@@ -44,7 +44,7 @@ class TopBar extends StatelessWidget {
                 child:
                     VerticalDivider(color: Color.fromARGB(255, 128, 128, 128))),
             Text(
-              loadedArticle.author ?? "匿名",
+              loadedArticle.authorName ?? "匿名",
               style: Theme.of(context).textTheme.captionSmall2,
             ),
           ],

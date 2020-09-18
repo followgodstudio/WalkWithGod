@@ -42,9 +42,9 @@ String getCreatedDuration(DateTime createdDate) {
                                   : null;
 }
 
-Future<bool> useWhiteTextColor(NetworkImage image) async {
+Future<bool> useWhiteTextColor(ImageProvider image) async {
   PaletteGenerator paletteGenerator = await PaletteGenerator.fromImageProvider(
-    //NetworkImage(imageUrl),
+    //CachedNetworkImageProvider(imageUrl),
     image,
     // Images are square
     size: Size(300, 300),

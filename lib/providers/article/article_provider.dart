@@ -1,7 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
-
-import '../../configurations/constants.dart';
 
 class Paragraph {
   final String subtitle;
@@ -19,7 +16,8 @@ class ArticleProvider with ChangeNotifier {
   final String title;
   final String description;
   final String icon;
-  final String author;
+  final String authorName;
+  final String authorUid;
   final DateTime createdDate;
   List<Paragraph> content;
   final String publisher;
@@ -30,17 +28,9 @@ class ArticleProvider with ChangeNotifier {
       @required this.title,
       @required this.description,
       @required this.icon,
-      @required this.author,
+      @required this.authorName,
+      @required this.authorUid,
       @required this.createdDate,
       this.content,
       this.publisher});
-
-  Future<void> save() async {
-    //TODO
-    DocumentSnapshot doc = await FirebaseFirestore.instance
-        .collection(cArticles)
-        .doc(this.id)
-        .get();
-    notifyListeners();
-  }
 }

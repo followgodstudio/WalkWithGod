@@ -5,26 +5,20 @@ import '../../configurations/constants.dart';
 
 class FriendProvider with ChangeNotifier {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
-  final String uid;
-  final String name;
-  final String imageUrl;
   final String friendUid;
   final String friendName;
   final String friendImageUrl;
   String friendStatus;
 
   FriendProvider({
-    @required this.uid,
-    @required this.name,
-    @required this.imageUrl,
-    this.friendUid,
-    this.friendName,
-    this.friendImageUrl,
+    @required this.friendUid,
+    @required this.friendName,
+    @required this.friendImageUrl,
     this.friendStatus,
   });
 
   // will be called by friends_provider
-  Future<void> follow() async {
+  Future<void> follow(String uid, String name, String imageUrl) async {
     if (friendStatus == eFriendStatusFollowing ||
         friendStatus == eFriendStatusFriend) return;
     DateTime followingDate = DateTime.now();
@@ -73,7 +67,7 @@ class FriendProvider with ChangeNotifier {
     await batch.commit();
   }
 
-  Future<void> unfollow() async {
+  Future<void> unfollow(String uid, String name, String imageUrl) async {
     if (friendStatus != eFriendStatusFollowing &&
         friendStatus != eFriendStatusFriend) return;
     friendStatus =

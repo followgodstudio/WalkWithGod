@@ -40,8 +40,12 @@ class BottomBar extends StatelessWidget {
                           onPressFunc: (String content) async {
                             await Provider.of<CommentsProvider>(context,
                                     listen: false)
-                                .addL1Comment(articleId, content, profile.uid,
-                                    profile.name, profile.imageUrl);
+                                .addLevel1Comment(
+                                    articleId,
+                                    content,
+                                    profile.uid,
+                                    profile.name,
+                                    profile.imageUrl);
                             onLeaveCommentScroll();
                             showDialog(
                                 context: context,
@@ -81,7 +85,7 @@ class BottomBar extends StatelessWidget {
         width: 55.0,
         child: FutureBuilder(
             future: Provider.of<SavedArticlesProvider>(context, listen: false)
-                .fetchSavedStatusByAid(profile.uid, articleId),
+                .fetchSavedStatusByArticleId(articleId),
             builder: (ctx, asyncSnapshot) {
               if (asyncSnapshot.connectionState == ConnectionState.waiting ||
                   asyncSnapshot.error != null)
@@ -99,9 +103,9 @@ class BottomBar extends StatelessWidget {
                   builder: (context, value, child) => FlatButton(
                         onPressed: () {
                           if (value.currentLike) {
-                            value.removeSavedByAid(articleId);
+                            value.removeSavedByArticleId(articleId);
                           } else {
-                            value.addSavedByAid(articleId);
+                            value.addSavedByArticleId(articleId);
                           }
                         },
                         child: Icon(

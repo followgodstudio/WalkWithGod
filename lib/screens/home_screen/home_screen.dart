@@ -24,9 +24,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  var _showOnlyFavorites = false;
-  var _isInit = true;
-  var _isLoading = false;
   ScrollController _controller = new ScrollController();
   var prevIndex = -1;
   ValueNotifier<String> title;
@@ -99,8 +96,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (Provider.of<AuthProvider>(context, listen: false).currentUser == null)
-      return Text("User not logged in");
+    String uid = Provider.of<AuthProvider>(context, listen: false).currentUser;
+    if (uid == null) return Text("User not logged in");
     return Scaffold(
         //resizeToAvoidBottomPadding: true,
         body: SafeArea(

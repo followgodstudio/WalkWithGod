@@ -42,6 +42,8 @@ class NetworkScreen extends StatelessWidget {
                               return Center(child: CircularProgressIndicator());
                             if (asyncSnapshot.error != null)
                               return Center(child: Text('An error occurred!'));
+                            if (!asyncSnapshot.data)
+                              return Center(child: Text("该用户不存在。"));
                             return Column(children: <Widget>[
                               Introduction(profile.name, profile.imageUrl),
                               if (uid != myProfile.uid)
@@ -62,7 +64,7 @@ class FriendStatus extends StatelessWidget {
     FriendsProvider friends =
         Provider.of<FriendsProvider>(context, listen: false);
     return FutureBuilder(
-        future: friends.fetchFriendStatusByUid(myProfile.uid, profile.uid),
+        future: friends.fetchFriendStatusByUserId(profile.uid),
         builder: (ctx, AsyncSnapshot<FriendProvider> asyncSnapshot) {
           if (asyncSnapshot.connectionState == ConnectionState.waiting)
             return Center(child: CircularProgressIndicator());
@@ -72,9 +74,6 @@ class FriendStatus extends StatelessWidget {
               value: (asyncSnapshot.data != null)
                   ? asyncSnapshot.data
                   : FriendProvider(
-                      uid: myProfile.uid,
-                      name: myProfile.name,
-                      imageUrl: myProfile.imageUrl,
                       friendUid: profile.uid,
                       friendName: profile.name,
                       friendImageUrl: profile.imageUrl),
@@ -93,10 +92,12 @@ class FriendStatus extends StatelessWidget {
                   return FlatButton(
                       onPressed: () {
                         if (isFollowing) {
-                          friend.unfollow();
+                          friend.unfollow(myProfile.uid, myProfile.name,
+                              myProfile.imageUrl);
                           friends.updateUnfollowInList(profile.uid);
                         } else {
-                          friend.follow();
+                          friend.follow(myProfile.uid, myProfile.name,
+                              myProfile.imageUrl);
                           friends.addFollowInList(friend);
                         }
                       },

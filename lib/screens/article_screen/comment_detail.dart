@@ -59,7 +59,7 @@ class _CommentDetailState extends State<CommentDetail> {
                   if (scrollInfo.metrics.pixels ==
                       scrollInfo.metrics.maxScrollExtent) {
                     Provider.of<CommentProvider>(rootContext, listen: false)
-                        .fetchMoreL2ChildrenComments(_userId);
+                        .fetchMoreLevel2ChildrenComments(_userId);
                   }
                   return true;
                 },

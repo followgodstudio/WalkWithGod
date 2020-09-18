@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
-import '../../providers/article/articles_provider.dart';
 import '../../providers/article/comments_provider.dart';
 import '../../providers/user/profile_provider.dart';
 import 'article_body.dart';
@@ -34,7 +33,7 @@ class ArticleScreen extends StatelessWidget {
     if (!_updatedRecentUsed) {
       // update recently read history, run only once.
       _updatedRecentUsed = true;
-      profile.updateRecentReadByAid(_articleId);
+      profile.updateRecentReadByArticleId(_articleId);
     }
     return Scaffold(
       body: SafeArea(
@@ -43,7 +42,7 @@ class ArticleScreen extends StatelessWidget {
               if (scrollInfo.metrics.pixels ==
                   scrollInfo.metrics.maxScrollExtent) {
                 Provider.of<CommentsProvider>(context, listen: false)
-                    .fetchMoreL1Comments(profile.uid);
+                    .fetchMoreLevel1Comments(profile.uid);
               }
               return true;
             },

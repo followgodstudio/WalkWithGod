@@ -5,12 +5,14 @@ import '../../configurations/constants.dart';
 import 'message_provider.dart';
 
 class MessagesProvider with ChangeNotifier {
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final String _userId;
   List<MessageProvider> _items = [];
-  String _userId;
   DocumentSnapshot _lastVisible;
   bool _noMore = false;
   bool _isFetching = false; // To avoid frequently request
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
+
+  MessagesProvider([this._userId]);
 
   List<MessageProvider> get items {
     return [..._items];
@@ -20,18 +22,15 @@ class MessagesProvider with ChangeNotifier {
     return _noMore;
   }
 
-  Future<void> fetchMessageListByUid(String userId,
-      [int limit = loadLimit]) async {
-    if (userId == null) return;
+  Future<void> fetchMessageList([int limit = loadLimit]) async {
     QuerySnapshot query = await _db
         .collection(cUsers)
-        .doc(userId)
+        .doc(_userId)
         .collection(cUserMessages)
         .orderBy(fCreatedDate, descending: true)
         .limit(limit)
         .get();
     _items = [];
-    _userId = userId;
     _appendMessageList(query, limit);
   }
 

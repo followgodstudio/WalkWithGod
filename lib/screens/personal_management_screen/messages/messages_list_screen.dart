@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 
 import '../../../configurations/theme.dart';
 import '../../../providers/user/messages_provider.dart';
-import '../../../providers/user/profile_provider.dart';
 import 'message_item.dart';
 
 class MessagesListScreen extends StatelessWidget {
@@ -37,9 +36,7 @@ class MessagesListScreen extends StatelessWidget {
           child: SingleChildScrollView(
               child: FutureBuilder(
                   future: Provider.of<MessagesProvider>(context, listen: false)
-                      .fetchMessageListByUid(
-                          Provider.of<ProfileProvider>(context, listen: false)
-                              .uid),
+                      .fetchMessageList(),
                   builder: (ctx, asyncSnapshot) {
                     if (asyncSnapshot.connectionState ==
                         ConnectionState.waiting)
