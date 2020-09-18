@@ -160,25 +160,40 @@ class AuthProvider with ChangeNotifier {
     _auth.verifyPhoneNumber(
         phoneNumber: phone,
         timeout: Duration(seconds: 60),
-        verificationCompleted: (AuthCredential authCredential) {
-          _auth
-              .signInWithCredential(authCredential)
-              .then((UserCredential result) {
-            ProfileProvider().initProfile(result.user.uid);
+        verificationCompleted: (PhoneAuthCredential authCredential) async {
+          UserCredential result =
+              await _auth.signInWithCredential(authCredential);
+// _auth.currentUser.linkWithCredential(credential)
+          User user = result.user;
+
+          if (user != null) {
             Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => HomeScreen()),
-            ); // to pop the dialog box
-            // Navigator.of(context).pushReplacementNamed('/home');
-          }).catchError((e) {
-            return "error";
-          });
+                context, MaterialPageRoute(builder: (context) => HomeScreen()));
+          } else {
+            print("Error");
+          }
+
+          // _auth
+          //     .signInWithCredential(authCredential)
+          //     .then((UserCredential result) {
+          //   if (result.additionalUserInfo.isNewUser) {
+          //     ProfileProvider().initProfile(result.user.uid);
+          //   }
+          //   Navigator.push(
+          //     context,
+          //     MaterialPageRoute(builder: (context) => HomeScreen()),
+          //   ); // to pop the dialog box
+          //   // Navigator.of(context).pushReplacementNamed('/home');
+          // }).catchError((e) {
+          //   return "error";
+          // });
         },
         verificationFailed: (FirebaseAuthException exception) {
           return "error";
         },
         codeSent: (String verificationId, [int forceResendingToken]) {
           final _codeController = TextEditingController();
+          print(verificationId);
           showDialog(
             context: context,
             barrierDismissible: false,
@@ -200,7 +215,9 @@ class AuthProvider with ChangeNotifier {
                     _auth
                         .signInWithCredential(_credential)
                         .then((UserCredential result) {
-                      ProfileProvider().initProfile(result.user.uid);
+                      if (result.additionalUserInfo.isNewUser) {
+                        ProfileProvider().initProfile(result.user.uid);
+                      }
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => HomeScreen()),
