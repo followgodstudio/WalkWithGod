@@ -107,7 +107,7 @@ class FriendsProvider with ChangeNotifier {
             item.friendStatus != eFriendStatusFriend));
   }
 
-  Future<void> removefollowInList(String uid, [bool isRefresh = true]) async {
+  Future<void> removefollowInList(String uid) async {
     _following.removeWhere((item) => item.friendUid == uid);
     FriendProvider friend =
         _follower.firstWhere((element) => element.friendUid == uid, orElse: () {
@@ -115,7 +115,7 @@ class FriendsProvider with ChangeNotifier {
     });
     if (friend != null) friend.friendStatus = eFriendStatusFollower;
     followingsCount -= 1;
-    if (isRefresh) notifyListeners();
+    notifyListeners();
 
     // Update database
     WriteBatch batch = _db.batch();
@@ -136,8 +136,9 @@ class FriendsProvider with ChangeNotifier {
     await batch.commit();
   }
 
-  Future<void> addFollowInList(FriendProvider friend,
-      [bool isRefresh = true]) async {
+  Future<void> addFollowInList(
+    FriendProvider friend,
+  ) async {
     FriendProvider old = _following.firstWhere(
         (element) => element.friendUid == friend.friendUid, orElse: () {
       return null;
@@ -153,7 +154,7 @@ class FriendsProvider with ChangeNotifier {
     });
     if (follower != null) follower.friendStatus = friend.friendStatus;
     followingsCount += 1;
-    if (isRefresh) notifyListeners();
+    notifyListeners();
 
     // Update database
     WriteBatch batch = _db.batch();

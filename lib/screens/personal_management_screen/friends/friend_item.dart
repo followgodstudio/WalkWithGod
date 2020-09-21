@@ -29,11 +29,11 @@ class FriendItem extends StatelessWidget {
                           data.unfollow(
                               profile.uid, profile.name, profile.imageUrl);
                           profile.friendsProvider
-                              .removefollowInList(data.friendUid, false);
+                              .removefollowInList(data.friendUid);
                         } else {
                           data.follow(
                               profile.uid, profile.name, profile.imageUrl);
-                          profile.friendsProvider.addFollowInList(data, false);
+                          profile.friendsProvider.addFollowInList(data);
                         }
                       },
                       child: Text(
