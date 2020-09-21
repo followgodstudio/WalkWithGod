@@ -6,13 +6,19 @@ import 'message_provider.dart';
 
 class MessagesProvider with ChangeNotifier {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
-  final String _userId;
+  String _userId;
+  int messagesCount = 0;
+  int unreadMessagesCount = 0;
   List<MessageProvider> _items = [];
   DocumentSnapshot _lastVisible;
   bool _noMore = false;
   bool _isFetching = false; // To avoid frequently request
 
-  MessagesProvider([this._userId]);
+  // getters and setters
+
+  void setUserId(String userId) {
+    _userId = userId;
+  }
 
   List<MessageProvider> get items {
     return [..._items];
@@ -22,7 +28,11 @@ class MessagesProvider with ChangeNotifier {
     return _noMore;
   }
 
-  Future<void> fetchMessageList([int limit = loadLimit]) async {
+  // methods
+
+  Future<void> fetchMessageList(int newMessageCount,
+      [int limit = loadLimit]) async {
+    if (newMessageCount == messagesCount) return; // do not need to refresh
     QuerySnapshot query = await _db
         .collection(cUsers)
         .doc(_userId)
@@ -76,10 +86,16 @@ class MessagesProvider with ChangeNotifier {
         _db.collection(cUsers).doc(receiverUid).collection(cUserMessages).doc();
     batch.set(newDocRef, data);
     // Increase message and unread message count by 1
-    batch.update(_db.collection(cUsers).doc(receiverUid), {
-      fUserMessagesCount: FieldValue.increment(1),
-      fUserUnreadMsgCount: FieldValue.increment(1)
-    });
+    batch.update(
+        _db
+            .collection(cUsers)
+            .doc(receiverUid)
+            .collection(cUserProfile)
+            .doc(dUserProfileDynamic),
+        {
+          fUserMessagesCount: FieldValue.increment(1),
+          fUserUnreadMsgCount: FieldValue.increment(1)
+        });
 
     await batch.commit();
   }

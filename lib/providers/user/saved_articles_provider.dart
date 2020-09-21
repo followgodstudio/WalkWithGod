@@ -7,14 +7,19 @@ import '../article/articles_provider.dart';
 
 class SavedArticlesProvider with ChangeNotifier {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
-  final String _userId;
+  String _userId;
+  int savedArticlesCount = 0;
   List<ArticleProvider> _articles = [];
   DocumentSnapshot _lastVisible;
   bool _noMore = false;
   bool _isFetching = false; // To avoid frequently request
   bool _currentLike = false; // for the article screen
 
-  SavedArticlesProvider([this._userId]);
+  // getters and setters
+
+  void setUserId(String userId) {
+    _userId = userId;
+  }
 
   List<ArticleProvider> get articles {
     return [..._articles];
@@ -28,7 +33,11 @@ class SavedArticlesProvider with ChangeNotifier {
     return _currentLike;
   }
 
+  // methods
+
   Future<void> fetchSavedList([int limit = loadLimit]) async {
+    if (_isFetching) return;
+    _isFetching = true;
     QuerySnapshot query = await _db
         .collection(cUsers)
         .doc(_userId)
@@ -39,6 +48,7 @@ class SavedArticlesProvider with ChangeNotifier {
     _articles = [];
     _noMore = false;
     await _appendSavedList(query, limit);
+    _isFetching = false;
   }
 
   Future<void> fetchMoreSavedArticles([int limit = loadLimit]) async {
@@ -68,6 +78,7 @@ class SavedArticlesProvider with ChangeNotifier {
 
   Future<void> removeSavedByArticleId(String articleId) async {
     _articles.removeWhere((item) => item.id == articleId);
+    savedArticlesCount = _articles.length;
     _currentLike = false;
     notifyListeners();
     // Update remote database
@@ -77,8 +88,13 @@ class SavedArticlesProvider with ChangeNotifier {
         .doc(_userId)
         .collection(cUserSavedarticles)
         .doc(articleId));
-    batch.update(_db.collection(cUsers).doc(_userId),
-        {fUserSavedArticlesCount: FieldValue.increment(-1)});
+    batch.update(
+        _db
+            .collection(cUsers)
+            .doc(_userId)
+            .collection(cUserProfile)
+            .doc(dUserProfileStatic),
+        {fUserSavedArticlesCount: savedArticlesCount});
     await batch.commit();
   }
 
@@ -88,6 +104,7 @@ class SavedArticlesProvider with ChangeNotifier {
     ArticleProvider article =
         await ArticlesProvider().fetchArticlePreviewById(articleId);
     _articles.insert(0, article);
+    savedArticlesCount = _articles.length;
     notifyListeners();
     // Update remote database
     WriteBatch batch = _db.batch();
@@ -98,8 +115,13 @@ class SavedArticlesProvider with ChangeNotifier {
             .collection(cUserSavedarticles)
             .doc(articleId),
         {fCreatedDate: Timestamp.now()});
-    batch.update(_db.collection(cUsers).doc(_userId),
-        {fUserSavedArticlesCount: FieldValue.increment(1)});
+    batch.update(
+        _db
+            .collection(cUsers)
+            .doc(_userId)
+            .collection(cUserProfile)
+            .doc(dUserProfileStatic),
+        {fUserSavedArticlesCount: savedArticlesCount});
     await batch.commit();
   }
 

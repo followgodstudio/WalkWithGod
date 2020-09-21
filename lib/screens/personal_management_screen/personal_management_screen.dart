@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../configurations/constants.dart';
 import '../../configurations/theme.dart';
+import '../../providers/user/friends_provider.dart';
 import '../../providers/user/profile_provider.dart';
 import '../../providers/user/saved_articles_provider.dart';
 import '../../widgets/article_card_small.dart';
@@ -118,18 +119,22 @@ class FriendsMessages extends StatelessWidget {
                               style: Theme.of(context).textTheme.captionMedium1,
                             ),
                             SizedBox(height: 8.0),
-                            Text(
-                              "共" +
-                                  (snapshot.data[fUserFollowersCount] == null
-                                      ? 0
-                                      : snapshot.data[fUserFollowersCount]
-                                          .toString()) +
-                                  "人关注我, 已关注" +
-                                  snapshot.data[fUserFollowingsCount]
-                                      .toString() +
-                                  "人",
-                              style: Theme.of(context).textTheme.captionMain,
-                            ),
+                            Consumer<FriendsProvider>(
+                                builder: (ctx, value, _) => Text(
+                                      "共" +
+                                          (snapshot.data[fUserFollowersCount] ==
+                                                  null
+                                              ? 0
+                                              : snapshot
+                                                  .data[fUserFollowersCount]
+                                                  .toString()) +
+                                          "人关注我, 已关注" +
+                                          value.followingsCount.toString() +
+                                          "人",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .captionMain,
+                                    )),
                           ],
                         ),
                       ),
@@ -186,77 +191,63 @@ class FriendsMessages extends StatelessWidget {
 class SavedArticles extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    ProfileProvider profile =
-        Provider.of<ProfileProvider>(context, listen: false);
-    return FutureBuilder(
-        future: Provider.of<SavedArticlesProvider>(context, listen: false)
-            .fetchSavedList(),
-        builder: (ctx, asyncSnapshot) {
-          if (asyncSnapshot.connectionState == ConnectionState.waiting)
-            return Center(child: CircularProgressIndicator());
-          if (asyncSnapshot.error != null)
-            return Center(child: Text('An error occurred!'));
-          return Consumer<SavedArticlesProvider>(
-              builder: (context, saved, child) {
-            Widget savedArticles;
-            if (saved.articles.length == 0) {
-              savedArticles = SizedBox(height: 8.0);
-            } else {
-              List<Widget> list = [];
-              saved.articles.forEach((element) {
-                list.add(ArticleCard(element, 4 / 5));
-              });
-              if (!saved.noMore)
-                list.add(Center(child: Icon(Icons.more_horiz)));
-              savedArticles = Container(
-                height: 200,
-                child: NotificationListener<ScrollNotification>(
-                    onNotification: (ScrollNotification scrollInfo) {
-                      if (scrollInfo.metrics.pixels ==
-                          scrollInfo.metrics.maxScrollExtent) {
-                        saved.fetchMoreSavedArticles();
-                      }
-                      return true;
-                    },
-                    child: ListView(
-                        children: list, scrollDirection: Axis.horizontal)),
-              );
-            }
-            return Column(children: [
-              Divider(),
-              Row(
+    return Consumer<SavedArticlesProvider>(builder: (context, saved, child) {
+      Widget savedArticles;
+      if (saved.articles.length == 0) {
+        savedArticles = SizedBox(height: 8.0);
+      } else {
+        List<Widget> list = [];
+        saved.articles.forEach((element) {
+          list.add(ArticleCard(element, 4 / 5));
+        });
+        if (!saved.noMore) list.add(Center(child: Icon(Icons.more_horiz)));
+        savedArticles = Container(
+          height: 200,
+          child: NotificationListener<ScrollNotification>(
+              onNotification: (ScrollNotification scrollInfo) {
+                if (scrollInfo.metrics.pixels ==
+                    scrollInfo.metrics.maxScrollExtent) {
+                  saved.fetchMoreSavedArticles();
+                }
+                return true;
+              },
+              child:
+                  ListView(children: list, scrollDirection: Axis.horizontal)),
+        );
+      }
+      return Column(children: [
+        Divider(),
+        Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 8.0),
-                        Text("我的收藏",
-                            style: Theme.of(context).textTheme.captionMedium1),
-                        SizedBox(height: 8.0),
-                        Text(
-                            "共" + profile.savedArticlesCount.toString() + "篇收藏",
-                            style: Theme.of(context).textTheme.captionMain),
-                      ],
-                    ),
-                  ),
-                  if (saved.articles.length > 0)
-                    FlatButton(
-                        onPressed: () {
-                          Navigator.of(context)
-                              .pushNamed(SavedArticlesScreen.routeName);
-                        },
-                        child: Text("查看全部",
-                            style: Theme.of(context).textTheme.captionMedium4),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18.0),
-                        ),
-                        color: Theme.of(context).buttonColor),
+                  SizedBox(height: 8.0),
+                  Text("我的收藏",
+                      style: Theme.of(context).textTheme.captionMedium1),
+                  SizedBox(height: 8.0),
+                  Text("共" + saved.savedArticlesCount.toString() + "篇收藏",
+                      style: Theme.of(context).textTheme.captionMain),
                 ],
               ),
-              savedArticles,
-            ]);
-          });
-        });
+            ),
+            if (saved.articles.length > 0)
+              FlatButton(
+                  onPressed: () {
+                    Navigator.of(context)
+                        .pushNamed(SavedArticlesScreen.routeName);
+                  },
+                  child: Text("查看全部",
+                      style: Theme.of(context).textTheme.captionMedium4),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0),
+                  ),
+                  color: Theme.of(context).buttonColor),
+          ],
+        ),
+        savedArticles,
+      ]);
+    });
   }
 }

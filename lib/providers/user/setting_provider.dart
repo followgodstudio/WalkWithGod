@@ -10,8 +10,8 @@ import '../../configurations/constants.dart';
 
 class SettingProvider with ChangeNotifier {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
-  final String _userId;
-  bool keepScreenAwakeOnRead = false;
+  String _userId;
+  bool keepScreenAwake = false;
   bool hideRecentRead = false;
   bool allowFollowing = false;
   bool rejectStrangerMessage = false;
@@ -23,9 +23,9 @@ class SettingProvider with ChangeNotifier {
   double imageCacheSize = 0;
   int imageCacheNumber = 0;
 
-  SettingProvider([this._userId]);
-
-  Future<void> fetchSetting() async {}
+  void setUserId(String userId) {
+    _userId = userId;
+  }
 
   Future<void> fetchAboutUs() async {
     DocumentSnapshot doc =
@@ -66,31 +66,34 @@ class SettingProvider with ChangeNotifier {
   }
 
   Future<void> updateSetting({
-    bool newKeepScreenAwakeOnRead,
+    bool newKeepScreenAwake,
     bool newHideRecentRead,
     bool newAllowFollowing,
     bool newRejectStrangerMessage,
     bool newFollowingNotification,
   }) async {
     Map<String, dynamic> data = {};
-    if (newKeepScreenAwakeOnRead != null) {
-      keepScreenAwakeOnRead =
-          data[fSettingScreenAwake] = newKeepScreenAwakeOnRead;
-      Wakelock.toggle(on: newKeepScreenAwakeOnRead);
+    if (newKeepScreenAwake != null) {
+      keepScreenAwake = data[fSettingScreenAwake] = newKeepScreenAwake;
+      Wakelock.toggle(on: newKeepScreenAwake);
     }
     if (newHideRecentRead != null)
       hideRecentRead = data[fSettingHideRecentRead] = newHideRecentRead;
-    if (newAllowFollowing != null)
-      allowFollowing = data[fSettingAllowFollowing] = newAllowFollowing;
-    if (newRejectStrangerMessage != null)
-      rejectStrangerMessage =
-          data[fSettingRejectStrangerMessage] = newRejectStrangerMessage;
-    if (newFollowingNotification != null)
-      followingNotification =
-          data[fSettingFollowingNotification] = newFollowingNotification;
+    // if (newAllowFollowing != null)
+    //   allowFollowing = data[fSettingAllowFollowing] = newAllowFollowing;
+    // if (newRejectStrangerMessage != null)
+    //   rejectStrangerMessage =
+    //       data[fSettingRejectStrangerMessage] = newRejectStrangerMessage;
+    // if (newFollowingNotification != null)
+    //   followingNotification =
+    //       data[fSettingFollowingNotification] = newFollowingNotification;
     if (data.isNotEmpty) {
-      print(data);
-      // await _db.collection(cUsers).document(_userId).updateData(data);
+      await _db
+          .collection(cUsers)
+          .doc(_userId)
+          .collection(cUserProfile)
+          .doc(dUserProfileStatic)
+          .update(data);
       notifyListeners();
     }
   }

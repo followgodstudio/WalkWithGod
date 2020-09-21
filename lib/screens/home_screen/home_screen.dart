@@ -103,10 +103,11 @@ class _HomeScreenState extends State<HomeScreen> {
         body: SafeArea(
             child: FutureBuilder(
                 future: Future.wait([
+                  // TODO: move to splash screen
                   Provider.of<ArticlesProvider>(context, listen: false)
                       .fetchArticlesByDate(new DateTime.utc(1989, 11, 9)),
                   Provider.of<ProfileProvider>(context, listen: false)
-                      .fetchBasicProfile()
+                      .fetchAllUserInfo(uid)
                 ]),
                 builder: (ctx, asyncSnapshot) {
                   if (asyncSnapshot.connectionState ==

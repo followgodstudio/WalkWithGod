@@ -52,13 +52,12 @@ class _CommentDetailState extends State<CommentDetail> {
         height: 0.85 * MediaQuery.of(context).size.height,
         child: ChangeNotifierProvider.value(
             value: widget.commentProvider,
-            child: Builder(builder: (BuildContext context) {
-              BuildContext rootContext = context;
-              return NotificationListener<ScrollNotification>(
+            child: Builder(builder: (BuildContext context) 
+              => NotificationListener<ScrollNotification>(
                 onNotification: (ScrollNotification scrollInfo) {
                   if (scrollInfo.metrics.pixels ==
                       scrollInfo.metrics.maxScrollExtent) {
-                    Provider.of<CommentProvider>(rootContext, listen: false)
+                    Provider.of<CommentProvider>(context, listen: false)
                         .fetchMoreLevel2ChildrenComments(_userId);
                   }
                   return true;
@@ -100,7 +99,7 @@ class _CommentDetailState extends State<CommentDetail> {
                         return Column(children: list);
                       }),
                     )),
-              );
-            })));
+              )
+            )));
   }
 }

@@ -6,11 +6,7 @@ import 'configurations/theme.dart';
 import 'providers/article/articles_provider.dart';
 import 'providers/article/comments_provider.dart';
 import 'providers/auth_provider.dart';
-import 'providers/user/friends_provider.dart';
-import 'providers/user/messages_provider.dart';
 import 'providers/user/profile_provider.dart';
-import 'providers/user/saved_articles_provider.dart';
-import 'providers/user/setting_provider.dart';
 import 'screens/article_screen/article_screen.dart';
 import 'screens/auth_screen/email_auth_screen.dart';
 import 'screens/auth_screen/login_screen.dart';
@@ -44,89 +40,87 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (_) => AuthProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => ArticlesProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => CommentsProvider(),
-        ),
-        ChangeNotifierProxyProvider<AuthProvider, ProfileProvider>(
-          create: (_) => ProfileProvider(),
-          update: (context, auth, previou) => ProfileProvider(auth.currentUser),
-        ),
-        ChangeNotifierProxyProvider<AuthProvider, FriendsProvider>(
-          create: (_) => FriendsProvider(),
-          update: (context, auth, previou) => FriendsProvider(auth.currentUser),
-        ),
-        ChangeNotifierProxyProvider<AuthProvider, MessagesProvider>(
-          create: (_) => MessagesProvider(),
-          update: (context, auth, previou) =>
-              MessagesProvider(auth.currentUser),
-        ),
-        ChangeNotifierProxyProvider<AuthProvider, SavedArticlesProvider>(
-          create: (_) => SavedArticlesProvider(),
-          update: (context, auth, previou) =>
-              SavedArticlesProvider(auth.currentUser),
-        ),
-        ChangeNotifierProxyProvider<AuthProvider, SettingProvider>(
-          create: (_) => SettingProvider(),
-          update: (context, auth, previou) => SettingProvider(auth.currentUser),
-        ),
-      ],
-      child: LifeCycleManager(
-        child: MaterialApp(
-          title: 'Walk With God',
-          debugShowCheckedModeBanner: false,
-          theme: dayTheme,
-          home: Builder(builder: (BuildContext context) {
-            BuildContext rootContext = context;
-            return StreamBuilder<String>(
-                stream: Provider.of<AuthProvider>(rootContext, listen: false)
-                    .onAuthStateChanged,
-                builder:
-                    (BuildContext context, AsyncSnapshot<String> snapshot) {
-                  if (snapshot.connectionState == ConnectionState.active) {
-                    final bool isLoggedIn = snapshot.hasData;
-                    return isLoggedIn
-                        ? HomeScreen()
-                        : SignupScreen(authFormType: AuthFormType.signIn);
-                  }
-                  return LoadingScreen();
-                });
-          }),
-          routes: {
-            //LoginScreengi.routeName: (ctx) => LoginScreen(),
-            //SignupScreen.routeName: (ctx) => SignupScreen(),
-            PersonalManagementScreen.routeName: (ctx) =>
-                PersonalManagementScreen(),
-            SettingScreen.routeName: (ctx) => SettingScreen(),
-            PrivacyScreen.routeName: (ctx) => PrivacyScreen(),
-            NotificationScreen.routeName: (ctx) => NotificationScreen(),
-            CacheClearScreen.routeName: (ctx) => CacheClearScreen(),
-            AppInfoScreen.routeName: (ctx) => AppInfoScreen(),
-            AboutUsScreen.routeName: (ctx) => AboutUsScreen(),
-            BlackListScreen.routeName: (ctx) => BlackListScreen(),
-            DeleteAccountScreen.routeName: (ctx) => DeleteAccountScreen(),
-            MessagesListScreen.routeName: (ctx) => MessagesListScreen(),
-            FriendsListScreen.routeName: (ctx) => FriendsListScreen(),
-            EditProfileScreen.routeName: (ctx) => EditProfileScreen(),
-            EditPictureScreen.routeName: (ctx) => EditPictureScreen(),
-            NetworkScreen.routeName: (ctx) => NetworkScreen(),
-            SavedArticlesScreen.routeName: (ctx) => SavedArticlesScreen(),
-            EmailAuthScreen.routeName: (ctx) => EmailAuthScreen(),
-            LoginScreen.routeName: (ctx) => LoginScreen(),
-            HomeScreen.routeName: (ctx) => HomeScreen(),
-            ArticleScreen.routeName: (ctx) => ArticleScreen(),
-            SignupScreen.routeName: (ctx) =>
-                SignupScreen(authFormType: AuthFormType.signIn),
-          },
-        ),
-      ),
-    );
+        providers: [
+          ChangeNotifierProvider(
+            create: (_) => AuthProvider(),
+          ),
+          ChangeNotifierProvider(
+            create: (_) => ArticlesProvider(),
+          ),
+          ChangeNotifierProvider(
+            create: (_) => CommentsProvider(),
+          ),
+          ChangeNotifierProvider(
+            create: (_) => ProfileProvider(),
+          ),
+        ],
+        child: Builder(builder: (BuildContext context) {
+          return MultiProvider(
+            providers: [
+              ChangeNotifierProvider.value(
+                  value: Provider.of<ProfileProvider>(context, listen: false)
+                      .savedArticlesProvider),
+              ChangeNotifierProvider.value(
+                  value: Provider.of<ProfileProvider>(context, listen: false)
+                      .friendsProvider),
+              ChangeNotifierProvider.value(
+                  value: Provider.of<ProfileProvider>(context, listen: false)
+                      .settingProvider),
+              ChangeNotifierProvider.value(
+                  value: Provider.of<ProfileProvider>(context, listen: false)
+                      .messagesProvider),
+              ChangeNotifierProvider.value(
+                  value: Provider.of<ProfileProvider>(context, listen: false)
+                      .recentReadProvider),
+            ],
+            child: LifeCycleManager(
+              child: MaterialApp(
+                title: 'Walk With God',
+                debugShowCheckedModeBanner: false,
+                theme: dayTheme,
+                home: StreamBuilder<String>(
+                    stream: Provider.of<AuthProvider>(context, listen: false)
+                        .onAuthStateChanged,
+                    builder:
+                        (BuildContext context, AsyncSnapshot<String> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.active) {
+                        final bool isLoggedIn = snapshot.hasData;
+                        return isLoggedIn
+                            ? HomeScreen()
+                            : SignupScreen(authFormType: AuthFormType.signIn);
+                      }
+                      return LoadingScreen();
+                    }),
+                routes: {
+                  //LoginScreengi.routeName: (ctx) => LoginScreen(),
+                  //SignupScreen.routeName: (ctx) => SignupScreen(),
+                  PersonalManagementScreen.routeName: (ctx) =>
+                      PersonalManagementScreen(),
+                  SettingScreen.routeName: (ctx) => SettingScreen(),
+                  PrivacyScreen.routeName: (ctx) => PrivacyScreen(),
+                  NotificationScreen.routeName: (ctx) => NotificationScreen(),
+                  CacheClearScreen.routeName: (ctx) => CacheClearScreen(),
+                  AppInfoScreen.routeName: (ctx) => AppInfoScreen(),
+                  AboutUsScreen.routeName: (ctx) => AboutUsScreen(),
+                  BlackListScreen.routeName: (ctx) => BlackListScreen(),
+                  DeleteAccountScreen.routeName: (ctx) => DeleteAccountScreen(),
+                  MessagesListScreen.routeName: (ctx) => MessagesListScreen(),
+                  FriendsListScreen.routeName: (ctx) => FriendsListScreen(),
+                  EditProfileScreen.routeName: (ctx) => EditProfileScreen(),
+                  EditPictureScreen.routeName: (ctx) => EditPictureScreen(),
+                  NetworkScreen.routeName: (ctx) => NetworkScreen(),
+                  SavedArticlesScreen.routeName: (ctx) => SavedArticlesScreen(),
+                  EmailAuthScreen.routeName: (ctx) => EmailAuthScreen(),
+                  LoginScreen.routeName: (ctx) => LoginScreen(),
+                  HomeScreen.routeName: (ctx) => HomeScreen(),
+                  ArticleScreen.routeName: (ctx) => ArticleScreen(),
+                  SignupScreen.routeName: (ctx) =>
+                      SignupScreen(authFormType: AuthFormType.signIn),
+                },
+              ),
+            ),
+          );
+        }));
   }
 }
 
@@ -158,6 +152,7 @@ class _LifeCycleManagerState extends State<LifeCycleManager>
     if (state == AppLifecycleState.resumed) _start = DateTime.now();
     if (state == AppLifecycleState.paused)
       Provider.of<ProfileProvider>(context, listen: false)
+          .recentReadProvider
           .updateReadDuration(_start);
   }
 

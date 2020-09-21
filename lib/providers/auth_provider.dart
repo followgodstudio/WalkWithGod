@@ -36,7 +36,7 @@ class AuthProvider with ChangeNotifier {
     if (authMode == AuthMode.createUserWithEmail) {
       result = await _auth.createUserWithEmailAndPassword(
           email: username, password: password);
-      await ProfileProvider(result.user.uid).initProfile();
+      await (ProfileProvider()..setUserId(result.user.uid)).initProfile();
     } else if (authMode == AuthMode.signInWithEmail) {
       result = await _auth.signInWithEmailAndPassword(
           email: username, password: password);
@@ -53,7 +53,7 @@ class AuthProvider with ChangeNotifier {
       password: password,
     );
 
-    await ProfileProvider(authResult.user.uid).initProfile();
+    await (ProfileProvider()..setUserId(authResult.user.uid)).initProfile();
     _uid = authResult.user.uid;
     notifyListeners();
     // Update the username
@@ -106,7 +106,7 @@ class AuthProvider with ChangeNotifier {
 
     var authResult = await _auth.signInWithCredential(credential);
     if (authResult.additionalUserInfo.isNewUser) {
-      await ProfileProvider(authResult.user.uid).initProfile();
+      await (ProfileProvider()..setUserId(authResult.user.uid)).initProfile();
     }
 
     return authResult.user.uid;
@@ -216,7 +216,8 @@ class AuthProvider with ChangeNotifier {
                         .signInWithCredential(_credential)
                         .then((UserCredential result) {
                       if (result.additionalUserInfo.isNewUser) {
-                        ProfileProvider(result.user.uid).initProfile();
+                        (ProfileProvider()..setUserId(result.user.uid))
+                            .initProfile();
                       }
                       Navigator.push(
                         context,
@@ -238,7 +239,7 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<void> deleteUser() async {
-    await ProfileProvider(_uid).deleteProfile();
+    await (ProfileProvider()..setUserId(_uid)).deleteProfile();
     await _auth.currentUser.delete();
     _uid = null;
   }

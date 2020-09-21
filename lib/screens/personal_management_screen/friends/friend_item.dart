@@ -28,9 +28,12 @@ class FriendItem extends StatelessWidget {
                             data.friendStatus == eFriendStatusFriend) {
                           data.unfollow(
                               profile.uid, profile.name, profile.imageUrl);
+                          profile.friendsProvider
+                              .removefollowInList(data.friendUid, false);
                         } else {
                           data.follow(
                               profile.uid, profile.name, profile.imageUrl);
+                          profile.friendsProvider.addFollowInList(data, false);
                         }
                       },
                       child: Text(

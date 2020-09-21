@@ -44,7 +44,12 @@ class MessageProvider with ChangeNotifier {
             .doc(id),
         {fMessageIsRead: read});
     // Update unread count
-    batch.update(_db.collection(cUsers).doc(receiverUid),
+    batch.update(
+        _db
+            .collection(cUsers)
+            .doc(receiverUid)
+            .collection(cUserProfile)
+            .doc(dUserProfileDynamic),
         {fUserUnreadMsgCount: FieldValue.increment(-1)});
     await batch.commit();
   }

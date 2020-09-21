@@ -39,7 +39,7 @@ class PrivacyScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("隐藏你最近的阅读内容TODO",
+                          Text("隐藏你最近的阅读内容",
                               style:
                                   Theme.of(context).textTheme.captionMedium1),
                           FlutterSwitch(

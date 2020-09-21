@@ -57,8 +57,6 @@ class AppInfoScreen extends StatelessWidget {
                     FutureBuilder(
                         future: Future.wait([
                           PackageInfo.fromPlatform(),
-                          Provider.of<SettingProvider>(context, listen: false)
-                              .fetchNewestVersion()
                         ]),
                         builder: (ctx, asyncSnapshot) {
                           if (asyncSnapshot.connectionState ==
