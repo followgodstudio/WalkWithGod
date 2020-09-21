@@ -15,11 +15,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "21802022919-psc5aigtlo0ovljjp3cnlmlbnu55h2j1.apps.googleusercontent.com",
-          "client_type": 3
+          "client_id": "21802022919-4te0vrmmla3c3rj239827jasi8qguh6c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.walk_with_god",
+            "certificate_hash": "b7f49edd9f08810f8756ce377af71424cbbe4a64"
+          }
         },
         {
-          "client_id": "21802022919-4te0vrmmla3c3rj239827jasi8qguh6c.apps.googleusercontent.com",
+          "client_id": "21802022919-psc5aigtlo0ovljjp3cnlmlbnu55h2j1.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -32,7 +36,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "21802022919-psc5aigtlo0ovljjp3cnlmlbnu55h2j1.apps.googleusercontent.com",
+              "client_id": "21802022919-24luec12hbrusquh6peq70p6n75bit6i.apps.googleusercontent.com",
               "client_type": 3
             },
             {

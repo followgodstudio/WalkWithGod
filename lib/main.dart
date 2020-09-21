@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:walk_with_god/providers/splash_provider.dart';
 
 import 'configurations/theme.dart';
 import 'providers/article/articles_provider.dart';
@@ -75,6 +76,10 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProxyProvider<AuthProvider, SettingProvider>(
           create: (_) => SettingProvider(),
           update: (context, auth, previou) => SettingProvider(auth.currentUser),
+        ),
+        ChangeNotifierProvider<SplashProvider>(
+          create: (_) => SplashProvider(),
+          //update: (context, auth, previou) => SettingProvider(auth.currentUser),
         ),
       ],
       child: LifeCycleManager(
