@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:walk_with_god/providers/splash_provider.dart';
@@ -66,7 +67,8 @@ class _SplashScreenState extends State<SplashScreen> {
                                   child: Center(
                                     child: Material(
                                         elevation: 5.0,
-                                        child: Image.network(value.imageUrl)),
+                                        child: CachedNetworkImage(
+                                            imageUrl: value.imageUrl)),
                                   ),
                                 ),
                               ),
@@ -106,7 +108,7 @@ class _SplashScreenState extends State<SplashScreen> {
                                     width: 100,
                                     height: 50,
                                     child: Image.asset(
-                                        "assets/images/app-logo.png"),
+                                        "assets/images/app_logo.png"),
                                   ),
                                   Expanded(
                                     child: SizedBox(),

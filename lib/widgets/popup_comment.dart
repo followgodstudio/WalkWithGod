@@ -17,7 +17,7 @@ class PopUpComment extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Container(
-        height: MediaQuery.of(context).size.height,
+        height: 0.65 * MediaQuery.of(context).size.height,
         child: Column(
           children: <Widget>[
             Row(
@@ -62,9 +62,7 @@ class PopUpComment extends StatelessWidget {
             ),
             Expanded(
               child: TextField(
-                // showCursor: true,
-                // readOnly: true,
-                //autofocus: true,
+                autofocus: true,
                 maxLines: 11,
                 controller: _commentController,
                 decoration: InputDecoration.collapsed(hintText: '请写下您的留言'),

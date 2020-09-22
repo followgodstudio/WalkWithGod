@@ -3,12 +3,15 @@ import 'package:provider/provider.dart';
 
 import '../../../configurations/theme.dart';
 import '../../../providers/user/messages_provider.dart';
+import '../../../providers/user/profile_provider.dart';
 import 'message_item.dart';
 
 class MessagesListScreen extends StatelessWidget {
   static const routeName = '/messages_list';
   @override
   Widget build(BuildContext context) {
+    ProfileProvider profile =
+        Provider.of<ProfileProvider>(context, listen: false);
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -28,15 +31,14 @@ class MessagesListScreen extends StatelessWidget {
           onNotification: (ScrollNotification scrollInfo) {
             if (scrollInfo.metrics.pixels ==
                 scrollInfo.metrics.maxScrollExtent) {
-              Provider.of<MessagesProvider>(context, listen: false)
-                  .fetchMoreMessages();
+              profile.messagesProvider.fetchMoreMessages();
             }
             return true;
           },
           child: SingleChildScrollView(
               child: FutureBuilder(
-                  future: Provider.of<MessagesProvider>(context, listen: false)
-                      .fetchMessageList(),
+                  future: profile.messagesProvider
+                      .fetchMessageList(profile.messagesCount),
                   builder: (ctx, asyncSnapshot) {
                     if (asyncSnapshot.connectionState ==
                         ConnectionState.waiting)

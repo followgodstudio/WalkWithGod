@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../../configurations/theme.dart';
 import '../../../providers/user/setting_provider.dart';
-import '../../../widgets/succeeded_dialog.dart';
+import '../../../widgets/popup_dialog.dart';
 
 class CacheClearScreen extends StatelessWidget {
   static const routeName = '/cache_clear';
@@ -74,7 +74,7 @@ class CacheClearScreen extends StatelessWidget {
                                   Future.delayed(Duration(seconds: 1), () {
                                     Navigator.of(context).pop(true);
                                   });
-                                  return SucceededDialog("完成清理");
+                                  return PopUpDialog(true, "完成清理");
                                 });
                           },
                           child: Text("清 理",

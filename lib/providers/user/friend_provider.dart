@@ -39,12 +39,7 @@ class FriendProvider with ChangeNotifier {
           fFriendFollowingDate: Timestamp.fromDate(followingDate),
           fFriendStatus: friendStatus
         },
-        SetOptions(merge: true)
-        //merge: true
-        );
-    // Update following count
-    batch.update(_db.collection(cUsers).doc(uid),
-        {fUserFollowingsCount: FieldValue.increment(1)});
+        SetOptions(merge: true));
 
     // Update followed user's document
     batch.set(
@@ -57,12 +52,7 @@ class FriendProvider with ChangeNotifier {
               ? eFriendStatusFriend
               : eFriendStatusFollower)
         },
-        SetOptions(merge: true)
-        //merge: true
-        );
-    // Update follower count
-    batch.update(_db.collection(cUsers).doc(friendUid),
-        {fUserFollowersCount: FieldValue.increment(1)});
+        SetOptions(merge: true));
 
     await batch.commit();
   }
@@ -77,8 +67,8 @@ class FriendProvider with ChangeNotifier {
     // Update remote database
     WriteBatch batch = _db.batch();
 
-    // Update current user's document
     if (friendStatus != null) {
+      // They were friends
       batch.set(
           _db
               .collection(cUsers)
@@ -86,22 +76,7 @@ class FriendProvider with ChangeNotifier {
               .collection(cUserFriends)
               .doc(friendUid),
           {fFriendStatus: friendStatus},
-          SetOptions(merge: true)
-          //merge: true
-          );
-    } else {
-      batch.delete(_db
-          .collection(cUsers)
-          .doc(uid)
-          .collection(cUserFriends)
-          .doc(friendUid));
-    }
-    // Update following count
-    batch.update(_db.collection(cUsers).doc(uid),
-        {fUserFollowingsCount: FieldValue.increment(-1)});
-
-    // Update followed user's document
-    if (friendStatus != null) {
+          SetOptions(merge: true));
       batch.set(
           _db
               .collection(cUsers)
@@ -109,20 +84,19 @@ class FriendProvider with ChangeNotifier {
               .collection(cUserFriends)
               .doc(uid),
           {fFriendStatus: eFriendStatusFollowing},
-          SetOptions(merge: true)
-          //merge: true
-          );
+          SetOptions(merge: true));
     } else {
+      batch.delete(_db
+          .collection(cUsers)
+          .doc(uid)
+          .collection(cUserFriends)
+          .doc(friendUid));
       batch.delete(_db
           .collection(cUsers)
           .doc(friendUid)
           .collection(cUserFriends)
           .doc(uid));
     }
-    // Update follower count
-    batch.update(_db.collection(cUsers).doc(friendUid),
-        {fUserFollowersCount: FieldValue.increment(-1)});
-
     await batch.commit();
   }
 }

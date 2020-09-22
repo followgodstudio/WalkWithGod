@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
+import '../../providers/article/articles_provider.dart';
 import '../../providers/article/comments_provider.dart';
 import '../../providers/user/profile_provider.dart';
 import 'article_body.dart';
@@ -12,7 +13,7 @@ import 'top_bar.dart';
 //ignore: must_be_immutable
 class ArticleScreen extends StatelessWidget {
   static const routeName = '/article_screen';
-  bool _updatedRecentUsed = false;
+  bool _updatedRecentRead = false;
   final dataKey = new GlobalKey();
   void scrollToComment() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -30,10 +31,14 @@ class ArticleScreen extends StatelessWidget {
     final HideNavbar hiding = HideNavbar();
     ProfileProvider profile =
         Provider.of<ProfileProvider>(context, listen: false);
-    if (!_updatedRecentUsed) {
+    if (!_updatedRecentRead) {
       // update recently read history, run only once.
-      _updatedRecentUsed = true;
-      profile.updateRecentReadByArticleId(_articleId);
+      _updatedRecentRead = true;
+      final loadedArticle = Provider.of<ArticlesProvider>(
+        context,
+        listen: false,
+      ).findById(_articleId);
+      profile.recentReadProvider.updateRecentReadByArticleId(loadedArticle);
     }
     return Scaffold(
       body: SafeArea(

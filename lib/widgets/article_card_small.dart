@@ -31,126 +31,110 @@ class ArticleCard extends StatelessWidget {
     return Container(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 12.5),
-        child: Hero(
-            tag: article.id,
-            child: FutureBuilder(
-              future: _getImage(article.imageUrl),
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (snapshot.hasData) {
-                  return AspectRatio(
-                    aspectRatio: aspectRatio,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: backgroundImage, fit: BoxFit.cover),
-                      ),
-                      child: FlatButton(
-                        onPressed: () {
-                          Navigator.of(context).pushNamed(
-                            ArticleScreen.routeName,
-                            arguments: {'articleId': article.id},
-                          );
-                        },
-                        child: Align(
-                          alignment: Alignment.bottomCenter,
-                          child: FutureBuilder(
-                            future: useWhiteTextColor(
-                                CachedNetworkImageProvider(article.imageUrl)),
-                            builder: (BuildContext context,
-                                AsyncSnapshot<bool> snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return Center(
-                                  child: CircularProgressIndicator(),
-                                );
-                              } else {
-                                if (snapshot.error != null) {
-                                  return Center(
-                                    child: Text('An error occurred!'),
-                                  );
-                                } else {
-                                  textColor = snapshot.data
-                                      ? Colors.white
-                                      : Colors.black;
-                                  return Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Expanded(child: SizedBox()),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 2.0),
-                                        child: Text(
-                                          article.title ?? "",
-                                          maxLines: 3,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                              fontFamily: "Jinling",
-                                              color: textColor,
-                                              fontSize: 16),
-                                        ),
-                                      ),
-                                      Divider(
+        child: FutureBuilder(
+          future: _getImage(article.imageUrl),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (snapshot.hasData) {
+              return AspectRatio(
+                aspectRatio: aspectRatio,
+                child: Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: backgroundImage, fit: BoxFit.cover),
+                  ),
+                  child: FlatButton(
+                    onPressed: () {
+                      Navigator.of(context).pushNamed(
+                        ArticleScreen.routeName,
+                        arguments: {'articleId': article.id},
+                      );
+                    },
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: FutureBuilder(
+                        future: useWhiteTextColor(
+                            CachedNetworkImageProvider(article.imageUrl)),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<bool> snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          } else {
+                            if (snapshot.error != null) {
+                              return Center(
+                                child: Text('An error occurred!'),
+                              );
+                            } else {
+                              textColor =
+                                  snapshot.data ? Colors.white : Colors.black;
+                              return Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    article.title ?? "",
+                                    maxLines: 3,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                        fontFamily: "Jinling",
                                         color: textColor,
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            top: 0.0, bottom: 4.0),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            article.icon == null ||
-                                                    article.icon.isEmpty
-                                                ? Icon(
-                                                    Icons.album,
-                                                    color: textColor,
-                                                  )
-                                                : CircleAvatar(
-                                                    radius: 10,
-                                                    backgroundImage:
-                                                        CachedNetworkImageProvider(
-                                                            article.icon),
-                                                    backgroundColor:
-                                                        Colors.transparent,
-                                                  ),
-                                            SizedBox(
-                                              width: 5.0,
+                                        fontSize: 16),
+                                  ),
+                                  Divider(
+                                    color: textColor,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      article.icon == null ||
+                                              article.icon.isEmpty
+                                          ? Icon(
+                                              Icons.album,
+                                              color: textColor,
+                                            )
+                                          : CircleAvatar(
+                                              radius: 10,
+                                              backgroundImage:
+                                                  CachedNetworkImageProvider(
+                                                      article.icon),
+                                              backgroundColor:
+                                                  Colors.transparent,
                                             ),
-                                            Expanded(
-                                              child: Text(
-                                                article.authorName ?? "匿名",
-                                                style: TextStyle(
-                                                    fontFamily:
-                                                        "LantingXianHei",
-                                                    color: textColor,
-                                                    fontSize: 12),
-                                              ),
-                                            ),
-                                          ],
+                                      SizedBox(width: 5.0),
+                                      Expanded(
+                                        child: Text(
+                                          article.authorName ?? "匿名",
+                                          style: TextStyle(
+                                              fontFamily: "LantingXianHei",
+                                              color: textColor,
+                                              fontSize: 12),
                                         ),
                                       ),
                                     ],
-                                  );
-                                }
-                              }
-                            },
-                          ),
-                        ),
+                                  ),
+                                  SizedBox(height: 4.0),
+                                ],
+                              );
+                            }
+                          }
+                        },
                       ),
                     ),
-                  );
-                } else {
-                  return Center(
-                    child: CircularProgressIndicator(
-                      strokeWidth: 1.0,
-                      backgroundColor: Colors.black87,
-                    ),
-                  );
-                }
-              },
-            )),
+                  ),
+                ),
+              );
+            } else {
+              return Center(
+                child: CircularProgressIndicator(
+                  strokeWidth: 1.0,
+                  backgroundColor: Colors.black87,
+                ),
+              );
+            }
+          },
+        ),
       ),
     );
   }

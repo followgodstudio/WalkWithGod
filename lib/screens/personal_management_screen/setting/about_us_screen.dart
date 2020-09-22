@@ -27,41 +27,29 @@ class AboutUsScreen extends StatelessWidget {
             child: SingleChildScrollView(
           child: Padding(
               padding: const EdgeInsets.all(20.0),
-              child: FutureBuilder(
-                  future: Provider.of<SettingProvider>(context, listen: true)
-                      .fetchAboutUs(),
-                  builder: (ctx, asyncSnapshot) {
-                    if (asyncSnapshot.connectionState ==
-                        ConnectionState.waiting)
-                      return Center(child: CircularProgressIndicator());
-                    if (asyncSnapshot.error != null)
-                      return Center(child: Text('An error occurred'));
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 15.0),
-                          child: Text("我们是谁",
-                              style:
-                                  Theme.of(context).textTheme.captionMedium1),
-                        ),
-                        Text(
-                            Provider.of<SettingProvider>(context, listen: false)
-                                .whoAreWe,
-                            style: Theme.of(context).textTheme.bodyTextBlack),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 15.0),
-                          child: Text("我们的使命",
-                              style:
-                                  Theme.of(context).textTheme.captionMedium1),
-                        ),
-                        Text(
-                            Provider.of<SettingProvider>(context, listen: false)
-                                .ourMission,
-                            style: Theme.of(context).textTheme.bodyTextBlack),
-                      ],
-                    );
-                  })),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 15.0),
+                    child: Text("我们是谁",
+                        style: Theme.of(context).textTheme.captionMedium1),
+                  ),
+                  Text(
+                      Provider.of<SettingProvider>(context, listen: false)
+                          .whoAreWe,
+                      style: Theme.of(context).textTheme.bodyTextBlack),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 15.0),
+                    child: Text("我们的使命",
+                        style: Theme.of(context).textTheme.captionMedium1),
+                  ),
+                  Text(
+                      Provider.of<SettingProvider>(context, listen: false)
+                          .ourMission,
+                      style: Theme.of(context).textTheme.bodyTextBlack),
+                ],
+              )),
         )));
   }
 }

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../../configurations/theme.dart';
 import '../../../providers/user/friend_provider.dart';
 import '../../../providers/user/friends_provider.dart';
+import '../../../providers/user/profile_provider.dart';
 import 'friend_item.dart';
 
 // TODO: add wechat and facebook friends, add friends search
@@ -18,6 +19,8 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
   bool _isFollower = false;
   @override
   Widget build(BuildContext context) {
+    ProfileProvider profile =
+        Provider.of<ProfileProvider>(context, listen: false);
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -73,8 +76,10 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
               child: Padding(
             padding: const EdgeInsets.all(20.0),
             child: FutureBuilder(
-                future: Provider.of<FriendsProvider>(context, listen: false)
-                    .fetchFriendList(_isFollower),
+                future: _isFollower
+                    ? profile.friendsProvider
+                        .fetchFriendList(_isFollower, profile.followersCount)
+                    : profile.friendsProvider.refreshFollowingList(),
                 builder: (ctx, asyncSnapshot) {
                   if (asyncSnapshot.connectionState == ConnectionState.waiting)
                     return Center(child: CircularProgressIndicator());
