@@ -6,7 +6,7 @@ import '../../configurations/theme.dart';
 import '../../providers/article/comments_provider.dart';
 import '../../providers/user/profile_provider.dart';
 import '../../providers/user/saved_articles_provider.dart';
-import '../../widgets/succeeded_dialog.dart';
+import '../../widgets/popup_dialog.dart';
 import '../../widgets/popup_comment.dart';
 import 'share_article.dart';
 
@@ -53,7 +53,7 @@ class BottomBar extends StatelessWidget {
                                   Future.delayed(Duration(seconds: 1), () {
                                     Navigator.of(context).pop(true);
                                   });
-                                  return SucceededDialog("你刚刚发布了留言");
+                                  return PopUpDialog(true, "你刚刚发布了留言");
                                 });
                           },
                         ));

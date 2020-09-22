@@ -10,7 +10,7 @@ import '../providers/user/profile_provider.dart';
 import '../screens/personal_management_screen/headline/network_screen.dart';
 import '../utils/utils.dart';
 import '../widgets/popup_comment.dart';
-import 'succeeded_dialog.dart';
+import 'popup_dialog.dart';
 import 'profile_picture.dart';
 
 class Comment extends StatelessWidget {
@@ -161,8 +161,8 @@ class Comment extends StatelessWidget {
                                                   Navigator.of(context)
                                                       .pop(true);
                                                 });
-                                                return SucceededDialog(
-                                                    "你刚刚发布了留言");
+                                                return PopUpDialog(
+                                                    true, "你刚刚发布了留言");
                                               });
                                       },
                                     ));

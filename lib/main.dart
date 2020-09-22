@@ -1,6 +1,10 @@
+import 'dart:async';
+
+import 'package:connectivity/connectivity.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:walk_with_god/widgets/popup_dialog.dart';
 
 import 'configurations/theme.dart';
 import 'providers/article/articles_provider.dart';
@@ -86,8 +90,10 @@ class MyApp extends StatelessWidget {
                       if (snapshot.connectionState == ConnectionState.active) {
                         final bool isLoggedIn = snapshot.hasData;
                         return isLoggedIn
-                            ? HomeScreen()
-                            : SignupScreen(authFormType: AuthFormType.signIn);
+                            ? NetworkManager(child: HomeScreen())
+                            : NetworkManager(
+                                child: SignupScreen(
+                                    authFormType: AuthFormType.signIn));
                       }
                       return LoadingScreen();
                     }),
@@ -95,7 +101,7 @@ class MyApp extends StatelessWidget {
                   //LoginScreengi.routeName: (ctx) => LoginScreen(),
                   //SignupScreen.routeName: (ctx) => SignupScreen(),
                   PersonalManagementScreen.routeName: (ctx) =>
-                      PersonalManagementScreen(),
+                      NetworkManager(child: PersonalManagementScreen()),
                   SettingScreen.routeName: (ctx) => SettingScreen(),
                   PrivacyScreen.routeName: (ctx) => PrivacyScreen(),
                   NotificationScreen.routeName: (ctx) => NotificationScreen(),
@@ -112,10 +118,11 @@ class MyApp extends StatelessWidget {
                   SavedArticlesScreen.routeName: (ctx) => SavedArticlesScreen(),
                   EmailAuthScreen.routeName: (ctx) => EmailAuthScreen(),
                   LoginScreen.routeName: (ctx) => LoginScreen(),
-                  HomeScreen.routeName: (ctx) => HomeScreen(),
+                  HomeScreen.routeName: (ctx) =>
+                      NetworkManager(child: HomeScreen()),
                   ArticleScreen.routeName: (ctx) => ArticleScreen(),
-                  SignupScreen.routeName: (ctx) =>
-                      SignupScreen(authFormType: AuthFormType.signIn),
+                  SignupScreen.routeName: (ctx) => NetworkManager(
+                      child: SignupScreen(authFormType: AuthFormType.signIn)),
                 },
               ),
             ),
@@ -158,8 +165,49 @@ class _LifeCycleManagerState extends State<LifeCycleManager>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: widget.child,
-    );
+    return widget.child;
+  }
+}
+
+// To monitor whether network is available
+class NetworkManager extends StatefulWidget {
+  final Widget child;
+  NetworkManager({Key key, this.child}) : super(key: key);
+  _NetworkManagerState createState() => _NetworkManagerState();
+}
+
+class _NetworkManagerState extends State<NetworkManager> {
+  StreamSubscription<ConnectivityResult> subscription;
+  bool isConnected = true;
+
+  @override
+  void initState() {
+    super.initState();
+    checkNetwork();
+  }
+
+  @override
+  void dispose() {
+    subscription.cancel();
+    super.dispose();
+  }
+
+  Future<void> checkNetwork() async {
+    subscription = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) {
+      if (result == ConnectivityResult.none) {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return PopUpDialog(false, "请检查网络连接");
+            });
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return widget.child;
   }
 }
