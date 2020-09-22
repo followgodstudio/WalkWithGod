@@ -97,7 +97,12 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     String uid = Provider.of<AuthProvider>(context, listen: false).currentUser;
-    if (uid == null) return Text("User not logged in");
+    // if (uid == null) return Text("User not logged in");
+    if (uid == null) {
+      uid =
+          Provider.of<AuthProvider>(context, listen: false).singInAnonymously();
+    }
+
     return Scaffold(
         //resizeToAvoidBottomPadding: true,
         body: SafeArea(

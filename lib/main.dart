@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:walk_with_god/providers/splash_provider.dart';
 
 import 'configurations/theme.dart';
 import 'providers/article/articles_provider.dart';
@@ -16,7 +17,7 @@ import 'screens/auth_screen/email_auth_screen.dart';
 import 'screens/auth_screen/login_screen.dart';
 import 'screens/auth_screen/signup_screen.dart';
 import 'screens/home_screen/home_screen.dart';
-import 'screens/loading_screen.dart';
+import 'screens/splash_screen.dart';
 import 'screens/personal_management_screen/friends/friends_list_screen.dart';
 import 'screens/personal_management_screen/headline/edit_image_screen.dart';
 import 'screens/personal_management_screen/headline/edit_profile_screen.dart';
@@ -76,6 +77,10 @@ class MyApp extends StatelessWidget {
           create: (_) => SettingProvider(),
           update: (context, auth, previou) => SettingProvider(auth.currentUser),
         ),
+        ChangeNotifierProvider<SplashProvider>(
+          create: (_) => SplashProvider(),
+          //update: (context, auth, previou) => SettingProvider(auth.currentUser),
+        ),
       ],
       child: LifeCycleManager(
         child: MaterialApp(
@@ -91,11 +96,9 @@ class MyApp extends StatelessWidget {
                     (BuildContext context, AsyncSnapshot<String> snapshot) {
                   if (snapshot.connectionState == ConnectionState.active) {
                     final bool isLoggedIn = snapshot.hasData;
-                    return isLoggedIn
-                        ? HomeScreen()
-                        : SignupScreen(authFormType: AuthFormType.signIn);
+                    return isLoggedIn ? HomeScreen() : SplashScreen();
                   }
-                  return LoadingScreen();
+                  return SplashScreen();
                 });
           }),
           routes: {
