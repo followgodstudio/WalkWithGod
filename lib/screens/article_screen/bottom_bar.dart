@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 
 import '../../configurations/theme.dart';
 import '../../providers/article/comments_provider.dart';
 import '../../providers/user/profile_provider.dart';
 import '../../providers/user/saved_articles_provider.dart';
-import '../../widgets/popup_dialog.dart';
 import '../../widgets/popup_comment.dart';
+import '../../widgets/popup_dialog.dart';
 import 'share_article.dart';
 
 class BottomBar extends StatelessWidget {
@@ -33,9 +32,10 @@ class BottomBar extends StatelessWidget {
                 ],
               ),
               onPressed: () {
-                showMaterialModalBottomSheet(
+                showModalBottomSheet(
                     context: context,
-                    builder: (context, scrollController) => PopUpComment(
+                    isScrollControlled: true,
+                    builder: (context) => PopUpComment(
                           articleId: articleId,
                           onPressFunc: (String content) async {
                             await Provider.of<CommentsProvider>(context,
@@ -68,10 +68,10 @@ class BottomBar extends StatelessWidget {
         width: 55.0,
         child: FlatButton(
           onPressed: () {
-            showMaterialModalBottomSheet(
+            showModalBottomSheet(
                 context: context,
-                builder: (context, scrollController) =>
-                    ShareArticle(articleId));
+                isScrollControlled: true,
+                builder: (context) => ShareArticle(articleId));
           },
           child: Icon(
             Icons.share,

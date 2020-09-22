@@ -114,13 +114,15 @@ class MyApp extends StatelessWidget {
                   FriendsListScreen.routeName: (ctx) => FriendsListScreen(),
                   EditProfileScreen.routeName: (ctx) => EditProfileScreen(),
                   EditPictureScreen.routeName: (ctx) => EditPictureScreen(),
-                  NetworkScreen.routeName: (ctx) => NetworkScreen(),
+                  NetworkScreen.routeName: (ctx) =>
+                      NetworkManager(child: NetworkScreen()),
                   SavedArticlesScreen.routeName: (ctx) => SavedArticlesScreen(),
                   EmailAuthScreen.routeName: (ctx) => EmailAuthScreen(),
                   LoginScreen.routeName: (ctx) => LoginScreen(),
                   HomeScreen.routeName: (ctx) =>
                       NetworkManager(child: HomeScreen()),
-                  ArticleScreen.routeName: (ctx) => ArticleScreen(),
+                  ArticleScreen.routeName: (ctx) =>
+                      NetworkManager(child: ArticleScreen()),
                   SignupScreen.routeName: (ctx) => NetworkManager(
                       child: SignupScreen(authFormType: AuthFormType.signIn)),
                 },

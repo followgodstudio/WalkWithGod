@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 
 import '../configurations/theme.dart';
@@ -10,13 +9,12 @@ import '../providers/user/profile_provider.dart';
 import '../screens/personal_management_screen/headline/network_screen.dart';
 import '../utils/utils.dart';
 import '../widgets/popup_comment.dart';
-import 'popup_dialog.dart';
 import 'profile_picture.dart';
 
 class Comment extends StatelessWidget {
+  final Function onStartComment;
   final Function onSubmitComment;
-  final bool isInCommentDetail;
-  Comment({Key key, this.onSubmitComment, this.isInCommentDetail = true})
+  Comment({Key key, this.onStartComment, this.onSubmitComment})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -26,7 +24,7 @@ class Comment extends StatelessWidget {
       final bool isLevel2Comment = (data.parent != null);
       return Column(
         children: [
-          SizedBox(height: 5.0),
+          SizedBox(height: 8.0),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             //avatar and title / created time
@@ -34,9 +32,7 @@ class Comment extends StatelessWidget {
               // Avatar
               Column(
                 children: [
-                  ProfilePicture(isLevel2Comment ? 16.0 : 20.0,
-                      data.creatorImage, data.creatorUid),
-                  // TODO: add a vertical line here
+                  ProfilePicture(20.0, data.creatorImage, data.creatorUid),
                 ],
               ),
               // Others
@@ -69,79 +65,103 @@ class Comment extends StatelessWidget {
                         )
                       ],
                     ),
-                    SizedBox(height: 8.0),
+                    SizedBox(height: 20.0),
                     // Comment body
-                    Row(
-                      children: [
-                        Flexible(
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: RichText(
-                              text: TextSpan(
-                                children: <TextSpan>[
-                                  if (data.replyToName != null)
+                    IntrinsicHeight(
+                      child: Row(
+                        children: [
+                          VerticalDivider(
+                            thickness: 1.2,
+                            color: isLevel2Comment
+                                ? Color.fromARGB(255, 224, 224, 224)
+                                : Color.fromARGB(255, 247, 181, 0),
+                            width: 1.2,
+                          ),
+                          SizedBox(width: 8),
+                          Flexible(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 2.0),
+                              child: RichText(
+                                text: TextSpan(
+                                  children: <TextSpan>[
+                                    if (data.replyToName != null)
+                                      TextSpan(
+                                          text: "@" + data.replyToName + ": ",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .captionMedium1,
+                                          recognizer: new TapGestureRecognizer()
+                                            ..onTap = () {
+                                              if (data.replyToUid == null ||
+                                                  data.replyToUid.isEmpty)
+                                                return;
+                                              Navigator.of(context).pushNamed(
+                                                  NetworkScreen.routeName,
+                                                  arguments: data.replyToUid);
+                                            }),
                                     TextSpan(
-                                        text: "@" + data.replyToName + " ",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .captionMedium1,
-                                        recognizer: new TapGestureRecognizer()
-                                          ..onTap = () {
-                                            if (data.replyToUid == null ||
-                                                data.replyToUid.isEmpty) return;
-                                            Navigator.of(context).pushNamed(
-                                                NetworkScreen.routeName,
-                                                arguments: data.replyToUid);
-                                          }),
-                                  TextSpan(
-                                    text: data.content,
-                                    style:
-                                        Theme.of(context).textTheme.bodyText1,
-                                  )
-                                ],
+                                      text: data.content,
+                                      style:
+                                          Theme.of(context).textTheme.bodyText1,
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
+                    SizedBox(height: 10.0),
                     // Icons
                     Row(
                       children: [
-                        if (!data.like)
-                          IconButton(
-                              icon: Icon(
-                                Icons.favorite_border,
-                                color: Color.fromARGB(255, 160, 160, 160),
+                        FlatButton(
+                            padding: const EdgeInsets.only(right: 50.0),
+                            child: Row(children: [
+                              if (!data.like)
+                                Icon(
+                                  Icons.favorite_border,
+                                  color: Color.fromARGB(255, 160, 160, 160),
+                                ),
+                              if (data.like)
+                                Icon(Icons.favorite, color: Colors.pink[300]),
+                              SizedBox(width: 5),
+                              Text(
+                                data.likesCount.toString(),
+                                style:
+                                    Theme.of(context).textTheme.captionMedium1,
                               ),
-                              onPressed: () => data.addLike(
-                                  profile.uid, profile.name, profile.imageUrl)),
-                        if (data.like)
-                          IconButton(
-                              icon:
-                                  Icon(Icons.favorite, color: Colors.pink[300]),
-                              onPressed: () => data.cancelLike(profile.uid)),
-                        Text(
-                          data.likesCount.toString(),
-                          style: Theme.of(context).textTheme.captionMedium1,
-                        ),
-                        SizedBox(width: 50),
+                            ]),
+                            onPressed: () {
+                              if (data.like) {
+                                data.cancelLike(profile.uid);
+                              } else {
+                                data.addLike(profile.uid, profile.name,
+                                    profile.imageUrl);
+                              }
+                            }),
                         FlatButton(
                           child: Row(children: [
                             Icon(
                               Icons.comment,
                               color: Color.fromARGB(255, 160, 160, 160),
                             ),
+                            SizedBox(width: 5),
                             Text(
-                              " 回复",
+                              data.childrenCount != null
+                                  ? data.childrenCount.toString()
+                                  : "回复",
                               style: Theme.of(context).textTheme.captionMedium1,
                             )
                           ]),
-                          onPressed: () {
-                            showMaterialModalBottomSheet(
+                          onPressed: () async {
+                            if (onStartComment != null) await onStartComment();
+                            showModalBottomSheet(
                                 context: context,
-                                builder: (context, scrollController) =>
-                                    PopUpComment(
+                                isScrollControlled: true,
+                                builder: (context) => PopUpComment(
                                       articleId: data.articleId,
                                       onPressFunc: (String content) async {
                                         await data.addLevel2Comment(
@@ -152,38 +172,17 @@ class Comment extends StatelessWidget {
                                             isLevel2Comment);
                                         if (onSubmitComment != null)
                                           await onSubmitComment();
-                                        if (isInCommentDetail)
-                                          showDialog(
-                                              context: context,
-                                              builder: (context) {
-                                                Future.delayed(
-                                                    Duration(seconds: 1), () {
-                                                  Navigator.of(context)
-                                                      .pop(true);
-                                                });
-                                                return PopUpDialog(
-                                                    true, "你刚刚发布了留言");
-                                              });
                                       },
                                     ));
                           },
                         ),
                       ],
                     ),
-                    if (data.childrenCount != null)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 5.0),
-                        child: Text(
-                          "共有" + data.childrenCount.toString() + "条回复",
-                          style: Theme.of(context).textTheme.buttonMedium1,
-                        ),
-                      ),
                   ],
                 ),
               ),
             ],
           ),
-          SizedBox(height: 5.0),
           if (!isLevel2Comment) Divider(),
         ],
       );

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 
 import '../../configurations/theme.dart';
@@ -7,6 +6,7 @@ import '../../providers/article/comment_provider.dart';
 import '../../providers/article/comments_provider.dart';
 import '../../providers/user/profile_provider.dart';
 import '../../widgets/comment.dart';
+import '../../widgets/popup_dialog.dart';
 import 'comment_detail.dart';
 
 class Comments extends StatefulWidget {
@@ -24,6 +24,7 @@ class Comments extends StatefulWidget {
 
 class _CommentsState extends State<Comments> {
   ProfileProvider profile;
+
   @override
   void initState() {
     super.initState();
@@ -35,30 +36,34 @@ class _CommentsState extends State<Comments> {
             await Provider.of<CommentsProvider>(context, listen: false)
                 .fetchLevel1CommentByCommentId(
                     widget.articleId, widget.commentId, profile.uid);
-        showMaterialModalBottomSheet(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            context: context,
-            builder: (context, scrollController) => CommentDetail(
-                articleId: widget.articleId, commentProvider: commentProvider));
+        await goToCommentDetail(profile.uid, commentProvider);
       });
     }
   }
 
-  Future<void> goToCommentDetail(String uid, CommentProvider commentProvider,
-      [afterSubmit = false]) async {
+  Future<void> goToCommentDetail(
+    String uid,
+    CommentProvider commentProvider,
+  ) async {
     await commentProvider.fetchLevel2ChildrenCommentList(uid);
-    showMaterialModalBottomSheet(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
+    showModalBottomSheet(
         context: context,
-        builder: (context, _) => CommentDetail(
+        isScrollControlled: true,
+        builder: (context) => CommentDetail(
               articleId: widget.articleId,
               commentProvider: commentProvider,
-              afterSubmit: afterSubmit,
             ));
+  }
+
+  void onSubmitComment() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          Future.delayed(Duration(seconds: 1), () {
+            Navigator.of(context).pop(true);
+          });
+          return PopUpDialog(true, "你刚刚发布了留言");
+        });
   }
 
   @override
@@ -96,10 +101,9 @@ class _CommentsState extends State<Comments> {
                       await goToCommentDetail(profile.uid, comments[i]);
                     },
                     child: Comment(
-                      onSubmitComment: () async {
-                        await goToCommentDetail(profile.uid, comments[i], true);
-                      },
-                      isInCommentDetail: false,
+                      onStartComment: () =>
+                          goToCommentDetail(profile.uid, comments[i]),
+                      onSubmitComment: onSubmitComment,
                     )),
               ));
             }

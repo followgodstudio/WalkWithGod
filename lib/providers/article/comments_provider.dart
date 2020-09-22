@@ -42,14 +42,8 @@ class CommentsProvider with ChangeNotifier {
         .doc(userId)
         .get();
     var tmp = doc.data();
-    if (doc.data() != null) {
-      tmp.update('like', (value) => docLikes.exists, ifAbsent: () => false);
-    }
-
-    //doc.data['like'] = docLikes.exists;
-    CommentProvider commentProvider = _buildLevel1CommentByMap(commentId, tmp);
-    // Fetch it children list
-    await commentProvider.fetchLevel2ChildrenCommentList(userId);
+    CommentProvider commentProvider =
+        _buildLevel1CommentByMap(commentId, tmp, docLikes.exists);
     return commentProvider;
   }
 
@@ -105,7 +99,6 @@ class CommentsProvider with ChangeNotifier {
         .doc(articleId)
         .collection(cArticleComments)
         .add(comment);
-    comment['like'] = false;
     _addLevel1CommentToList(docRef.id, comment);
   }
 
@@ -119,7 +112,6 @@ class CommentsProvider with ChangeNotifier {
     }
 
     // Fetch if current user like, will it be slow???
-    List tmpList = List();
     for (int i = 0; i < docs.length; i++) {
       DocumentSnapshot docRef = await _db
           .collection(cArticles)
@@ -129,22 +121,9 @@ class CommentsProvider with ChangeNotifier {
           .collection(cArticleCommentLikes)
           .doc(userId)
           .get();
-
-      // docs[i]
-      //     .data()
-      //     .update("like", (value) => docRef.exists, ifAbsent: () => false);
-
-      var copyOfData = docs[i].data();
-      copyOfData.update("like", (value) => docRef.exists,
-          ifAbsent: () => false);
-      copyOfData.update("id", (value) => docs[i].id,
-          ifAbsent: () => docs[i].id);
-      tmpList.add(copyOfData);
+      _items.add(
+          _buildLevel1CommentByMap(docs[i].id, docs[i].data(), docRef.exists));
     }
-
-    tmpList.forEach((data) {
-      _items.add(_buildLevel1CommentByMap(data["id"], data));
-    });
 
     _isFetching = false;
     _lastVisible = query.docs[query.docs.length - 1];
@@ -152,12 +131,12 @@ class CommentsProvider with ChangeNotifier {
   }
 
   void _addLevel1CommentToList(String cid, Map<String, dynamic> data) {
-    _items.insert(0, _buildLevel1CommentByMap(cid, data));
+    _items.insert(0, _buildLevel1CommentByMap(cid, data, false));
     notifyListeners();
   }
 
   CommentProvider _buildLevel1CommentByMap(
-      String id, Map<String, dynamic> data) {
+      String id, Map<String, dynamic> data, bool isLike) {
     return CommentProvider(
         id: id,
         articleId: data[fCommentArticleId],
@@ -168,6 +147,6 @@ class CommentsProvider with ChangeNotifier {
         createdDate: (data[fCreatedDate] as Timestamp).toDate(),
         childrenCount: data[fCommentChildrenCount],
         likesCount: data[fCommentLikesCount],
-        like: data['like']);
+        like: isLike);
   }
 }
