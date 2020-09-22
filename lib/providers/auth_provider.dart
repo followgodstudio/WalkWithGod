@@ -82,8 +82,12 @@ class AuthProvider with ChangeNotifier {
   }
 
   // Create Anonymous User
-  Future singInAnonymously() {
-    return _auth.signInAnonymously();
+  String singInAnonymously() {
+    //return _auth.signInAnonymously();
+    var tmpUser = _auth.signInAnonymously();
+    tmpUser.then((value) => _uid = value.user.uid);
+    ProfileProvider(_uid).initProfile();
+    return _uid;
   }
 
   // GOOGLE

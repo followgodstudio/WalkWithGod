@@ -4,27 +4,22 @@ import 'package:flutter/widgets.dart';
 class SplashProvider with ChangeNotifier {
   var _fdb = FirebaseFirestore.instance;
   bool _isFetching = false;
-  //String image_url;
+  String imageUrl = "";
+  String author = "";
+  String content = "";
 
-  SplashProvider();
+  SplashProvider({@required this.imageUrl, this.author, this.content});
 
-  // List<ArticleProvider> _articles = [];
-
-  // List<ArticleProvider> get articles {
-  //   return [..._articles];
-  // }
-
-  Future<String> fetch_splash_image() async {
-    String imageUrl = "";
+  Future<void> fetchSplashImage() async {
     await _fdb
-        .collection("app_info")
-        .doc("images")
+        .collection("splash_screens")
+        .doc("obUzPLIfTbawxBasGEM2")
         .get()
-        .then((doc) => imageUrl = doc.get("splash_screen")[0]);
-
-    return imageUrl;
-    // query.then((value) {
-    //   SplashProvider splashProvider = (image_url = value.get("image_url"));
-    // });
+        .then((value) {
+      var data = value.data();
+      imageUrl = data["image_url"];
+      author = data["author"];
+      content = data["content"];
+    });
   }
 }
