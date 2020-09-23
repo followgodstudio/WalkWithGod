@@ -7,120 +7,134 @@ import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 
 import '../../configurations/constants.dart';
-import '../article/article_provider.dart';
-import '../article/articles_provider.dart';
+import 'friends_provider.dart';
+import 'messages_provider.dart';
+import 'recent_read_provider.dart';
+import 'saved_articles_provider.dart';
+import 'setting_provider.dart';
 
 class ProfileProvider with ChangeNotifier {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
   // Basic info
-  final String uid;
-  String name;
+  String uid;
+  String name = defaultUserName;
   String imageUrl;
   // Network info
   DateTime createdDate;
-  int readsCount;
-  int readDuration;
-  int followersCount;
-  int savedArticlesCount;
-  // For recent read
-  List<String> _recentReadList = [];
-  List<ArticleProvider> recentRead = [];
-  bool noMoreRecentRead = false;
-  int _lastVisibleRecentRead = 0;
-  bool _isFetchingRecentRead = false; // To avoid frequently request
-  bool _isUpdatingRecentRead = false; // To avoid frequently request
+  int unreadMessagesCount = 0;
+  int messagesCount = 0;
+  int followersCount = 0;
+  // Providers
+  FriendsProvider friendsProvider = FriendsProvider();
+  SavedArticlesProvider savedArticlesProvider = SavedArticlesProvider();
+  MessagesProvider messagesProvider = MessagesProvider();
+  SettingProvider settingProvider = SettingProvider();
+  RecentReadProvider recentReadProvider = RecentReadProvider();
+
+  bool _isFetching = false; // to avoid frequent request
 
   ProfileProvider([this.uid]);
 
-  Stream<Map<String, dynamic>> fetchProfileStream() {
-    if (uid == null || uid == "") return null;
-    Stream<DocumentSnapshot> stream =
-        _db.collection(cUsers).doc(uid).snapshots();
-    // watch message count stream
-    return stream.map((DocumentSnapshot doc) {
-      return {
-        fUserUnreadMsgCount: doc.data().containsKey(fUserUnreadMsgCount)
-            ? doc.get(fUserUnreadMsgCount)
-            : 0,
-        fUserMessagesCount: doc.data().containsKey(fUserMessagesCount)
-            ? doc.get(fUserMessagesCount)
-            : 0,
-        fUserFollowingsCount: doc.data().containsKey(fUserFollowingsCount)
-            ? doc.get(fUserFollowingsCount)
-            : 0,
-        fUserFollowersCount: doc.data().containsKey(fUserFollowersCount)
-            ? doc.get(fUserFollowersCount)
-            : 0,
-      };
-    });
-  }
+  Future<bool> fetchAllUserInfo(String userId) async {
+    if (userId == null || userId.isEmpty || _isFetching) return false;
+    uid = userId;
+    friendsProvider.setUserId(uid);
+    savedArticlesProvider.setUserId(uid);
+    messagesProvider.setUserId(uid);
+    settingProvider.setUserId(uid);
+    recentReadProvider.setUserId(uid);
 
-  Future<bool> fetchBasicProfile() async {
-    DocumentSnapshot doc = await _db.collection(cUsers).doc(uid).get();
-    if (!doc.exists) return false;
-    name = doc.get(fUserName);
+    _isFetching = true;
+    //TODO: exception handling
+    if (!await fetchProfile()) return false;
+    await savedArticlesProvider.fetchSavedList();
+    await friendsProvider.fetchFriendList(true, followersCount);
+    await friendsProvider.fetchFriendList(false);
+    await messagesProvider.fetchMessageList(messagesCount);
+    await settingProvider.fetchAboutUs();
+    await settingProvider.fetchNewestVersion();
+    await recentReadProvider.fetchRecentRead();
 
-    if (imageUrl == null || imageUrl.isEmpty) {
-      imageUrl =
-          doc.data().containsKey(fUserImageUrl) ? doc.get(fUserImageUrl) : null;
-    }
-    createdDate = (doc.get(fCreatedDate) as Timestamp).toDate();
-
-    readDuration = doc.data().containsKey(fUserReadDuration)
-        ? doc.get(fUserReadDuration).floor()
-        : 0;
-    readsCount =
-        doc.data().containsKey(fUserReadsCount) ? doc.get(fUserReadsCount) : 0;
-    followersCount = doc.data().containsKey(fUserFollowersCount)
-        ? doc.get(fUserFollowersCount)
-        : 0;
-    savedArticlesCount = doc.data().containsKey(fUserSavedArticlesCount)
-        ? doc.get(fUserSavedArticlesCount)
-        : 0;
+    _isFetching = false;
     return true;
   }
 
-  Future<void> fetchRecentRead() async {
-    if (readsCount == 0) return;
-    QuerySnapshot query = await _db
+  Stream<Map<String, int>> fetchProfileStream() {
+    Stream<DocumentSnapshot> stream = _db
         .collection(cUsers)
         .doc(uid)
-        .collection(cUserReadHistory)
-        .where(fUpdatedDate,
-            isGreaterThanOrEqualTo: DateTime.now().subtract(Duration(days: 7)))
-        .orderBy(fUpdatedDate, descending: true)
-        .get();
-    query.docs.forEach((data) {
-      _recentReadList.add(data.id);
+        .collection(cUserProfile)
+        .doc(dUserProfileDynamic)
+        .snapshots();
+    return stream.map((DocumentSnapshot doc) {
+      Map<String, int> data = {
+        fUserUnreadMsgCount: 0,
+        fUserMessagesCount: 0,
+        fUserFollowersCount: 0,
+      };
+      if (!doc.exists) return data;
+      if (doc.data().containsKey(fUserUnreadMsgCount))
+        unreadMessagesCount =
+            data[fUserUnreadMsgCount] = doc.get(fUserUnreadMsgCount);
+      if (doc.data().containsKey(fUserMessagesCount))
+        messagesCount = data[fUserMessagesCount] = doc.get(fUserMessagesCount);
+      if (doc.data().containsKey(fUserFollowersCount))
+        followersCount =
+            data[fUserFollowersCount] = doc.get(fUserFollowersCount);
+      return data;
     });
-    _lastVisibleRecentRead = 0;
-    await _appendRecentReadList();
   }
 
-  Future<void> fetchMoreRecentRead() async {
-    if (readsCount == 0 || noMoreRecentRead || _isFetchingRecentRead) return;
-    _isFetchingRecentRead = true;
-    await _appendRecentReadList();
-    _isFetchingRecentRead = false;
-  }
+  Future<bool> fetchProfile() async {
+    DocumentSnapshot doc = await _db.collection(cUsers).doc(uid).get();
+    if (!doc.exists) return false; // User not exist
 
-  Future<bool> fetchNetworkProfile() async {
-    if (await fetchBasicProfile()) {
-      await fetchRecentRead();
-      return true;
-    }
-    return false;
-  }
+    if (doc.data().containsKey(fUserName)) name = doc.get(fUserName);
+    if ((imageUrl == null || imageUrl.isEmpty) &&
+        doc.data().containsKey(fUserImageUrl))
+      imageUrl = doc.get(fUserImageUrl); // Only fetch once
 
-  Future<void> initProfile() async {
-    await _db.collection(cUsers).doc(uid).set({});
-    String newName = "弟兄姊妹"; // TODO: Random name
-    await updateProfile(newName: newName, newCreatedDate: Timestamp.now());
-  }
+    // fetch dynamic information
+    DocumentSnapshot docDynamic = await _db
+        .collection(cUsers)
+        .doc(uid)
+        .collection(cUserProfile)
+        .doc(dUserProfileDynamic)
+        .get();
+    if (docDynamic.exists && docDynamic.data().containsKey(fUserFollowersCount))
+      friendsProvider.followersCount = docDynamic.get(fUserFollowersCount);
+    if (docDynamic.exists && docDynamic.data().containsKey(fUserMessagesCount))
+      messagesProvider.messagesCount = docDynamic.get(fUserMessagesCount);
+    if (docDynamic.exists && docDynamic.data().containsKey(fUserUnreadMsgCount))
+      messagesProvider.unreadMessagesCount =
+          docDynamic.get(fUserUnreadMsgCount);
 
-  Future<void> deleteProfile() async {
-    await _db.collection(cUsers).doc(uid).delete();
+    // fetch static information
+    DocumentSnapshot docStatic = await _db
+        .collection(cUsers)
+        .doc(uid)
+        .collection(cUserProfile)
+        .doc(dUserProfileStatic)
+        .get();
+    if (!docStatic.exists) return true;
+    if (docStatic.data().containsKey(fCreatedDate))
+      createdDate = (docStatic.get(fCreatedDate) as Timestamp).toDate();
+    if (docStatic.data().containsKey(fUserReadDuration))
+      recentReadProvider.readDuration =
+          docStatic.get(fUserReadDuration).floor();
+    if (docStatic.data().containsKey(fUserReadsCount))
+      recentReadProvider.readsCount = docStatic.get(fUserReadsCount);
+    if (docStatic.data().containsKey(fUserFollowingsCount))
+      friendsProvider.followingsCount = docStatic.get(fUserFollowingsCount);
+    if (docStatic.data().containsKey(fUserSavedArticlesCount))
+      savedArticlesProvider.savedArticlesCount =
+          docStatic.get(fUserSavedArticlesCount);
+    if (docStatic.data().containsKey(fSettingScreenAwake))
+      settingProvider.keepScreenAwake = docStatic.get(fSettingScreenAwake);
+    if (docStatic.data().containsKey(fSettingHideRecentRead))
+      settingProvider.hideRecentRead = docStatic.get(fSettingHideRecentRead);
+    return true;
   }
 
   Future<void> updateProfilePicture(File file) async {
@@ -129,10 +143,9 @@ class ProfileProvider with ChangeNotifier {
         await _storage.ref().child(path).putFile(file).onComplete;
     if (snapshot.error != null) return;
     if (imageUrl == null || imageUrl.isEmpty) {
-      imageUrl = await snapshot.ref.getDownloadURL();
-      imageUrl = imageUrl.substring(0, imageUrl.indexOf('&token='));
-      // update profile in database
-      await updateProfile(newImageUrl: imageUrl);
+      String newUrl = await snapshot.ref.getDownloadURL();
+      newUrl = newUrl.substring(0, newUrl.indexOf('&token='));
+      await updateProfile(newImageUrl: newUrl);
     } else {
       // To guarantee the image will be reloaded instead of using cache
       String uniqueKey = DateFormat('yyyyMMddkkmmss').format(DateTime.now());
@@ -143,78 +156,38 @@ class ProfileProvider with ChangeNotifier {
     }
   }
 
-  Future<void> updateProfile(
-      {String newName, String newImageUrl, Timestamp newCreatedDate}) async {
+  Future<void> updateProfile({String newName, String newImageUrl}) async {
     Map<String, dynamic> data = {};
-    if (newName != null && newName.isNotEmpty) name = data[fUserName] = newName;
-    if (newImageUrl != null && newImageUrl.isNotEmpty)
-      imageUrl = data[fUserImageUrl] = newImageUrl;
-    if (newCreatedDate != null) {
-      createdDate = newCreatedDate.toDate();
-      data[fCreatedDate] = newCreatedDate;
-    }
+    if (newName != null && newName.isNotEmpty && name != newName)
+      name = data[fUserName] = newName;
+    if (newImageUrl != null &&
+        newImageUrl.isNotEmpty &&
+        newImageUrl != imageUrl) imageUrl = data[fUserImageUrl] = newImageUrl;
     if (data.isNotEmpty) {
       await _db.collection(cUsers).doc(uid).update(data);
       notifyListeners();
     }
   }
 
-  Future<void> updateRecentReadByArticleId(String articleId) async {
-    if (_isUpdatingRecentRead) return;
-    _isUpdatingRecentRead = true;
-
-    DocumentReference user = _db.collection(cUsers).doc(uid);
-    DocumentReference history = _db
+  Future<void> initProfile() async {
+    createdDate = DateTime.now();
+    await _db.collection(cUsers).doc(uid).set({fUserName: name});
+    await _db
         .collection(cUsers)
         .doc(uid)
-        .collection(cUserReadHistory)
-        .doc(articleId);
-    DocumentSnapshot doc = await history.get();
-
-    WriteBatch batch = _db.batch();
-    if (doc.exists) {
-      // Update read history timestamp
-      batch.update(history, {fUpdatedDate: Timestamp.now()});
-    } else {
-      // Create a new document in read history
-      batch.set(history, {fUpdatedDate: Timestamp.now()});
-      // Increase count
-      batch.update(user, {fUserReadsCount: FieldValue.increment(1)});
-    }
-    await batch.commit();
-
-    _isUpdatingRecentRead = false;
-  }
-
-  Future<void> updateReadDuration(DateTime start) async {
-    if (uid == null || uid.isEmpty) return;
-    int timeDiffInSecond = DateTime.now().difference(start).inSeconds;
-    await _db.collection(cUsers).doc(uid).update(
-        {fUserReadDuration: FieldValue.increment(timeDiffInSecond / 3600)});
-  }
-
-  Future<void> _appendRecentReadList() async {
-    if (_recentReadList.length == _lastVisibleRecentRead) return;
-    Map<String, int> itemsMap = {};
-    int end = 10 + _lastVisibleRecentRead;
-    if (end >= _recentReadList.length) {
-      end = _recentReadList.length;
-      noMoreRecentRead = true;
-    }
-    for (var i = _lastVisibleRecentRead; i < end; i++) {
-      itemsMap[_recentReadList[i]] = i;
-    }
-    // Fetch Document's basic info, cannot be more than 10
-    List<ArticleProvider> articles = await ArticlesProvider()
-        .fetchList(_recentReadList.sublist(_lastVisibleRecentRead, end));
-    // Reorganize by update date (orginal sequence)
-    articles.sort((a, b) {
-      return itemsMap[a.id].compareTo(itemsMap[b.id]);
-    });
-    articles.forEach((element) {
-      recentRead.add(element);
-    });
-    _lastVisibleRecentRead = end;
+        .collection(cUserProfile)
+        .doc(dUserProfileDynamic)
+        .set({});
+    await _db
+        .collection(cUsers)
+        .doc(uid)
+        .collection(cUserProfile)
+        .doc(dUserProfileStatic)
+        .set({fCreatedDate: Timestamp.fromDate(createdDate)});
     notifyListeners();
+  }
+
+  Future<void> deleteProfile() async {
+    await _db.collection(cUsers).doc(uid).delete();
   }
 }

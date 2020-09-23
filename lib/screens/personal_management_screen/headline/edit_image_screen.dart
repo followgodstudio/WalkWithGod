@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 
 import '../../../configurations/theme.dart';
 import '../../../providers/user/profile_provider.dart';
-import '../../../widgets/succeeded_dialog.dart';
+import '../../../widgets/popup_dialog.dart';
 
 class EditPictureScreen extends StatefulWidget {
   static const routeName = "/edit_picture";
@@ -84,7 +84,7 @@ class _EditPictureScreenState extends State<EditPictureScreen> {
                               Navigator.of(context).pop();
                               Navigator.of(context).pop();
                             });
-                            return SucceededDialog("上传成功");
+                            return PopUpDialog(true, "上传成功");
                           });
                     },
                     child: Text("上传",

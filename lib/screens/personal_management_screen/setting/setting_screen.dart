@@ -50,10 +50,9 @@ class SettingScreen extends StatelessWidget {
                             height: 25.0,
                             toggleSize: 17.0,
                             activeColor: Colors.blue[300],
-                            value: setting.keepScreenAwakeOnRead,
+                            value: setting.keepScreenAwake,
                             onToggle: (value) {
-                              setting.updateSetting(
-                                  newKeepScreenAwakeOnRead: value);
+                              setting.updateSetting(newKeepScreenAwake: value);
                             },
                           ),
                         ],

@@ -101,8 +101,6 @@ class AuthProvider with ChangeNotifier {
 
     final GoogleSignInAuthentication _googleAuth = await account.authentication;
 
-    final authHeaders = _googleSignIn.currentUser.authHeaders;
-
     final AuthCredential credential = GoogleAuthProvider.credential(
       idToken: _googleAuth.idToken,
       accessToken: _googleAuth.accessToken,

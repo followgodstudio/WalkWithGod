@@ -1,23 +1,21 @@
+import 'dart:async';
+
+import 'package:connectivity/connectivity.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:walk_with_god/providers/splash_provider.dart';
 
 import 'configurations/theme.dart';
 import 'providers/article/articles_provider.dart';
 import 'providers/article/comments_provider.dart';
 import 'providers/auth_provider.dart';
-import 'providers/user/friends_provider.dart';
-import 'providers/user/messages_provider.dart';
+import 'providers/splash_provider.dart';
 import 'providers/user/profile_provider.dart';
-import 'providers/user/saved_articles_provider.dart';
-import 'providers/user/setting_provider.dart';
 import 'screens/article_screen/article_screen.dart';
 import 'screens/auth_screen/email_auth_screen.dart';
 import 'screens/auth_screen/login_screen.dart';
 import 'screens/auth_screen/signup_screen.dart';
 import 'screens/home_screen/home_screen.dart';
-import 'screens/splash_screen.dart';
 import 'screens/personal_management_screen/friends/friends_list_screen.dart';
 import 'screens/personal_management_screen/headline/edit_image_screen.dart';
 import 'screens/personal_management_screen/headline/edit_profile_screen.dart';
@@ -33,6 +31,8 @@ import 'screens/personal_management_screen/setting/delete_account_screen.dart';
 import 'screens/personal_management_screen/setting/notification_screen.dart';
 import 'screens/personal_management_screen/setting/privacy_screen.dart';
 import 'screens/personal_management_screen/setting/setting_screen.dart';
+import 'screens/splash_screen.dart';
+import 'widgets/popup_dialog.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,94 +45,94 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (_) => AuthProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => ArticlesProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => CommentsProvider(),
-        ),
-        ChangeNotifierProxyProvider<AuthProvider, ProfileProvider>(
-          create: (_) => ProfileProvider(),
-          update: (context, auth, previou) => ProfileProvider(auth.currentUser),
-        ),
-        ChangeNotifierProxyProvider<AuthProvider, FriendsProvider>(
-          create: (_) => FriendsProvider(),
-          update: (context, auth, previou) => FriendsProvider(auth.currentUser),
-        ),
-        ChangeNotifierProxyProvider<AuthProvider, MessagesProvider>(
-          create: (_) => MessagesProvider(),
-          update: (context, auth, previou) =>
-              MessagesProvider(auth.currentUser),
-        ),
-        ChangeNotifierProxyProvider<AuthProvider, SavedArticlesProvider>(
-          create: (_) => SavedArticlesProvider(),
-          update: (context, auth, previou) =>
-              SavedArticlesProvider(auth.currentUser),
-        ),
-        ChangeNotifierProxyProvider<AuthProvider, SettingProvider>(
-          create: (_) => SettingProvider(),
-          update: (context, auth, previou) => SettingProvider(auth.currentUser),
-        ),
-        ChangeNotifierProvider<SplashProvider>(
-          create: (_) => SplashProvider(),
-          //update: (context, auth, previou) =>
-          //SplashProvider(userId: auth.currentUser),
-        ),
-      ],
-      child: LifeCycleManager(
-        child: MaterialApp(
-          title: 'Walk With God',
-          debugShowCheckedModeBanner: false,
-          theme: dayTheme,
-          home: SplashScreen(),
-          // Builder(builder: (BuildContext context) {
-          //   BuildContext rootContext = context;
-          //   return StreamBuilder<String>(
-          //       stream: Provider.of<AuthProvider>(rootContext, listen: false)
-          //           .onAuthStateChanged,
-          //       builder:
-          //           (BuildContext context, AsyncSnapshot<String> snapshot) {
-          //         if (snapshot.connectionState == ConnectionState.active) {
-          //           final bool isLoggedIn = snapshot.hasData;
-          //           return isLoggedIn ? HomeScreen() : SplashScreen();
-          //         }
-          //         return SplashScreen();
-          //       });
-          // }),
-          routes: {
-            //LoginScreengi.routeName: (ctx) => LoginScreen(),
-            //SignupScreen.routeName: (ctx) => SignupScreen(),
-            PersonalManagementScreen.routeName: (ctx) =>
-                PersonalManagementScreen(),
-            SettingScreen.routeName: (ctx) => SettingScreen(),
-            PrivacyScreen.routeName: (ctx) => PrivacyScreen(),
-            NotificationScreen.routeName: (ctx) => NotificationScreen(),
-            CacheClearScreen.routeName: (ctx) => CacheClearScreen(),
-            AppInfoScreen.routeName: (ctx) => AppInfoScreen(),
-            AboutUsScreen.routeName: (ctx) => AboutUsScreen(),
-            BlackListScreen.routeName: (ctx) => BlackListScreen(),
-            DeleteAccountScreen.routeName: (ctx) => DeleteAccountScreen(),
-            MessagesListScreen.routeName: (ctx) => MessagesListScreen(),
-            FriendsListScreen.routeName: (ctx) => FriendsListScreen(),
-            EditProfileScreen.routeName: (ctx) => EditProfileScreen(),
-            EditPictureScreen.routeName: (ctx) => EditPictureScreen(),
-            NetworkScreen.routeName: (ctx) => NetworkScreen(),
-            SavedArticlesScreen.routeName: (ctx) => SavedArticlesScreen(),
-            EmailAuthScreen.routeName: (ctx) => EmailAuthScreen(),
-            LoginScreen.routeName: (ctx) => LoginScreen(),
-            HomeScreen.routeName: (ctx) => HomeScreen(),
-            ArticleScreen.routeName: (ctx) => ArticleScreen(),
-            SplashScreen.routeName: (ctx) => SplashScreen(),
-            SignupScreen.routeName: (ctx) =>
-                SignupScreen(authFormType: AuthFormType.signIn),
-          },
-        ),
-      ),
-    );
+        providers: [
+          ChangeNotifierProvider(
+            create: (_) => AuthProvider(),
+          ),
+          ChangeNotifierProvider(
+            create: (_) => ArticlesProvider(),
+          ),
+          ChangeNotifierProvider(
+            create: (_) => CommentsProvider(),
+          ),
+          ChangeNotifierProvider<SplashProvider>(
+            create: (_) => SplashProvider(),
+          ),
+          ChangeNotifierProvider(
+            create: (_) => ProfileProvider(),
+          ),
+        ],
+        child: Builder(builder: (BuildContext context) {
+          return MultiProvider(
+            providers: [
+              ChangeNotifierProvider.value(
+                  value: Provider.of<ProfileProvider>(context, listen: false)
+                      .savedArticlesProvider),
+              ChangeNotifierProvider.value(
+                  value: Provider.of<ProfileProvider>(context, listen: false)
+                      .friendsProvider),
+              ChangeNotifierProvider.value(
+                  value: Provider.of<ProfileProvider>(context, listen: false)
+                      .settingProvider),
+              ChangeNotifierProvider.value(
+                  value: Provider.of<ProfileProvider>(context, listen: false)
+                      .messagesProvider),
+              ChangeNotifierProvider.value(
+                  value: Provider.of<ProfileProvider>(context, listen: false)
+                      .recentReadProvider),
+            ],
+            child: LifeCycleManager(
+              child: MaterialApp(
+                title: 'Walk With God',
+                debugShowCheckedModeBanner: false,
+                theme: dayTheme,
+                home: SplashScreen(),
+                // StreamBuilder<String>(
+                //     stream: Provider.of<AuthProvider>(context, listen: false)
+                //         .onAuthStateChanged,
+                //     builder:
+                //         (BuildContext context, AsyncSnapshot<String> snapshot) {
+                //       if (snapshot.connectionState == ConnectionState.active) {
+                //         final bool isLoggedIn = snapshot.hasData;
+                //         return isLoggedIn
+                //             ? NetworkManager(child: HomeScreen())
+                //             : SplashScreen();
+                //       }
+                //       return SplashScreen();
+                //     }),
+                routes: {
+                  //LoginScreengi.routeName: (ctx) => LoginScreen(),
+                  //SignupScreen.routeName: (ctx) => SignupScreen(),
+                  PersonalManagementScreen.routeName: (ctx) =>
+                      NetworkManager(child: PersonalManagementScreen()),
+                  SettingScreen.routeName: (ctx) => SettingScreen(),
+                  PrivacyScreen.routeName: (ctx) => PrivacyScreen(),
+                  NotificationScreen.routeName: (ctx) => NotificationScreen(),
+                  CacheClearScreen.routeName: (ctx) => CacheClearScreen(),
+                  AppInfoScreen.routeName: (ctx) => AppInfoScreen(),
+                  AboutUsScreen.routeName: (ctx) => AboutUsScreen(),
+                  BlackListScreen.routeName: (ctx) => BlackListScreen(),
+                  DeleteAccountScreen.routeName: (ctx) => DeleteAccountScreen(),
+                  MessagesListScreen.routeName: (ctx) => MessagesListScreen(),
+                  FriendsListScreen.routeName: (ctx) => FriendsListScreen(),
+                  EditProfileScreen.routeName: (ctx) => EditProfileScreen(),
+                  EditPictureScreen.routeName: (ctx) => EditPictureScreen(),
+                  NetworkScreen.routeName: (ctx) =>
+                      NetworkManager(child: NetworkScreen()),
+                  SavedArticlesScreen.routeName: (ctx) => SavedArticlesScreen(),
+                  EmailAuthScreen.routeName: (ctx) => EmailAuthScreen(),
+                  LoginScreen.routeName: (ctx) => LoginScreen(),
+                  HomeScreen.routeName: (ctx) =>
+                      NetworkManager(child: HomeScreen()),
+                  ArticleScreen.routeName: (ctx) =>
+                      NetworkManager(child: ArticleScreen()),
+                  SignupScreen.routeName: (ctx) => NetworkManager(
+                      child: SignupScreen(authFormType: AuthFormType.signIn)),
+                },
+              ),
+            ),
+          );
+        }));
   }
 }
 
@@ -164,13 +164,55 @@ class _LifeCycleManagerState extends State<LifeCycleManager>
     if (state == AppLifecycleState.resumed) _start = DateTime.now();
     if (state == AppLifecycleState.paused)
       Provider.of<ProfileProvider>(context, listen: false)
+          .recentReadProvider
           .updateReadDuration(_start);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: widget.child,
-    );
+    return widget.child;
+  }
+}
+
+// To monitor whether network is available
+class NetworkManager extends StatefulWidget {
+  final Widget child;
+  NetworkManager({Key key, this.child}) : super(key: key);
+  _NetworkManagerState createState() => _NetworkManagerState();
+}
+
+class _NetworkManagerState extends State<NetworkManager> {
+  StreamSubscription<ConnectivityResult> subscription;
+  bool isConnected = true;
+
+  @override
+  void initState() {
+    super.initState();
+    checkNetwork();
+  }
+
+  @override
+  void dispose() {
+    subscription.cancel();
+    super.dispose();
+  }
+
+  Future<void> checkNetwork() async {
+    subscription = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) {
+      if (result == ConnectivityResult.none) {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return PopUpDialog(false, "请检查网络连接");
+            });
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return widget.child;
   }
 }

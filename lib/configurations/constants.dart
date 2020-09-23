@@ -1,3 +1,5 @@
+String defaultUserName = "弟兄姊妹";
+
 ///******** keys in Firestore ********///
 
 const int loadLimit = 10;
@@ -22,6 +24,7 @@ const String cAppInfo = "app_info";
 
 const String cArticleComments = "comments";
 
+const String cUserProfile = "profile";
 const String cUserReadHistory = "read_history";
 const String cUserFriends = "friends";
 const String cUserMessages = "messages";
@@ -31,6 +34,9 @@ const String cUserSavedarticles = "saved_articles";
 
 const String dAppInfoAboutUs = "about_us";
 const String dAppInfoVersion = "version";
+
+const String dUserProfileDynamic = "dynamic";
+const String dUserProfileStatic = "static";
 
 // Third level collection names
 

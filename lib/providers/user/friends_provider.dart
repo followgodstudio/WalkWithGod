@@ -6,7 +6,9 @@ import 'friend_provider.dart';
 
 class FriendsProvider with ChangeNotifier {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
-  final String _userId;
+  String _userId;
+  int followingsCount = 0;
+  int followersCount = 0;
   List<FriendProvider> _follower = [];
   List<FriendProvider> _following = [];
   DocumentSnapshot _lastVisibleFollower;
@@ -15,7 +17,11 @@ class FriendsProvider with ChangeNotifier {
   bool _noMoreFollowing = false;
   bool _isFetching = false; // To avoid frequently request
 
-  FriendsProvider([this._userId]);
+  // getters and setters
+
+  void setUserId(String userId) {
+    _userId = userId;
+  }
 
   List<FriendProvider> get follower {
     return [..._follower];
@@ -33,10 +39,14 @@ class FriendsProvider with ChangeNotifier {
     return _noMoreFollowing;
   }
 
-  Future<void> fetchFriendList(bool isFollower, [int limit = loadLimit]) async {
+  // methods
+
+  Future<void> fetchFriendList(bool isFollower,
+      [int newFollowersCount, int limit = loadLimit]) async {
     List<String> whereIn = [eFriendStatusFollowing, eFriendStatusFriend];
     String orderBy = fFriendFollowingDate;
     if (isFollower) {
+      if (followersCount == newFollowersCount) return; // Do not need update
       whereIn = [eFriendStatusFollower, eFriendStatusFriend];
       orderBy = fFriendFollowerDate;
       _follower = [];
@@ -91,17 +101,44 @@ class FriendsProvider with ChangeNotifier {
     return null;
   }
 
-  Future<void> updateUnfollowInList(String uid) async {
+  Future<void> refreshFollowingList() async {
+    _following.removeWhere((item) =>
+        (item.friendStatus != eFriendStatusFollowing &&
+            item.friendStatus != eFriendStatusFriend));
+  }
+
+  Future<void> removefollowInList(String uid) async {
     _following.removeWhere((item) => item.friendUid == uid);
     FriendProvider friend =
         _follower.firstWhere((element) => element.friendUid == uid, orElse: () {
       return null;
     });
     if (friend != null) friend.friendStatus = eFriendStatusFollower;
+    followingsCount -= 1;
     notifyListeners();
+
+    // Update database
+    WriteBatch batch = _db.batch();
+    batch.update(
+        _db
+            .collection(cUsers)
+            .doc(_userId)
+            .collection(cUserProfile)
+            .doc(dUserProfileStatic),
+        {fUserFollowingsCount: FieldValue.increment(-1)});
+    batch.update(
+        _db
+            .collection(cUsers)
+            .doc(uid)
+            .collection(cUserProfile)
+            .doc(dUserProfileDynamic),
+        {fUserFollowersCount: FieldValue.increment(-1)});
+    await batch.commit();
   }
 
-  Future<void> addFollowInList(FriendProvider friend) async {
+  Future<void> addFollowInList(
+    FriendProvider friend,
+  ) async {
     FriendProvider old = _following.firstWhere(
         (element) => element.friendUid == friend.friendUid, orElse: () {
       return null;
@@ -116,7 +153,26 @@ class FriendsProvider with ChangeNotifier {
       return null;
     });
     if (follower != null) follower.friendStatus = friend.friendStatus;
+    followingsCount += 1;
     notifyListeners();
+
+    // Update database
+    WriteBatch batch = _db.batch();
+    batch.update(
+        _db
+            .collection(cUsers)
+            .doc(_userId)
+            .collection(cUserProfile)
+            .doc(dUserProfileStatic),
+        {fUserFollowingsCount: FieldValue.increment(1)});
+    batch.update(
+        _db
+            .collection(cUsers)
+            .doc(friend.friendUid)
+            .collection(cUserProfile)
+            .doc(dUserProfileDynamic),
+        {fUserFollowersCount: FieldValue.increment(1)});
+    await batch.commit();
   }
 
   void _appendFriendsList(QuerySnapshot query, int limit, bool isFollower) {

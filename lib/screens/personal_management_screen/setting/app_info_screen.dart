@@ -40,7 +40,7 @@ class AppInfoScreen extends StatelessWidget {
                         color: Colors.white,
                         image: DecorationImage(
                           fit: BoxFit.fitWidth,
-                          image: AssetImage("assets/images/logo.png"),
+                          image: AssetImage("assets/images/app_logo.png"),
                         ),
                         borderRadius: BorderRadius.circular(25.0),
                         border: Border.all(
@@ -57,8 +57,6 @@ class AppInfoScreen extends StatelessWidget {
                     FutureBuilder(
                         future: Future.wait([
                           PackageInfo.fromPlatform(),
-                          Provider.of<SettingProvider>(context, listen: false)
-                              .fetchNewestVersion()
                         ]),
                         builder: (ctx, asyncSnapshot) {
                           if (asyncSnapshot.connectionState ==

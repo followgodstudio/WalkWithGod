@@ -39,9 +39,20 @@ class PrivacyScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("隐藏你最近的阅读内容TODO",
-                              style:
-                                  Theme.of(context).textTheme.captionMedium1),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("隐藏你最近的阅读内容",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .captionMedium1),
+                              SizedBox(height: 4),
+                              Text("开启后，关注你的好友将看不到你的\"最近阅读\"内容。",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .captionSmall1),
+                            ],
+                          ),
                           FlutterSwitch(
                             width: 50.0,
                             height: 25.0,

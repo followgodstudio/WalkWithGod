@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 
 import '../configurations/theme.dart';
 
-class SucceededDialog extends StatelessWidget {
+class PopUpDialog extends StatelessWidget {
+  final bool isSuccess;
   final String message;
-  SucceededDialog(this.message);
+  PopUpDialog(this.isSuccess, this.message);
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +21,16 @@ class SucceededDialog extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
-                Icons.check_circle,
-                color: Colors.green[300],
-              ),
+              if (isSuccess)
+                Icon(
+                  Icons.check_circle,
+                  color: Colors.green[300],
+                ),
+              if (!isSuccess)
+                Icon(
+                  Icons.error,
+                  color: Colors.red,
+                ),
               SizedBox(height: 4.0),
               Center(
                   child: Text(message,
