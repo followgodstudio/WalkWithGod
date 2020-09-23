@@ -86,19 +86,20 @@ class MyApp extends StatelessWidget {
                 title: 'Walk With God',
                 debugShowCheckedModeBanner: false,
                 theme: dayTheme,
-                home: StreamBuilder<String>(
-                    stream: Provider.of<AuthProvider>(context, listen: false)
-                        .onAuthStateChanged,
-                    builder:
-                        (BuildContext context, AsyncSnapshot<String> snapshot) {
-                      if (snapshot.connectionState == ConnectionState.active) {
-                        final bool isLoggedIn = snapshot.hasData;
-                        return isLoggedIn
-                            ? NetworkManager(child: HomeScreen())
-                            : SplashScreen();
-                      }
-                      return SplashScreen();
-                    }),
+                home: SplashScreen(),
+                // StreamBuilder<String>(
+                //     stream: Provider.of<AuthProvider>(context, listen: false)
+                //         .onAuthStateChanged,
+                //     builder:
+                //         (BuildContext context, AsyncSnapshot<String> snapshot) {
+                //       if (snapshot.connectionState == ConnectionState.active) {
+                //         final bool isLoggedIn = snapshot.hasData;
+                //         return isLoggedIn
+                //             ? NetworkManager(child: HomeScreen())
+                //             : SplashScreen();
+                //       }
+                //       return SplashScreen();
+                //     }),
                 routes: {
                   //LoginScreengi.routeName: (ctx) => LoginScreen(),
                   //SignupScreen.routeName: (ctx) => SignupScreen(),
