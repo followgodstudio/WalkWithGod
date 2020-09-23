@@ -162,6 +162,9 @@ class Comment extends StatelessWidget {
                                 context: context,
                                 isScrollControlled: true,
                                 builder: (context) => PopUpComment(
+                                      replyTo: isLevel2Comment
+                                          ? data.creatorName
+                                          : null,
                                       articleId: data.articleId,
                                       onPressFunc: (String content) async {
                                         await data.addLevel2Comment(
