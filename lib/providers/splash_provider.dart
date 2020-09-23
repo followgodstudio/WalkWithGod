@@ -3,12 +3,13 @@ import 'package:flutter/widgets.dart';
 
 class SplashProvider with ChangeNotifier {
   var _fdb = FirebaseFirestore.instance;
+
   bool _isFetching = false;
   String imageUrl = "";
   String author = "";
   String content = "";
 
-  SplashProvider({@required this.imageUrl, this.author, this.content});
+  SplashProvider({this.imageUrl, this.author, this.content});
 
   Future<void> fetchSplashImage() async {
     await _fdb

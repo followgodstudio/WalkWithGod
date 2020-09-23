@@ -79,7 +79,8 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<SplashProvider>(
           create: (_) => SplashProvider(),
-          //update: (context, auth, previou) => SettingProvider(auth.currentUser),
+          //update: (context, auth, previou) =>
+          //SplashProvider(userId: auth.currentUser),
         ),
       ],
       child: LifeCycleManager(
@@ -87,20 +88,21 @@ class MyApp extends StatelessWidget {
           title: 'Walk With God',
           debugShowCheckedModeBanner: false,
           theme: dayTheme,
-          home: Builder(builder: (BuildContext context) {
-            BuildContext rootContext = context;
-            return StreamBuilder<String>(
-                stream: Provider.of<AuthProvider>(rootContext, listen: false)
-                    .onAuthStateChanged,
-                builder:
-                    (BuildContext context, AsyncSnapshot<String> snapshot) {
-                  if (snapshot.connectionState == ConnectionState.active) {
-                    final bool isLoggedIn = snapshot.hasData;
-                    return isLoggedIn ? HomeScreen() : SplashScreen();
-                  }
-                  return SplashScreen();
-                });
-          }),
+          home: SplashScreen(),
+          // Builder(builder: (BuildContext context) {
+          //   BuildContext rootContext = context;
+          //   return StreamBuilder<String>(
+          //       stream: Provider.of<AuthProvider>(rootContext, listen: false)
+          //           .onAuthStateChanged,
+          //       builder:
+          //           (BuildContext context, AsyncSnapshot<String> snapshot) {
+          //         if (snapshot.connectionState == ConnectionState.active) {
+          //           final bool isLoggedIn = snapshot.hasData;
+          //           return isLoggedIn ? HomeScreen() : SplashScreen();
+          //         }
+          //         return SplashScreen();
+          //       });
+          // }),
           routes: {
             //LoginScreengi.routeName: (ctx) => LoginScreen(),
             //SignupScreen.routeName: (ctx) => SignupScreen(),
@@ -124,6 +126,7 @@ class MyApp extends StatelessWidget {
             LoginScreen.routeName: (ctx) => LoginScreen(),
             HomeScreen.routeName: (ctx) => HomeScreen(),
             ArticleScreen.routeName: (ctx) => ArticleScreen(),
+            SplashScreen.routeName: (ctx) => SplashScreen(),
             SignupScreen.routeName: (ctx) =>
                 SignupScreen(authFormType: AuthFormType.signIn),
           },
