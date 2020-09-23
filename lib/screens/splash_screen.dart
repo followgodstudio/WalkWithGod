@@ -21,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
     // TODO: implement initState
     super.initState();
 
-    nextScreen = getNextScreen();
+    //nextScreen = getNextScreen();
     startTime();
   }
 
