@@ -86,7 +86,9 @@ class MyApp extends StatelessWidget {
                 title: 'Walk With God',
                 debugShowCheckedModeBanner: false,
                 theme: dayTheme,
-                home: SplashScreen(),
+                home: NetworkManager(
+                  child: SplashScreen(),
+                ),
                 // StreamBuilder<String>(
                 //     stream: Provider.of<AuthProvider>(context, listen: false)
                 //         .onAuthStateChanged,

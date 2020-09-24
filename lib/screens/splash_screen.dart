@@ -22,7 +22,7 @@ class _SplashScreenState extends State<SplashScreen> {
     // TODO: implement initState
     super.initState();
 
-    //nextScreen = getNextScreen();
+    //getNextScreen();
     startTime();
   }
 
@@ -36,28 +36,43 @@ class _SplashScreenState extends State<SplashScreen> {
         context, MaterialPageRoute(builder: (context) => nextScreen));
   }
 
-  StatefulWidget getNextScreen() {
-    StatefulWidget _screen;
+  void getNextScreen() {
+    //StatefulWidget _screen;
 
+    // var _userId =
+    //     Provider.of<AuthProvider>(context, listen: false).onAuthStateChanged;
+    // _userId.listen((event) {
+    //   nextScreen = event == null
+    //       ? HomeScreen()
+    //       : SignupScreen(
+    //           authFormType: AuthFormType.signIn,
+    //         );
+    // });
+
+    // _screen
+    // if(_userId != null){
+
+    //}
     Builder(builder: (context) {
       BuildContext rootContext = context;
+
       return StreamBuilder<String>(
-          stream: Provider.of<AuthProvider>(rootContext, listen: false)
+          stream: Provider.of<AuthProvider>(rootContext, listen: true)
               .onAuthStateChanged,
           builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
             if (snapshot.connectionState == ConnectionState.active) {
               final bool isLoggedIn = snapshot.hasData;
-              _screen = isLoggedIn
+              nextScreen = isLoggedIn
                   ? HomeScreen()
                   : SignupScreen(
                       authFormType: AuthFormType.signIn,
                     );
             }
-            return _screen;
+            return nextScreen;
           });
     });
 
-    return _screen;
+    //return nextScreen;
   }
 
   @override
@@ -76,11 +91,12 @@ class _SplashScreenState extends State<SplashScreen> {
                       authFormType: AuthFormType.signIn,
                     );
             }
+            //getNextScreen();
             return Scaffold(
               body: SafeArea(
                   child: FutureBuilder(
                       future: Provider.of<SplashProvider>(context)
-                          .fetchSplashImage(),
+                          .fetchSplashScreensData(),
                       builder: (ctx, asyncSnapshot) {
                         if (asyncSnapshot.connectionState ==
                             ConnectionState.waiting) {
