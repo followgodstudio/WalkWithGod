@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:provider/provider.dart';
+import '../../../screens/auth_screen/signup_screen.dart';
 
 import '../../../configurations/theme.dart';
 import '../../../providers/auth_provider.dart';
@@ -156,7 +157,9 @@ class PrivacyScreen extends StatelessWidget {
                             onPressed: () {
                               Provider.of<AuthProvider>(context, listen: false)
                                   .logout();
-                              Navigator.of(context).pushReplacementNamed('/');
+                              Navigator.of(context).pushNamedAndRemoveUntil(
+                                  SignupScreen.routeName,
+                                  (Route<dynamic> route) => false);
                             },
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
