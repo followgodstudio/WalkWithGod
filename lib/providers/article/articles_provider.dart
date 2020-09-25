@@ -44,7 +44,7 @@ class ArticlesProvider with ChangeNotifier {
         .get();
     List<ArticleProvider> result = [];
     query.docs.forEach((data) {
-      result.add(_buildArticleByMap(data.id, data.data()));
+      result.add(buildArticleByMap(data.id, data.data()));
     });
     return result;
   }
@@ -88,7 +88,7 @@ class ArticlesProvider with ChangeNotifier {
       [bool isContentNeeded = false, int limit = 10]) {
     //_articles = [];
     query.docs.forEach((data) {
-      _articles.add(_buildArticleByMap(data.id, data.data()));
+      _articles.add(buildArticleByMap(data.id, data.data()));
     });
     if (query.docs.length < limit) _noMoreChild = true;
     if (query.docs.length > 0)
@@ -125,7 +125,7 @@ class ArticlesProvider with ChangeNotifier {
 
   Future<ArticleProvider> fetchArticlePreviewById(String aid) async {
     DocumentSnapshot data = await _fdb.collection(cArticles).doc(aid).get();
-    return _buildArticleByMap(data.id, data.data());
+    return buildArticleByMap(data.id, data.data());
   }
 
   ArticleProvider findById(String id) {
@@ -134,7 +134,7 @@ class ArticlesProvider with ChangeNotifier {
     });
   }
 
-  ArticleProvider _buildArticleByMap(String id, Map<String, dynamic> data) {
+  ArticleProvider buildArticleByMap(String id, Map<String, dynamic> data) {
     return ArticleProvider(
         id: id,
         title: data[fArticleTitle],
