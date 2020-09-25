@@ -8,6 +8,7 @@ import '../../providers/user/profile_provider.dart';
 import 'article_body.dart';
 import 'bottom_bar.dart';
 import 'comments.dart';
+import 'similar_articles.dart';
 import 'top_bar.dart';
 
 //ignore: must_be_immutable
@@ -62,6 +63,7 @@ class ArticleScreen extends StatelessWidget {
                         padding: const EdgeInsets.all(20.0),
                         child: ArticleBody(_articleId),
                       ),
+                      SimilarArticles(_articleId),
                       Padding(
                         key: dataKey,
                         padding: const EdgeInsets.symmetric(horizontal: 10.0),
