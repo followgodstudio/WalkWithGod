@@ -48,7 +48,6 @@ class _ArticleListState extends State<ArticleList> {
     final articlesData = Provider.of<ArticlesProvider>(context);
 
     return SliverList(
-      //itemExtent: MediaQuery.of(context).size.width,
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {
           // var backgroundImage = articlesData.articles[index].imageUrl == null ||

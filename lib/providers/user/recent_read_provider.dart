@@ -24,6 +24,7 @@ class RecentReadProvider with ChangeNotifier {
 
   Future<void> fetchRecentRead() async {
     if (readsCount == 0) return;
+    print("RecentReadProvider-fetchRecentRead");
     QuerySnapshot query = await _db
         .collection(cUsers)
         .doc(_userId)
@@ -43,6 +44,7 @@ class RecentReadProvider with ChangeNotifier {
 
   Future<void> fetchMoreRecentRead() async {
     if (readsCount == 0 || noMoreRecentRead || _isFetchingRecentRead) return;
+    print("RecentReadProvider-fetchMoreRecentRead");
     _isFetchingRecentRead = true;
     await _appendRecentReadList();
     _isFetchingRecentRead = false;
@@ -51,6 +53,7 @@ class RecentReadProvider with ChangeNotifier {
   Future<void> updateRecentReadByArticleId(
       ArticleProvider articleProvider) async {
     if (_isUpdatingRecentRead || articleProvider == null) return;
+    print("RecentReadProvider-updateRecentReadByArticleId");
     _isUpdatingRecentRead = true;
 
     // update local variables
@@ -89,6 +92,7 @@ class RecentReadProvider with ChangeNotifier {
 
   Future<void> updateReadDuration(DateTime start) async {
     if (_userId == null || _userId.isEmpty) return;
+    print("RecentReadProvider-updateReadDuration");
     int timeDiffInSecond = DateTime.now().difference(start).inSeconds;
     await _db
         .collection(cUsers)
@@ -111,8 +115,8 @@ class RecentReadProvider with ChangeNotifier {
       itemsMap[_recentReadList[i]] = i;
     }
     // Fetch Document's basic info, cannot be more than 10
-    List<ArticleProvider> articles = await ArticlesProvider()
-        .fetchList(_recentReadList.sublist(_lastVisibleRecentRead, end));
+    List<ArticleProvider> articles = await ArticlesProvider.fetchList(
+        _recentReadList.sublist(_lastVisibleRecentRead, end));
     // Reorganize by update date (orginal sequence)
     articles.sort((a, b) {
       return itemsMap[a.id].compareTo(itemsMap[b.id]);

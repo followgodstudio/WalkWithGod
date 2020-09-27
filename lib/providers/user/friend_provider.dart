@@ -19,6 +19,7 @@ class FriendProvider with ChangeNotifier {
 
   // will be called by friends_provider
   Future<void> follow(String uid, String name, String imageUrl) async {
+    print("FriendProvider-follow");
     if (friendStatus == eFriendStatusFollowing ||
         friendStatus == eFriendStatusFriend) return;
     DateTime followingDate = DateTime.now();
@@ -58,6 +59,7 @@ class FriendProvider with ChangeNotifier {
   }
 
   Future<void> unfollow(String uid, String name, String imageUrl) async {
+    print("FriendProvider-unfollow");
     if (friendStatus != eFriendStatusFollowing &&
         friendStatus != eFriendStatusFriend) return;
     friendStatus =

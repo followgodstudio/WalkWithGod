@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
-//import 'package:the_gorgeous_login/configurations/constants.dart';
 
 import '../../configurations/constants.dart';
 import 'article_provider.dart';
@@ -11,34 +10,15 @@ class ArticlesProvider with ChangeNotifier {
   bool _noMoreChild = false;
   bool _isFetching = false;
 
-  ArticlesProvider();
-
   List<ArticleProvider> _articles = [];
 
   List<ArticleProvider> get articles {
     return [..._articles];
   }
 
-  Future<void> fetchAll() async {
-    QuerySnapshot query = await _fdb
-        .collection(cArticles)
-        .orderBy(fCreatedDate, descending: true)
-        .get();
-    setArticles(query);
-  }
-
-  Future<void> fetchLatest([int n = loadLimit]) async {
-    QuerySnapshot query = await _fdb
-        .collection(cArticles)
-        .orderBy(fCreatedDate, descending: true)
-        .limit(n)
-        .get();
-    setArticles(query);
-  }
-
-  // For other providers static call
-  Future<List<ArticleProvider>> fetchList(List<String> aids) async {
-    QuerySnapshot query = await _fdb
+  static Future<List<ArticleProvider>> fetchList(List<String> aids) async {
+    print("ArticlesProvider-fetchList");
+    QuerySnapshot query = await FirebaseFirestore.instance
         .collection(cArticles)
         .where(FieldPath.documentId, whereIn: aids)
         .get();
@@ -53,6 +33,7 @@ class ArticlesProvider with ChangeNotifier {
       [DateTime dateTime,
       int n = loadLimit,
       bool isContentNeeded = false]) async {
+    print("ArticlesProvider-fetchArticlesByDate");
     if (dateTime == null) dateTime = DateTime.now();
 
     QuerySnapshot query = await _fdb
@@ -70,6 +51,7 @@ class ArticlesProvider with ChangeNotifier {
       int n = loadLimit,
       bool isContentNeeded = false]) async {
     if (_noMoreChild || _isFetching) return;
+    print("ArticlesProvider-fetchMoreArticles");
     _isFetching = true;
     if (dateTime == null) dateTime = DateTime.now();
 
@@ -86,7 +68,6 @@ class ArticlesProvider with ChangeNotifier {
 
   void setArticles(QuerySnapshot query,
       [bool isContentNeeded = false, int limit = 10]) {
-    //_articles = [];
     query.docs.forEach((data) {
       _articles.add(buildArticleByMap(data.id, data.data()));
     });
@@ -96,35 +77,10 @@ class ArticlesProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> fetchArticleConentById(String aid) async {
-    List<Paragraph> content = [];
-    QuerySnapshot querySnapshot = await _fdb
-        .collection(cArticles)
-        .doc(aid)
-        .collection(cArticleContent)
-        .orderBy(fContentIndex)
-        .get();
-    if (querySnapshot != null) {
-      querySnapshot.docs.forEach((element) {
-        var subtitle = "";
-        try {
-          subtitle = element.get(fContentSubtitle);
-        } catch (err) {
-          print("subtitle does not exist");
-        }
-        content.add(
-            Paragraph(subtitle: subtitle, body: element.get(fContentBody)));
-      });
-      ArticleProvider article =
-          _articles.firstWhere((a) => a.id == aid, orElse: () {
-        return null;
-      });
-      if (article != null) article.content = content;
-    }
-  }
-
-  Future<ArticleProvider> fetchArticlePreviewById(String aid) async {
-    DocumentSnapshot data = await _fdb.collection(cArticles).doc(aid).get();
+  static Future<ArticleProvider> fetchArticlePreviewById(String aid) async {
+    print("ArticlesProvider-fetchArticlePreviewById");
+    DocumentSnapshot data =
+        await FirebaseFirestore.instance.collection(cArticles).doc(aid).get();
     return buildArticleByMap(data.id, data.data());
   }
 
@@ -134,7 +90,8 @@ class ArticlesProvider with ChangeNotifier {
     });
   }
 
-  ArticleProvider buildArticleByMap(String id, Map<String, dynamic> data) {
+  static ArticleProvider buildArticleByMap(
+      String id, Map<String, dynamic> data) {
     return ArticleProvider(
         id: id,
         title: data[fArticleTitle],

@@ -31,6 +31,7 @@ class MessageProvider with ChangeNotifier {
 
   Future<void> markMessageAsRead(bool read) async {
     if (isRead == read) return;
+    print("MessageProvider-markMessageAsRead");
     isRead = read;
     notifyListeners();
 

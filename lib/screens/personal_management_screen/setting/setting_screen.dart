@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:provider/provider.dart';
-import 'package:walk_with_god/screens/auth_screen/signup_screen.dart';
 
 import '../../../configurations/theme.dart';
 import '../../../providers/auth_provider.dart';
 import '../../../providers/user/setting_provider.dart';
+import '../../auth_screen/signup_screen.dart';
 import 'about_us_screen.dart';
 import 'app_info_screen.dart';
 import 'cache_clear_screen.dart';

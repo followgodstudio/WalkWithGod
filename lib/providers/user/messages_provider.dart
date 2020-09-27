@@ -33,6 +33,7 @@ class MessagesProvider with ChangeNotifier {
   Future<void> fetchMessageList(int newMessageCount,
       [int limit = loadLimit]) async {
     if (newMessageCount == messagesCount) return; // do not need to refresh
+    print("MessagesProvider-fetchMessageList");
     QuerySnapshot query = await _db
         .collection(cUsers)
         .doc(_userId)
@@ -46,6 +47,7 @@ class MessagesProvider with ChangeNotifier {
 
   Future<void> fetchMoreMessages([int limit = loadLimit]) async {
     if (_userId == null || _isFetching) return;
+    print("MessagesProvider-fetchMessageList");
     _isFetching = true;
     QuerySnapshot query = await _db
         .collection(cUsers)
@@ -60,7 +62,7 @@ class MessagesProvider with ChangeNotifier {
   }
 
   // Used by other classes
-  Future<void> sendMessage(
+  static Future<void> sendMessage(
       String type,
       String senderUid,
       String senderName,
@@ -68,6 +70,7 @@ class MessagesProvider with ChangeNotifier {
       String receiverUid,
       String articleId,
       String commentId) async {
+    print("MessagesProvider-sendMessage");
     Map<String, dynamic> data = {};
     data[fMessageType] = type;
     data[fMessageSenderUid] = senderUid;
@@ -79,6 +82,7 @@ class MessagesProvider with ChangeNotifier {
     data[fCreatedDate] = Timestamp.now();
     data[fMessageIsRead] = false;
 
+    final FirebaseFirestore _db = FirebaseFirestore.instance;
     WriteBatch batch = _db.batch();
 
     // Add document

@@ -151,25 +151,6 @@ class PrivacyScreen extends StatelessWidget {
                       ),
                     ),
                     Divider(),
-                    Container(
-                        width: double.infinity,
-                        child: FlatButton(
-                            onPressed: () {
-                              Provider.of<AuthProvider>(context, listen: false)
-                                  .logout();
-                              Navigator.of(context).pushNamedAndRemoveUntil(
-                                  SignupScreen.routeName,
-                                  (Route<dynamic> route) => false);
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text("退出登录",
-                                  style: Theme.of(context).textTheme.headline6),
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18.0),
-                            ),
-                            color: Theme.of(context).buttonColor)),
                   ],
                 )
               ],

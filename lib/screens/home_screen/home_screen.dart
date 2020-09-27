@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 
 import '../../configurations/theme.dart';
 import '../../providers/article/articles_provider.dart';
-import '../../providers/auth_provider.dart';
 import '../../providers/user/profile_provider.dart';
 import '../../screens/personal_management_screen/personal_management_screen.dart';
 import '../../widgets/profile_picture.dart';
@@ -96,125 +95,74 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    String uid = Provider.of<AuthProvider>(context, listen: false).currentUser;
-    // if (uid == null) return Text("User not logged in");
-    if (uid == null) {
-      uid =
-          Provider.of<AuthProvider>(context, listen: false).singInAnonymously();
-    }
-
+    print("HomeScreen");
     return Scaffold(
         //resizeToAvoidBottomPadding: true,
         body: SafeArea(
-            child: FutureBuilder(
-                future: Future.wait([
-                  // TODO: move to splash screen
-                  Provider.of<ArticlesProvider>(context, listen: false)
-                      .fetchArticlesByDate(new DateTime.utc(1989, 11, 9)),
-                  Provider.of<ProfileProvider>(context, listen: false)
-                      .fetchAllUserInfo(uid)
-                ]),
-                builder: (ctx, asyncSnapshot) {
-                  if (asyncSnapshot.connectionState ==
-                      ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  } else {
-                    if (asyncSnapshot.error != null) {
-                      return Center(
-                        child: Text('An error occurred!'),
-                      );
-                    } else {
-                      return RefreshIndicator(
-                          onRefresh: () => _refreshArticles(context),
-                          child: Consumer<ArticlesProvider>(
-                              builder: (context, data, child) {
-                            refreshHeader(data.articles);
-                            return NotificationListener<ScrollNotification>(
-                                onNotification:
-                                    (ScrollNotification scrollInfo) {
-                                  if (scrollInfo.metrics.pixels ==
-                                      scrollInfo.metrics.maxScrollExtent) {
-                                    Provider.of<ArticlesProvider>(context,
-                                            listen: false)
-                                        .fetchMoreArticles(
-                                            new DateTime.utc(1989, 11, 9));
-                                  }
-                                  return true;
-                                },
-                                child: CustomScrollView(
-                                    controller: _controller,
-                                    slivers: <Widget>[
-                                      SliverAppBar(
-                                        toolbarHeight: 48.0,
-                                        shadowColor:
-                                            Theme.of(context).canvasColor,
-                                        backgroundColor:
-                                            Theme.of(context).canvasColor,
-                                        pinned: true,
-                                        automaticallyImplyLeading: false,
-                                        flexibleSpace: Row(
-                                          children: <Widget>[
-                                            RawMaterialButton(
-                                              constraints: BoxConstraints(),
-                                              padding:
-                                                  EdgeInsets.only(left: 20),
-                                              onPressed: () {},
-                                              child: ValueListenableBuilder(
-                                                valueListenable: title,
-                                                builder: (context, String value,
-                                                        child) =>
-                                                    Text(
-                                                  value,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .captionMedium2,
-                                                ),
-                                              ),
-                                            ),
-                                            Container(
-                                                height: 10,
-                                                child: VerticalDivider(
-                                                    color: Color.fromARGB(
-                                                        255, 128, 128, 128))),
-                                            ValueListenableBuilder(
-                                              valueListenable: formattedDate,
-                                              builder: (context, String value,
-                                                      child) =>
-                                                  Text(
-                                                value,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .captionMain,
-                                              ),
-                                            ),
-//                                        Text(
-//                                          formattedDate.value,
-//                                          style: Theme.of(context)
-//                                              .textTheme
-//                                              .captionMain,
-//                                        ),
-                                          ],
-                                        ),
-                                        actions: [
-                                          FlatButton(
-                                            child: Consumer<ProfileProvider>(
-                                                builder: (ctx, profile, _) =>
-                                                    ProfilePicture(18.0,
-                                                        profile.imageUrl)),
-                                            onPressed: () {
-                                              Navigator.of(context).pushNamed(
-                                                PersonalManagementScreen
-                                                    .routeName,
-                                              );
-                                            },
-                                          )
-                                        ],
-                                      ),
-                                      ArticleList(),
-                                    ]));
-                          }));
-                    }
+            child: RefreshIndicator(
+                onRefresh: () => _refreshArticles(context),
+                child: NotificationListener<ScrollNotification>(onNotification:
+                    (ScrollNotification scrollInfo) {
+                  if (scrollInfo.metrics.pixels ==
+                      scrollInfo.metrics.maxScrollExtent) {
+                    Provider.of<ArticlesProvider>(context, listen: false)
+                        .fetchMoreArticles(new DateTime.utc(1989, 11, 9));
                   }
-                })));
+                  return true;
+                }, child:
+                    Consumer<ArticlesProvider>(builder: (context, data, child) {
+                  refreshHeader(data.articles);
+                  return CustomScrollView(controller: _controller, slivers: <
+                      Widget>[
+                    SliverAppBar(
+                      toolbarHeight: 48.0,
+                      shadowColor: Theme.of(context).canvasColor,
+                      backgroundColor: Theme.of(context).canvasColor,
+                      pinned: true,
+                      automaticallyImplyLeading: false,
+                      flexibleSpace: Row(
+                        children: <Widget>[
+                          RawMaterialButton(
+                            constraints: BoxConstraints(),
+                            padding: EdgeInsets.only(left: 20),
+                            onPressed: () {},
+                            child: ValueListenableBuilder(
+                              valueListenable: title,
+                              builder: (context, String value, child) => Text(
+                                value,
+                                style:
+                                    Theme.of(context).textTheme.captionMedium2,
+                              ),
+                            ),
+                          ),
+                          Container(
+                              height: 10,
+                              child: VerticalDivider(
+                                  color: Color.fromARGB(255, 128, 128, 128))),
+                          ValueListenableBuilder(
+                            valueListenable: formattedDate,
+                            builder: (context, String value, child) => Text(
+                              value,
+                              style: Theme.of(context).textTheme.captionMain,
+                            ),
+                          ),
+                        ],
+                      ),
+                      actions: [
+                        FlatButton(
+                          child: Consumer<ProfileProvider>(
+                              builder: (ctx, profile, _) =>
+                                  ProfilePicture(18.0, profile.imageUrl)),
+                          onPressed: () {
+                            Navigator.of(context).pushNamed(
+                              PersonalManagementScreen.routeName,
+                            );
+                          },
+                        )
+                      ],
+                    ),
+                    ArticleList(),
+                  ]);
+                })))));
   }
 }

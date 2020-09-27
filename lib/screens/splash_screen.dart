@@ -3,10 +3,13 @@ import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../configurations/theme.dart';
+import '../providers/article/articles_provider.dart';
 import '../providers/auth_provider.dart';
 import '../providers/splash_provider.dart';
+import '../providers/user/profile_provider.dart';
 import '../screens/auth_screen/signup_screen.dart';
-import '../configurations/theme.dart';
 import 'home_screen/home_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -77,26 +80,38 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print("SplashScreen");
     return Builder(builder: (context) {
       BuildContext rootContext = context;
       return StreamBuilder<String>(
           stream: Provider.of<AuthProvider>(rootContext, listen: false)
               .onAuthStateChanged,
           builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-            if (snapshot.connectionState == ConnectionState.active) {
-              final bool isLoggedIn = snapshot.hasData;
-              nextScreen = isLoggedIn
-                  ? HomeScreen()
-                  : SignupScreen(
-                      authFormType: AuthFormType.signIn,
-                    );
+            if (snapshot.connectionState != ConnectionState.active)
+              return Center(child: CircularProgressIndicator());
+            final bool isLoggedIn = snapshot.hasData;
+            nextScreen = isLoggedIn
+                ? HomeScreen()
+                : SignupScreen(
+                    authFormType: AuthFormType.signIn,
+                  );
+            String uid =
+                Provider.of<AuthProvider>(context, listen: false).currentUser;
+            if (uid == null) {
+              uid = Provider.of<AuthProvider>(context, listen: false)
+                  .singInAnonymously();
             }
-            //getNextScreen();
             return Scaffold(
               body: SafeArea(
                   child: FutureBuilder(
-                      future: Provider.of<SplashProvider>(context)
-                          .fetchSplashScreensData(),
+                      future: Future.wait([
+                        Provider.of<ArticlesProvider>(context, listen: false)
+                            .fetchArticlesByDate(new DateTime.utc(1989, 11, 9)),
+                        Provider.of<ProfileProvider>(context, listen: false)
+                            .fetchAllUserInfo(uid),
+                        Provider.of<SplashProvider>(context)
+                            .fetchSplashScreensData(),
+                      ]),
                       builder: (ctx, asyncSnapshot) {
                         if (asyncSnapshot.connectionState ==
                             ConnectionState.waiting) {
@@ -126,8 +141,8 @@ class _SplashScreenState extends State<SplashScreen> {
                                           child: Center(
                                             child: Material(
                                                 elevation: 5.0,
-                                                child: Image.network(
-                                                    value.imageUrl)),
+                                                child: CachedNetworkImage(
+                                                    imageUrl: value.imageUrl)),
                                           ),
                                         ),
                                       ),

@@ -174,21 +174,6 @@ class AuthProvider with ChangeNotifier {
           } else {
             print("Error");
           }
-
-          // _auth
-          //     .signInWithCredential(authCredential)
-          //     .then((UserCredential result) {
-          //   if (result.additionalUserInfo.isNewUser) {
-          //     ProfileProvider().initProfile(result.user.uid);
-          //   }
-          //   Navigator.push(
-          //     context,
-          //     MaterialPageRoute(builder: (context) => HomeScreen()),
-          //   ); // to pop the dialog box
-          //   // Navigator.of(context).pushReplacementNamed('/home');
-          // }).catchError((e) {
-          //   return "error";
-          // });
         },
         verificationFailed: (FirebaseAuthException exception) {
           return "error";

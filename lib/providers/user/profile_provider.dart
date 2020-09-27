@@ -38,6 +38,7 @@ class ProfileProvider with ChangeNotifier {
 
   Future<bool> fetchAllUserInfo(String userId) async {
     if (userId == null || userId.isEmpty || _isFetching) return false;
+    print("ProfileProvider-fetchAllUserInfo");
     uid = userId;
     friendsProvider.setUserId(uid);
     savedArticlesProvider.setUserId(uid);
@@ -87,6 +88,7 @@ class ProfileProvider with ChangeNotifier {
   }
 
   Future<bool> fetchProfile() async {
+    print("ProfileProvider-fetchProfile");
     DocumentSnapshot doc = await _db.collection(cUsers).doc(uid).get();
     if (!doc.exists) return false; // User not exist
 
@@ -138,6 +140,7 @@ class ProfileProvider with ChangeNotifier {
   }
 
   Future<void> updateProfilePicture(File file) async {
+    print("ProfileProvider-updateProfilePicture");
     String path = sProfilePictures + "/$uid.jpeg";
     StorageTaskSnapshot snapshot =
         await _storage.ref().child(path).putFile(file).onComplete;
@@ -164,12 +167,14 @@ class ProfileProvider with ChangeNotifier {
         newImageUrl.isNotEmpty &&
         newImageUrl != imageUrl) imageUrl = data[fUserImageUrl] = newImageUrl;
     if (data.isNotEmpty) {
+      print("ProfileProvider-updateProfilePicture");
       await _db.collection(cUsers).doc(uid).update(data);
       notifyListeners();
     }
   }
 
   Future<void> initProfile() async {
+    print("ProfileProvider-initProfile");
     createdDate = DateTime.now();
     await _db.collection(cUsers).doc(uid).set({fUserName: name});
     await _db
@@ -188,6 +193,7 @@ class ProfileProvider with ChangeNotifier {
   }
 
   Future<void> deleteProfile() async {
+    print("ProfileProvider-deleteProfile");
     await _db.collection(cUsers).doc(uid).delete();
   }
 }

@@ -8,9 +8,9 @@ class ArticleParagraph extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("ArticleParagraph");
     return Container(
-      padding: const EdgeInsets.only(top: 20.0),
-      width: MediaQuery.of(context).size.width * 160 / 188,
+      padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
       child: Column(children: [
         Padding(
           padding: const EdgeInsets.only(bottom: 10.0),

@@ -53,6 +53,7 @@ class FriendsProvider with ChangeNotifier {
     } else {
       _following = [];
     }
+    print("FriendsProvider-fetchFriendList");
     QuerySnapshot query = await _db
         .collection(cUsers)
         .doc(_userId)
@@ -67,6 +68,7 @@ class FriendsProvider with ChangeNotifier {
   Future<void> fetchMoreFriends(bool isFollower,
       [int limit = loadLimit]) async {
     if (_userId == null || _isFetching) return;
+    print("FriendsProvider-fetchMoreFriends");
     List<String> whereIn = [eFriendStatusFollowing, eFriendStatusFriend];
     String orderBy = fFriendFollowingDate;
     DocumentSnapshot lastVisible = _lastVisibleFollowing;
@@ -91,6 +93,7 @@ class FriendsProvider with ChangeNotifier {
   }
 
   Future<FriendProvider> fetchFriendStatusByUserId(String uid) async {
+    print("FriendsProvider-fetchFriendStatusByUserId");
     DocumentSnapshot doc = await _db
         .collection(cUsers)
         .doc(_userId)
@@ -117,6 +120,7 @@ class FriendsProvider with ChangeNotifier {
     followingsCount -= 1;
     notifyListeners();
 
+    print("FriendsProvider-fetchFriendStatusByUserId");
     // Update database
     WriteBatch batch = _db.batch();
     batch.update(
@@ -156,6 +160,7 @@ class FriendsProvider with ChangeNotifier {
     followingsCount += 1;
     notifyListeners();
 
+    print("FriendsProvider-addFollowInList");
     // Update database
     WriteBatch batch = _db.batch();
     batch.update(

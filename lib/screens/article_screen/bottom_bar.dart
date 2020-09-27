@@ -82,45 +82,31 @@ class BottomBar extends StatelessWidget {
         ),
       ),
       SizedBox(
-        width: 55.0,
-        child: FutureBuilder(
-            future: Provider.of<SavedArticlesProvider>(context, listen: false)
-                .fetchSavedStatusByArticleId(articleId),
-            builder: (ctx, asyncSnapshot) {
-              if (asyncSnapshot.connectionState == ConnectionState.waiting ||
-                  asyncSnapshot.error != null)
-                // return a button without function
-                FlatButton(
-                  onPressed: () {},
-                  child: Icon(
-                    Icons.star_border,
-                    size: 20.0,
-                  ),
-                  color: Theme.of(context).buttonColor,
-                  shape: CircleBorder(),
-                );
-              return Consumer<SavedArticlesProvider>(
-                  builder: (context, value, child) => FlatButton(
-                        onPressed: () {
-                          if (value.currentLike) {
-                            value.removeSavedByArticleId(articleId);
-                          } else {
-                            value.addSavedByArticleId(articleId);
-                          }
-                        },
-                        child: Icon(
-                          value.currentLike ? Icons.star : Icons.star_border,
-                          size: 20.0,
-                          color:
-                              value.currentLike ? Colors.white : Colors.black87,
-                        ),
-                        color: value.currentLike
-                            ? Colors.blue
-                            : Theme.of(context).buttonColor,
-                        shape: CircleBorder(),
-                      ));
-            }),
-      ),
+          width: 55.0,
+          child: Consumer<SavedArticlesProvider>(
+              builder: (context, value, child) => FlatButton(
+                    onPressed: () {
+                      if (value.currentLike == null) return;
+                      if (value.currentLike) {
+                        value.removeSavedByArticleId(articleId);
+                      } else {
+                        value.addSavedByArticleId(articleId);
+                      }
+                    },
+                    child: Icon(
+                      (value.currentLike != null && value.currentLike)
+                          ? Icons.star
+                          : Icons.star_border,
+                      size: 20.0,
+                      color: (value.currentLike != null && value.currentLike)
+                          ? Colors.white
+                          : Colors.black87,
+                    ),
+                    color: (value.currentLike != null && value.currentLike)
+                        ? Colors.blue
+                        : Theme.of(context).buttonColor,
+                    shape: CircleBorder(),
+                  ))),
     ]));
   }
 }

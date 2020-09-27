@@ -321,7 +321,6 @@ class ArticleCard extends StatelessWidget {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Expanded(child: SizedBox()),
                                             Padding(
                                               padding: const EdgeInsets.only(
                                                   bottom: 8.0),

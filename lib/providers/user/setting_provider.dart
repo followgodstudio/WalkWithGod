@@ -28,6 +28,7 @@ class SettingProvider with ChangeNotifier {
   }
 
   Future<void> fetchAboutUs() async {
+    print("SettingProvider-fetchAboutUs");
     DocumentSnapshot doc =
         await _db.collection(cAppInfo).doc(dAppInfoAboutUs).get();
     ourMission = doc.get(fAppInfoOurMission);
@@ -35,6 +36,7 @@ class SettingProvider with ChangeNotifier {
   }
 
   Future<void> fetchNewestVersion() async {
+    print("SettingProvider-fetchNewestVersion");
     DocumentSnapshot doc =
         await _db.collection(cAppInfo).doc(dAppInfoVersion).get();
     newestVersion = doc.get(fAppInfoNewestVersion);
@@ -72,6 +74,7 @@ class SettingProvider with ChangeNotifier {
     bool newRejectStrangerMessage,
     bool newFollowingNotification,
   }) async {
+    print("SettingProvider-updateSetting");
     Map<String, dynamic> data = {};
     if (newKeepScreenAwake != null) {
       keepScreenAwake = data[fSettingScreenAwake] = newKeepScreenAwake;

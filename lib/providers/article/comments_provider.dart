@@ -25,7 +25,12 @@ class CommentsProvider with ChangeNotifier {
   // Will be called by comment detail screen
   Future<CommentProvider> fetchLevel1CommentByCommentId(
       String articleId, String commentId, String userId) async {
-    // Fetch Comment
+    CommentProvider commentProvider =
+        _items.firstWhere((element) => element.id == commentId, orElse: () {
+      return null;
+    });
+    if (commentProvider != null) return commentProvider;
+    print("CommentsProvider-fetchLevel1CommentByCommentId");
     DocumentSnapshot doc = await _db
         .collection(cArticles)
         .doc(articleId)
@@ -42,8 +47,7 @@ class CommentsProvider with ChangeNotifier {
         .doc(userId)
         .get();
     var tmp = doc.data();
-    CommentProvider commentProvider =
-        _buildLevel1CommentByMap(commentId, tmp, docLikes.exists);
+    commentProvider = _buildLevel1CommentByMap(commentId, tmp, docLikes.exists);
     return commentProvider;
   }
 
@@ -51,6 +55,7 @@ class CommentsProvider with ChangeNotifier {
       String articleId, String userId,
       [int limit = loadLimit]) async {
     if (articleId == null || userId == null) return;
+    print("CommentsProvider-fetchLevel1CommentListByArticleId");
     // Clear data
     _items = [];
     _lastVisible = null;
@@ -66,11 +71,13 @@ class CommentsProvider with ChangeNotifier {
     _items = [];
     _articleId = articleId;
     await _appendLevel1CommentList(query, articleId, userId, limit);
+    notifyListeners();
   }
 
   Future<void> fetchMoreLevel1Comments(String userId,
       [int limit = loadLimit]) async {
     if (_articleId == null || userId == null || _noMore || _isFetching) return;
+    print("CommentsProvider-fetchMoreLevel1Comments");
     _isFetching = true;
     QuerySnapshot query = await _db
         .collection(cArticles)
@@ -85,6 +92,7 @@ class CommentsProvider with ChangeNotifier {
 
   Future<void> addLevel1Comment(String articleId, String content,
       String creatorUid, String creatorName, String creatorImage) async {
+    print("CommentsProvider-addLevel1Comment");
     Map<String, dynamic> comment = {};
     comment[fCommentArticleId] = articleId;
     comment[fCommentContent] = content;

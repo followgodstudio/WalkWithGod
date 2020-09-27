@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
+import '../../providers/article/article_provider.dart';
 import '../../providers/article/articles_provider.dart';
 import '../../providers/article/comments_provider.dart';
 import '../../providers/user/profile_provider.dart';
+import '../../providers/user/saved_articles_provider.dart';
 import 'article_body.dart';
 import 'bottom_bar.dart';
 import 'comments.dart';
@@ -14,9 +16,10 @@ import 'top_bar.dart';
 //ignore: must_be_immutable
 class ArticleScreen extends StatelessWidget {
   static const routeName = '/article_screen';
-  bool _updatedRecentRead = false;
+  bool _fetchedAllData = false;
   final dataKey = new GlobalKey();
-  void scrollToComment() {
+
+  void _scrollToComment() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (dataKey.currentContext != null)
         Scrollable.ensureVisible(dataKey.currentContext,
@@ -24,72 +27,87 @@ class ArticleScreen extends StatelessWidget {
     });
   }
 
+  // fetch all data that needed by the article screen, run only once
+  void _fetchAllData(BuildContext context, ArticleProvider article) async {
+    if (!_fetchedAllData) {
+      _fetchedAllData = true;
+      await article.fetchArticleContent();
+      await Provider.of<SavedArticlesProvider>(context, listen: false)
+          .fetchSavedStatusByArticleId(article.id);
+      ProfileProvider profile =
+          Provider.of<ProfileProvider>(context, listen: false);
+      await Provider.of<CommentsProvider>(context, listen: false)
+          .fetchLevel1CommentListByArticleId(article.id, profile.uid);
+      await article.fetchSimilarArticles();
+      await profile.recentReadProvider.updateRecentReadByArticleId(article);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    print("ArticleScreen");
+    ProfileProvider profile =
+        Provider.of<ProfileProvider>(context, listen: false);
     final Map parameter = ModalRoute.of(context).settings.arguments as Map;
     final String _articleId = parameter["articleId"];
     final String _commentId = parameter["commentId"];
     final HideNavbar hiding = HideNavbar();
-    ProfileProvider profile =
-        Provider.of<ProfileProvider>(context, listen: false);
-    if (!_updatedRecentRead) {
-      // update recently read history, run only once.
-      _updatedRecentRead = true;
-      final loadedArticle = Provider.of<ArticlesProvider>(
-        context,
-        listen: false,
-      ).findById(_articleId);
-      profile.recentReadProvider.updateRecentReadByArticleId(loadedArticle);
-    }
-    return Scaffold(
-      body: SafeArea(
-        child: NotificationListener<ScrollNotification>(
-            onNotification: (ScrollNotification scrollInfo) {
-              if (scrollInfo.metrics.pixels ==
-                  scrollInfo.metrics.maxScrollExtent) {
-                Provider.of<CommentsProvider>(context, listen: false)
-                    .fetchMoreLevel1Comments(profile.uid);
-              }
-              return true;
-            },
-            child: CustomScrollView(
-              controller: hiding.controller,
-              slivers: <Widget>[
-                TopBar(_articleId),
-                SliverToBoxAdapter(
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: ArticleBody(_articleId),
+    final loadedArticle = Provider.of<ArticlesProvider>(
+      context,
+      listen: false,
+    ).findById(_articleId);
+    _fetchAllData(context, loadedArticle);
+    return ChangeNotifierProvider.value(
+        value: loadedArticle,
+        child: Scaffold(
+          body: SafeArea(
+            child: NotificationListener<ScrollNotification>(
+                onNotification: (ScrollNotification scrollInfo) {
+                  if (scrollInfo.metrics.pixels ==
+                      scrollInfo.metrics.maxScrollExtent) {
+                    Provider.of<CommentsProvider>(context, listen: false)
+                        .fetchMoreLevel1Comments(profile.uid);
+                  }
+                  return true;
+                },
+                child: CustomScrollView(
+                  controller: hiding.controller,
+                  slivers: <Widget>[
+                    TopBar(),
+                    SliverToBoxAdapter(
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: ArticleBody(),
+                          ),
+                          SimilarArticles(),
+                          Padding(
+                            key: dataKey,
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 10.0),
+                            child: Comments(
+                                articleId: _articleId, commentId: _commentId),
+                          ),
+                        ],
                       ),
-                      SimilarArticles(_articleId),
-                      Padding(
-                        key: dataKey,
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                        child: Comments(
-                            articleId: _articleId, commentId: _commentId),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            )),
-      ),
-      bottomNavigationBar: ValueListenableBuilder(
-        valueListenable: hiding.visible,
-        builder: (context, bool value, child) => AnimatedContainer(
-          duration: Duration(milliseconds: 300),
-          height: value ? 60.0 : 0.0,
-          child: value
-              ? BottomBar(_articleId, scrollToComment)
-              : Container(
-                  color: Colors.white,
-                  // width: MediaQuery.of(context).size.width,
-                ),
-        ),
-      ),
-    );
+                    ),
+                  ],
+                )),
+          ),
+          bottomNavigationBar: ValueListenableBuilder(
+            valueListenable: hiding.visible,
+            builder: (context, bool value, child) => AnimatedContainer(
+              duration: Duration(milliseconds: 300),
+              height: value ? 60.0 : 0.0,
+              child: value
+                  ? BottomBar(_articleId, _scrollToComment)
+                  : Container(
+                      color: Colors.white,
+                    ),
+            ),
+          ),
+        ));
   }
 }
 

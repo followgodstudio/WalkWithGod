@@ -50,6 +50,7 @@ class CommentProvider with ChangeNotifier {
       [int limit = loadLimit]) async {
     // level 1 comment will call this method
     if (parent != null) return;
+    print("CommentProvider-fetchLevel2ChildrenCommentList");
     QuerySnapshot query = await _db
         .collection(cArticles)
         .doc(articleId)
@@ -67,6 +68,7 @@ class CommentProvider with ChangeNotifier {
       [int limit = loadLimit]) async {
     // level 1 comment will call this method
     if (parent != null || _noMoreChild || _isFetching) return;
+    print("CommentProvider-fetchMoreLevel2ChildrenComments");
     _isFetching = true;
     QuerySnapshot query = await _db
         .collection(cArticles)
@@ -90,6 +92,7 @@ class CommentProvider with ChangeNotifier {
 
     // Add user to like list
     if (parent == null) {
+      print("CommentProvider-addLike");
       // Level 1
       WriteBatch batch = _db.batch();
       // Add a document
@@ -126,7 +129,7 @@ class CommentProvider with ChangeNotifier {
       });
     }
     // Send the creator a message
-    await MessagesProvider().sendMessage(eMessageTypeLike, userId, userName,
+    await MessagesProvider.sendMessage(eMessageTypeLike, userId, userName,
         userImage, creatorUid, articleId, parent == null ? id : parent);
   }
 
@@ -138,6 +141,7 @@ class CommentProvider with ChangeNotifier {
 
     // Remove user from like list
     if (parent == null) {
+      print("CommentProvider-cancelLike");
       // Level 1
       WriteBatch batch = _db.batch();
       // Remove a document
@@ -175,6 +179,7 @@ class CommentProvider with ChangeNotifier {
 
   Future<void> addLevel2Comment(String l2content, String l2creatorUid,
       String l2creatorName, String l2creatorImage, bool isL3Comment) async {
+    print("CommentProvider-addLevel2Comment");
     Map<String, dynamic> comment = {};
     comment[fCommentArticleId] = articleId;
     comment[fCommentContent] = l2content;
@@ -220,7 +225,7 @@ class CommentProvider with ChangeNotifier {
     }
 
     // Send the creator/replyTo a message
-    await MessagesProvider().sendMessage(
+    await MessagesProvider.sendMessage(
         eMessageTypeReply,
         l2creatorUid,
         l2creatorName,
@@ -258,12 +263,6 @@ class CommentProvider with ChangeNotifier {
           }, ifAbsent: () => false);
           copyOfData.update('id', (value) => doc.id, ifAbsent: () => doc.id);
         }
-        // doc.data().update("like", (_) {
-        //   return (List<String>.from(doc.get(fCommentReplyLikes)))
-        //       .contains(userId);
-        // }, ifAbsent: () => false);
-        // data.data['like'] =
-        //     (List<String>.from(doc.[fCommentReplyLikes])).contains(userId);
       }
       children.add(_buildLevel2CommentByMap(doc.id, copyOfData));
     });
