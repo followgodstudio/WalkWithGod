@@ -10,21 +10,13 @@ import '../../../utils/utils.dart';
 
 class ArticleCard extends StatelessWidget {
   final ArticleProvider article;
-  // final AspectRatio aspectRatio;
-  // final Padding padding;
+  double _screenWidthAdjustment;
 
-  ArticleCard(this.article) {
-    // this.article = article;
-    // this.aspectRatio = aspectRatio;
-  }
+  ArticleCard(this.article);
+
   @override
   Widget build(BuildContext context) {
-    //Color textColor = Colors.white;
-    //final article = Provider.of<ArticleProvider>(context, listen: false);
-
-    // final backgroundImage = article.imageUrl == null || article.imageUrl.isEmpty
-    //     ? AssetImage('assets/images/placeholder.png')
-    //     : CachedNetworkImageProvider(article.imageUrl);
+    _screenWidthAdjustment = MediaQuery.of(context).size.width - 48.0 - 40.0;
 
     Future<ui.Image> _getImage(String imgUrl) {
       Completer<ui.Image> completer = new Completer<ui.Image>();
@@ -41,369 +33,142 @@ class ArticleCard extends StatelessWidget {
     return Container(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12.5),
-        child: Hero(
-            tag: article.id,
-            child: FutureBuilder(
-              future: _getImage(article.imageUrl),
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                } else {
-                  if (snapshot.error != null) {
-                    return Center(
-                      child: FlatButton(
-                          onPressed: () {}, child: Text('An error occurred!')),
-                    );
-                  } else {
-                    if (snapshot.hasData) {
-                      return AspectRatio(
-                        aspectRatio: 7 / 8,
-                        // child: Stack(
-                        //   children: [
-                        //     ShaderMask(
-                        //         shaderCallback: (rect) {
-                        //           return LinearGradient(
-                        //             begin: Alignment.topCenter,
-                        //             end: Alignment.bottomCenter,
-                        //             //colors: [Colors.black, Colors.transparent],
-                        //             colors: [
-                        //               Colors.transparent,
-                        //               Colors.black,
-                        //             ],
-                        //           ).createShader(
-                        //               Rect.fromLTRB(0, 0, rect.width, rect.height));
-                        //         },
-                        //         blendMode: BlendMode.srcOver,
-                        //         child: FittedBox(
-                        //             //fit: BoxFit.fitHeight,
-                        //             child: Image(
-                        //                 image: CachedNetworkImageProvider(article.imageUrl)))
-                        //         //AssetImage('assets/images/image0.jpg')),
-                        //         ),
-                        //     FlatButton(
-                        //       onPressed: () {
-                        //         Navigator.of(context).pushNamed(
-                        //           ArticleScreen.routeName,
-                        //           arguments: article.id,
-                        //         );
-                        //       },
-                        //       child: Align(
-                        //         alignment: Alignment.bottomCenter,
-                        //         child: FutureBuilder(
-                        //           future: useWhiteTextColor(
-                        //               CachedNetworkImageProvider(article.imageUrl)),
-                        //           builder: (BuildContext context,
-                        //               AsyncSnapshot<bool> snapshot) {
-                        //             if (snapshot.connectionState ==
-                        //                 ConnectionState.waiting) {
-                        //               return Center(
-                        //                 child: CircularProgressIndicator(),
-                        //               );
-                        //             } else {
-                        //               if (snapshot.error != null) {
-                        //                 return Center(
-                        //                   child: Text('An error occurred!'),
-                        //                 );
-                        //               } else {
-                        //                 return Column(
-                        //                   mainAxisSize: MainAxisSize.min,
-                        //                   crossAxisAlignment:
-                        //                       CrossAxisAlignment.start,
-                        //                   children: [
-                        //                     Expanded(child: SizedBox()),
-                        //                     Padding(
-                        //                       padding: const EdgeInsets.only(
-                        //                           bottom: 8.0),
-                        //                       child: Text(
-                        //                         article.title ?? "",
-                        //                         maxLines: 2,
-                        //                         overflow: TextOverflow.ellipsis,
-                        //                         style: TextStyle(
-                        //                             fontFamily: "Jinling",
-                        //                             color: snapshot.data
-                        //                                 ? Colors.white
-                        //                                 : Colors.black,
-                        //                             fontSize: 24),
-                        //                       ),
-                        //                     ),
-                        //                     Padding(
-                        //                       padding: const EdgeInsets.symmetric(
-                        //                           vertical: 8.0, horizontal: 3.0),
-                        //                       child: Text(
-                        //                         article.description ?? "",
-                        //                         maxLines: 2,
-                        //                         overflow: TextOverflow.ellipsis,
-                        //                         style: TextStyle(
-                        //                             fontFamily: "LantingXianHei",
-                        //                             color: snapshot.data
-                        //                                 ? Colors.white
-                        //                                 : Colors.black,
-                        //                             fontSize: 12),
-                        //                       ),
-                        //                     ),
-                        //                     Divider(
-                        //                       color: Colors.white,
-                        //                     ),
-                        //                     Padding(
-                        //                       padding: const EdgeInsets.only(
-                        //                           top: 8.0, bottom: 20.0),
-                        //                       child: Row(
-                        //                         mainAxisAlignment:
-                        //                             MainAxisAlignment.start,
-                        //                         children: [
-                        //                           article.icon == null ||
-                        //                                   article.icon.isEmpty
-                        //                               ? Icon(
-                        //                                   Icons.album,
-                        //                                   color: snapshot.data
-                        //                                       ? Colors.white
-                        //                                       : Colors.black,
-                        //                                 )
-                        //                               : Image(
-                        //                                   image: CachedNetworkImageProvider(
-                        //                                     article.icon,
-                        //                                   ),
-                        //                                   width: 30,
-                        //                                   height: 30,
-                        //                                   color: null,
-                        //                                   fit: BoxFit.scaleDown,
-                        //                                   alignment:
-                        //                                       Alignment.center,
-                        //                                 ),
-                        //                           SizedBox(
-                        //                             width: 5.0,
-                        //                           ),
-                        //                           Expanded(
-                        //                             child: Text(
-                        //                               article.author ?? "匿名",
-                        //                               style: TextStyle(
-                        //                                   fontFamily:
-                        //                                       "LantingXianHei",
-                        //                                   color: snapshot.data
-                        //                                       ? Colors.white
-                        //                                       : Colors.black,
-                        //                                   fontSize: 12),
-                        //                             ),
-                        //                           ),
-                        //                           Text(
-                        //                             getCreatedDuration(
-                        //                                 article.createdDate ??
-                        //                                     DateTime.now().toUtc()),
-                        //                             style: TextStyle(
-                        //                                 fontFamily:
-                        //                                     "LantingXianHei",
-                        //                                 color: snapshot.data
-                        //                                     ? Colors.white
-                        //                                     : Colors.black,
-                        //                                 fontSize: 12),
-                        //                           ),
-                        //                         ],
-                        //                       ),
-                        //                     ),
-                        //                   ],
-                        //                 );
-                        //               }
-                        //             }
-                        //           },
-                        //         ),
-                        //       ),
-                        //     )
+        child: FutureBuilder(
+          future: _getImage(article.imageUrl),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                  child: CircularProgressIndicator(
+                strokeWidth: 1.0,
+              ));
+            } else {
+              if (snapshot.error != null) {
+                return Center(
+                  child: FlatButton(
+                      onPressed: () {}, child: Text('An error occurred!')),
+                );
+              } else {
+                if (snapshot.connectionState == ConnectionState.done &&
+                    snapshot.hasData) {
+                  return GestureDetector(
+                    onTap: () {
+                      // Navigator.of(context).pushNamed(
+                      //   ArticleScreen.routeName,
+                      //   arguments: {'articleId': article.id},
+                      // );
 
-                        //   ],
-                        // ),
-
-                        // Container(
-                        //     decoration: BoxDecoration(
-                        //       boxShadow: [
-                        //         BoxShadow(
-                        //           color: Colors.grey[300],
-                        //           blurRadius:
-                        //               25.0, // has the effect of softening the shadow
-                        //           spreadRadius:
-                        //               0.0, // has the effect of extending the shadow
-                        //           offset: Offset(
-                        //             0.0, // horizontal, move right 10
-                        //             7.5, // vertical, move down 10
-                        //           ),
-                        //         )
-                        //       ],
-                        //       image: DecorationImage(
-                        //           image: backgroundImage,
-                        //           colorFilter: ColorFilter.mode(
-                        //               //snapshot.data
-                        //               //? Colors.white.withOpacity(0.8)
-                        //               Colors.black.withOpacity(0.8),
-                        //               BlendMode.srcOver),
-                        //           fit: BoxFit.cover
-                        //           // image.height > image.width
-                        //           //     ? BoxFit.fitWidth
-                        //           //     : BoxFit.fitHeight
-                        //           ),
-                        //     ),
-
-                        child: Container(
-                            decoration: BoxDecoration(
-                              backgroundBlendMode: BlendMode.softLight,
-                              gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: <Color>[
-                                  Colors.black.withAlpha(0),
-                                  //Colors.black12,
-                                  Colors.black45
-                                ],
-                              ),
-
-                              // LinearGradient(
-                              //   end: FractionalOffset.topCenter,
-                              //   begin: FractionalOffset.bottomCenter,
-                              //   colors: [
-                              //     Colors.black.withOpacity(0.0),
-                              //     Colors.black.withOpacity(0.8),
-                              //   ],
-                              // ),
-
-                              // boxShadow: [
-                              //   BoxShadow(
-                              //     color: Colors.grey[300],
-                              //     blurRadius:
-                              //         25.0, // has the effect of softening the shadow
-                              //     spreadRadius:
-                              //         0.0, // has the effect of extending the shadow
-                              //     offset: Offset(
-                              //       0.0, // horizontal, move right 10
-                              //       7.5, // vertical, move down 10
-                              //     ),
-                              //   )
-                              // ],
-
-                              image: DecorationImage(
-                                  image: backgroundImage,
-                                  // colorFilter: ColorFilter.mode(
-                                  //     //snapshot.data
-                                  //     //? Colors.white.withOpacity(0.8)
-                                  //     Colors.black.withOpacity(0.8),
-                                  //     BlendMode.srcOver),
-                                  fit: BoxFit.cover
-                                  // image.height > image.width
-                                  //     ? BoxFit.fitWidth
-                                  //     : BoxFit.fitHeight
+                      Navigator.of(context).push(PageRouteBuilder(
+                        fullscreenDialog: true,
+                        transitionDuration: Duration(milliseconds: 1500),
+                        pageBuilder: (context, animaton, secondaryAnimtaion) {
+                          return ArticleScreen();
+                        },
+                        settings: RouteSettings(
+                          name: ArticleScreen.routeName,
+                          arguments: {'articleId': article.id},
+                        ),
+                        transitionsBuilder:
+                            (context, animation, secondaryAnimation, child) {
+                          return FadeTransition(
+                            opacity: animation,
+                            child: child,
+                          );
+                        },
+                      ));
+                    },
+                    child: Card(
+                      elevation: 4.0,
+                      child: Stack(
+                        children: [
+                          Hero(
+                              tag: 'background' + article.id,
+                              child: AspectRatio(
+                                aspectRatio: 7 / 8,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    //backgroundBlendMode: BlendMode.softLight,
+                                    image: DecorationImage(
+                                        image: backgroundImage,
+                                        fit: BoxFit.cover),
+                                    // gradient: LinearGradient(
+                                    //   begin: Alignment.topCenter,
+                                    //   end: Alignment.bottomCenter,
+                                    //   colors: <Color>[
+                                    //     Colors.black.withAlpha(0),
+                                    //     Colors.black12,
+                                    //     Colors.black45
+                                    //   ],
+                                    // ),
                                   ),
-                            ),
-                            child: FlatButton(
-                              onPressed: () {
-                                Navigator.of(context).pushNamed(
-                                  ArticleScreen.routeName,
-                                  arguments: {'articleId': article.id},
-                                );
-                              },
+                                ),
+                              )),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 20.0),
+                            child: AspectRatio(
+                              aspectRatio: 7 / 8,
+                              // child: Container(
+                              //   // height: 360,
+                              //   // width: _screenWidthAdjustment,
                               child: Align(
-                                alignment: Alignment.bottomCenter,
-                                child: FutureBuilder(
-                                  future: useWhiteTextColor(
-                                      CachedNetworkImageProvider(
-                                          article.imageUrl)),
-                                  builder: (BuildContext context,
-                                      AsyncSnapshot<bool> snapshot) {
-                                    if (snapshot.connectionState ==
-                                        ConnectionState.waiting) {
-                                      return Center(
-                                        child: CircularProgressIndicator(),
-                                      );
-                                    } else {
-                                      if (snapshot.error != null) {
-                                        return Center(
-                                          child: Text('An error occurred!'),
-                                        );
-                                      } else {
-                                        return Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Expanded(child: SizedBox()),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  bottom: 8.0),
-                                              child: Text(
-                                                article.title ?? "",
-                                                maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                    fontFamily: "Jinling",
-                                                    color: snapshot.data
-                                                        ? Colors.white
-                                                        : Colors.black,
-                                                    fontSize: 24),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      vertical: 8.0,
-                                                      horizontal: 3.0),
-                                              child: Text(
-                                                article.description ?? "",
-                                                maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                    fontFamily:
-                                                        "LantingXianHei",
-                                                    color: snapshot.data
-                                                        ? Colors.white
-                                                        : Colors.black,
-                                                    fontSize: 12),
-                                              ),
-                                            ),
-                                            Divider(
-                                              color: Colors.white,
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 8.0, bottom: 20.0),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                children: [
-                                                  article.icon == null ||
-                                                          article.icon.isEmpty
-                                                      ? Icon(
-                                                          Icons.album,
-                                                          color: snapshot.data
-                                                              ? Colors.white
-                                                              : Colors.black,
-                                                        )
-                                                      : CircleAvatar(
-                                                          radius: 15,
-                                                          backgroundImage:
-                                                              CachedNetworkImageProvider(
-                                                                  article.icon),
-                                                          backgroundColor:
-                                                              Colors
-                                                                  .transparent,
-                                                          // width: 30,
-                                                          // height: 30,
-                                                        ),
-                                                  SizedBox(
-                                                    width: 10.0,
-                                                  ),
-                                                  Expanded(
-                                                    child: Text(
-                                                      article.authorName ??
-                                                          "匿名",
-                                                      style: TextStyle(
-                                                          fontFamily:
-                                                              "LantingXianHei",
-                                                          color: snapshot.data
-                                                              ? Colors.white
-                                                              : Colors.black,
-                                                          fontSize: 12),
+                                  alignment: Alignment.bottomCenter,
+                                  child: FutureBuilder(
+                                      future: useWhiteTextColor(
+                                          CachedNetworkImageProvider(
+                                              article.imageUrl)),
+                                      builder: (BuildContext context,
+                                          AsyncSnapshot<bool> snapshot) {
+                                        if (snapshot.connectionState ==
+                                            ConnectionState.waiting) {
+                                          return Center(
+                                            child: CircularProgressIndicator(),
+                                          );
+                                        } else {
+                                          if (snapshot.error != null) {
+                                            return Center(
+                                              child: Text('An error occurred!'),
+                                            );
+                                          } else {
+                                            return Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Expanded(child: SizedBox()),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          bottom: 8.0),
+                                                  child: Hero(
+                                                    tag: 'title1' + article.id,
+                                                    child: Material(
+                                                      color: Colors.transparent,
+                                                      child: Text(
+                                                        article.title ?? "",
+                                                        maxLines: 2,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                "Jinling",
+                                                            color: snapshot.data
+                                                                ? Colors.white
+                                                                : Colors.black,
+                                                            fontSize: 24),
+                                                      ),
                                                     ),
                                                   ),
-                                                  Text(
-                                                    getCreatedDuration(article
-                                                            .createdDate ??
-                                                        DateTime.now().toUtc()),
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
+                                                      vertical: 8.0,
+                                                      horizontal: 3.0),
+                                                  child: Text(
+                                                    article.description ?? "",
+                                                    maxLines: 2,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
                                                     style: TextStyle(
                                                         fontFamily:
                                                             "LantingXianHei",
@@ -412,27 +177,459 @@ class ArticleCard extends StatelessWidget {
                                                             : Colors.black,
                                                         fontSize: 12),
                                                   ),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        );
-                                      }
-                                    }
-                                  },
-                                ),
-                              ),
-                            )),
-                      );
-                    }
-                    // else {
-                    //   return Center(child: CircularProgressIndicator());
-                    // }
-                  }
+                                                ),
+                                                Divider(
+                                                  color: Colors.white,
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 8.0,
+                                                          bottom: 0.0),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    children: [
+                                                      article.icon == null ||
+                                                              article
+                                                                  .icon.isEmpty
+                                                          ? Hero(
+                                                              tag: 'icon' +
+                                                                  article.id,
+                                                              child: Icon(
+                                                                Icons.album,
+                                                                color: snapshot
+                                                                        .data
+                                                                    ? Colors
+                                                                        .white
+                                                                    : Colors
+                                                                        .black,
+                                                              ),
+                                                            )
+                                                          : Hero(
+                                                              tag: 'icon' +
+                                                                  article.id,
+                                                              child:
+                                                                  CircleAvatar(
+                                                                radius: 15,
+                                                                backgroundImage:
+                                                                    CachedNetworkImageProvider(
+                                                                        article
+                                                                            .icon),
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .transparent,
+                                                                // width: 30,
+                                                                // height: 30,
+                                                              ),
+                                                            ),
+                                                      SizedBox(
+                                                        width: 10.0,
+                                                      ),
+                                                      Expanded(
+                                                        child: Hero(
+                                                          tag: "testing" +
+                                                              article.id,
+                                                          // tag: 'authorName' +
+                                                          //     article.id,
+                                                          //flightShuttleBuilder: (flightContext, animation, flightDirection, fromHeroContext, toHeroContext) => ,
+
+                                                          child: Material(
+                                                            color: Colors
+                                                                .transparent,
+                                                            child: Text(
+                                                              article.authorName ??
+                                                                  "匿名",
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      "LantingXianHei",
+                                                                  color: snapshot
+                                                                          .data
+                                                                      ? Colors
+                                                                          .white
+                                                                      : Colors
+                                                                          .black,
+                                                                  fontSize: 12),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        getCreatedDuration(
+                                                            article.createdDate ??
+                                                                DateTime.now()
+                                                                    .toUtc()),
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                "LantingXianHei",
+                                                            color: snapshot.data
+                                                                ? Colors.white
+                                                                : Colors.black,
+                                                            fontSize: 12),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            );
+                                          }
+                                        }
+                                      })),
+                              //),
+                            ),
+                          )
+
+                          // Positioned(
+                          //   top: 100,
+                          //   left: 32.0,
+                          //   width: _screenWidthAdjustment,
+                          //   child: Hero(
+                          //     tag: 'title' + article.id,
+                          //     child: Text(
+                          //       article.title ?? "",
+                          //       maxLines: 2,
+                          //       overflow: TextOverflow.ellipsis,
+                          //       style: TextStyle(
+                          //           fontFamily: "Jinling",
+                          //           // color: snapshot.data
+                          //           //     ? Colors.white
+                          //           //     : Colors.black,
+                          //           fontSize: 24),
+                          //     ),
+                          //   ),
+                          // ),
+                          // Positioned(
+                          //     child: Hero(
+                          //   tag: 'description' + article.id,
+                          //   child: Padding(
+                          //     padding: const EdgeInsets.symmetric(
+                          //         vertical: 8.0, horizontal: 3.0),
+                          //     child: Text(
+                          //       article.description ?? "",
+                          //       maxLines: 2,
+                          //       overflow: TextOverflow.ellipsis,
+                          //       style: TextStyle(
+                          //           fontFamily: "LantingXianHei",
+                          //           // color: snapshot.data
+                          //           //     ? Colors.white
+                          //           //     : Colors.black,
+                          //           fontSize: 12),
+                          //     ),
+                          //   ),
+                          // )),
+                        ],
+                      ),
+                    ),
+                  );
+
+                  // return AspectRatio(
+                  //   aspectRatio: 7 / 8,
+                  //   child: Hero(
+                  //     tag: article.id,
+                  //     child: Container(
+                  //         decoration: BoxDecoration(
+                  //           backgroundBlendMode: BlendMode.softLight,
+                  //           gradient: LinearGradient(
+                  //             begin: Alignment.topCenter,
+                  //             end: Alignment.bottomCenter,
+                  //             colors: <Color>[
+                  //               Colors.black.withAlpha(0),
+                  //               //Colors.black12,
+                  //               Colors.black45
+                  //             ],
+                  //           ),
+                  //           image: DecorationImage(
+                  //               image: backgroundImage, fit: BoxFit.cover),
+                  //         ),
+                  //         child: FlatButton(
+                  //           onPressed: () {
+                  //             Navigator.of(context).pushNamed(
+                  //               ArticleScreen.routeName,
+                  //               arguments: {'articleId': article.id},
+                  //             );
+                  //           },
+                  //           child: Align(
+                  //             alignment: Alignment.bottomCenter,
+                  //             child: FutureBuilder(
+                  //               future: useWhiteTextColor(
+                  //                   CachedNetworkImageProvider(
+                  //                       article.imageUrl)),
+                  //               builder: (BuildContext context,
+                  //                   AsyncSnapshot<bool> snapshot) {
+                  //                 if (snapshot.connectionState ==
+                  //                     ConnectionState.waiting) {
+                  //                   return Center(
+                  //                     child: CircularProgressIndicator(),
+                  //                   );
+                  //                 } else {
+                  //                   if (snapshot.error != null) {
+                  //                     return Center(
+                  //                       child: Text('An error occurred!'),
+                  //                     );
+                  //                   } else {
+                  //                     return Column(
+                  //                       mainAxisSize: MainAxisSize.min,
+                  //                       crossAxisAlignment:
+                  //                           CrossAxisAlignment.start,
+                  //                       children: [
+                  //                         Expanded(child: SizedBox()),
+                  //                         Padding(
+                  //                           padding: const EdgeInsets.only(
+                  //                               bottom: 8.0),
+                  //                           child: Text(
+                  //                             article.title ?? "",
+                  //                             maxLines: 2,
+                  //                             overflow: TextOverflow.ellipsis,
+                  //                             style: TextStyle(
+                  //                                 fontFamily: "Jinling",
+                  //                                 color: snapshot.data
+                  //                                     ? Colors.white
+                  //                                     : Colors.black,
+                  //                                 fontSize: 24),
+                  //                           ),
+                  //                         ),
+                  //                         Padding(
+                  //                           padding: const EdgeInsets.symmetric(
+                  //                               vertical: 8.0, horizontal: 3.0),
+                  //                           child: Text(
+                  //                             article.description ?? "",
+                  //                             maxLines: 2,
+                  //                             overflow: TextOverflow.ellipsis,
+                  //                             style: TextStyle(
+                  //                                 fontFamily: "LantingXianHei",
+                  //                                 color: snapshot.data
+                  //                                     ? Colors.white
+                  //                                     : Colors.black,
+                  //                                 fontSize: 12),
+                  //                           ),
+                  //                         ),
+                  //                         Divider(
+                  //                           color: Colors.white,
+                  //                         ),
+                  //                         Padding(
+                  //                           padding: const EdgeInsets.only(
+                  //                               top: 8.0, bottom: 20.0),
+                  //                           child: Row(
+                  //                             mainAxisAlignment:
+                  //                                 MainAxisAlignment.start,
+                  //                             children: [
+                  //                               article.icon == null ||
+                  //                                       article.icon.isEmpty
+                  //                                   ? Icon(
+                  //                                       Icons.album,
+                  //                                       color: snapshot.data
+                  //                                           ? Colors.white
+                  //                                           : Colors.black,
+                  //                                     )
+                  //                                   : CircleAvatar(
+                  //                                       radius: 15,
+                  //                                       backgroundImage:
+                  //                                           CachedNetworkImageProvider(
+                  //                                               article.icon),
+                  //                                       backgroundColor:
+                  //                                           Colors.transparent,
+                  //                                       // width: 30,
+                  //                                       // height: 30,
+                  //                                     ),
+                  //                               SizedBox(
+                  //                                 width: 10.0,
+                  //                               ),
+                  //                               Expanded(
+                  //                                 child: Text(
+                  //                                   article.authorName ?? "匿名",
+                  //                                   style: TextStyle(
+                  //                                       fontFamily:
+                  //                                           "LantingXianHei",
+                  //                                       color: snapshot.data
+                  //                                           ? Colors.white
+                  //                                           : Colors.black,
+                  //                                       fontSize: 12),
+                  //                                 ),
+                  //                               ),
+                  //                               Text(
+                  //                                 getCreatedDuration(article
+                  //                                         .createdDate ??
+                  //                                     DateTime.now().toUtc()),
+                  //                                 style: TextStyle(
+                  //                                     fontFamily:
+                  //                                         "LantingXianHei",
+                  //                                     color: snapshot.data
+                  //                                         ? Colors.white
+                  //                                         : Colors.black,
+                  //                                     fontSize: 12),
+                  //                               ),
+                  //                             ],
+                  //                           ),
+                  //                         ),
+                  //                       ],
+                  //                     );
+                  //                   }
+                  //                 }
+                  //               },
+                  //             ),
+                  //           ),
+                  //         )),
+                  //   ),
+                  // );
+
+                } else {
+                  return Center(child: CircularProgressIndicator());
                 }
-              },
-            )),
+              }
+            }
+          },
+        ),
       ),
     );
   }
 }
+
+// return AspectRatio(
+//   aspectRatio: 7 / 8,
+//   child: Hero(
+//     tag: article.id,
+//     child: Container(
+//         decoration: BoxDecoration(
+//           backgroundBlendMode: BlendMode.softLight,
+//           gradient: LinearGradient(
+//             begin: Alignment.topCenter,
+//             end: Alignment.bottomCenter,
+//             colors: <Color>[
+//               Colors.black.withAlpha(0),
+//               //Colors.black12,
+//               Colors.black45
+//             ],
+//           ),
+//           image: DecorationImage(
+//               image: backgroundImage, fit: BoxFit.cover),
+//         ),
+//         child: FlatButton(
+//           onPressed: () {
+//             Navigator.of(context).pushNamed(
+//               ArticleScreen.routeName,
+//               arguments: {'articleId': article.id},
+//             );
+//           },
+//           child: Align(
+//             alignment: Alignment.bottomCenter,
+//             child: FutureBuilder(
+//               future: useWhiteTextColor(
+//                   CachedNetworkImageProvider(
+//                       article.imageUrl)),
+//               builder: (BuildContext context,
+//                   AsyncSnapshot<bool> snapshot) {
+//                 if (snapshot.connectionState ==
+//                     ConnectionState.waiting) {
+//                   return Center(
+//                     child: CircularProgressIndicator(),
+//                   );
+//                 } else {
+//                   if (snapshot.error != null) {
+//                     return Center(
+//                       child: Text('An error occurred!'),
+//                     );
+//                   } else {
+//                     return Column(
+//                       mainAxisSize: MainAxisSize.min,
+//                       crossAxisAlignment:
+//                           CrossAxisAlignment.start,
+//                       children: [
+//                         Expanded(child: SizedBox()),
+//                         Padding(
+//                           padding: const EdgeInsets.only(
+//                               bottom: 8.0),
+//                           child: Text(
+//                             article.title ?? "",
+//                             maxLines: 2,
+//                             overflow: TextOverflow.ellipsis,
+//                             style: TextStyle(
+//                                 fontFamily: "Jinling",
+//                                 color: snapshot.data
+//                                     ? Colors.white
+//                                     : Colors.black,
+//                                 fontSize: 24),
+//                           ),
+//                         ),
+//                         Padding(
+//                           padding: const EdgeInsets.symmetric(
+//                               vertical: 8.0, horizontal: 3.0),
+//                           child: Text(
+//                             article.description ?? "",
+//                             maxLines: 2,
+//                             overflow: TextOverflow.ellipsis,
+//                             style: TextStyle(
+//                                 fontFamily: "LantingXianHei",
+//                                 color: snapshot.data
+//                                     ? Colors.white
+//                                     : Colors.black,
+//                                 fontSize: 12),
+//                           ),
+//                         ),
+//                         Divider(
+//                           color: Colors.white,
+//                         ),
+//                         Padding(
+//                           padding: const EdgeInsets.only(
+//                               top: 8.0, bottom: 20.0),
+//                           child: Row(
+//                             mainAxisAlignment:
+//                                 MainAxisAlignment.start,
+//                             children: [
+//                               article.icon == null ||
+//                                       article.icon.isEmpty
+//                                   ? Icon(
+//                                       Icons.album,
+//                                       color: snapshot.data
+//                                           ? Colors.white
+//                                           : Colors.black,
+//                                     )
+//                                   : CircleAvatar(
+//                                       radius: 15,
+//                                       backgroundImage:
+//                                           CachedNetworkImageProvider(
+//                                               article.icon),
+//                                       backgroundColor:
+//                                           Colors.transparent,
+//                                       // width: 30,
+//                                       // height: 30,
+//                                     ),
+//                               SizedBox(
+//                                 width: 10.0,
+//                               ),
+//                               Expanded(
+//                                 child: Text(
+//                                   article.authorName ?? "匿名",
+//                                   style: TextStyle(
+//                                       fontFamily:
+//                                           "LantingXianHei",
+//                                       color: snapshot.data
+//                                           ? Colors.white
+//                                           : Colors.black,
+//                                       fontSize: 12),
+//                                 ),
+//                               ),
+//                               Text(
+//                                 getCreatedDuration(article
+//                                         .createdDate ??
+//                                     DateTime.now().toUtc()),
+//                                 style: TextStyle(
+//                                     fontFamily:
+//                                         "LantingXianHei",
+//                                     color: snapshot.data
+//                                         ? Colors.white
+//                                         : Colors.black,
+//                                     fontSize: 12),
+//                               ),
+//                             ],
+//                           ),
+//                         ),
+//                       ],
+//                     );
+//                   }
+//                 }
+//               },
+//             ),
+//           ),
+//         )),
+//   ),
+// );
