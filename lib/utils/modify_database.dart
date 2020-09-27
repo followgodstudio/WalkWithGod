@@ -25,3 +25,13 @@ Future<void> addCollection() async {
     //     .set({});
   });
 }
+
+Future<void> removeAnonymousUser() async {
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  QuerySnapshot query = await _db.collection(cUsers).get();
+  List<DocumentSnapshot> docs = query.docs;
+  docs.forEach((DocumentSnapshot element) async {
+    if (!element.data().containsKey(fCreatedDate))
+      _db.collection(cUsers).doc(element.id).delete();
+  });
+}

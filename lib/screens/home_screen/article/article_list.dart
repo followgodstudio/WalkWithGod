@@ -45,8 +45,7 @@ class _ArticleListState extends State<ArticleList> {
 
   @override
   Widget build(BuildContext context) {
-    final articlesData = Provider.of<ArticlesProvider>(context);
-
+    final articlesData = Provider.of<ArticlesProvider>(context, listen: false);
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {

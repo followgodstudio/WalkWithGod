@@ -33,13 +33,16 @@ class ProfileProvider with ChangeNotifier {
   RecentReadProvider recentReadProvider = RecentReadProvider();
 
   bool _isFetching = false; // to avoid frequent request
+  bool _isFetchedAll = false;
 
   ProfileProvider([this.uid]);
 
-  Future<bool> fetchAllUserInfo(String userId) async {
-    if (userId == null || userId.isEmpty || _isFetching) return false;
+  Future<void> fetchAllUserInfo(String userId) async {
+    if (userId == null || userId.isEmpty || _isFetching || _isFetchedAll)
+      return;
     print("ProfileProvider-fetchAllUserInfo");
     uid = userId;
+    _isFetchedAll = true;
     friendsProvider.setUserId(uid);
     savedArticlesProvider.setUserId(uid);
     messagesProvider.setUserId(uid);
@@ -47,6 +50,7 @@ class ProfileProvider with ChangeNotifier {
     recentReadProvider.setUserId(uid);
 
     _isFetching = true;
+    DateTime start = DateTime.now();
     //TODO: exception handling
     if (!await fetchProfile()) return false;
     await savedArticlesProvider.fetchSavedList();
@@ -58,7 +62,9 @@ class ProfileProvider with ChangeNotifier {
     await recentReadProvider.fetchRecentRead();
 
     _isFetching = false;
-    return true;
+    print("ProfileProvider-fetchAllUserInfo takes: " +
+        DateTime.now().difference(start).inMilliseconds.toString() +
+        "ms.");
   }
 
   Stream<Map<String, int>> fetchProfileStream() {
@@ -136,6 +142,8 @@ class ProfileProvider with ChangeNotifier {
       settingProvider.keepScreenAwake = docStatic.get(fSettingScreenAwake);
     if (docStatic.data().containsKey(fSettingHideRecentRead))
       settingProvider.hideRecentRead = docStatic.get(fSettingHideRecentRead);
+
+    notifyListeners();
     return true;
   }
 

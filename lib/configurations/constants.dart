@@ -19,6 +19,7 @@ const String sArticlePictures = "article_pictures";
 const String cArticles = "articles";
 const String cUsers = "users";
 const String cAppInfo = "app_info";
+const String cSplashScreen = "splash_screens";
 
 // Second level collection names
 
@@ -111,3 +112,7 @@ const String fCommentReplyToName = 'reply_to_name';
 const String fCommentChildrenCount = 'children_count';
 const String fCommentLikesCount = 'likes_count';
 const String fCommentReplyLikes = 'likes';
+
+const String fSplashScreenImageUrl = 'image_url';
+const String fSplashScreenAuthor = 'author';
+const String fSplashScreenContent = 'content';

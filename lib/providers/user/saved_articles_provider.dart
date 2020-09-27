@@ -49,6 +49,7 @@ class SavedArticlesProvider with ChangeNotifier {
     _articles = [];
     _noMore = false;
     await _appendSavedList(query, limit);
+    notifyListeners();
     _isFetching = false;
   }
 

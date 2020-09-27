@@ -47,7 +47,7 @@ class MessagesProvider with ChangeNotifier {
 
   Future<void> fetchMoreMessages([int limit = loadLimit]) async {
     if (_userId == null || _isFetching) return;
-    print("MessagesProvider-fetchMessageList");
+    print("MessagesProvider-fetchMoreMessages");
     _isFetching = true;
     QuerySnapshot query = await _db
         .collection(cUsers)

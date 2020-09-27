@@ -120,7 +120,7 @@ class FriendsProvider with ChangeNotifier {
     followingsCount -= 1;
     notifyListeners();
 
-    print("FriendsProvider-fetchFriendStatusByUserId");
+    print("FriendsProvider-removefollowInList");
     // Update database
     WriteBatch batch = _db.batch();
     batch.update(

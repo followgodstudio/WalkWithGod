@@ -4,6 +4,11 @@ import 'package:connectivity/connectivity.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:walk_with_god/providers/user/friends_provider.dart';
+import 'package:walk_with_god/providers/user/messages_provider.dart';
+import 'package:walk_with_god/providers/user/recent_read_provider.dart';
+import 'package:walk_with_god/providers/user/saved_articles_provider.dart';
+import 'package:walk_with_god/providers/user/setting_provider.dart';
 
 import 'configurations/theme.dart';
 import 'providers/article/articles_provider.dart';
@@ -13,7 +18,6 @@ import 'providers/splash_provider.dart';
 import 'providers/user/profile_provider.dart';
 import 'screens/article_screen/article_screen.dart';
 import 'screens/auth_screen/email_auth_screen.dart';
-import 'screens/auth_screen/login_screen.dart';
 import 'screens/auth_screen/signup_screen.dart';
 import 'screens/home_screen/home_screen.dart';
 import 'screens/personal_management_screen/friends/friends_list_screen.dart';
@@ -58,53 +62,58 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider<SplashProvider>(
             create: (_) => SplashProvider(),
           ),
-          ChangeNotifierProvider(
-            create: (_) => ProfileProvider(),
-          ),
+          ChangeNotifierProxyProvider<AuthProvider, ProfileProvider>(
+              create: (_) => ProfileProvider(),
+              update: (context, auth, previou) =>
+                  ProfileProvider(auth.currentUser)),
         ],
         child: Builder(builder: (BuildContext context) {
           return MultiProvider(
             providers: [
-              ChangeNotifierProvider.value(
-                  value: Provider.of<ProfileProvider>(context, listen: false)
-                      .savedArticlesProvider),
-              ChangeNotifierProvider.value(
-                  value: Provider.of<ProfileProvider>(context, listen: false)
-                      .friendsProvider),
-              ChangeNotifierProvider.value(
-                  value: Provider.of<ProfileProvider>(context, listen: false)
-                      .settingProvider),
-              ChangeNotifierProvider.value(
-                  value: Provider.of<ProfileProvider>(context, listen: false)
-                      .messagesProvider),
-              ChangeNotifierProvider.value(
-                  value: Provider.of<ProfileProvider>(context, listen: false)
-                      .recentReadProvider),
+              // TODO: Concurrency issue?
+              ChangeNotifierProxyProvider<AuthProvider, SavedArticlesProvider>(
+                  create: (_) =>
+                      Provider.of<ProfileProvider>(context, listen: false)
+                          .savedArticlesProvider,
+                  update: (context, auth, previou) =>
+                      Provider.of<ProfileProvider>(context, listen: false)
+                          .savedArticlesProvider),
+              ChangeNotifierProxyProvider<AuthProvider, FriendsProvider>(
+                  create: (_) =>
+                      Provider.of<ProfileProvider>(context, listen: false)
+                          .friendsProvider,
+                  update: (context, auth, previou) =>
+                      Provider.of<ProfileProvider>(context, listen: false)
+                          .friendsProvider),
+              ChangeNotifierProxyProvider<AuthProvider, SettingProvider>(
+                  create: (_) =>
+                      Provider.of<ProfileProvider>(context, listen: false)
+                          .settingProvider,
+                  update: (context, auth, previou) =>
+                      Provider.of<ProfileProvider>(context, listen: false)
+                          .settingProvider),
+              ChangeNotifierProxyProvider<AuthProvider, MessagesProvider>(
+                  create: (_) =>
+                      Provider.of<ProfileProvider>(context, listen: false)
+                          .messagesProvider,
+                  update: (context, auth, previou) =>
+                      Provider.of<ProfileProvider>(context, listen: false)
+                          .messagesProvider),
+              ChangeNotifierProxyProvider<AuthProvider, RecentReadProvider>(
+                  create: (_) =>
+                      Provider.of<ProfileProvider>(context, listen: false)
+                          .recentReadProvider,
+                  update: (context, auth, previou) =>
+                      Provider.of<ProfileProvider>(context, listen: false)
+                          .recentReadProvider),
             ],
             child: LifeCycleManager(
               child: MaterialApp(
                 title: 'Walk With God',
                 debugShowCheckedModeBanner: false,
                 theme: dayTheme,
-                home: NetworkManager(
-                  child: SplashScreen(),
-                ),
-                // StreamBuilder<String>(
-                //     stream: Provider.of<AuthProvider>(context, listen: false)
-                //         .onAuthStateChanged,
-                //     builder:
-                //         (BuildContext context, AsyncSnapshot<String> snapshot) {
-                //       if (snapshot.connectionState == ConnectionState.active) {
-                //         final bool isLoggedIn = snapshot.hasData;
-                //         return isLoggedIn
-                //             ? NetworkManager(child: HomeScreen())
-                //             : SplashScreen();
-                //       }
-                //       return SplashScreen();
-                //     }),
+                home: NetworkManager(child: SplashScreen()),
                 routes: {
-                  //LoginScreengi.routeName: (ctx) => LoginScreen(),
-                  //SignupScreen.routeName: (ctx) => SignupScreen(),
                   PersonalManagementScreen.routeName: (ctx) =>
                       NetworkManager(child: PersonalManagementScreen()),
                   SettingScreen.routeName: (ctx) => SettingScreen(),
@@ -123,7 +132,6 @@ class MyApp extends StatelessWidget {
                       NetworkManager(child: NetworkScreen()),
                   SavedArticlesScreen.routeName: (ctx) => SavedArticlesScreen(),
                   EmailAuthScreen.routeName: (ctx) => EmailAuthScreen(),
-                  LoginScreen.routeName: (ctx) => LoginScreen(),
                   HomeScreen.routeName: (ctx) =>
                       NetworkManager(child: HomeScreen()),
                   ArticleScreen.routeName: (ctx) =>

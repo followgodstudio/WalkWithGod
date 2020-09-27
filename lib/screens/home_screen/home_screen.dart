@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 
 import '../../configurations/theme.dart';
 import '../../providers/article/articles_provider.dart';
+import '../../providers/auth_provider.dart';
 import '../../providers/user/profile_provider.dart';
 import '../../screens/personal_management_screen/personal_management_screen.dart';
 import '../../widgets/profile_picture.dart';
@@ -32,6 +33,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    String uid = Provider.of<AuthProvider>(context, listen: false).currentUser;
+    Provider.of<ProfileProvider>(context, listen: false).fetchAllUserInfo(uid);
   }
 
   String diff(DateTime time) {
