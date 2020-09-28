@@ -44,7 +44,7 @@ class ArticleBody extends StatelessWidget {
       Padding(
         padding: const EdgeInsets.only(top: 20.0, bottom: 10),
         child: Hero(
-          tag: 'title' + loadedArticle.id,
+          tag: 'testing' + loadedArticle.id,
           child: Material(
             color: Colors.transparent,
             child: SelectableText(

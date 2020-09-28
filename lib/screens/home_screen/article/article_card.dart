@@ -59,7 +59,7 @@ class ArticleCard extends StatelessWidget {
 
                       Navigator.of(context).push(PageRouteBuilder(
                         fullscreenDialog: true,
-                        transitionDuration: Duration(milliseconds: 1500),
+                        transitionDuration: Duration(milliseconds: 800),
                         pageBuilder: (context, animaton, secondaryAnimtaion) {
                           return ArticleScreen();
                         },
@@ -140,7 +140,7 @@ class ArticleCard extends StatelessWidget {
                                                       const EdgeInsets.only(
                                                           bottom: 8.0),
                                                   child: Hero(
-                                                    tag: 'title1' + article.id,
+                                                    tag: 'title' + article.id,
                                                     child: Material(
                                                       color: Colors.transparent,
                                                       child: Text(
@@ -228,11 +228,9 @@ class ArticleCard extends StatelessWidget {
                                                       ),
                                                       Expanded(
                                                         child: Hero(
-                                                          tag: "testing" +
+                                                          tag: 'authorName' +
                                                               article.id,
-                                                          // tag: 'authorName' +
-                                                          //     article.id,
-                                                          //flightShuttleBuilder: (flightContext, animation, flightDirection, fromHeroContext, toHeroContext) => ,
+                                                          // //flightShuttleBuilder: (flightContext, animation, flightDirection, fromHeroContext, toHeroContext) => ,
 
                                                           child: Material(
                                                             color: Colors

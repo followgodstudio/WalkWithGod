@@ -17,18 +17,18 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   StatefulWidget nextScreen;
+  Timer _timer;
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-
-    //getNextScreen();
     startTime();
   }
 
   startTime() async {
-    var duration = new Duration(seconds: 5);
-    return new Timer(duration, route);
+    var duration = Duration(seconds: 8);
+    _timer = Timer(duration, route);
+    return _timer;
   }
 
   route() {
@@ -37,22 +37,6 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void getNextScreen() {
-    //StatefulWidget _screen;
-
-    // var _userId =
-    //     Provider.of<AuthProvider>(context, listen: false).onAuthStateChanged;
-    // _userId.listen((event) {
-    //   nextScreen = event == null
-    //       ? HomeScreen()
-    //       : SignupScreen(
-    //           authFormType: AuthFormType.signIn,
-    //         );
-    // });
-
-    // _screen
-    // if(_userId != null){
-
-    //}
     Builder(builder: (context) {
       BuildContext rootContext = context;
 
@@ -71,8 +55,6 @@ class _SplashScreenState extends State<SplashScreen> {
             return nextScreen;
           });
     });
-
-    //return nextScreen;
   }
 
   @override
@@ -112,6 +94,7 @@ class _SplashScreenState extends State<SplashScreen> {
                             return Consumer<SplashProvider>(
                                 builder: (context, value, child) => FlatButton(
                                     onPressed: () {
+                                      _timer.cancel();
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -124,11 +107,33 @@ class _SplashScreenState extends State<SplashScreen> {
                                           padding: const EdgeInsets.only(
                                               top: 20, bottom: 4.0),
                                           child: Center(
-                                            child: Material(
-                                                elevation: 5.0,
-                                                child: Image.network(
-                                                    value.imageUrl)),
-                                          ),
+                                              child: Material(
+                                            elevation: 5.0,
+                                            child: CachedNetworkImage(
+                                              imageUrl: value.imageUrl,
+                                              imageBuilder:
+                                                  (context, imageProvider) =>
+                                                      Container(
+                                                decoration: BoxDecoration(
+                                                  image: DecorationImage(
+                                                    image: imageProvider,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                ),
+                                              ),
+                                              placeholder: (context, url) =>
+                                                  CircularProgressIndicator(
+                                                strokeWidth: 1.0,
+                                              ),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      Icon(Icons.error),
+                                            ),
+                                          )
+                                              // Image.network(
+                                              //     value.imageUrl)
+                                              //     ),
+                                              ),
                                         ),
                                       ),
                                       Container(
@@ -179,6 +184,7 @@ class _SplashScreenState extends State<SplashScreen> {
                                                       255, 128, 128, 128))),
                                           FlatButton(
                                               onPressed: () {
+                                                _timer.cancel();
                                                 Navigator.push(
                                                     context,
                                                     MaterialPageRoute(
