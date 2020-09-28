@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:provider/provider.dart';
-import '../../../screens/auth_screen/signup_screen.dart';
 
 import '../../../configurations/theme.dart';
-import '../../../providers/auth_provider.dart';
 import '../../../providers/user/setting_provider.dart';
 import 'black_list_screen.dart';
 import 'delete_account_screen.dart';

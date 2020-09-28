@@ -11,7 +11,6 @@ import '../../widgets/aricle_paragraph.dart';
 class ArticleBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    print("ArticleBody");
     return Consumer<ArticleProvider>(
         builder: (context, article, child) =>
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

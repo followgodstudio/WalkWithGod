@@ -62,7 +62,7 @@ class _SplashScreenState extends State<SplashScreen> {
             //   Provider.of<AuthProvider>(context, listen: false)
             //       .singInAnonymously();
             Provider.of<ProfileProvider>(context, listen: false)
-                .fetchAllUserInfo(uid);
+                .fetchAllUserData(uid);
             Provider.of<ArticlesProvider>(context, listen: false)
                 .fetchArticlesByDate(new DateTime.utc(1989, 11, 9));
             SplashProvider splash =

@@ -68,7 +68,6 @@ class _CommentsState extends State<Comments> {
 
   @override
   Widget build(BuildContext context) {
-    print("Comments");
     return Consumer<CommentsProvider>(builder: (context, data, child) {
       List<CommentProvider> comments = data.items;
       List<Widget> list = [];

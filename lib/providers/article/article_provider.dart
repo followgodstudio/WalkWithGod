@@ -28,6 +28,7 @@ class ArticleProvider with ChangeNotifier {
   List<Paragraph> content = [];
   List<ArticleProvider> _similarArticles = [];
   bool isSaved;
+  bool isFetchedSimilarArticles = false;
 
   ArticleProvider(
       {@required this.id,
@@ -45,8 +46,9 @@ class ArticleProvider with ChangeNotifier {
   }
 
   Future<void> fetchSimilarArticles([limit = loadLimit]) async {
-    _similarArticles = [];
+    if (isFetchedSimilarArticles) return;
     print("ArticleProvider-fetchSimilarArticles");
+    isFetchedSimilarArticles = true;
     // Find articles of this author
     QuerySnapshot query = await _fdb
         .collection(cArticles)
@@ -54,6 +56,7 @@ class ArticleProvider with ChangeNotifier {
         .orderBy(fCreatedDate, descending: true)
         .limit(limit)
         .get();
+    _similarArticles = [];
     query.docs.forEach((data) {
       if (data.id != this.id)
         _similarArticles
@@ -63,6 +66,7 @@ class ArticleProvider with ChangeNotifier {
   }
 
   Future<void> fetchArticleContent() async {
+    if (content.isNotEmpty) return;
     print("ArticleProvider-fetchArticleContent");
     QuerySnapshot querySnapshot = await _fdb
         .collection(cArticles)

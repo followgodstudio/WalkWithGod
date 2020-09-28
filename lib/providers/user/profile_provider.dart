@@ -37,10 +37,10 @@ class ProfileProvider with ChangeNotifier {
 
   ProfileProvider([this.uid]);
 
-  Future<void> fetchAllUserInfo(String userId) async {
+  Future<void> fetchAllUserData(String userId) async {
     if (userId == null || userId.isEmpty || _isFetching || _isFetchedAll)
       return;
-    print("ProfileProvider-fetchAllUserInfo");
+    print("ProfileProvider-fetchAllUserData");
     uid = userId;
     _isFetchedAll = true;
     friendsProvider.setUserId(uid);
@@ -62,7 +62,7 @@ class ProfileProvider with ChangeNotifier {
     await recentReadProvider.fetchRecentRead();
 
     _isFetching = false;
-    print("ProfileProvider-fetchAllUserInfo takes: " +
+    print("ProfileProvider-fetchAllUserData takes: " +
         DateTime.now().difference(start).inMilliseconds.toString() +
         "ms.");
   }

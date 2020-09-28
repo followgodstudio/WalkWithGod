@@ -4,18 +4,18 @@ import 'package:connectivity/connectivity.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:walk_with_god/providers/user/friends_provider.dart';
-import 'package:walk_with_god/providers/user/messages_provider.dart';
-import 'package:walk_with_god/providers/user/recent_read_provider.dart';
-import 'package:walk_with_god/providers/user/saved_articles_provider.dart';
-import 'package:walk_with_god/providers/user/setting_provider.dart';
 
 import 'configurations/theme.dart';
 import 'providers/article/articles_provider.dart';
 import 'providers/article/comments_provider.dart';
 import 'providers/auth_provider.dart';
 import 'providers/splash_provider.dart';
+import 'providers/user/friends_provider.dart';
+import 'providers/user/messages_provider.dart';
 import 'providers/user/profile_provider.dart';
+import 'providers/user/recent_read_provider.dart';
+import 'providers/user/saved_articles_provider.dart';
+import 'providers/user/setting_provider.dart';
 import 'screens/article_screen/article_screen.dart';
 import 'screens/auth_screen/email_auth_screen.dart';
 import 'screens/auth_screen/signup_screen.dart';
@@ -64,48 +64,29 @@ class MyApp extends StatelessWidget {
           ),
           ChangeNotifierProxyProvider<AuthProvider, ProfileProvider>(
               create: (_) => ProfileProvider(),
-              update: (context, auth, previou) =>
-                  ProfileProvider(auth.currentUser)),
+              update: (context, auth, _) => ProfileProvider(auth.currentUser)),
         ],
         child: Builder(builder: (BuildContext context) {
+          ProfileProvider profile =
+              Provider.of<ProfileProvider>(context, listen: false);
           return MultiProvider(
             providers: [
               // TODO: Concurrency issue?
               ChangeNotifierProxyProvider<AuthProvider, SavedArticlesProvider>(
-                  create: (_) =>
-                      Provider.of<ProfileProvider>(context, listen: false)
-                          .savedArticlesProvider,
-                  update: (context, auth, previou) =>
-                      Provider.of<ProfileProvider>(context, listen: false)
-                          .savedArticlesProvider),
+                  create: (_) => profile.savedArticlesProvider,
+                  update: (context, auth, _) => profile.savedArticlesProvider),
               ChangeNotifierProxyProvider<AuthProvider, FriendsProvider>(
-                  create: (_) =>
-                      Provider.of<ProfileProvider>(context, listen: false)
-                          .friendsProvider,
-                  update: (context, auth, previou) =>
-                      Provider.of<ProfileProvider>(context, listen: false)
-                          .friendsProvider),
+                  create: (_) => profile.friendsProvider,
+                  update: (context, auth, _) => profile.friendsProvider),
               ChangeNotifierProxyProvider<AuthProvider, SettingProvider>(
-                  create: (_) =>
-                      Provider.of<ProfileProvider>(context, listen: false)
-                          .settingProvider,
-                  update: (context, auth, previou) =>
-                      Provider.of<ProfileProvider>(context, listen: false)
-                          .settingProvider),
+                  create: (_) => profile.settingProvider,
+                  update: (context, auth, _) => profile.settingProvider),
               ChangeNotifierProxyProvider<AuthProvider, MessagesProvider>(
-                  create: (_) =>
-                      Provider.of<ProfileProvider>(context, listen: false)
-                          .messagesProvider,
-                  update: (context, auth, previou) =>
-                      Provider.of<ProfileProvider>(context, listen: false)
-                          .messagesProvider),
+                  create: (_) => profile.messagesProvider,
+                  update: (context, auth, _) => profile.messagesProvider),
               ChangeNotifierProxyProvider<AuthProvider, RecentReadProvider>(
-                  create: (_) =>
-                      Provider.of<ProfileProvider>(context, listen: false)
-                          .recentReadProvider,
-                  update: (context, auth, previou) =>
-                      Provider.of<ProfileProvider>(context, listen: false)
-                          .recentReadProvider),
+                  create: (_) => profile.recentReadProvider,
+                  update: (context, auth, _) => profile.recentReadProvider),
             ],
             child: LifeCycleManager(
               child: MaterialApp(

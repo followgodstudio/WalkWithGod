@@ -6,7 +6,6 @@ import '../../providers/article/article_provider.dart';
 import '../../providers/article/articles_provider.dart';
 import '../../providers/article/comments_provider.dart';
 import '../../providers/user/profile_provider.dart';
-import '../../providers/user/saved_articles_provider.dart';
 import 'article_body.dart';
 import 'bottom_bar.dart';
 import 'comments.dart';
@@ -28,14 +27,15 @@ class ArticleScreen extends StatelessWidget {
   }
 
   // fetch all data that needed by the article screen, run only once
-  void _fetchAllData(BuildContext context, ArticleProvider article) async {
+  void _fetchAllArticleData(
+      BuildContext context, ArticleProvider article) async {
     if (!_fetchedAllData) {
       _fetchedAllData = true;
       await article.fetchArticleContent();
-      await Provider.of<SavedArticlesProvider>(context, listen: false)
-          .fetchSavedStatusByArticleId(article.id);
       ProfileProvider profile =
           Provider.of<ProfileProvider>(context, listen: false);
+      await profile.savedArticlesProvider
+          .fetchSavedStatusByArticleId(article.id);
       await Provider.of<CommentsProvider>(context, listen: false)
           .fetchLevel1CommentListByArticleId(article.id, profile.uid);
       await article.fetchSimilarArticles();
@@ -56,7 +56,7 @@ class ArticleScreen extends StatelessWidget {
       context,
       listen: false,
     ).findById(_articleId);
-    _fetchAllData(context, loadedArticle);
+    _fetchAllArticleData(context, loadedArticle);
     return ChangeNotifierProvider.value(
         value: loadedArticle,
         child: Scaffold(

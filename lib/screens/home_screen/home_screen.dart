@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -14,11 +12,6 @@ import 'article/article_list.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = '/home';
-  final User user;
-  final FirebaseFirestore firestore;
-
-  HomeScreen({this.user, this.firestore});
-
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -34,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     String uid = Provider.of<AuthProvider>(context, listen: false).currentUser;
-    Provider.of<ProfileProvider>(context, listen: false).fetchAllUserInfo(uid);
+    Provider.of<ProfileProvider>(context, listen: false).fetchAllUserData(uid);
   }
 
   String diff(DateTime time) {
@@ -52,20 +45,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void didChangeDependencies() {
-    // if (_isInit) {
-    //   setState(() {
-    //     _isLoading = true;
-    //   });
-    //   Provider.of<ArticlesProvider>(context)
-    //       .fetchArticlesByDate(new DateTime.utc(1989, 11, 9))
-    //       .then((_) {
-    //     setState(() {
-    //       _isLoading = false;
-    //     });
-    //   });
-    // }
-    // _isInit = false;
-
     var articleHeight = (MediaQuery.of(context).size.width - 40) / 7 * 8 + 25;
     title = ValueNotifier<String>("今日");
     formattedDate = ValueNotifier<String>(formatter.format(new DateTime.now()));
@@ -100,7 +79,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     print("HomeScreen");
     return Scaffold(
-        //resizeToAvoidBottomPadding: true,
         body: SafeArea(
             child: RefreshIndicator(
                 onRefresh: () => _refreshArticles(context),
