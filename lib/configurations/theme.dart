@@ -100,6 +100,11 @@ extension CustomStyles on TextTheme {
         color: Color.fromARGB(255, 128, 128, 128),
         fontFamily: 'LantingXianHei',
       );
+  TextStyle get captionMainWideSpacing => const TextStyle(
+      fontSize: 14.0,
+      color: Color.fromARGB(255, 128, 128, 128),
+      fontFamily: 'LantingXianHei',
+      letterSpacing: 1.3);
   TextStyle get captionSmall => const TextStyle(
         fontSize: 10.0,
         color: Color.fromARGB(255, 128, 128, 128),

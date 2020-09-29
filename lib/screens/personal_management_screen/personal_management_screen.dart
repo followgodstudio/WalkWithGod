@@ -244,7 +244,7 @@ class SavedArticles extends StatelessWidget {
                         .pushNamed(SavedArticlesScreen.routeName);
                   },
                   child: Text("查看全部",
-                      style: Theme.of(context).textTheme.captionMedium4),
+                      style: Theme.of(context).textTheme.captionSmallBlack),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(18.0),
                   ),
