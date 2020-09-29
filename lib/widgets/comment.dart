@@ -33,7 +33,11 @@ class Comment extends StatelessWidget {
               // Avatar
               Column(
                 children: [
-                  ProfilePicture(20.0, data.creatorImage, data.creatorUid),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4.0),
+                    child: ProfilePicture(
+                        15.0, data.creatorImage, data.creatorUid),
+                  ),
                 ],
               ),
               // Others
