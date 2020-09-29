@@ -13,7 +13,7 @@ class SavedArticlesProvider with ChangeNotifier {
   DocumentSnapshot _lastVisible;
   bool _noMore = false;
   bool _isFetching = false; // To avoid frequently request
-  bool _currentLike; // for the article screen
+  bool _currentLike = false; // for the article screen
 
   // getters and setters
 
@@ -70,6 +70,7 @@ class SavedArticlesProvider with ChangeNotifier {
   }
 
   Future<void> fetchSavedStatusByArticleId(String articleId) async {
+    if (_userId == null) return;
     ArticleProvider article =
         _articles.firstWhere((element) => element.id == articleId, orElse: () {
       return null;

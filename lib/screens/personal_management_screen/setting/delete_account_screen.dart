@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../../configurations/theme.dart';
 import '../../../providers/auth_provider.dart';
+import '../../auth_screen/signup_screen.dart';
 
 class DeleteAccountScreen extends StatelessWidget {
   static const routeName = '/delete_account';
@@ -70,7 +71,9 @@ class DeleteAccountScreen extends StatelessWidget {
                         onPressed: () {
                           Provider.of<AuthProvider>(context, listen: false)
                               .deleteUser();
-                          Navigator.of(context).pushReplacementNamed('/');
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                              SignupScreen.routeName,
+                              (Route<dynamic> route) => false);
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),

@@ -18,7 +18,7 @@ class FriendProvider with ChangeNotifier {
   });
 
   // will be called by friends_provider
-  Future<void> follow(String uid, String name, String imageUrl) async {
+  Future<void> follow(String userId, String name, String imageUrl) async {
     print("FriendProvider-follow");
     if (friendStatus == eFriendStatusFollowing ||
         friendStatus == eFriendStatusFriend) return;
@@ -33,7 +33,11 @@ class FriendProvider with ChangeNotifier {
 
     // Update current user's document
     batch.set(
-        _db.collection(cUsers).doc(uid).collection(cUserFriends).doc(friendUid),
+        _db
+            .collection(cUsers)
+            .doc(userId)
+            .collection(cUserFriends)
+            .doc(friendUid),
         {
           fFriendName: friendName,
           fFriendImageUrl: friendImageUrl,
@@ -44,7 +48,11 @@ class FriendProvider with ChangeNotifier {
 
     // Update followed user's document
     batch.set(
-        _db.collection(cUsers).doc(friendUid).collection(cUserFriends).doc(uid),
+        _db
+            .collection(cUsers)
+            .doc(friendUid)
+            .collection(cUserFriends)
+            .doc(userId),
         {
           fFriendName: name,
           fFriendImageUrl: imageUrl,
@@ -58,7 +66,7 @@ class FriendProvider with ChangeNotifier {
     await batch.commit();
   }
 
-  Future<void> unfollow(String uid, String name, String imageUrl) async {
+  Future<void> unfollow(String userId, String name, String imageUrl) async {
     print("FriendProvider-unfollow");
     if (friendStatus != eFriendStatusFollowing &&
         friendStatus != eFriendStatusFriend) return;
@@ -74,7 +82,7 @@ class FriendProvider with ChangeNotifier {
       batch.set(
           _db
               .collection(cUsers)
-              .doc(uid)
+              .doc(userId)
               .collection(cUserFriends)
               .doc(friendUid),
           {fFriendStatus: friendStatus},
@@ -84,20 +92,20 @@ class FriendProvider with ChangeNotifier {
               .collection(cUsers)
               .doc(friendUid)
               .collection(cUserFriends)
-              .doc(uid),
+              .doc(userId),
           {fFriendStatus: eFriendStatusFollowing},
           SetOptions(merge: true));
     } else {
       batch.delete(_db
           .collection(cUsers)
-          .doc(uid)
+          .doc(userId)
           .collection(cUserFriends)
           .doc(friendUid));
       batch.delete(_db
           .collection(cUsers)
           .doc(friendUid)
           .collection(cUserFriends)
-          .doc(uid));
+          .doc(userId));
     }
     await batch.commit();
   }

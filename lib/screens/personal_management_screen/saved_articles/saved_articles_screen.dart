@@ -13,7 +13,8 @@ class SavedArticlesScreen extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text('我的收藏', style: Theme.of(context).textTheme.headline2),
+          title:
+              Text('我的收藏', style: Theme.of(context).textTheme.captionMedium2),
           elevation: 0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back_ios),

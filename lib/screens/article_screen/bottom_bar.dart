@@ -32,31 +32,42 @@ class BottomBar extends StatelessWidget {
                 ],
               ),
               onPressed: () {
-                showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    builder: (context) => PopUpComment(
-                          articleId: articleId,
-                          onPressFunc: (String content) async {
-                            await Provider.of<CommentsProvider>(context,
-                                    listen: false)
-                                .addLevel1Comment(
-                                    articleId,
-                                    content,
-                                    profile.uid,
-                                    profile.name,
-                                    profile.imageUrl);
-                            onLeaveCommentScroll();
-                            showDialog(
-                                context: context,
-                                builder: (context) {
-                                  Future.delayed(Duration(seconds: 1), () {
-                                    Navigator.of(context).pop(true);
+                if (profile.uid == null) {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        Future.delayed(Duration(seconds: 1), () {
+                          Navigator.of(context).pop(true);
+                        });
+                        return PopUpDialog(false, "请登陆后再操作");
+                      });
+                } else {
+                  showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      builder: (context) => PopUpComment(
+                            articleId: articleId,
+                            onPressFunc: (String content) async {
+                              await Provider.of<CommentsProvider>(context,
+                                      listen: false)
+                                  .addLevel1Comment(
+                                      articleId,
+                                      content,
+                                      profile.uid,
+                                      profile.name,
+                                      profile.imageUrl);
+                              onLeaveCommentScroll();
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    Future.delayed(Duration(seconds: 1), () {
+                                      Navigator.of(context).pop(true);
+                                    });
+                                    return PopUpDialog(true, "你刚刚发布了留言");
                                   });
-                                  return PopUpDialog(true, "你刚刚发布了留言");
-                                });
-                          },
-                        ));
+                            },
+                          ));
+                }
               },
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(18.0),
@@ -86,23 +97,33 @@ class BottomBar extends StatelessWidget {
           child: Consumer<SavedArticlesProvider>(
               builder: (context, value, child) => FlatButton(
                     onPressed: () {
-                      if (value.currentLike == null) return;
-                      if (value.currentLike) {
-                        value.removeSavedByArticleId(articleId);
+                      if (profile.uid == null) {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              Future.delayed(Duration(seconds: 1), () {
+                                Navigator.of(context).pop(true);
+                              });
+                              return PopUpDialog(false, "请登陆后再操作");
+                            });
                       } else {
-                        value.addSavedByArticleId(articleId);
+                        if (value.currentLike) {
+                          value.removeSavedByArticleId(articleId);
+                        } else {
+                          value.addSavedByArticleId(articleId);
+                        }
                       }
                     },
                     child: Icon(
-                      (value.currentLike != null && value.currentLike)
+                      (profile.uid != null && value.currentLike)
                           ? Icons.star
                           : Icons.star_border,
                       size: 20.0,
-                      color: (value.currentLike != null && value.currentLike)
+                      color: (profile.uid != null && value.currentLike)
                           ? Colors.white
                           : Colors.black87,
                     ),
-                    color: (value.currentLike != null && value.currentLike)
+                    color: (profile.uid != null && value.currentLike)
                         ? Colors.blue
                         : Theme.of(context).buttonColor,
                     shape: CircleBorder(),

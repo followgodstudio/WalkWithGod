@@ -16,7 +16,7 @@ class ProfilePicture extends StatelessWidget {
         backgroundImage: (imageUrl == null || imageUrl.isEmpty)
             ? AssetImage("assets/images/default_profile_picture.jpg")
             : CachedNetworkImageProvider(imageUrl));
-    if (uid == null || uid.isEmpty) return circle;
+    if (uid == null) return circle;
     return GestureDetector(
         onTap: () {
           Navigator.of(context).pushNamed(

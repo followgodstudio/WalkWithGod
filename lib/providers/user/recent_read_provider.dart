@@ -52,7 +52,7 @@ class RecentReadProvider with ChangeNotifier {
 
   Future<void> updateRecentReadByArticleId(
       ArticleProvider articleProvider) async {
-    if (_isUpdatingRecentRead || articleProvider == null) return;
+    if (_isUpdatingRecentRead || _userId == null || _userId.isEmpty) return;
     print("RecentReadProvider-updateRecentReadByArticleId");
     _isUpdatingRecentRead = true;
 
@@ -88,6 +88,7 @@ class RecentReadProvider with ChangeNotifier {
     await batch.commit();
 
     _isUpdatingRecentRead = false;
+    notifyListeners();
   }
 
   Future<void> updateReadDuration(DateTime start) async {
@@ -101,6 +102,7 @@ class RecentReadProvider with ChangeNotifier {
         .doc(dUserProfileStatic)
         .update(
             {fUserReadDuration: FieldValue.increment(timeDiffInSecond / 3600)});
+    notifyListeners();
   }
 
   Future<void> _appendRecentReadList() async {

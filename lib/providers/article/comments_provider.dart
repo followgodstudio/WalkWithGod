@@ -1,5 +1,3 @@
-// import 'dart:html';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
 
@@ -37,24 +35,14 @@ class CommentsProvider with ChangeNotifier {
         .collection(cArticleComments)
         .doc(commentId)
         .get();
-    // Fetch Likes
-    DocumentSnapshot docLikes = await _db
-        .collection(cArticles)
-        .doc(articleId)
-        .collection(cArticleComments)
-        .doc(commentId)
-        .collection(cArticleCommentLikes)
-        .doc(userId)
-        .get();
-    var tmp = doc.data();
-    commentProvider = _buildLevel1CommentByMap(commentId, tmp, docLikes.exists);
+    bool isLike = await _fetchLevel1LikeStatus(userId, articleId, doc);
+    commentProvider = _buildLevel1CommentByMap(commentId, doc.data(), isLike);
     return commentProvider;
   }
 
   Future<void> fetchLevel1CommentListByArticleId(
       String articleId, String userId,
       [int limit = loadLimit]) async {
-    if (articleId == null || userId == null) return;
     print("CommentsProvider-fetchLevel1CommentListByArticleId");
     // Clear data
     _items = [];
@@ -76,7 +64,7 @@ class CommentsProvider with ChangeNotifier {
 
   Future<void> fetchMoreLevel1Comments(String userId,
       [int limit = loadLimit]) async {
-    if (_articleId == null || userId == null || _noMore || _isFetching) return;
+    if (_articleId == null || _noMore || _isFetching) return;
     print("CommentsProvider-fetchMoreLevel1Comments");
     _isFetching = true;
     QuerySnapshot query = await _db
@@ -118,21 +106,10 @@ class CommentsProvider with ChangeNotifier {
       notifyListeners();
       return;
     }
-
-    // Fetch if current user like, will it be slow???
     for (int i = 0; i < docs.length; i++) {
-      DocumentSnapshot docRef = await _db
-          .collection(cArticles)
-          .doc(articleId)
-          .collection(cArticleComments)
-          .doc(docs[i].id)
-          .collection(cArticleCommentLikes)
-          .doc(userId)
-          .get();
-      _items.add(
-          _buildLevel1CommentByMap(docs[i].id, docs[i].data(), docRef.exists));
+      bool isLike = await _fetchLevel1LikeStatus(userId, articleId, docs[i]);
+      _items.add(_buildLevel1CommentByMap(docs[i].id, docs[i].data(), isLike));
     }
-
     _isFetching = false;
     _lastVisible = query.docs[query.docs.length - 1];
     notifyListeners();
@@ -141,6 +118,25 @@ class CommentsProvider with ChangeNotifier {
   void _addLevel1CommentToList(String cid, Map<String, dynamic> data) {
     _items.insert(0, _buildLevel1CommentByMap(cid, data, false));
     notifyListeners();
+  }
+
+  Future<bool> _fetchLevel1LikeStatus(
+      String userId, String articleId, DocumentSnapshot commentDoc) async {
+    bool isLike = false;
+    if (userId != null &&
+        userId.isNotEmpty &&
+        commentDoc.get(fCommentLikesCount) > 0) {
+      DocumentSnapshot docRef = await _db
+          .collection(cArticles)
+          .doc(articleId)
+          .collection(cArticleComments)
+          .doc(commentDoc.id)
+          .collection(cArticleCommentLikes)
+          .doc(userId)
+          .get();
+      isLike = docRef.exists;
+    }
+    return isLike;
   }
 
   CommentProvider _buildLevel1CommentByMap(
