@@ -152,7 +152,7 @@ class ReadStatus extends StatelessWidget {
                 Text("共有", style: Theme.of(context).textTheme.bodyText2),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4.0),
-                  child: Text(profile.friendsProvider.followersCount.toString(),
+                  child: Text(profile.followersCount.toString(),
                       style: Theme.of(context).textTheme.headline6),
                 ),
                 Text("人关注", style: Theme.of(context).textTheme.captionMedium3)

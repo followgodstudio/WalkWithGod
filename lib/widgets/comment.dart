@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:walk_with_god/widgets/popup_dialog.dart';
 
 import '../configurations/theme.dart';
 import '../providers/article/comment_provider.dart';
@@ -120,7 +121,7 @@ class Comment extends StatelessWidget {
                         FlatButton(
                             padding: const EdgeInsets.only(right: 50.0),
                             child: Row(children: [
-                              if (!data.like)
+                              if (!data.like || profile.uid == null)
                                 Icon(
                                   Icons.favorite_border,
                                   color: Color.fromARGB(255, 160, 160, 160),
@@ -135,7 +136,16 @@ class Comment extends StatelessWidget {
                               ),
                             ]),
                             onPressed: () {
-                              if (data.like) {
+                              if (profile.uid == null) {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      Future.delayed(Duration(seconds: 1), () {
+                                        Navigator.of(context).pop(true);
+                                      });
+                                      return PopUpDialog(false, "请登陆后再操作");
+                                    });
+                              } else if (data.like) {
                                 data.cancelLike(profile.uid);
                               } else {
                                 data.addLike(profile.uid, profile.name,
@@ -157,26 +167,38 @@ class Comment extends StatelessWidget {
                             )
                           ]),
                           onPressed: () async {
-                            if (onStartComment != null) await onStartComment();
-                            showModalBottomSheet(
-                                context: context,
-                                isScrollControlled: true,
-                                builder: (context) => PopUpComment(
-                                      replyTo: isLevel2Comment
-                                          ? data.creatorName
-                                          : null,
-                                      articleId: data.articleId,
-                                      onPressFunc: (String content) async {
-                                        await data.addLevel2Comment(
-                                            content,
-                                            profile.uid,
-                                            profile.name,
-                                            profile.imageUrl,
-                                            isLevel2Comment);
-                                        if (onSubmitComment != null)
-                                          await onSubmitComment();
-                                      },
-                                    ));
+                            if (profile.uid == null) {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    Future.delayed(Duration(seconds: 1), () {
+                                      Navigator.of(context).pop(true);
+                                    });
+                                    return PopUpDialog(false, "请登陆后再操作");
+                                  });
+                            } else {
+                              if (onStartComment != null)
+                                await onStartComment();
+                              showModalBottomSheet(
+                                  context: context,
+                                  isScrollControlled: true,
+                                  builder: (context) => PopUpComment(
+                                        replyTo: isLevel2Comment
+                                            ? data.creatorName
+                                            : null,
+                                        articleId: data.articleId,
+                                        onPressFunc: (String content) async {
+                                          await data.addLevel2Comment(
+                                              content,
+                                              profile.uid,
+                                              profile.name,
+                                              profile.imageUrl,
+                                              isLevel2Comment);
+                                          if (onSubmitComment != null)
+                                            await onSubmitComment();
+                                        },
+                                      ));
+                            }
                           },
                         ),
                       ],

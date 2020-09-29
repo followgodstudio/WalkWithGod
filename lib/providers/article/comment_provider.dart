@@ -217,7 +217,6 @@ class CommentProvider with ChangeNotifier {
     await batch.commit();
 
     // Update local variables
-    comment['like'] = false;
     if (isL3Comment) {
       parentPointer._addLevel2CommentToList(newDocRef.id, comment);
     } else {
@@ -237,7 +236,6 @@ class CommentProvider with ChangeNotifier {
 
   void _appendLevel2CommentList(QuerySnapshot query, String userId, int limit) {
     List<DocumentSnapshot> docs = query.docs;
-    //docs[0].data().update(key, (value) => null)
     if (docs.length < limit) _noMoreChild = true;
     if (docs.length == 0) {
       notifyListeners();
@@ -245,26 +243,11 @@ class CommentProvider with ChangeNotifier {
     }
     query.docs.forEach((doc) {
       // Fetch if current user like
-
-      var copyOfData = doc.data();
-
-      if (doc.data().containsKey(fCommentReplyLikes)) {
-        if (doc.data() != null) {
-          copyOfData.update('like', (value) => false, ifAbsent: () => false);
-          copyOfData.update('id', (value) => doc.id, ifAbsent: () => doc.id);
-        }
-
-        //doc.data().update('like', (value) => false, ifAbsent: () => false);
-      } else {
-        if (doc.data() != null) {
-          copyOfData.update('like', (_) {
-            return (List<String>.from(doc.get(fCommentReplyLikes)))
-                .contains(userId);
-          }, ifAbsent: () => false);
-          copyOfData.update('id', (value) => doc.id, ifAbsent: () => doc.id);
-        }
+      bool isLike = false;
+      if (doc.data().containsKey(fCommentReplyLikes) && userId != null) {
+        isLike = doc.get(fCommentReplyLikes).contains(userId);
       }
-      children.add(_buildLevel2CommentByMap(doc.id, copyOfData));
+      children.add(_buildLevel2CommentByMap(doc.id, doc.data(), isLike));
     });
     _lastVisibleChild = query.docs[query.docs.length - 1];
     notifyListeners();
@@ -272,13 +255,13 @@ class CommentProvider with ChangeNotifier {
 
   void _addLevel2CommentToList(String cid, Map<String, dynamic> data) {
     if (parent != null) return; // Level 2 cannot have children
-    children.insert(0, _buildLevel2CommentByMap(cid, data));
+    children.insert(0, _buildLevel2CommentByMap(cid, data, false));
     childrenCount += 1;
     notifyListeners();
   }
 
   CommentProvider _buildLevel2CommentByMap(
-      String id, Map<String, dynamic> data) {
+      String id, Map<String, dynamic> data, bool isLike) {
     return CommentProvider(
         id: id,
         articleId: data[fCommentArticleId],
@@ -292,7 +275,7 @@ class CommentProvider with ChangeNotifier {
         replyToName: data[fCommentReplyToName],
         childrenCount: data[fCommentChildrenCount],
         likesCount: data[fCommentLikesCount],
-        like: data['like'],
+        like: isLike,
         parentPointer: this);
   }
 }

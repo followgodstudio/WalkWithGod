@@ -92,13 +92,13 @@ class FriendsProvider with ChangeNotifier {
     _appendFriendsList(query, limit, isFollower);
   }
 
-  Future<FriendProvider> fetchFriendStatusByUserId(String uid) async {
+  Future<FriendProvider> fetchFriendStatusByUserId(String userId) async {
     print("FriendsProvider-fetchFriendStatusByUserId");
     DocumentSnapshot doc = await _db
         .collection(cUsers)
         .doc(_userId)
         .collection(cUserFriends)
-        .doc(uid)
+        .doc(userId)
         .get();
     if (doc.exists) return _buildFriendByMap(doc.id, doc.data());
     return null;
@@ -110,10 +110,10 @@ class FriendsProvider with ChangeNotifier {
             item.friendStatus != eFriendStatusFriend));
   }
 
-  Future<void> removefollowInList(String uid) async {
-    _following.removeWhere((item) => item.friendUid == uid);
-    FriendProvider friend =
-        _follower.firstWhere((element) => element.friendUid == uid, orElse: () {
+  Future<void> removefollowInList(String userId) async {
+    _following.removeWhere((item) => item.friendUid == userId);
+    FriendProvider friend = _follower
+        .firstWhere((element) => element.friendUid == userId, orElse: () {
       return null;
     });
     if (friend != null) friend.friendStatus = eFriendStatusFollower;
@@ -133,7 +133,7 @@ class FriendsProvider with ChangeNotifier {
     batch.update(
         _db
             .collection(cUsers)
-            .doc(uid)
+            .doc(userId)
             .collection(cUserProfile)
             .doc(dUserProfileDynamic),
         {fUserFollowersCount: FieldValue.increment(-1)});

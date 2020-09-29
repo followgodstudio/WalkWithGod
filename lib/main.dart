@@ -48,6 +48,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    print("MyApp");
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(
@@ -71,22 +72,27 @@ class MyApp extends StatelessWidget {
               Provider.of<ProfileProvider>(context, listen: false);
           return MultiProvider(
             providers: [
-              // TODO: Concurrency issue?
-              ChangeNotifierProxyProvider<AuthProvider, SavedArticlesProvider>(
+              ChangeNotifierProxyProvider<ProfileProvider,
+                      SavedArticlesProvider>(
                   create: (_) => profile.savedArticlesProvider,
-                  update: (context, auth, _) => profile.savedArticlesProvider),
-              ChangeNotifierProxyProvider<AuthProvider, FriendsProvider>(
+                  update: (context, newProfile, _) =>
+                      newProfile.savedArticlesProvider),
+              ChangeNotifierProxyProvider<ProfileProvider, FriendsProvider>(
                   create: (_) => profile.friendsProvider,
-                  update: (context, auth, _) => profile.friendsProvider),
-              ChangeNotifierProxyProvider<AuthProvider, SettingProvider>(
+                  update: (context, newProfile, _) =>
+                      newProfile.friendsProvider),
+              ChangeNotifierProxyProvider<ProfileProvider, SettingProvider>(
                   create: (_) => profile.settingProvider,
-                  update: (context, auth, _) => profile.settingProvider),
-              ChangeNotifierProxyProvider<AuthProvider, MessagesProvider>(
+                  update: (context, newProfile, _) =>
+                      newProfile.settingProvider),
+              ChangeNotifierProxyProvider<ProfileProvider, MessagesProvider>(
                   create: (_) => profile.messagesProvider,
-                  update: (context, auth, _) => profile.messagesProvider),
-              ChangeNotifierProxyProvider<AuthProvider, RecentReadProvider>(
+                  update: (context, newProfile, _) =>
+                      newProfile.messagesProvider),
+              ChangeNotifierProxyProvider<ProfileProvider, RecentReadProvider>(
                   create: (_) => profile.recentReadProvider,
-                  update: (context, auth, _) => profile.recentReadProvider),
+                  update: (context, newProfile, _) =>
+                      newProfile.recentReadProvider),
             ],
             child: LifeCycleManager(
               child: MaterialApp(

@@ -35,7 +35,9 @@ class ProfileProvider with ChangeNotifier {
   bool _isFetching = false; // to avoid frequent request
   bool _isFetchedAll = false;
 
-  ProfileProvider([this.uid]);
+  ProfileProvider([this.uid]) {
+    print("Rebuild ProfileProvider");
+  }
 
   Future<void> fetchAllUserData(String userId) async {
     if (userId == null || userId.isEmpty || _isFetching || _isFetchedAll)
@@ -111,12 +113,7 @@ class ProfileProvider with ChangeNotifier {
         .doc(dUserProfileDynamic)
         .get();
     if (docDynamic.exists && docDynamic.data().containsKey(fUserFollowersCount))
-      friendsProvider.followersCount = docDynamic.get(fUserFollowersCount);
-    if (docDynamic.exists && docDynamic.data().containsKey(fUserMessagesCount))
-      messagesProvider.messagesCount = docDynamic.get(fUserMessagesCount);
-    if (docDynamic.exists && docDynamic.data().containsKey(fUserUnreadMsgCount))
-      messagesProvider.unreadMessagesCount =
-          docDynamic.get(fUserUnreadMsgCount);
+      followersCount = docDynamic.get(fUserFollowersCount);
 
     // fetch static information
     DocumentSnapshot docStatic = await _db

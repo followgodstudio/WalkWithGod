@@ -23,13 +23,6 @@ class _HomeScreenState extends State<HomeScreen> {
   ValueNotifier<String> formattedDate;
   var formatter = new DateFormat('yyyy年M月d日');
 
-  @override
-  void initState() {
-    super.initState();
-    String uid = Provider.of<AuthProvider>(context, listen: false).currentUser;
-    Provider.of<ProfileProvider>(context, listen: false).fetchAllUserData(uid);
-  }
-
   String diff(DateTime time) {
     var now = DateTime.now();
     var diffDays = now.difference(time).inDays;
@@ -78,6 +71,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     print("HomeScreen");
+    String uid = Provider.of<AuthProvider>(context, listen: false).currentUser;
+    Provider.of<ProfileProvider>(context, listen: false).fetchAllUserData(uid);
     return Scaffold(
         body: SafeArea(
             child: RefreshIndicator(

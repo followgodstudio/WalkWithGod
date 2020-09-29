@@ -11,7 +11,7 @@ enum AuthMode { signInWithEmail, createUserWithEmail }
 
 class AuthProvider with ChangeNotifier {
   FirebaseAuth _auth = FirebaseAuth.instance;
-  String _uid;
+  String _userId;
   final GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: <String>[
       'email',
@@ -21,13 +21,13 @@ class AuthProvider with ChangeNotifier {
 
   Stream<String> get onAuthStateChanged {
     return _auth.authStateChanges().map((User user) {
-      _uid = user?.uid;
-      return _uid;
+      _userId = user?.uid;
+      return _userId;
     });
   }
 
   String get currentUser {
-    return _uid;
+    return _userId;
   }
 
   Future<void> authenticate(
@@ -41,7 +41,7 @@ class AuthProvider with ChangeNotifier {
       result = await _auth.signInWithEmailAndPassword(
           email: username, password: password);
     }
-    _uid = result.user.uid;
+    _userId = result.user.uid;
     notifyListeners();
   }
 
@@ -54,7 +54,7 @@ class AuthProvider with ChangeNotifier {
     );
 
     await ProfileProvider(authResult.user.uid).initProfile();
-    _uid = authResult.user.uid;
+    _userId = authResult.user.uid;
     notifyListeners();
     // Update the username
     //await updateUserName(name, authResult.user);
@@ -66,7 +66,7 @@ class AuthProvider with ChangeNotifier {
     var result = await _auth.signInWithEmailAndPassword(
         email: email, password: password);
 
-    _uid = result.user.uid;
+    _userId = result.user.uid;
     notifyListeners();
   }
 
@@ -77,7 +77,7 @@ class AuthProvider with ChangeNotifier {
 
   Future<void> logout() async {
     await _auth.signOut();
-    _uid = null;
+    _userId = null;
     //notifyListeners();
   }
 
@@ -85,9 +85,9 @@ class AuthProvider with ChangeNotifier {
   String singInAnonymously() {
     //return _auth.signInAnonymously();
     var tmpUser = _auth.signInAnonymously();
-    tmpUser.then((value) => _uid = value.user.uid);
-    ProfileProvider(_uid).initProfile();
-    return _uid;
+    tmpUser.then((value) => _userId = value.user.uid);
+    ProfileProvider(_userId).initProfile();
+    return _userId;
   }
 
   // GOOGLE
@@ -225,8 +225,8 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<void> deleteUser() async {
-    await ProfileProvider(_uid).deleteProfile();
+    await ProfileProvider(_userId).deleteProfile();
     await _auth.currentUser.delete();
-    _uid = null;
+    _userId = null;
   }
 }
