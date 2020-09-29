@@ -77,7 +77,6 @@ class _SplashScreenState extends State<SplashScreen> {
                                         top: 20, bottom: 4.0),
                                     child: Center(
                                         child: Material(
-                                      elevation: 5.0,
                                       child: CachedNetworkImage(
                                         imageUrl: splash.imageUrl,
                                         imageBuilder:
@@ -86,7 +85,7 @@ class _SplashScreenState extends State<SplashScreen> {
                                           decoration: BoxDecoration(
                                             image: DecorationImage(
                                               image: imageProvider,
-                                              fit: BoxFit.cover,
+                                              fit: BoxFit.contain,
                                             ),
                                           ),
                                         ),
@@ -111,7 +110,7 @@ class _SplashScreenState extends State<SplashScreen> {
                                         textAlign: TextAlign.center,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .captionSmall1,
+                                            .captionSmall2,
                                       ),
                                     ),
                                     Divider(
@@ -125,7 +124,7 @@ class _SplashScreenState extends State<SplashScreen> {
                                         splash.author + " 作品 ",
                                         style: Theme.of(context)
                                             .textTheme
-                                            .captionSmall1,
+                                            .captionSmall2,
                                       ),
                                     ),
                                   ]),
@@ -157,14 +156,14 @@ class _SplashScreenState extends State<SplashScreen> {
                                               "进入应用",
                                               style: Theme.of(context)
                                                   .textTheme
-                                                  .captionSmall1,
+                                                  .captionSmall2,
                                             ),
                                             Icon(Icons.arrow_right)
                                           ],
                                         ))
                                   ],
                                 ),
-                                Icon(Icons.arrow_right)
+                                //Icon(Icons.arrow_right)
                               ],
                             ));
                       })));
