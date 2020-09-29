@@ -61,16 +61,17 @@ class Comment extends StatelessWidget {
                             )),
                         Text(
                           getCreatedDuration(data.createdDate),
-                          style: Theme.of(context).textTheme.bodyTextGray,
+                          style: Theme.of(context).textTheme.captionSmall2,
                         )
                       ],
                     ),
-                    SizedBox(height: 20.0),
+                    SizedBox(height: 10.0),
                     // Comment body
                     IntrinsicHeight(
                       child: Row(
                         children: [
                           VerticalDivider(
+                            indent: 10,
                             thickness: 1.2,
                             color: isLevel2Comment
                                 ? Color.fromARGB(255, 224, 224, 224)
@@ -131,7 +132,7 @@ class Comment extends StatelessWidget {
                               Text(
                                 data.likesCount.toString(),
                                 style:
-                                    Theme.of(context).textTheme.captionMedium1,
+                                    Theme.of(context).textTheme.captionSmall2,
                               ),
                             ]),
                             onPressed: () {
@@ -153,7 +154,7 @@ class Comment extends StatelessWidget {
                               data.childrenCount != null
                                   ? data.childrenCount.toString()
                                   : "回复",
-                              style: Theme.of(context).textTheme.captionMedium1,
+                              style: Theme.of(context).textTheme.captionSmall2,
                             )
                           ]),
                           onPressed: () async {

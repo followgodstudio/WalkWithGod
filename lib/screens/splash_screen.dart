@@ -111,7 +111,7 @@ class _SplashScreenState extends State<SplashScreen> {
                                           top: 20, bottom: 4.0),
                                       child: Center(
                                           child: Material(
-                                        elevation: 5.0,
+                                        //elevation: 5.0,
                                         child: CachedNetworkImage(
                                           imageUrl: splash.imageUrl,
                                           imageBuilder:
@@ -120,7 +120,7 @@ class _SplashScreenState extends State<SplashScreen> {
                                             decoration: BoxDecoration(
                                               image: DecorationImage(
                                                 image: imageProvider,
-                                                fit: BoxFit.cover,
+                                                fit: BoxFit.contain,
                                               ),
                                             ),
                                           ),

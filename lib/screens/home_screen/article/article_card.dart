@@ -73,7 +73,7 @@ class ArticleCard extends StatelessWidget {
                       ));
                     },
                     child: Card(
-                      elevation: 4.0,
+                      elevation: 8.0,
                       child: Stack(
                         children: [
                           Hero(

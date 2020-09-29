@@ -106,7 +106,7 @@ extension CustomStyles on TextTheme {
         fontFamily: 'LantingXianHei',
       );
   TextStyle get captionSmall2 => const TextStyle(
-        fontSize: 10.0,
+        fontSize: 12.0,
         color: Color.fromARGB(255, 128, 128, 128),
         fontFamily: 'LantingXianHei',
       );
