@@ -115,8 +115,8 @@ class ShareArticle extends StatelessWidget {
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child:
-                      Text("取消", style: Theme.of(context).textTheme.headline6),
+                  child: Text("取消",
+                      style: Theme.of(context).textTheme.captionSmall2),
                 ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(18.0),
