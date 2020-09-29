@@ -3,12 +3,12 @@ import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:walk_with_god/providers/user/profile_provider.dart';
 
 import '../configurations/theme.dart';
 import '../providers/article/articles_provider.dart';
 import '../providers/auth_provider.dart';
 import '../providers/splash_provider.dart';
+import '../providers/user/profile_provider.dart';
 import 'home_screen/home_screen.dart';
 
 class SplashScreen extends StatefulWidget {

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:walk_with_god/screens/auth_screen/signup_screen.dart';
 
 import '../../../configurations/theme.dart';
 import '../../../providers/auth_provider.dart';
+import '../../auth_screen/signup_screen.dart';
 
 class DeleteAccountScreen extends StatelessWidget {
   static const routeName = '/delete_account';

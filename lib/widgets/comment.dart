@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:walk_with_god/widgets/popup_dialog.dart';
 
 import '../configurations/theme.dart';
 import '../providers/article/comment_provider.dart';
@@ -10,6 +9,7 @@ import '../providers/user/profile_provider.dart';
 import '../screens/personal_management_screen/headline/network_screen.dart';
 import '../utils/utils.dart';
 import '../widgets/popup_comment.dart';
+import 'popup_dialog.dart';
 import 'profile_picture.dart';
 
 class Comment extends StatelessWidget {
