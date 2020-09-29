@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../widgets/profile_picture.dart';
+import '../../../configurations/theme.dart';
 
 class Introduction extends StatelessWidget {
   final String name;
@@ -12,10 +13,10 @@ class Introduction extends StatelessWidget {
     return Column(
       children: <Widget>[
         ProfilePicture(30.0, imageUrl),
-        SizedBox(height: 10.0),
+        SizedBox(height: 20.0),
         Text(
           (name == null || name.isEmpty) ? "弟兄姊妹" : name,
-          style: Theme.of(context).textTheme.headline6,
+          style: Theme.of(context).textTheme.captionMedium1,
         ),
       ],
     );

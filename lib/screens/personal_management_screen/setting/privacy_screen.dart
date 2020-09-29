@@ -47,9 +47,8 @@ class PrivacyScreen extends StatelessWidget {
                                       .captionMedium1),
                               SizedBox(height: 4),
                               Text("开启后，关注你的好友将看不到你的\"最近阅读\"内容。",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .captionSmall1),
+                                  style:
+                                      Theme.of(context).textTheme.captionSmall),
                             ],
                           ),
                           FlutterSwitch(

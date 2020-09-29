@@ -441,7 +441,7 @@ class _SignupScreenState extends State<SignupScreen> {
               GoogleSignInButton(
                 centered: true,
                 text: "Google账号登陆",
-                textStyle: Theme.of(context).textTheme.captionSmall3,
+                textStyle: Theme.of(context).textTheme.captionSmall1,
                 onPressed: () async {
                   try {
                     await _auth.signInWithGoogle();

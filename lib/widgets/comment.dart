@@ -104,7 +104,7 @@ class Comment extends StatelessWidget {
                                     TextSpan(
                                       text: data.content,
                                       style:
-                                          Theme.of(context).textTheme.bodyText1,
+                                          Theme.of(context).textTheme.bodyText2,
                                     )
                                   ],
                                 ),

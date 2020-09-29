@@ -149,7 +149,7 @@ class _SplashScreenState extends State<SplashScreen> {
                                           textAlign: TextAlign.center,
                                           style: Theme.of(context)
                                               .textTheme
-                                              .captionSmall1,
+                                              .captionSmall,
                                         ),
                                       ),
                                       Divider(
@@ -163,7 +163,7 @@ class _SplashScreenState extends State<SplashScreen> {
                                           splash.author + " 作品 ",
                                           style: Theme.of(context)
                                               .textTheme
-                                              .captionSmall1,
+                                              .captionSmall,
                                         ),
                                       ),
                                     ]),
@@ -195,7 +195,7 @@ class _SplashScreenState extends State<SplashScreen> {
                                                 "进入应用",
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .captionSmall1,
+                                                    .captionSmall,
                                               ),
                                               Icon(Icons.arrow_right)
                                             ],

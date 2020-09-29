@@ -85,10 +85,10 @@ class AppInfoScreen extends StatelessWidget {
                 Column(
                   children: [
                     Text("随行工作室 版权所有",
-                        style: Theme.of(context).textTheme.captionSmall1),
+                        style: Theme.of(context).textTheme.captionSmall),
                     Text(
                         "Copyright @ 2019-2020 Follow God Studio. All rights reserved.",
-                        style: Theme.of(context).textTheme.captionSmall1)
+                        style: Theme.of(context).textTheme.captionSmall)
                   ],
                 )
               ],

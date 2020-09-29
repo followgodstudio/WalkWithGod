@@ -22,7 +22,7 @@ class PersonalManagementScreen extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text('我的', style: Theme.of(context).textTheme.headline2),
+          title: Text('我的', style: Theme.of(context).textTheme.captionMedium2),
           elevation: 0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back_ios),
@@ -48,6 +48,7 @@ class PersonalManagementScreen extends StatelessWidget {
             padding: const EdgeInsets.all(20.0),
             child: Column(children: <Widget>[
               HeadLine(),
+              SizedBox(height: 15),
               SavedArticles(),
               FriendsMessages(),
             ]),
@@ -71,13 +72,17 @@ class HeadLine extends StatelessWidget {
             Consumer<ProfileProvider>(
                 builder: (ctx, profile, _) =>
                     Introduction("你好，" + profile.name, profile.imageUrl)),
-            SizedBox(height: 8.0),
+            SizedBox(height: 18.0),
             FlatButton(
                 onPressed: () {
                   Navigator.of(context).pushNamed(EditProfileScreen.routeName);
                 },
-                child: Text("编辑个人资料",
-                    style: Theme.of(context).textTheme.captionMedium4),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8.0, vertical: 0),
+                  child: Text("编辑个人资料",
+                      style: Theme.of(context).textTheme.captionSmallBlack),
+                ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(18.0),
                 ),
@@ -133,7 +138,7 @@ class FriendsMessages extends StatelessWidget {
                                           "人",
                                       style: Theme.of(context)
                                           .textTheme
-                                          .captionMain,
+                                          .captionSmall2,
                                     )),
                           ],
                         ),
@@ -170,7 +175,7 @@ class FriendsMessages extends StatelessWidget {
                                   snapshot.data[fUserUnreadMsgCount]
                                       .toString() +
                                   "条未读",
-                              style: Theme.of(context).textTheme.captionMain,
+                              style: Theme.of(context).textTheme.captionSmall2,
                             ),
                           ],
                         ),
@@ -228,7 +233,7 @@ class SavedArticles extends StatelessWidget {
                       style: Theme.of(context).textTheme.captionMedium1),
                   SizedBox(height: 8.0),
                   Text("共" + saved.savedArticlesCount.toString() + "篇收藏",
-                      style: Theme.of(context).textTheme.captionMain),
+                      style: Theme.of(context).textTheme.captionSmall2),
                 ],
               ),
             ),

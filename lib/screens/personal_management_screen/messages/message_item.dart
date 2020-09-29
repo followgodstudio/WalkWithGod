@@ -39,7 +39,7 @@ class MessageItem extends StatelessWidget {
                       Text(
                         DateFormat('yyyy年M月d日 HH:mm a').format(data.createDate),
                         style: data.isRead
-                            ? Theme.of(context).textTheme.captionSmall3
+                            ? Theme.of(context).textTheme.captionSmall1
                             : Theme.of(context).textTheme.captionSmallBlack,
                       ),
                     ],
