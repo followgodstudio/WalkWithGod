@@ -61,6 +61,12 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
             },
           ),
           backgroundColor: Theme.of(context).appBarTheme.color,
+          actions: [
+            Placeholder(
+              color: Theme.of(context).appBarTheme.color,
+              fallbackWidth: 60,
+            ),
+          ],
         ),
         body: SafeArea(
             child: NotificationListener<ScrollNotification>(
