@@ -54,7 +54,9 @@ class ProfileProvider with ChangeNotifier {
     _isFetching = true;
     DateTime start = DateTime.now();
     //TODO: exception handling
-    if (!await fetchProfile()) return false;
+    // if (!await fetchProfile()) {
+    //   //return false;
+    // }
     await savedArticlesProvider.fetchSavedList();
     await friendsProvider.fetchFriendList(true, followersCount);
     await friendsProvider.fetchFriendList(false);

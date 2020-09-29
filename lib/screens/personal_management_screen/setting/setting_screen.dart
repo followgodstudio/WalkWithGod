@@ -20,7 +20,8 @@ class SettingScreen extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text('设置', style: Theme.of(context).textTheme.headline2),
+          title:
+              Text('系统设置', style: Theme.of(context).textTheme.captionMedium2),
           elevation: 0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back_ios),
@@ -151,6 +152,7 @@ class SettingScreen extends StatelessWidget {
                       ),
                     ),
                     Divider(),
+                    SizedBox(height: 20),
                     Container(
                         width: double.infinity,
                         child: FlatButton(
@@ -164,7 +166,9 @@ class SettingScreen extends StatelessWidget {
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text("退出登录",
-                                  style: Theme.of(context).textTheme.headline6),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .captionMedium1),
                             ),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(18.0),

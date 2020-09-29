@@ -37,89 +37,93 @@ class ArticleCard extends StatelessWidget {
             if (snapshot.hasData) {
               return AspectRatio(
                 aspectRatio: aspectRatio,
-                child: Container(
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: backgroundImage, fit: BoxFit.cover),
-                  ),
-                  child: FlatButton(
-                    onPressed: () {
-                      Navigator.of(context).pushNamed(
-                        ArticleScreen.routeName,
-                        arguments: {'articleId': article.id},
-                      );
-                    },
-                    child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: FutureBuilder(
-                        future: useWhiteTextColor(
-                            CachedNetworkImageProvider(article.imageUrl)),
-                        builder: (BuildContext context,
-                            AsyncSnapshot<bool> snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          } else {
-                            if (snapshot.error != null) {
+                child: Material(
+                  elevation: 6.0,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: backgroundImage, fit: BoxFit.cover),
+                    ),
+                    child: FlatButton(
+                      onPressed: () {
+                        Navigator.of(context).pushNamed(
+                          ArticleScreen.routeName,
+                          arguments: {'articleId': article.id},
+                        );
+                      },
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: FutureBuilder(
+                          future: useWhiteTextColor(
+                              CachedNetworkImageProvider(article.imageUrl)),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<bool> snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
                               return Center(
-                                child: Text('An error occurred!'),
+                                child: CircularProgressIndicator(),
                               );
                             } else {
-                              textColor =
-                                  snapshot.data ? Colors.white : Colors.black;
-                              return Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    article.title ?? "",
-                                    maxLines: 3,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                        fontFamily: "Jinling",
-                                        color: textColor,
-                                        fontSize: 16),
-                                  ),
-                                  Divider(
-                                    color: textColor,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      article.icon == null ||
-                                              article.icon.isEmpty
-                                          ? Icon(
-                                              Icons.album,
-                                              color: textColor,
-                                            )
-                                          : CircleAvatar(
-                                              radius: 10,
-                                              backgroundImage:
-                                                  CachedNetworkImageProvider(
-                                                      article.icon),
-                                              backgroundColor:
-                                                  Colors.transparent,
-                                            ),
-                                      SizedBox(width: 5.0),
-                                      Expanded(
-                                        child: Text(
-                                          article.authorName ?? "匿名",
-                                          style: TextStyle(
-                                              fontFamily: "LantingXianHei",
-                                              color: textColor,
-                                              fontSize: 12),
+                              if (snapshot.error != null) {
+                                return Center(
+                                  child: Text('An error occurred!'),
+                                );
+                              } else {
+                                textColor =
+                                    snapshot.data ? Colors.white : Colors.black;
+                                return Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      article.title ?? "",
+                                      maxLines: 3,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                          fontFamily: "Jinling",
+                                          color: textColor,
+                                          fontSize: 16),
+                                    ),
+                                    Divider(
+                                      color: textColor,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        article.icon == null ||
+                                                article.icon.isEmpty
+                                            ? Icon(
+                                                Icons.album,
+                                                color: textColor,
+                                              )
+                                            : CircleAvatar(
+                                                radius: 10,
+                                                backgroundImage:
+                                                    CachedNetworkImageProvider(
+                                                        article.icon),
+                                                backgroundColor:
+                                                    Colors.transparent,
+                                              ),
+                                        SizedBox(width: 5.0),
+                                        Expanded(
+                                          child: Text(
+                                            article.authorName ?? "匿名",
+                                            style: TextStyle(
+                                                fontFamily: "LantingXianHei",
+                                                color: textColor,
+                                                fontSize: 12),
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 4.0),
-                                ],
-                              );
+                                      ],
+                                    ),
+                                    SizedBox(height: 4.0),
+                                  ],
+                                );
+                              }
                             }
-                          }
-                        },
+                          },
+                        ),
                       ),
                     ),
                   ),

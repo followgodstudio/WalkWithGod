@@ -20,6 +20,7 @@ class NetworkScreen extends StatelessWidget {
         Provider.of<ProfileProvider>(context, listen: false);
     return Scaffold(
         appBar: AppBar(
+          elevation: 0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back_ios),
             color: Theme.of(context).textTheme.buttonColor2,
@@ -169,37 +170,43 @@ class ReadStatus extends StatelessWidget {
               (!profile.settingProvider.hideRecentRead &&
                   (friend.friendStatus == eFriendStatusFollowing ||
                       friend.friendStatus == eFriendStatusFriend));
-          return Column(children: [
-            if (showRecentRead)
-              Text("最近一周阅读", style: Theme.of(context).textTheme.captionMedium1),
-            SizedBox(height: 8.0),
-            if (showRecentRead)
-              Text(
-                  "共" +
-                      profile.recentReadProvider.readsCount.toString() +
-                      "篇文章",
-                  style: Theme.of(context).textTheme.captionMain),
-            if (showRecentRead && profile.recentReadProvider.readsCount > 0)
-              Container(
-                  height: 200,
-                  child: NotificationListener<ScrollNotification>(
-                    onNotification: (ScrollNotification scrollInfo) {
-                      if (scrollInfo.metrics.pixels ==
-                          scrollInfo.metrics.maxScrollExtent) {
-                        profile.recentReadProvider.fetchMoreRecentRead();
-                      }
-                      return true;
-                    },
-                    child: Consumer<RecentReadProvider>(
-                        builder: (context, value, child) => ListView(children: [
-                              ...value.recentRead
-                                  .map((e) => ArticleCard(e, 4 / 5))
-                                  .toList(),
-                              if (!value.noMoreRecentRead)
-                                Center(child: Icon(Icons.more_horiz))
-                            ], scrollDirection: Axis.horizontal)),
-                  ))
-          ]);
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 15.0),
+            child: Column(children: [
+              if (showRecentRead)
+                Text("最近一周阅读",
+                    style: Theme.of(context).textTheme.captionMedium1),
+              SizedBox(height: 8.0),
+              if (showRecentRead)
+                Text(
+                    "共" +
+                        profile.recentReadProvider.readsCount.toString() +
+                        "篇文章",
+                    style: Theme.of(context).textTheme.captionMain),
+              if (showRecentRead && profile.recentReadProvider.readsCount > 0)
+                Container(
+                    height: 200,
+                    child: NotificationListener<ScrollNotification>(
+                      onNotification: (ScrollNotification scrollInfo) {
+                        if (scrollInfo.metrics.pixels ==
+                            scrollInfo.metrics.maxScrollExtent) {
+                          profile.recentReadProvider.fetchMoreRecentRead();
+                        }
+                        return true;
+                      },
+                      child: Consumer<RecentReadProvider>(
+                          builder: (context, value, child) =>
+                              ListView(children: [
+                                ...value.recentRead
+                                    .map((e) => ArticleCard(e, 4 / 5))
+                                    .toList(),
+                                if (!value.noMoreRecentRead &&
+                                    value.recentRead.length != 0)
+                                  Center(child: Icon(Icons.more_horiz))
+                              ], scrollDirection: Axis.horizontal)),
+                    ))
+            ]),
+          );
         })
       ],
     );

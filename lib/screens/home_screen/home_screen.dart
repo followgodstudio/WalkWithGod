@@ -119,7 +119,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             valueListenable: formattedDate,
                             builder: (context, String value, child) => Text(
                               value,
-                              style: Theme.of(context).textTheme.captionMain,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .captionMainWideSpacing,
                             ),
                           ),
                         ],

@@ -16,7 +16,8 @@ class EditProfileScreen extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text('编辑个人资料', style: Theme.of(context).textTheme.headline2),
+          title:
+              Text('编辑个人资料', style: Theme.of(context).textTheme.captionMedium2),
           elevation: 0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back_ios),
@@ -51,7 +52,7 @@ class EditProfileScreen extends StatelessWidget {
                   ],
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5.0),
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
                   child: Divider(),
                 ),
                 Row(
@@ -75,7 +76,7 @@ class EditProfileScreen extends StatelessWidget {
                   ],
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5.0),
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
                   child: Divider(),
                 ),
                 FlatButton(
