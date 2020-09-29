@@ -52,7 +52,7 @@ class EditProfileScreen extends StatelessWidget {
                   ],
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5.0),
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
                   child: Divider(),
                 ),
                 Row(
@@ -76,7 +76,7 @@ class EditProfileScreen extends StatelessWidget {
                   ],
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5.0),
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
                   child: Divider(),
                 ),
                 FlatButton(
