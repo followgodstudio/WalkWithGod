@@ -53,7 +53,8 @@ class FriendsProvider with ChangeNotifier {
     } else {
       _following = [];
     }
-    print("FriendsProvider-fetchFriendList");
+    print("FriendsProvider-fetchFriendList-" +
+        (isFollower ? "follower" : "following"));
     QuerySnapshot query = await _db
         .collection(cUsers)
         .doc(_userId)

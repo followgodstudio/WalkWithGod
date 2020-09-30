@@ -10,29 +10,28 @@ class SplashProvider with ChangeNotifier {
   String content;
 
   Future<void> fetchSplashScreensData() async {
-    print("SplashScreen-fetchSplashScreensData");
+    print("SplashProvider-fetchSplashScreensData");
     var splashRefs = _fdb.collection(cSplashScreen);
     var random = _fdb.collection(cSplashScreen).doc().id;
     Map<String, dynamic> data;
-    await splashRefs
+    QuerySnapshot snapshot = await splashRefs
         .where(FieldPath.documentId, isGreaterThanOrEqualTo: random)
         .limit(1)
-        .get()
-        .then((snapshot) async {
-      if (snapshot.size > 0) {
-        data = snapshot.docs.first.data();
-      } else {
-        await splashRefs
-            .where(FieldPath.documentId, isLessThan: random)
-            .limit(1)
-            .get()
-            .then((value) {
-          data = value.docs.first.data();
-        });
-      }
-      imageUrl = data[fSplashScreenImageUrl];
-      author = data[fSplashScreenAuthor];
-      content = data[fSplashScreenContent];
-    });
+        .get();
+    if (snapshot.size > 0) {
+      data = snapshot.docs.first.data();
+    } else {
+      await splashRefs
+          .where(FieldPath.documentId, isLessThan: random)
+          .limit(1)
+          .get()
+          .then((value) {
+        data = value.docs.first.data();
+      });
+    }
+    imageUrl = data[fSplashScreenImageUrl];
+    author = data[fSplashScreenAuthor];
+    content = data[fSplashScreenContent];
+    notifyListeners();
   }
 }
