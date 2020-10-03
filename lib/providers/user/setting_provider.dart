@@ -3,15 +3,15 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:logging/logging.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:wakelock/wakelock.dart';
 
 import '../../configurations/constants.dart';
+import '../../utils/my_logger.dart';
 
 class SettingProvider with ChangeNotifier {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
-  Logger _logger = Logger("Provider");
+  MyLogger _logger = MyLogger("Provider");
   String _userId;
   bool keepScreenAwake = false;
   bool hideRecentRead = false;
@@ -30,7 +30,7 @@ class SettingProvider with ChangeNotifier {
   }
 
   Future<void> fetchAboutUs() async {
-    _logger.info("SettingProvider-fetchAboutUs");
+    _logger.i("SettingProvider-fetchAboutUs");
     DocumentSnapshot doc =
         await _db.collection(cAppInfo).doc(dAppInfoAboutUs).get();
     ourMission = doc.get(fAppInfoOurMission);
@@ -38,7 +38,7 @@ class SettingProvider with ChangeNotifier {
   }
 
   Future<void> fetchNewestVersion() async {
-    _logger.info("SettingProvider-fetchNewestVersion");
+    _logger.i("SettingProvider-fetchNewestVersion");
     DocumentSnapshot doc =
         await _db.collection(cAppInfo).doc(dAppInfoVersion).get();
     newestVersion = doc.get(fAppInfoNewestVersion);
@@ -76,7 +76,7 @@ class SettingProvider with ChangeNotifier {
     bool newRejectStrangerMessage,
     bool newFollowingNotification,
   }) async {
-    _logger.info("SettingProvider-updateSetting");
+    _logger.i("SettingProvider-updateSetting");
     Map<String, dynamic> data = {};
     if (newKeepScreenAwake != null) {
       keepScreenAwake = data[fSettingScreenAwake] = newKeepScreenAwake;

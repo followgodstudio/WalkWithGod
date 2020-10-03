@@ -1,15 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:logging/logging.dart';
 
 import '../../configurations/constants.dart';
+import '../../utils/my_logger.dart';
 import '../article/article_provider.dart';
 import '../article/articles_provider.dart';
 
 class RecentReadProvider with ChangeNotifier {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
-  Logger _logger = Logger("Provider");
+  MyLogger _logger = MyLogger("Provider");
   String _userId;
   int readsCount = 0;
   int readDuration = 0;
@@ -26,7 +26,7 @@ class RecentReadProvider with ChangeNotifier {
 
   Future<void> fetchRecentRead() async {
     if (readsCount == 0) return;
-    _logger.info("RecentReadProvider-fetchRecentRead");
+    _logger.i("RecentReadProvider-fetchRecentRead");
     QuerySnapshot query = await _db
         .collection(cUsers)
         .doc(_userId)
@@ -46,7 +46,7 @@ class RecentReadProvider with ChangeNotifier {
 
   Future<void> fetchMoreRecentRead() async {
     if (readsCount == 0 || noMoreRecentRead || _isFetchingRecentRead) return;
-    _logger.info("RecentReadProvider-fetchMoreRecentRead");
+    _logger.i("RecentReadProvider-fetchMoreRecentRead");
     _isFetchingRecentRead = true;
     await _appendRecentReadList();
     _isFetchingRecentRead = false;
@@ -55,7 +55,7 @@ class RecentReadProvider with ChangeNotifier {
   Future<void> updateRecentReadByArticleId(
       ArticleProvider articleProvider) async {
     if (_isUpdatingRecentRead || _userId == null || _userId.isEmpty) return;
-    _logger.info("RecentReadProvider-updateRecentReadByArticleId");
+    _logger.i("RecentReadProvider-updateRecentReadByArticleId");
     _isUpdatingRecentRead = true;
 
     // update local variables
@@ -95,7 +95,7 @@ class RecentReadProvider with ChangeNotifier {
 
   Future<void> updateReadDuration(DateTime start) async {
     if (_userId == null || _userId.isEmpty) return;
-    _logger.info("RecentReadProvider-updateReadDuration");
+    _logger.i("RecentReadProvider-updateReadDuration");
     int timeDiffInSecond = DateTime.now().difference(start).inSeconds;
     await _db
         .collection(cUsers)

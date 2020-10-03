@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
-import 'package:logging/logging.dart';
 
 import '../../configurations/constants.dart';
+import '../../utils/my_logger.dart';
 import '../user/messages_provider.dart';
 
 class CommentProvider with ChangeNotifier {
-  Logger _logger = Logger("Provider");
+  MyLogger _logger = MyLogger("Provider");
   final String id;
   final String articleId;
   final String content;
@@ -52,7 +52,7 @@ class CommentProvider with ChangeNotifier {
       [int limit = loadLimit]) async {
     // level 1 comment will call this method
     if (parent != null) return;
-    _logger.info("CommentProvider-fetchLevel2ChildrenCommentList");
+    _logger.i("CommentProvider-fetchLevel2ChildrenCommentList");
     QuerySnapshot query = await _db
         .collection(cArticles)
         .doc(articleId)
@@ -70,7 +70,7 @@ class CommentProvider with ChangeNotifier {
       [int limit = loadLimit]) async {
     // level 1 comment will call this method
     if (parent != null || _noMoreChild || _isFetching) return;
-    _logger.info("CommentProvider-fetchMoreLevel2ChildrenComments");
+    _logger.i("CommentProvider-fetchMoreLevel2ChildrenComments");
     _isFetching = true;
     QuerySnapshot query = await _db
         .collection(cArticles)
@@ -94,7 +94,7 @@ class CommentProvider with ChangeNotifier {
 
     // Add user to like list
     if (parent == null) {
-      _logger.info("CommentProvider-addLike");
+      _logger.i("CommentProvider-addLike");
       // Level 1
       WriteBatch batch = _db.batch();
       // Add a document
@@ -143,7 +143,7 @@ class CommentProvider with ChangeNotifier {
 
     // Remove user from like list
     if (parent == null) {
-      _logger.info("CommentProvider-cancelLike");
+      _logger.i("CommentProvider-cancelLike");
       // Level 1
       WriteBatch batch = _db.batch();
       // Remove a document
@@ -181,7 +181,7 @@ class CommentProvider with ChangeNotifier {
 
   Future<void> addLevel2Comment(String l2content, String l2creatorUid,
       String l2creatorName, String l2creatorImage, bool isL3Comment) async {
-    _logger.info("CommentProvider-addLevel2Comment");
+    _logger.i("CommentProvider-addLevel2Comment");
     Map<String, dynamic> comment = {};
     comment[fCommentArticleId] = articleId;
     comment[fCommentContent] = l2content;

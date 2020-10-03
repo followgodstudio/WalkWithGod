@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
-import 'package:logging/logging.dart';
 
 import '../../configurations/constants.dart';
+import '../../utils/my_logger.dart';
 import 'article_provider.dart';
 
 class ArticlesProvider with ChangeNotifier {
   var _fdb = FirebaseFirestore.instance;
-  Logger _logger = Logger("Provider");
+  MyLogger _logger = MyLogger("Provider");
   DocumentSnapshot _lastVisibleChild;
   bool _noMoreChild = false;
   bool _isFetching = false;
@@ -19,7 +19,7 @@ class ArticlesProvider with ChangeNotifier {
   }
 
   static Future<List<ArticleProvider>> fetchList(List<String> aids) async {
-    Logger("Provider").info("ArticlesProvider-fetchList");
+    MyLogger("Provider").i("ArticlesProvider-fetchList");
     QuerySnapshot query = await FirebaseFirestore.instance
         .collection(cArticles)
         .where(FieldPath.documentId, whereIn: aids)
@@ -35,7 +35,7 @@ class ArticlesProvider with ChangeNotifier {
       [DateTime dateTime,
       int n = loadLimit,
       bool isContentNeeded = false]) async {
-    _logger.info("ArticlesProvider-fetchArticlesByDate");
+    _logger.i("ArticlesProvider-fetchArticlesByDate");
     if (dateTime == null) dateTime = DateTime.now();
 
     QuerySnapshot query = await _fdb
@@ -53,7 +53,7 @@ class ArticlesProvider with ChangeNotifier {
       int n = loadLimit,
       bool isContentNeeded = false]) async {
     if (_noMoreChild || _isFetching) return;
-    _logger.info("ArticlesProvider-fetchMoreArticles");
+    _logger.i("ArticlesProvider-fetchMoreArticles");
     _isFetching = true;
     if (dateTime == null) dateTime = DateTime.now();
 
@@ -80,7 +80,7 @@ class ArticlesProvider with ChangeNotifier {
   }
 
   static Future<ArticleProvider> fetchArticlePreviewById(String aid) async {
-    Logger("Provider").info("ArticlesProvider-fetchArticlePreviewById");
+    MyLogger("Provider").i("ArticlesProvider-fetchArticlePreviewById");
     DocumentSnapshot data =
         await FirebaseFirestore.instance.collection(cArticles).doc(aid).get();
     return buildArticleByMap(data.id, data.data());

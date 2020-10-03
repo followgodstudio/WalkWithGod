@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
 import '../../configurations/theme.dart';
@@ -8,6 +7,7 @@ import '../../providers/article/articles_provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/user/profile_provider.dart';
 import '../../screens/personal_management_screen/personal_management_screen.dart';
+import '../../utils/my_logger.dart';
 import '../../widgets/profile_picture.dart';
 import 'article/article_list.dart';
 
@@ -71,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Logger("Widget").info("HomeScreen");
+    MyLogger("Widget").i("HomeScreen");
     String uid = Provider.of<AuthProvider>(context, listen: false).currentUser;
     Provider.of<ProfileProvider>(context, listen: false).fetchAllUserData(uid);
     return Scaffold(

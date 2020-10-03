@@ -1,18 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
-import 'package:logging/logging.dart';
 
 import '../configurations/constants.dart';
+import '../utils/my_logger.dart';
 
 class SplashProvider with ChangeNotifier {
   var _fdb = FirebaseFirestore.instance;
-  Logger _logger = Logger("Provider");
+  MyLogger _logger = MyLogger("Provider");
   String imageUrl;
   String author;
   String content;
 
   Future<void> fetchSplashScreensData() async {
-    _logger.info("SplashProvider-fetchSplashScreensData");
+    _logger.i("SplashProvider-fetchSplashScreensData");
     var splashRefs = _fdb.collection(cSplashScreen);
     var random = _fdb.collection(cSplashScreen).doc().id;
     Map<String, dynamic> data;

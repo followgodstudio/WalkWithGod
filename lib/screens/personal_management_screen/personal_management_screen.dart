@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
 import '../../configurations/constants.dart';
@@ -8,6 +7,7 @@ import '../../providers/auth_provider.dart';
 import '../../providers/user/friends_provider.dart';
 import '../../providers/user/profile_provider.dart';
 import '../../providers/user/saved_articles_provider.dart';
+import '../../utils/my_logger.dart';
 import '../../widgets/article_card_small.dart';
 import '../../widgets/popup_dialog.dart';
 import '../auth_screen/signup_screen.dart';
@@ -23,7 +23,7 @@ class PersonalManagementScreen extends StatelessWidget {
   static const routeName = '/personal_management';
   @override
   Widget build(BuildContext context) {
-    Logger("Widget").info("PersonalManagementScreen");
+    MyLogger("Widget").i("PersonalManagementScreen");
     String uid = Provider.of<AuthProvider>(context, listen: false).currentUser;
     bool isLoggedIn = (uid != null);
     return Scaffold(

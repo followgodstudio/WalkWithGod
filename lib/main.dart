@@ -3,8 +3,7 @@ import 'dart:async';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:logging/logging.dart';
+import 'package:logger_flutter/logger_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'configurations/theme.dart';
@@ -38,6 +37,7 @@ import 'screens/personal_management_screen/setting/notification_screen.dart';
 import 'screens/personal_management_screen/setting/privacy_screen.dart';
 import 'screens/personal_management_screen/setting/setting_screen.dart';
 import 'screens/splash_screen.dart';
+import 'utils/my_logger.dart';
 import 'widgets/popup_dialog.dart';
 
 void main() async {
@@ -50,8 +50,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    setLogger();
-    Logger("Widget").info("MyApp");
+    MyLogger("Widget").i("MyApp");
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(
@@ -174,18 +173,6 @@ class _LifeCycleManagerState extends State<LifeCycleManager>
   }
 }
 
-void setLogger() {
-  Logger.root.level = Level.INFO;
-  // hierarchicalLoggingEnabled = true;
-  // Logger("Widget").level = Level.SEVERE;
-  Logger.root.onRecord.listen((record) {
-    print("[${record.level.name}] " +
-        DateFormat('hh:mm:ss ').format(record.time) +
-        record.loggerName +
-        " ${record.message}");
-  });
-}
-
 // To monitor whether network is available
 class NetworkManager extends StatefulWidget {
   final Widget child;
@@ -225,6 +212,6 @@ class _NetworkManagerState extends State<NetworkManager> {
 
   @override
   Widget build(BuildContext context) {
-    return widget.child;
+    return LogConsoleOnShake(child: widget.child);
   }
 }

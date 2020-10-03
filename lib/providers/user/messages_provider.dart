@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
-import 'package:logging/logging.dart';
 
 import '../../configurations/constants.dart';
+import '../../utils/my_logger.dart';
 import 'message_provider.dart';
 
 class MessagesProvider with ChangeNotifier {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
-  Logger _logger = Logger("Provider");
+  MyLogger _logger = MyLogger("Provider");
   String _userId;
   int messagesCount = 0;
   int unreadMessagesCount = 0;
@@ -35,7 +35,7 @@ class MessagesProvider with ChangeNotifier {
   Future<void> fetchMessageList(int newMessageCount,
       [int limit = loadLimit]) async {
     if (newMessageCount == messagesCount) return; // do not need to refresh
-    _logger.info("MessagesProvider-fetchMessageList");
+    _logger.i("MessagesProvider-fetchMessageList");
     QuerySnapshot query = await _db
         .collection(cUsers)
         .doc(_userId)
@@ -49,7 +49,7 @@ class MessagesProvider with ChangeNotifier {
 
   Future<void> fetchMoreMessages([int limit = loadLimit]) async {
     if (_userId == null || _isFetching) return;
-    _logger.info("MessagesProvider-fetchMoreMessages");
+    _logger.i("MessagesProvider-fetchMoreMessages");
     _isFetching = true;
     QuerySnapshot query = await _db
         .collection(cUsers)
@@ -72,7 +72,7 @@ class MessagesProvider with ChangeNotifier {
       String receiverUid,
       String articleId,
       String commentId) async {
-    Logger("Provider").info("MessagesProvider-sendMessage");
+    MyLogger("Provider").i("MessagesProvider-sendMessage");
     Map<String, dynamic> data = {};
     data[fMessageType] = type;
     data[fMessageSenderUid] = senderUid;

@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
-import 'package:logging/logging.dart';
 import 'package:palette_generator/palette_generator.dart';
+
+import 'my_logger.dart';
 
 String getCreatedDuration(DateTime createdDate) {
   int timeDiffInMins = DateTime.now().toUtc().difference(createdDate).inMinutes;
@@ -59,7 +60,7 @@ Future<bool> useWhiteTextColor(ImageProvider image) async {
   // Here's the problem
   // Sometimes dominantColor returns null
   // With black and white background colors in my tests
-  if (dominantColor == null) Logger("Widget").info('Dominant Color null');
+  if (dominantColor == null) MyLogger("Widget").i('Dominant Color null');
 
   return useWhiteForeground(dominantColor);
 }

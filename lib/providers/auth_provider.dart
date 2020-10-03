@@ -3,16 +3,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:logging/logging.dart';
 
 import '../screens/home_screen/home_screen.dart';
+import '../utils/my_logger.dart';
 import 'user/profile_provider.dart';
 
 enum AuthMode { signInWithEmail, createUserWithEmail }
 
 class AuthProvider with ChangeNotifier {
   FirebaseAuth _auth = FirebaseAuth.instance;
-  Logger _logger = Logger("Provider");
+  MyLogger _logger = MyLogger("Provider");
   String _userId;
   final GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: <String>[
@@ -98,7 +98,7 @@ class AuthProvider with ChangeNotifier {
     try {
       account = await _googleSignIn.signIn();
     } catch (error) {
-      _logger.severe(error);
+      _logger.e(error);
     }
 
     final GoogleSignInAuthentication _googleAuth = await account.authentication;
@@ -144,11 +144,11 @@ class AuthProvider with ChangeNotifier {
         break;
 
       case AuthorizationStatus.error:
-        _logger.severe("Sign In Failed ${result.error.localizedDescription}");
+        _logger.e("Sign In Failed ${result.error.localizedDescription}");
         break;
 
       case AuthorizationStatus.cancelled:
-        _logger.info("User Cancled");
+        _logger.i("User Cancled");
         break;
     }
   }
@@ -174,7 +174,7 @@ class AuthProvider with ChangeNotifier {
             Navigator.push(
                 context, MaterialPageRoute(builder: (context) => HomeScreen()));
           } else {
-            _logger.severe("Error");
+            _logger.e("Error");
           }
         },
         verificationFailed: (FirebaseAuthException exception) {
@@ -182,7 +182,7 @@ class AuthProvider with ChangeNotifier {
         },
         codeSent: (String verificationId, [int forceResendingToken]) {
           final _codeController = TextEditingController();
-          _logger.info(verificationId);
+          _logger.i(verificationId);
           showDialog(
             context: context,
             barrierDismissible: false,

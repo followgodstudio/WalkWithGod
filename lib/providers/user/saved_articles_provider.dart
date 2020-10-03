@@ -1,14 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
-import 'package:logging/logging.dart';
 
 import '../../configurations/constants.dart';
+import '../../utils/my_logger.dart';
 import '../article/article_provider.dart';
 import '../article/articles_provider.dart';
 
 class SavedArticlesProvider with ChangeNotifier {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
-  Logger _logger = Logger("Provider");
+  MyLogger _logger = MyLogger("Provider");
   String _userId;
   int savedArticlesCount = 0;
   List<ArticleProvider> _articles = [];
@@ -39,7 +39,7 @@ class SavedArticlesProvider with ChangeNotifier {
 
   Future<void> fetchSavedList([int limit = loadLimit]) async {
     if (_isFetching) return;
-    _logger.info("SavedArticlesProvider-fetchSavedList");
+    _logger.i("SavedArticlesProvider-fetchSavedList");
     _isFetching = true;
     QuerySnapshot query = await _db
         .collection(cUsers)
@@ -57,7 +57,7 @@ class SavedArticlesProvider with ChangeNotifier {
 
   Future<void> fetchMoreSavedArticles([int limit = loadLimit]) async {
     if (_userId == null || _noMore || _isFetching) return;
-    _logger.info("SavedArticlesProvider-fetchMoreSavedArticles");
+    _logger.i("SavedArticlesProvider-fetchMoreSavedArticles");
     _isFetching = true;
     QuerySnapshot query = await _db
         .collection(cUsers)
@@ -80,7 +80,7 @@ class SavedArticlesProvider with ChangeNotifier {
     if (article != null) {
       _currentLike = true;
     } else {
-      _logger.info("SavedArticlesProvider-fetchSavedStatusByArticleId");
+      _logger.i("SavedArticlesProvider-fetchSavedStatusByArticleId");
       DocumentSnapshot doc = await _db
           .collection(cUsers)
           .doc(_userId)
@@ -93,7 +93,7 @@ class SavedArticlesProvider with ChangeNotifier {
   }
 
   Future<void> removeSavedByArticleId(String articleId) async {
-    _logger.info("SavedArticlesProvider-removeSavedByArticleId");
+    _logger.i("SavedArticlesProvider-removeSavedByArticleId");
     _articles.removeWhere((item) => item.id == articleId);
     savedArticlesCount = _articles.length;
     _currentLike = false;
@@ -116,7 +116,7 @@ class SavedArticlesProvider with ChangeNotifier {
   }
 
   Future<void> addSavedByArticleId(String articleId) async {
-    _logger.info("SavedArticlesProvider-addSavedByArticleId");
+    _logger.i("SavedArticlesProvider-addSavedByArticleId");
     _currentLike = true;
     // Get article info
     ArticleProvider article =

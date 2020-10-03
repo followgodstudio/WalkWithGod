@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
 import '../configurations/theme.dart';
@@ -10,6 +9,7 @@ import '../providers/article/articles_provider.dart';
 import '../providers/auth_provider.dart';
 import '../providers/splash_provider.dart';
 import '../providers/user/profile_provider.dart';
+import '../utils/my_logger.dart';
 import 'home_screen/home_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -40,7 +40,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Logger("Widget").info("SplashScreen");
+    MyLogger("Widget").i("SplashScreen");
     AuthProvider auth = Provider.of<AuthProvider>(context, listen: true);
     return StreamBuilder<String>(
         stream: auth.onAuthStateChanged,
@@ -50,8 +50,8 @@ class _SplashScreenState extends State<SplashScreen> {
           if (_userId != auth.currentUser) {
             // Stream will be updated twice, this is to avoid fetch twice
             _userId = auth.currentUser;
-            Logger("Widget")
-                .info("User ID: " + (_userId == null ? "Anonymous" : _userId));
+            MyLogger("Widget")
+                .i("User ID: " + (_userId == null ? "Anonymous" : _userId));
             Provider.of<SplashProvider>(context, listen: false)
                 .fetchSplashScreensData();
             Provider.of<ProfileProvider>(context, listen: false)

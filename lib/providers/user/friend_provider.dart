@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
-import 'package:logging/logging.dart';
 
 import '../../configurations/constants.dart';
+import '../../utils/my_logger.dart';
 
 class FriendProvider with ChangeNotifier {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
-  Logger _logger = Logger("Provider");
+  MyLogger _logger = MyLogger("Provider");
   final String friendUid;
   final String friendName;
   final String friendImageUrl;
@@ -21,7 +21,7 @@ class FriendProvider with ChangeNotifier {
 
   // will be called by friends_provider
   Future<void> follow(String userId, String name, String imageUrl) async {
-    _logger.info("FriendProvider-follow");
+    _logger.i("FriendProvider-follow");
     if (friendStatus == eFriendStatusFollowing ||
         friendStatus == eFriendStatusFriend) return;
     DateTime followingDate = DateTime.now();
@@ -69,7 +69,7 @@ class FriendProvider with ChangeNotifier {
   }
 
   Future<void> unfollow(String userId, String name, String imageUrl) async {
-    _logger.info("FriendProvider-unfollow");
+    _logger.i("FriendProvider-unfollow");
     if (friendStatus != eFriendStatusFollowing &&
         friendStatus != eFriendStatusFriend) return;
     friendStatus =

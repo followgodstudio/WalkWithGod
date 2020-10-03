@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
-import 'package:logging/logging.dart';
 
 import '../../configurations/constants.dart';
+import '../../utils/my_logger.dart';
 import 'articles_provider.dart';
 
 class Paragraph {
@@ -17,7 +17,7 @@ class Paragraph {
 
 class ArticleProvider with ChangeNotifier {
   var _fdb = FirebaseFirestore.instance;
-  Logger _logger = Logger("Provider");
+  MyLogger _logger = MyLogger("Provider");
   final String id;
   final String imageUrl;
   final String title;
@@ -49,7 +49,7 @@ class ArticleProvider with ChangeNotifier {
 
   Future<void> fetchSimilarArticles([limit = loadLimit]) async {
     if (isFetchedSimilarArticles) return;
-    _logger.info("ArticleProvider-fetchSimilarArticles");
+    _logger.i("ArticleProvider-fetchSimilarArticles");
     isFetchedSimilarArticles = true;
     // Find articles of this author
     QuerySnapshot query = await _fdb
@@ -69,7 +69,7 @@ class ArticleProvider with ChangeNotifier {
 
   Future<void> fetchArticleContent() async {
     if (content.isNotEmpty) return;
-    _logger.info("ArticleProvider-fetchArticleContent");
+    _logger.i("ArticleProvider-fetchArticleContent");
     QuerySnapshot querySnapshot = await _fdb
         .collection(cArticles)
         .doc(id)

@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:logging/logging.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:provider/provider.dart';
 
 import '../../../providers/article/articles_provider.dart';
+import '../../../utils/my_logger.dart';
 import 'article_card.dart';
 
 class ArticleList extends StatefulWidget {
@@ -36,7 +36,7 @@ class _ArticleListState extends State<ArticleList> {
     // Here's the problem
     // Sometimes dominantColor returns null
     // With black and white background colors in my tests
-    if (dominantColor == null) Logger("Widget").info('Dominant Color null');
+    if (dominantColor == null) MyLogger("Widget").i('Dominant Color null');
 
     return useWhiteForeground(dominantColor);
   }
