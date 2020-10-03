@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
+import 'package:logging/logging.dart';
 
 import '../../configurations/constants.dart';
 import 'article_provider.dart';
 
 class ArticlesProvider with ChangeNotifier {
   var _fdb = FirebaseFirestore.instance;
+  Logger _logger = Logger("Provider");
   DocumentSnapshot _lastVisibleChild;
   bool _noMoreChild = false;
   bool _isFetching = false;
@@ -17,7 +19,7 @@ class ArticlesProvider with ChangeNotifier {
   }
 
   static Future<List<ArticleProvider>> fetchList(List<String> aids) async {
-    print("ArticlesProvider-fetchList");
+    Logger("Provider").info("ArticlesProvider-fetchList");
     QuerySnapshot query = await FirebaseFirestore.instance
         .collection(cArticles)
         .where(FieldPath.documentId, whereIn: aids)
@@ -33,7 +35,7 @@ class ArticlesProvider with ChangeNotifier {
       [DateTime dateTime,
       int n = loadLimit,
       bool isContentNeeded = false]) async {
-    print("ArticlesProvider-fetchArticlesByDate");
+    _logger.info("ArticlesProvider-fetchArticlesByDate");
     if (dateTime == null) dateTime = DateTime.now();
 
     QuerySnapshot query = await _fdb
@@ -51,7 +53,7 @@ class ArticlesProvider with ChangeNotifier {
       int n = loadLimit,
       bool isContentNeeded = false]) async {
     if (_noMoreChild || _isFetching) return;
-    print("ArticlesProvider-fetchMoreArticles");
+    _logger.info("ArticlesProvider-fetchMoreArticles");
     _isFetching = true;
     if (dateTime == null) dateTime = DateTime.now();
 
@@ -78,7 +80,7 @@ class ArticlesProvider with ChangeNotifier {
   }
 
   static Future<ArticleProvider> fetchArticlePreviewById(String aid) async {
-    print("ArticlesProvider-fetchArticlePreviewById");
+    Logger("Provider").info("ArticlesProvider-fetchArticlePreviewById");
     DocumentSnapshot data =
         await FirebaseFirestore.instance.collection(cArticles).doc(aid).get();
     return buildArticleByMap(data.id, data.data());

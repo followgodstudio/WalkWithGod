@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:logging/logging.dart';
 
 import '../screens/home_screen/home_screen.dart';
 import 'user/profile_provider.dart';
@@ -11,6 +12,7 @@ enum AuthMode { signInWithEmail, createUserWithEmail }
 
 class AuthProvider with ChangeNotifier {
   FirebaseAuth _auth = FirebaseAuth.instance;
+  Logger _logger = Logger("Provider");
   String _userId;
   final GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: <String>[
@@ -96,7 +98,7 @@ class AuthProvider with ChangeNotifier {
     try {
       account = await _googleSignIn.signIn();
     } catch (error) {
-      print(error);
+      _logger.severe(error);
     }
 
     final GoogleSignInAuthentication _googleAuth = await account.authentication;
@@ -142,11 +144,11 @@ class AuthProvider with ChangeNotifier {
         break;
 
       case AuthorizationStatus.error:
-        print("Sign In Failed ${result.error.localizedDescription}");
+        _logger.severe("Sign In Failed ${result.error.localizedDescription}");
         break;
 
       case AuthorizationStatus.cancelled:
-        print("User Cancled");
+        _logger.info("User Cancled");
         break;
     }
   }
@@ -172,7 +174,7 @@ class AuthProvider with ChangeNotifier {
             Navigator.push(
                 context, MaterialPageRoute(builder: (context) => HomeScreen()));
           } else {
-            print("Error");
+            _logger.severe("Error");
           }
         },
         verificationFailed: (FirebaseAuthException exception) {
@@ -180,7 +182,7 @@ class AuthProvider with ChangeNotifier {
         },
         codeSent: (String verificationId, [int forceResendingToken]) {
           final _codeController = TextEditingController();
-          print(verificationId);
+          _logger.info(verificationId);
           showDialog(
             context: context,
             barrierDismissible: false,

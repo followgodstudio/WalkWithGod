@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
+import 'package:logging/logging.dart';
 
 import '../../configurations/constants.dart';
 import 'comment_provider.dart';
 
 class CommentsProvider with ChangeNotifier {
+  Logger _logger = Logger("Provider");
   List<CommentProvider> _items = [];
   String _articleId;
   DocumentSnapshot _lastVisible;
@@ -28,7 +30,7 @@ class CommentsProvider with ChangeNotifier {
       return null;
     });
     if (commentProvider != null) return commentProvider;
-    print("CommentsProvider-fetchLevel1CommentByCommentId");
+    _logger.info("CommentsProvider-fetchLevel1CommentByCommentId");
     DocumentSnapshot doc = await _db
         .collection(cArticles)
         .doc(articleId)
@@ -43,7 +45,7 @@ class CommentsProvider with ChangeNotifier {
   Future<void> fetchLevel1CommentListByArticleId(
       String articleId, String userId,
       [int limit = loadLimit]) async {
-    print("CommentsProvider-fetchLevel1CommentListByArticleId");
+    _logger.info("CommentsProvider-fetchLevel1CommentListByArticleId");
     // Clear data
     _items = [];
     _lastVisible = null;
@@ -65,7 +67,7 @@ class CommentsProvider with ChangeNotifier {
   Future<void> fetchMoreLevel1Comments(String userId,
       [int limit = loadLimit]) async {
     if (_articleId == null || _noMore || _isFetching) return;
-    print("CommentsProvider-fetchMoreLevel1Comments");
+    _logger.info("CommentsProvider-fetchMoreLevel1Comments");
     _isFetching = true;
     QuerySnapshot query = await _db
         .collection(cArticles)
@@ -80,7 +82,7 @@ class CommentsProvider with ChangeNotifier {
 
   Future<void> addLevel1Comment(String articleId, String content,
       String creatorUid, String creatorName, String creatorImage) async {
-    print("CommentsProvider-addLevel1Comment");
+    _logger.info("CommentsProvider-addLevel1Comment");
     Map<String, dynamic> comment = {};
     comment[fCommentArticleId] = articleId;
     comment[fCommentContent] = content;

@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
 import 'configurations/theme.dart';
@@ -48,7 +50,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    print("MyApp");
+    setLogger();
+    Logger("Widget").info("MyApp");
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(
@@ -169,6 +172,18 @@ class _LifeCycleManagerState extends State<LifeCycleManager>
   Widget build(BuildContext context) {
     return widget.child;
   }
+}
+
+void setLogger() {
+  Logger.root.level = Level.INFO;
+  // hierarchicalLoggingEnabled = true;
+  // Logger("Widget").level = Level.SEVERE;
+  Logger.root.onRecord.listen((record) {
+    print("[${record.level.name}] " +
+        DateFormat('hh:mm:ss ').format(record.time) +
+        record.loggerName +
+        " ${record.message}");
+  });
 }
 
 // To monitor whether network is available

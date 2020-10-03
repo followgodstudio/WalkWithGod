@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
 import '../../configurations/theme.dart';
@@ -70,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print("HomeScreen");
+    Logger("Widget").info("HomeScreen");
     String uid = Provider.of<AuthProvider>(context, listen: false).currentUser;
     Provider.of<ProfileProvider>(context, listen: false).fetchAllUserData(uid);
     return Scaffold(

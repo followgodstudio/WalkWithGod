@@ -5,6 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:logging/logging.dart';
 
 import '../../configurations/constants.dart';
 import 'friends_provider.dart';
@@ -16,6 +17,7 @@ import 'setting_provider.dart';
 class ProfileProvider with ChangeNotifier {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
+  Logger _logger = Logger("Provider");
   // Basic info
   String uid;
   String name = defaultUserName;
@@ -36,13 +38,13 @@ class ProfileProvider with ChangeNotifier {
   bool _isFetchedAll = false;
 
   ProfileProvider([this.uid]) {
-    print("Rebuild ProfileProvider");
+    _logger.info("Rebuild ProfileProvider");
   }
 
   Future<void> fetchAllUserData(String userId) async {
     if (userId == null || userId.isEmpty || _isFetching || _isFetchedAll)
       return;
-    print("ProfileProvider-fetchAllUserData");
+    _logger.info("ProfileProvider-fetchAllUserData");
     uid = userId;
     _isFetchedAll = true;
     friendsProvider.setUserId(uid);
@@ -65,7 +67,7 @@ class ProfileProvider with ChangeNotifier {
     await recentReadProvider.fetchRecentRead();
 
     _isFetching = false;
-    print("ProfileProvider-fetchAllUserData takes: " +
+    _logger.info("ProfileProvider-fetchAllUserData takes: " +
         DateTime.now().difference(start).inMilliseconds.toString() +
         "ms.");
   }
@@ -97,7 +99,7 @@ class ProfileProvider with ChangeNotifier {
   }
 
   Future<bool> fetchProfile() async {
-    print("ProfileProvider-fetchProfile");
+    _logger.info("ProfileProvider-fetchProfile");
     DocumentSnapshot doc = await _db.collection(cUsers).doc(uid).get();
     if (!doc.exists) return false; // User not exist
 
@@ -146,7 +148,7 @@ class ProfileProvider with ChangeNotifier {
   }
 
   Future<void> updateProfilePicture(File file) async {
-    print("ProfileProvider-updateProfilePicture");
+    _logger.info("ProfileProvider-updateProfilePicture");
     String path = sProfilePictures + "/$uid.jpeg";
     StorageTaskSnapshot snapshot =
         await _storage.ref().child(path).putFile(file).onComplete;
@@ -173,14 +175,14 @@ class ProfileProvider with ChangeNotifier {
         newImageUrl.isNotEmpty &&
         newImageUrl != imageUrl) imageUrl = data[fUserImageUrl] = newImageUrl;
     if (data.isNotEmpty) {
-      print("ProfileProvider-updateProfilePicture");
+      _logger.info("ProfileProvider-updateProfilePicture");
       await _db.collection(cUsers).doc(uid).update(data);
       notifyListeners();
     }
   }
 
   Future<void> initProfile() async {
-    print("ProfileProvider-initProfile");
+    _logger.info("ProfileProvider-initProfile");
     createdDate = DateTime.now();
     await _db.collection(cUsers).doc(uid).set({fUserName: name});
     await _db
@@ -199,7 +201,7 @@ class ProfileProvider with ChangeNotifier {
   }
 
   Future<void> deleteProfile() async {
-    print("ProfileProvider-deleteProfile");
+    _logger.info("ProfileProvider-deleteProfile");
     await _db.collection(cUsers).doc(uid).delete();
   }
 }

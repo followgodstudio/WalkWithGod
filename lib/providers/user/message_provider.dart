@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
+import 'package:logging/logging.dart';
 
 import '../../configurations/constants.dart';
 
@@ -31,7 +32,7 @@ class MessageProvider with ChangeNotifier {
 
   Future<void> markMessageAsRead(bool read) async {
     if (isRead == read) return;
-    print("MessageProvider-markMessageAsRead");
+    Logger("Provider").info("MessageProvider-markMessageAsRead");
     isRead = read;
     notifyListeners();
 

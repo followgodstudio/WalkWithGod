@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/article/article_provider.dart';
@@ -45,7 +46,7 @@ class ArticleScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("ArticleScreen");
+    Logger("Widget").info("ArticleScreen");
     ProfileProvider profile =
         Provider.of<ProfileProvider>(context, listen: false);
     final Map parameter = ModalRoute.of(context).settings.arguments as Map;

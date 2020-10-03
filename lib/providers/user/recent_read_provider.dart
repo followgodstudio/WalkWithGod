@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:logging/logging.dart';
 
 import '../../configurations/constants.dart';
 import '../article/article_provider.dart';
@@ -8,6 +9,7 @@ import '../article/articles_provider.dart';
 
 class RecentReadProvider with ChangeNotifier {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
+  Logger _logger = Logger("Provider");
   String _userId;
   int readsCount = 0;
   int readDuration = 0;
@@ -24,7 +26,7 @@ class RecentReadProvider with ChangeNotifier {
 
   Future<void> fetchRecentRead() async {
     if (readsCount == 0) return;
-    print("RecentReadProvider-fetchRecentRead");
+    _logger.info("RecentReadProvider-fetchRecentRead");
     QuerySnapshot query = await _db
         .collection(cUsers)
         .doc(_userId)
@@ -44,7 +46,7 @@ class RecentReadProvider with ChangeNotifier {
 
   Future<void> fetchMoreRecentRead() async {
     if (readsCount == 0 || noMoreRecentRead || _isFetchingRecentRead) return;
-    print("RecentReadProvider-fetchMoreRecentRead");
+    _logger.info("RecentReadProvider-fetchMoreRecentRead");
     _isFetchingRecentRead = true;
     await _appendRecentReadList();
     _isFetchingRecentRead = false;
@@ -53,7 +55,7 @@ class RecentReadProvider with ChangeNotifier {
   Future<void> updateRecentReadByArticleId(
       ArticleProvider articleProvider) async {
     if (_isUpdatingRecentRead || _userId == null || _userId.isEmpty) return;
-    print("RecentReadProvider-updateRecentReadByArticleId");
+    _logger.info("RecentReadProvider-updateRecentReadByArticleId");
     _isUpdatingRecentRead = true;
 
     // update local variables
@@ -93,7 +95,7 @@ class RecentReadProvider with ChangeNotifier {
 
   Future<void> updateReadDuration(DateTime start) async {
     if (_userId == null || _userId.isEmpty) return;
-    print("RecentReadProvider-updateReadDuration");
+    _logger.info("RecentReadProvider-updateReadDuration");
     int timeDiffInSecond = DateTime.now().difference(start).inSeconds;
     await _db
         .collection(cUsers)

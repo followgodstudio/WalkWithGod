@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
+import 'package:logging/logging.dart';
 
 import '../../configurations/constants.dart';
 import 'friend_provider.dart';
 
 class FriendsProvider with ChangeNotifier {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
+  Logger _logger = Logger("Provider");
   String _userId;
   int followingsCount = 0;
   int followersCount = 0;
@@ -53,7 +55,7 @@ class FriendsProvider with ChangeNotifier {
     } else {
       _following = [];
     }
-    print("FriendsProvider-fetchFriendList-" +
+    _logger.info("FriendsProvider-fetchFriendList-" +
         (isFollower ? "follower" : "following"));
     QuerySnapshot query = await _db
         .collection(cUsers)
@@ -69,7 +71,7 @@ class FriendsProvider with ChangeNotifier {
   Future<void> fetchMoreFriends(bool isFollower,
       [int limit = loadLimit]) async {
     if (_userId == null || _isFetching) return;
-    print("FriendsProvider-fetchMoreFriends");
+    _logger.info("FriendsProvider-fetchMoreFriends");
     List<String> whereIn = [eFriendStatusFollowing, eFriendStatusFriend];
     String orderBy = fFriendFollowingDate;
     DocumentSnapshot lastVisible = _lastVisibleFollowing;
@@ -94,7 +96,7 @@ class FriendsProvider with ChangeNotifier {
   }
 
   Future<FriendProvider> fetchFriendStatusByUserId(String userId) async {
-    print("FriendsProvider-fetchFriendStatusByUserId");
+    _logger.info("FriendsProvider-fetchFriendStatusByUserId");
     DocumentSnapshot doc = await _db
         .collection(cUsers)
         .doc(_userId)
@@ -121,7 +123,7 @@ class FriendsProvider with ChangeNotifier {
     followingsCount -= 1;
     notifyListeners();
 
-    print("FriendsProvider-removefollowInList");
+    _logger.info("FriendsProvider-removefollowInList");
     // Update database
     WriteBatch batch = _db.batch();
     batch.update(
@@ -161,7 +163,7 @@ class FriendsProvider with ChangeNotifier {
     followingsCount += 1;
     notifyListeners();
 
-    print("FriendsProvider-addFollowInList");
+    _logger.info("FriendsProvider-addFollowInList");
     // Update database
     WriteBatch batch = _db.batch();
     batch.update(

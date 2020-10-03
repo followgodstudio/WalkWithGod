@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
 import '../../configurations/constants.dart';
@@ -22,7 +23,7 @@ class PersonalManagementScreen extends StatelessWidget {
   static const routeName = '/personal_management';
   @override
   Widget build(BuildContext context) {
-    print("PersonalManagementScreen");
+    Logger("Widget").info("PersonalManagementScreen");
     String uid = Provider.of<AuthProvider>(context, listen: false).currentUser;
     bool isLoggedIn = (uid != null);
     return Scaffold(
