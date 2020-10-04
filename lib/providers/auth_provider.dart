@@ -165,24 +165,26 @@ class AuthProvider with ChangeNotifier {
         phoneNumber: phone,
         timeout: Duration(seconds: 60),
         verificationCompleted: (PhoneAuthCredential authCredential) async {
+          _logger.i("Verification completed");
           UserCredential result =
               await _auth.signInWithCredential(authCredential);
 // _auth.currentUser.linkWithCredential(credential)
           User user = result.user;
 
           if (user != null) {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => HomeScreen()));
+            _routeHome(context);
           } else {
             _logger.e("Error");
           }
         },
         verificationFailed: (FirebaseAuthException exception) {
+          _logger.e("Verification failed");
+          _logger.e(exception.message);
           return "error";
         },
         codeSent: (String verificationId, [int forceResendingToken]) {
           final _codeController = TextEditingController();
-          _logger.i(verificationId);
+          _logger.i("Code sent: " + verificationId);
           showDialog(
             context: context,
             barrierDismissible: false,
@@ -207,11 +209,7 @@ class AuthProvider with ChangeNotifier {
                       if (result.additionalUserInfo.isNewUser) {
                         ProfileProvider(result.user.uid).initProfile();
                       }
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => HomeScreen()),
-                      ); // to pop the dialog box
-                      //Navigator.of(context).pushReplacementNamed('/home');
+                      _routeHome(context);
                     }).catchError((e) {
                       return "error";
                     });
@@ -223,6 +221,7 @@ class AuthProvider with ChangeNotifier {
         },
         codeAutoRetrievalTimeout: (String verificationId) {
           verificationId = verificationId;
+          _logger.e("Send code time out");
         });
   }
 
@@ -230,5 +229,10 @@ class AuthProvider with ChangeNotifier {
     await ProfileProvider(_userId).deleteProfile();
     await _auth.currentUser.delete();
     _userId = null;
+  }
+
+  void _routeHome(BuildContext context) {
+    Navigator.of(context).pushNamedAndRemoveUntil(
+        HomeScreen.routeName, (Route<dynamic> route) => false);
   }
 }

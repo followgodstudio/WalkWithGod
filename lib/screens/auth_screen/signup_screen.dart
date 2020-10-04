@@ -1,14 +1,16 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:apple_sign_in/apple_sign_in.dart' as apple;
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
-import 'package:provider/provider.dart';
-import 'package:international_phone_input/international_phone_input.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import '../home_screen/home_screen.dart';
-import '../../providers/auth_provider.dart';
-import '../../utils/utils.dart';
+import 'package:international_phone_input/international_phone_input.dart';
+import 'package:provider/provider.dart';
+
 import '../../configurations/theme.dart';
+import '../../providers/auth_provider.dart';
+import '../../utils/my_logger.dart';
+import '../../utils/utils.dart';
+import '../home_screen/home_screen.dart';
 
 enum AuthFormType { signIn, signUp, reset, anonymous, phone }
 
@@ -44,6 +46,11 @@ class _SignupScreenState extends State<SignupScreen> {
   final formKey = GlobalKey<FormState>();
   String _email, _password, _name, _warning, _phone;
 
+  void routeHome() {
+    Navigator.of(context).pushNamedAndRemoveUntil(
+        HomeScreen.routeName, (Route<dynamic> route) => false);
+  }
+
   void switchFormState(String state) {
     formKey.currentState.reset();
     if (state == "signUp") {
@@ -51,10 +58,7 @@ class _SignupScreenState extends State<SignupScreen> {
         authFormType = AuthFormType.signUp;
       });
     } else if (state == 'home') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
-      );
+      routeHome();
     } else {
       setState(() {
         authFormType = AuthFormType.signIn;
@@ -83,17 +87,11 @@ class _SignupScreenState extends State<SignupScreen> {
         switch (authFormType) {
           case AuthFormType.signIn:
             await auth.signInWithEmailAndPassword(_email, _password);
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => HomeScreen()),
-            );
+            routeHome();
             break;
           case AuthFormType.signUp:
             await auth.createUserWithEmailAndPassword(_email, _password, _name);
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => HomeScreen()),
-            );
+            routeHome();
             break;
           case AuthFormType.reset:
             await auth.sendPasswordResetEmail(_email);
@@ -104,12 +102,10 @@ class _SignupScreenState extends State<SignupScreen> {
             break;
           case AuthFormType.anonymous:
             await auth.singInAnonymously();
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => HomeScreen()),
-            );
+            routeHome();
             break;
           case AuthFormType.phone:
+            MyLogger("Widget").i("Submit: " + _phone);
             var result = await auth.createUserWithPhone(_phone, context);
             if (_phone == "" || result == "error") {
               setState(() {
@@ -132,6 +128,7 @@ class _SignupScreenState extends State<SignupScreen> {
     final _height = MediaQuery.of(context).size.height;
 
     if (authFormType == AuthFormType.anonymous) {
+      // TODO: can be removed???
       submit();
       return Scaffold(
           backgroundColor: Theme.of(context).canvasColor,
@@ -445,11 +442,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 onPressed: () async {
                   try {
                     await _auth.signInWithGoogle();
-                    // Navigator.of(context).pushReplacementNamed('/home');
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => HomeScreen()),
-                    );
+                    routeHome();
                   } catch (e) {
                     setState(() {
                       _warning = e.message + "。请使用其他方式登陆";
@@ -494,11 +487,7 @@ class _SignupScreenState extends State<SignupScreen> {
       return apple.AppleSignInButton(
         onPressed: () async {
           await _auth.signInWithApple();
-          //Navigator.of(context).pushReplacementNamed('/home');
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => HomeScreen()),
-          );
+          routeHome();
         },
         style: apple.ButtonStyle.black,
       );
