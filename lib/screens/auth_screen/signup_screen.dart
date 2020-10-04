@@ -105,7 +105,7 @@ class _SignupScreenState extends State<SignupScreen> {
             routeHome();
             break;
           case AuthFormType.phone:
-            MyLogger("Widget").i("Submit: " + _phone);
+            MyLogger("Widget").i("SignupScreen-submit-" + _phone);
             var result = await auth.createUserWithPhone(_phone, context);
             if (_phone == "" || result == "error") {
               setState(() {

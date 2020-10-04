@@ -36,7 +36,8 @@ class _ArticleListState extends State<ArticleList> {
     // Here's the problem
     // Sometimes dominantColor returns null
     // With black and white background colors in my tests
-    if (dominantColor == null) MyLogger("Widget").i('Dominant Color null');
+    if (dominantColor == null)
+      MyLogger("Widget").i('ArticleList-build-Dominant Color null');
 
     return useWhiteForeground(dominantColor);
   }

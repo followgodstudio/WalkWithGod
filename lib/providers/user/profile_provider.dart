@@ -38,14 +38,12 @@ class ProfileProvider with ChangeNotifier {
   bool _isFetchedAll = false;
 
   ProfileProvider([this.uid]) {
-    _logger.i("Rebuild ProfileProvider");
+    _logger.i("ProfileProvider-init");
   }
 
-  Future<void> fetchAllUserData(String userId) async {
-    if (userId == null || userId.isEmpty || _isFetching || _isFetchedAll)
-      return;
+  Future<void> fetchAllUserData() async {
+    if (_isFetching || _isFetchedAll) return;
     _logger.i("ProfileProvider-fetchAllUserData");
-    uid = userId;
     _isFetchedAll = true;
     friendsProvider.setUserId(uid);
     savedArticlesProvider.setUserId(uid);

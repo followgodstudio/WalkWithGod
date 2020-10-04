@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +13,7 @@ import 'user/profile_provider.dart';
 enum AuthMode { signInWithEmail, createUserWithEmail }
 
 class AuthProvider with ChangeNotifier {
+  StreamSubscription userAuthSub;
   FirebaseAuth _auth = FirebaseAuth.instance;
   MyLogger _logger = MyLogger("Provider");
   String _userId;
@@ -21,14 +24,24 @@ class AuthProvider with ChangeNotifier {
     ],
   );
 
-  Stream<String> get onAuthStateChanged {
-    return _auth.authStateChanges().map((User user) {
-      _userId = user?.uid;
-      return _userId;
+  AuthProvider() {
+    userAuthSub = _auth.authStateChanges().listen((newUser) {
+      _userId = (newUser != null) ? newUser.uid : null;
+      _logger.i("AuthProvider-init-onAuthStateChanged-$_userId");
+      notifyListeners();
     });
   }
 
-  String get currentUser {
+  @override
+  void dispose() {
+    if (userAuthSub != null) {
+      userAuthSub.cancel();
+      userAuthSub = null;
+    }
+    super.dispose();
+  }
+
+  String get userId {
     return _userId;
   }
 
@@ -98,7 +111,7 @@ class AuthProvider with ChangeNotifier {
     try {
       account = await _googleSignIn.signIn();
     } catch (error) {
-      _logger.e(error);
+      _logger.e("AuthProvider-signInWithGoogle-$error");
     }
 
     final GoogleSignInAuthentication _googleAuth = await account.authentication;
@@ -144,11 +157,12 @@ class AuthProvider with ChangeNotifier {
         break;
 
       case AuthorizationStatus.error:
-        _logger.e("Sign In Failed ${result.error.localizedDescription}");
+        _logger.e(
+            "AuthProvider-signInWithApple-Sign In Failed ${result.error.localizedDescription}");
         break;
 
       case AuthorizationStatus.cancelled:
-        _logger.i("User Cancled");
+        _logger.i("AuthProvider-signInWithApple-User Cancled");
         break;
     }
   }
@@ -165,26 +179,27 @@ class AuthProvider with ChangeNotifier {
         phoneNumber: phone,
         timeout: Duration(seconds: 60),
         verificationCompleted: (PhoneAuthCredential authCredential) async {
-          _logger.i("Verification completed");
+          _logger.i("AuthProvider-createUserWithPhone-Verification completed");
           UserCredential result =
               await _auth.signInWithCredential(authCredential);
-// _auth.currentUser.linkWithCredential(credential)
           User user = result.user;
 
           if (user != null) {
             _routeHome(context);
           } else {
-            _logger.e("Error");
+            _logger.i("AuthProvider-createUserWithPhone-Error");
+            return "error";
           }
         },
         verificationFailed: (FirebaseAuthException exception) {
-          _logger.e("Verification failed");
-          _logger.e(exception.message);
+          _logger.e("AuthProvider-createUserWithPhone-Verification failed: " +
+              exception.message);
           return "error";
         },
         codeSent: (String verificationId, [int forceResendingToken]) {
           final _codeController = TextEditingController();
-          _logger.i("Code sent: " + verificationId);
+          _logger.i(
+              "AuthProvider-createUserWithPhone-Code sent: " + verificationId);
           showDialog(
             context: context,
             barrierDismissible: false,
@@ -221,7 +236,7 @@ class AuthProvider with ChangeNotifier {
         },
         codeAutoRetrievalTimeout: (String verificationId) {
           verificationId = verificationId;
-          _logger.e("Send code time out");
+          _logger.e("AuthProvider-createUserWithPhone-Send code time out");
         });
   }
 

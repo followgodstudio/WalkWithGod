@@ -14,7 +14,7 @@ class SimpleLogPrinter extends LogPrinter {
     var emoji = PrettyPrinter.levelEmojis[event.level];
     println(color("$emoji" +
         // DateFormat('yy-MM-dd hh:mm:ss').format(DateTime.now()) +
-        " $className " +
+        " [$className] " +
         event.message));
   }
 }

@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 
 import '../../configurations/constants.dart';
 import '../../configurations/theme.dart';
-import '../../providers/auth_provider.dart';
 import '../../providers/user/friends_provider.dart';
 import '../../providers/user/profile_provider.dart';
 import '../../providers/user/saved_articles_provider.dart';
@@ -23,9 +22,9 @@ class PersonalManagementScreen extends StatelessWidget {
   static const routeName = '/personal_management';
   @override
   Widget build(BuildContext context) {
-    MyLogger("Widget").i("PersonalManagementScreen");
-    String uid = Provider.of<AuthProvider>(context, listen: false).currentUser;
-    bool isLoggedIn = (uid != null);
+    MyLogger("Widget").i("PersonalManagementScreen-build");
+    bool isLoggedIn =
+        (Provider.of<ProfileProvider>(context, listen: false).uid != null);
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,

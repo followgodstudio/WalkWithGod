@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    MyLogger("Widget").i("MyApp");
+    MyLogger("Widget").i("MyApp-build");
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(
@@ -67,7 +67,7 @@ class MyApp extends StatelessWidget {
           ),
           ChangeNotifierProxyProvider<AuthProvider, ProfileProvider>(
               create: (_) => ProfileProvider(),
-              update: (context, auth, _) => ProfileProvider(auth.currentUser)),
+              update: (context, auth, _) => ProfileProvider(auth.userId)),
         ],
         child: Builder(builder: (BuildContext context) {
           ProfileProvider profile =

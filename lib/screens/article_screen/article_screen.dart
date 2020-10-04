@@ -46,7 +46,7 @@ class ArticleScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    MyLogger("Widget").i("ArticleScreen");
+    MyLogger("Widget").i("ArticleScreen-build");
     ProfileProvider profile =
         Provider.of<ProfileProvider>(context, listen: false);
     final Map parameter = ModalRoute.of(context).settings.arguments as Map;

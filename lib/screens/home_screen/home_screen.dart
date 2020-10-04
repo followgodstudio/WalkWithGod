@@ -71,9 +71,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    MyLogger("Widget").i("HomeScreen");
-    String uid = Provider.of<AuthProvider>(context, listen: false).currentUser;
-    Provider.of<ProfileProvider>(context, listen: false).fetchAllUserData(uid);
+    MyLogger("Widget").i("HomeScreen-build");
+    Provider.of<ProfileProvider>(context, listen: false).fetchAllUserData();
     return Scaffold(
         body: SafeArea(
             child: RefreshIndicator(
