@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:walk_with_god/utils/utils.dart';
 
 import '../../../configurations/theme.dart';
 import '../../../providers/user/profile_provider.dart';
@@ -77,15 +78,7 @@ class _EditPictureScreenState extends State<EditPictureScreen> {
                       setState(() {
                         _uploading = false;
                       });
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            Future.delayed(Duration(seconds: 1), () {
-                              Navigator.of(context).pop();
-                              Navigator.of(context).pop();
-                            });
-                            return PopUpDialog(true, "上传成功");
-                          });
+                      showPopUpDialog(context, true, "上传成功");
                     },
                     child: Text("上传",
                         style: Theme.of(context).textTheme.captionMedium4),

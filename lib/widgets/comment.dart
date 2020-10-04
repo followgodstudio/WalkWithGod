@@ -142,14 +142,7 @@ class Comment extends StatelessWidget {
                             ]),
                             onPressed: () {
                               if (profile.uid == null) {
-                                showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      Future.delayed(Duration(seconds: 1), () {
-                                        Navigator.of(context).pop(true);
-                                      });
-                                      return PopUpDialog(false, "请登陆后再操作");
-                                    });
+                                showPopUpDialog(context, false, "请登陆后再操作");
                               } else if (data.like) {
                                 data.cancelLike(profile.uid);
                               } else {
@@ -173,14 +166,7 @@ class Comment extends StatelessWidget {
                           ]),
                           onPressed: () async {
                             if (profile.uid == null) {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    Future.delayed(Duration(seconds: 1), () {
-                                      Navigator.of(context).pop(true);
-                                    });
-                                    return PopUpDialog(false, "请登陆后再操作");
-                                  });
+                              showPopUpDialog(context, false, "请登陆后再操作");
                             } else {
                               if (onStartComment != null)
                                 await onStartComment();

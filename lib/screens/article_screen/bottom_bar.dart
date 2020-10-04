@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:walk_with_god/utils/utils.dart';
 
 import '../../configurations/theme.dart';
 import '../../providers/article/comments_provider.dart';
@@ -33,14 +34,7 @@ class BottomBar extends StatelessWidget {
               ),
               onPressed: () {
                 if (profile.uid == null) {
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        Future.delayed(Duration(seconds: 1), () {
-                          Navigator.of(context).pop(true);
-                        });
-                        return PopUpDialog(false, "请登陆后再操作");
-                      });
+                  showPopUpDialog(context, false, "请登陆后再操作");
                 } else {
                   showModalBottomSheet(
                       context: context,
@@ -57,14 +51,7 @@ class BottomBar extends StatelessWidget {
                                       profile.name,
                                       profile.imageUrl);
                               onLeaveCommentScroll();
-                              showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    Future.delayed(Duration(seconds: 1), () {
-                                      Navigator.of(context).pop(true);
-                                    });
-                                    return PopUpDialog(true, "你刚刚发布了留言");
-                                  });
+                              showPopUpDialog(context, true, "你刚刚发布了留言");
                             },
                           ));
                 }
@@ -98,14 +85,7 @@ class BottomBar extends StatelessWidget {
               builder: (context, value, child) => FlatButton(
                     onPressed: () {
                       if (profile.uid == null) {
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              Future.delayed(Duration(seconds: 1), () {
-                                Navigator.of(context).pop(true);
-                              });
-                              return PopUpDialog(false, "请登陆后再操作");
-                            });
+                        showPopUpDialog(context, false, "请登陆后再操作");
                       } else {
                         if (value.currentLike) {
                           value.removeSavedByArticleId(articleId);

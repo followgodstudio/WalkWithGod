@@ -28,6 +28,7 @@ class _AuthCardState extends State<AuthCard> {
   void _showErrorDialog(String message) {
     showDialog(
       context: context,
+      barrierColor: Color.fromARGB(1, 255, 255, 255),
       builder: (ctx) => AlertDialog(
         title: Text('An Error Occurred!'),
         content: Text(message),

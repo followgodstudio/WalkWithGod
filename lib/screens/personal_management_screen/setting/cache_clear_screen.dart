@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:walk_with_god/utils/utils.dart';
 
 import '../../../configurations/theme.dart';
 import '../../../providers/user/setting_provider.dart';
@@ -69,14 +70,7 @@ class CacheClearScreen extends StatelessWidget {
                             await Provider.of<SettingProvider>(context,
                                     listen: false)
                                 .clearCache();
-                            showDialog(
-                                context: context,
-                                builder: (context) {
-                                  Future.delayed(Duration(seconds: 1), () {
-                                    Navigator.of(context).pop(true);
-                                  });
-                                  return PopUpDialog(true, "完成清理");
-                                });
+                            showPopUpDialog(context, true, "完成清理");
                           },
                           child: Text("清 理",
                               style:

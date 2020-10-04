@@ -18,8 +18,10 @@ class PopUpDialog extends StatelessWidget {
         titlePadding: const EdgeInsets.all(0),
         contentPadding: const EdgeInsets.symmetric(vertical: 8.0),
         content: Container(
+          width: 200,
           child: Column(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               if (isSuccess)
                 Icon(

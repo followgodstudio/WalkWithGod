@@ -1,7 +1,28 @@
+import 'dart:async';
+
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:palette_generator/palette_generator.dart';
+import 'package:walk_with_god/configurations/constants.dart';
 
+import '../widgets/popup_dialog.dart';
 import 'my_logger.dart';
+
+void showPopUpDialog(BuildContext context, bool isSuccess, String message,
+    [int durationMilliseconds = 2000]) {
+  Timer timer = Timer(Duration(milliseconds: durationMilliseconds), () {
+    Navigator.of(context).pop(true);
+  });
+  showDialog(
+      context: context,
+      barrierColor: Color.fromARGB(1, 255, 255, 255),
+      builder: (context) {
+        return PopUpDialog(isSuccess, message);
+      }).then((value) {
+    timer?.cancel();
+    timer = null;
+  });
+}
 
 String getCreatedDuration(DateTime createdDate) {
   int timeDiffInMins = DateTime.now().toUtc().difference(createdDate).inMinutes;

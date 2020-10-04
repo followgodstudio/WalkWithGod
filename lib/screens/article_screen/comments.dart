@@ -5,8 +5,8 @@ import '../../configurations/theme.dart';
 import '../../providers/article/comment_provider.dart';
 import '../../providers/article/comments_provider.dart';
 import '../../providers/user/profile_provider.dart';
+import '../../utils/utils.dart';
 import '../../widgets/comment.dart';
-import '../../widgets/popup_dialog.dart';
 import 'comment_detail.dart';
 
 class Comments extends StatefulWidget {
@@ -56,14 +56,7 @@ class _CommentsState extends State<Comments> {
   }
 
   void onSubmitComment() {
-    showDialog(
-        context: context,
-        builder: (context) {
-          Future.delayed(Duration(seconds: 1), () {
-            Navigator.of(context).pop(true);
-          });
-          return PopUpDialog(true, "你刚刚发布了留言");
-        });
+    showPopUpDialog(context, true, "你刚刚发布了留言");
   }
 
   @override

@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:logger_flutter/logger_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:walk_with_god/utils/utils.dart';
 
 import 'configurations/theme.dart';
 import 'providers/article/articles_provider.dart';
@@ -201,11 +202,7 @@ class _NetworkManagerState extends State<NetworkManager> {
         .onConnectivityChanged
         .listen((ConnectivityResult result) {
       if (result == ConnectivityResult.none) {
-        showDialog(
-            context: context,
-            builder: (context) {
-              return PopUpDialog(false, "请检查网络连接");
-            });
+        showPopUpDialog(context, false, "请检查网络连接");
       }
     });
   }

@@ -4,8 +4,8 @@ import 'package:provider/provider.dart';
 import '../../configurations/theme.dart';
 import '../../providers/article/comment_provider.dart';
 import '../../providers/user/profile_provider.dart';
+import '../../utils/utils.dart';
 import '../../widgets/comment.dart';
-import '../../widgets/popup_dialog.dart';
 
 class CommentDetail extends StatefulWidget {
   final String articleId;
@@ -22,14 +22,7 @@ class _CommentDetailState extends State<CommentDetail> {
   void onSubmitComment() {
     _controller.animateTo(0,
         duration: Duration(seconds: 1), curve: Curves.easeIn);
-    showDialog(
-        context: context,
-        builder: (context) {
-          Future.delayed(Duration(seconds: 1), () {
-            Navigator.of(context).pop(true);
-          });
-          return PopUpDialog(true, "你刚刚发布了留言");
-        });
+    showPopUpDialog(context, true, "你刚刚发布了留言");
   }
 
   @override

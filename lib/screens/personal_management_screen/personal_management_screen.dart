@@ -7,8 +7,8 @@ import '../../providers/user/friends_provider.dart';
 import '../../providers/user/profile_provider.dart';
 import '../../providers/user/saved_articles_provider.dart';
 import '../../utils/my_logger.dart';
+import '../../utils/utils.dart';
 import '../../widgets/article_card_small.dart';
-import '../../widgets/popup_dialog.dart';
 import '../auth_screen/signup_screen.dart';
 import 'friends/friends_list_screen.dart';
 import 'headline/edit_profile_screen.dart';
@@ -43,14 +43,7 @@ class PersonalManagementScreen extends StatelessWidget {
               color: Theme.of(context).textTheme.buttonColor2,
               onPressed: () {
                 if (!isLoggedIn) {
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        Future.delayed(Duration(seconds: 1), () {
-                          Navigator.of(context).pop(true);
-                        });
-                        return PopUpDialog(false, "请登陆后再操作");
-                      });
+                  showPopUpDialog(context, false, "请登陆后再操作");
                 } else {
                   Navigator.of(context).pushNamed(SettingScreen.routeName);
                 }
