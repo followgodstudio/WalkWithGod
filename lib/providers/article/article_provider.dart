@@ -18,28 +18,28 @@ class Paragraph {
 class ArticleProvider with ChangeNotifier {
   var _fdb = FirebaseFirestore.instance;
   MyLogger _logger = MyLogger("Provider");
-  final String id;
-  final String imageUrl;
-  final String title;
-  final String description;
-  final String icon;
-  final String authorName;
-  final String authorUid;
-  final DateTime createdDate;
-  final String publisher;
+  String id;
+  String imageUrl;
+  String title;
+  String description;
+  String icon;
+  String authorName;
+  String authorUid;
+  DateTime createdDate;
+  String publisher;
   List<Paragraph> content = [];
   List<ArticleProvider> _similarArticles = [];
   bool isSaved;
   bool isFetchedSimilarArticles = false;
 
   ArticleProvider(
-      {@required this.id,
-      @required this.title,
-      @required this.description,
-      @required this.icon,
-      @required this.authorName,
-      @required this.authorUid,
-      @required this.createdDate,
+      {this.id,
+      this.title,
+      this.description,
+      this.icon,
+      this.authorName,
+      this.authorUid,
+      this.createdDate,
       this.imageUrl,
       this.publisher});
 
@@ -86,5 +86,19 @@ class ArticleProvider with ChangeNotifier {
           .add(Paragraph(subtitle: subtitle, body: element.get(fContentBody)));
     });
     notifyListeners();
+  }
+
+  void deepCopy(ArticleProvider target, bool isNotify) {
+    if (target == null) return;
+    id = target.id;
+    title = target.title;
+    description = target.description;
+    icon = target.icon;
+    authorName = target.authorName;
+    authorUid = target.authorUid;
+    createdDate = target.createdDate;
+    imageUrl = target.imageUrl;
+    publisher = target.publisher;
+    if (isNotify) notifyListeners();
   }
 }

@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:walk_with_god/utils/utils.dart';
 
 import '../../configurations/theme.dart';
+import '../../providers/article/articles_provider.dart';
 import '../../providers/article/comments_provider.dart';
 import '../../providers/user/profile_provider.dart';
 import '../../providers/user/saved_articles_provider.dart';
+import '../../utils/my_logger.dart';
+import '../../utils/utils.dart';
 import '../../widgets/popup_comment.dart';
-import '../../widgets/popup_dialog.dart';
 import 'share_article.dart';
 
 class BottomBar extends StatelessWidget {
@@ -17,6 +18,8 @@ class BottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    MyLogger("Widget").v("BottomBar-build");
+    BuildContext rootContext = context;
     ProfileProvider profile =
         Provider.of<ProfileProvider>(context, listen: false);
     return BottomAppBar(
@@ -42,16 +45,18 @@ class BottomBar extends StatelessWidget {
                       builder: (context) => PopUpComment(
                             articleId: articleId,
                             onPressFunc: (String content) async {
-                              await Provider.of<CommentsProvider>(context,
-                                      listen: false)
-                                  .addLevel1Comment(
-                                      articleId,
-                                      content,
-                                      profile.uid,
-                                      profile.name,
-                                      profile.imageUrl);
-                              onLeaveCommentScroll();
-                              showPopUpDialog(context, true, "你刚刚发布了留言");
+                              exceptionHandling(rootContext, () async {
+                                await Provider.of<CommentsProvider>(context,
+                                        listen: false)
+                                    .addLevel1Comment(
+                                        articleId,
+                                        content,
+                                        profile.uid,
+                                        profile.name,
+                                        profile.imageUrl);
+                                onLeaveCommentScroll();
+                                showPopUpDialog(rootContext, true, "你刚刚发布了留言");
+                              });
                             },
                           ));
                 }
@@ -90,7 +95,10 @@ class BottomBar extends StatelessWidget {
                         if (value.currentLike) {
                           value.removeSavedByArticleId(articleId);
                         } else {
-                          value.addSavedByArticleId(articleId);
+                          value.addSavedByArticleId(
+                              articleId,
+                              Provider.of<ArticlesProvider>(context,
+                                  listen: false));
                         }
                       }
                     },

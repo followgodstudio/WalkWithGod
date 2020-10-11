@@ -54,7 +54,7 @@ class RecentReadProvider with ChangeNotifier {
 
   Future<void> updateRecentReadByArticleId(
       ArticleProvider articleProvider) async {
-    if (_isUpdatingRecentRead || _userId == null || _userId.isEmpty) return;
+    if (_isUpdatingRecentRead || _userId == null) return;
     _logger.i("RecentReadProvider-updateRecentReadByArticleId");
     _isUpdatingRecentRead = true;
 
@@ -94,7 +94,7 @@ class RecentReadProvider with ChangeNotifier {
   }
 
   Future<void> updateReadDuration(DateTime start) async {
-    if (_userId == null || _userId.isEmpty) return;
+    if (_userId == null) return;
     _logger.i("RecentReadProvider-updateReadDuration");
     int timeDiffInSecond = DateTime.now().difference(start).inSeconds;
     await _db

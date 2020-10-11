@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../../configurations/theme.dart';
 import '../../../providers/user/messages_provider.dart';
 import '../../../providers/user/profile_provider.dart';
+import '../../../utils/utils.dart';
 import 'message_item.dart';
 
 class MessagesListScreen extends StatelessWidget {
@@ -32,20 +33,22 @@ class MessagesListScreen extends StatelessWidget {
           onNotification: (ScrollNotification scrollInfo) {
             if (scrollInfo.metrics.pixels ==
                 scrollInfo.metrics.maxScrollExtent) {
-              profile.messagesProvider.fetchMoreMessages();
+              exceptionHandling(context, () async {
+                await profile.messagesProvider.fetchMoreMessages();
+              });
             }
             return true;
           },
           child: SingleChildScrollView(
               child: FutureBuilder(
-                  future: profile.messagesProvider
-                      .fetchMessageList(profile.messagesCount),
+                  future: exceptionHandling(context, () async {
+                    await profile.messagesProvider
+                        .fetchMessageList(profile.messagesCount);
+                  }),
                   builder: (ctx, asyncSnapshot) {
                     if (asyncSnapshot.connectionState ==
                         ConnectionState.waiting)
                       return Center(child: CircularProgressIndicator());
-                    if (asyncSnapshot.error != null)
-                      return Center(child: Text('An error occurred!'));
                     return Consumer<MessagesProvider>(
                         builder: (context, data, child) {
                       if (data.items.length == 0) {

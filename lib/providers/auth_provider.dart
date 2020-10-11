@@ -10,8 +10,6 @@ import '../screens/home_screen/home_screen.dart';
 import '../utils/my_logger.dart';
 import 'user/profile_provider.dart';
 
-enum AuthMode { signInWithEmail, createUserWithEmail }
-
 class AuthProvider with ChangeNotifier {
   StreamSubscription userAuthSub;
   FirebaseAuth _auth = FirebaseAuth.instance;
@@ -26,7 +24,9 @@ class AuthProvider with ChangeNotifier {
 
   AuthProvider() {
     userAuthSub = _auth.authStateChanges().listen((newUser) {
-      _userId = (newUser != null) ? newUser.uid : null;
+      String newUserId = (newUser != null) ? newUser.uid : null;
+      if (newUserId == _userId) return;
+      _userId = newUserId;
       _logger.i("AuthProvider-init-onAuthStateChanged-$_userId");
       notifyListeners();
     });
@@ -45,21 +45,6 @@ class AuthProvider with ChangeNotifier {
     return _userId;
   }
 
-  Future<void> authenticate(
-      String username, String password, AuthMode authMode) async {
-    UserCredential result;
-    if (authMode == AuthMode.createUserWithEmail) {
-      result = await _auth.createUserWithEmailAndPassword(
-          email: username, password: password);
-      await ProfileProvider(result.user.uid).initProfile();
-    } else if (authMode == AuthMode.signInWithEmail) {
-      result = await _auth.signInWithEmailAndPassword(
-          email: username, password: password);
-    }
-    _userId = result.user.uid;
-    notifyListeners();
-  }
-
   // Email & Password Sign Up
   Future<String> createUserWithEmailAndPassword(
       String email, String password, String name) async {
@@ -72,7 +57,6 @@ class AuthProvider with ChangeNotifier {
     _userId = authResult.user.uid;
     notifyListeners();
     // Update the username
-    //await updateUserName(name, authResult.user);
     return authResult.user.uid;
   }
 
@@ -96,26 +80,10 @@ class AuthProvider with ChangeNotifier {
     //notifyListeners();
   }
 
-  // Create Anonymous User
-  String singInAnonymously() {
-    //return _auth.signInAnonymously();
-    var tmpUser = _auth.signInAnonymously();
-    tmpUser.then((value) => _userId = value.user.uid);
-    ProfileProvider(_userId).initProfile();
-    return _userId;
-  }
-
   // GOOGLE
   Future<String> signInWithGoogle() async {
-    GoogleSignInAccount account;
-    try {
-      account = await _googleSignIn.signIn();
-    } catch (error) {
-      _logger.e("AuthProvider-signInWithGoogle-$error");
-    }
-
+    final GoogleSignInAccount account = await _googleSignIn.signIn();
     final GoogleSignInAuthentication _googleAuth = await account.authentication;
-
     final AuthCredential credential = GoogleAuthProvider.credential(
       idToken: _googleAuth.idToken,
       accessToken: _googleAuth.accessToken,
@@ -174,7 +142,7 @@ class AuthProvider with ChangeNotifier {
     await currentUser.reload();
   }
 
-  Future createUserWithPhone(String phone, BuildContext context) async {
+  Future<void> createUserWithPhone(String phone, BuildContext context) async {
     _auth.verifyPhoneNumber(
         phoneNumber: phone,
         timeout: Duration(seconds: 60),
@@ -183,18 +151,17 @@ class AuthProvider with ChangeNotifier {
           UserCredential result =
               await _auth.signInWithCredential(authCredential);
           User user = result.user;
+          _routeHome(context);
 
           if (user != null) {
             _routeHome(context);
           } else {
             _logger.i("AuthProvider-createUserWithPhone-Error");
-            return "error";
           }
         },
         verificationFailed: (FirebaseAuthException exception) {
           _logger.e("AuthProvider-createUserWithPhone-Verification failed: " +
               exception.message);
-          return "error";
         },
         codeSent: (String verificationId, [int forceResendingToken]) {
           final _codeController = TextEditingController();
@@ -225,8 +192,6 @@ class AuthProvider with ChangeNotifier {
                         ProfileProvider(result.user.uid).initProfile();
                       }
                       _routeHome(context);
-                    }).catchError((e) {
-                      return "error";
                     });
                   },
                 )

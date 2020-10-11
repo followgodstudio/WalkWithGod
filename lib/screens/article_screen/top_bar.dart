@@ -3,32 +3,36 @@ import 'package:provider/provider.dart';
 
 import '../../configurations/theme.dart';
 import '../../providers/article/article_provider.dart';
+import '../../utils/my_logger.dart';
 
 class TopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    MyLogger("Widget").v("TopBar-build");
     return SliverAppBar(
-      backgroundColor: Theme.of(context).appBarTheme.color,
-      leading: IconButton(
-        icon: Icon(
-          Icons.arrow_back_ios,
-          color: Colors.black,
+        backgroundColor: Theme.of(context).appBarTheme.color,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: Colors.black,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      ),
-      floating: true,
-      expandedHeight: 50,
-      actions: [
-        Placeholder(
-          color: Theme.of(context).appBarTheme.color,
-          fallbackWidth: 60,
-        ),
-      ],
-      title: Consumer<ArticleProvider>(
-          builder: (context, article, child) =>
-              Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+        floating: true,
+        expandedHeight: 50,
+        actions: [
+          Placeholder(
+            color: Theme.of(context).appBarTheme.color,
+            fallbackWidth: 60,
+          ),
+        ],
+        title: Consumer<ArticleProvider>(builder: (context, article, child) {
+          if (article.id == null) return SizedBox();
+          return Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 5.0),
                   child: Text(
@@ -53,7 +57,7 @@ class TopBar extends StatelessWidget {
                     ),
                   ],
                 ),
-              ])),
-    );
+              ]);
+        }));
   }
 }

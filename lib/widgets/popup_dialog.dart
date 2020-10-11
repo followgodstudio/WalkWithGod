@@ -16,7 +16,7 @@ class PopUpDialog extends StatelessWidget {
           borderRadius: BorderRadius.circular(18.0),
         ),
         titlePadding: const EdgeInsets.all(0),
-        contentPadding: const EdgeInsets.symmetric(vertical: 8.0),
+        contentPadding: const EdgeInsets.all(8.0),
         content: Container(
           width: 200,
           child: Column(

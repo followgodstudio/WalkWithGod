@@ -4,10 +4,10 @@ import 'package:provider/provider.dart';
 
 import '../../configurations/theme.dart';
 import '../../providers/article/articles_provider.dart';
-import '../../providers/auth_provider.dart';
 import '../../providers/user/profile_provider.dart';
 import '../../screens/personal_management_screen/personal_management_screen.dart';
 import '../../utils/my_logger.dart';
+import '../../utils/utils.dart';
 import '../../widgets/profile_picture.dart';
 import 'article/article_list.dart';
 
@@ -64,25 +64,33 @@ class _HomeScreenState extends State<HomeScreen> {
         ValueNotifier<String>(formatter.format(articles[0].createdDate));
   }
 
-  Future<void> _refreshArticles(BuildContext ctx) async {
-    await Provider.of<ArticlesProvider>(context, listen: false)
-        .fetchArticlesByDate(new DateTime.utc(1989, 11, 9));
+  Future<void> refreshArticles() async {
+    await exceptionHandling(context, () async {
+      await Provider.of<ArticlesProvider>(context, listen: false)
+          .fetchArticlesByDate(new DateTime.utc(1989, 11, 9));
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     MyLogger("Widget").i("HomeScreen-build");
-    Provider.of<ProfileProvider>(context, listen: false).fetchAllUserData();
+    exceptionHandling(context, () async {
+      await Provider.of<ProfileProvider>(context, listen: false)
+          .fetchAllUserData();
+    });
     return Scaffold(
         body: SafeArea(
             child: RefreshIndicator(
-                onRefresh: () => _refreshArticles(context),
+                onRefresh: () => refreshArticles(),
                 child: NotificationListener<ScrollNotification>(onNotification:
                     (ScrollNotification scrollInfo) {
                   if (scrollInfo.metrics.pixels ==
                       scrollInfo.metrics.maxScrollExtent) {
-                    Provider.of<ArticlesProvider>(context, listen: false)
-                        .fetchMoreArticles(new DateTime.utc(1989, 11, 9));
+                    exceptionHandling(context, () async {
+                      await Provider.of<ArticlesProvider>(context,
+                              listen: false)
+                          .fetchMoreArticles(new DateTime.utc(1989, 11, 9));
+                    });
                   }
                   return true;
                 }, child:

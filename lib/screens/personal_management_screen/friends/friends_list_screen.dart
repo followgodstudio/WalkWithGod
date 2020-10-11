@@ -5,6 +5,7 @@ import '../../../configurations/theme.dart';
 import '../../../providers/user/friend_provider.dart';
 import '../../../providers/user/friends_provider.dart';
 import '../../../providers/user/profile_provider.dart';
+import '../../../utils/utils.dart';
 import 'friend_item.dart';
 
 // TODO: add wechat and facebook friends, add friends search
@@ -73,8 +74,10 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
           onNotification: (ScrollNotification scrollInfo) {
             if (scrollInfo.metrics.pixels ==
                 scrollInfo.metrics.maxScrollExtent) {
-              Provider.of<FriendsProvider>(context, listen: false)
-                  .fetchMoreFriends(_isFollower);
+              exceptionHandling(context, () async {
+                await Provider.of<FriendsProvider>(context, listen: false)
+                    .fetchMoreFriends(_isFollower);
+              });
             }
             return true;
           },
@@ -82,15 +85,15 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
               child: Padding(
             padding: const EdgeInsets.all(20.0),
             child: FutureBuilder(
-                future: _isFollower
-                    ? profile.friendsProvider
-                        .fetchFriendList(_isFollower, profile.followersCount)
-                    : profile.friendsProvider.refreshFollowingList(),
+                future: exceptionHandling(context, () async {
+                  _isFollower
+                      ? profile.friendsProvider
+                          .fetchFriendList(_isFollower, profile.followersCount)
+                      : profile.friendsProvider.refreshFollowingList();
+                }),
                 builder: (ctx, asyncSnapshot) {
                   if (asyncSnapshot.connectionState == ConnectionState.waiting)
                     return Center(child: CircularProgressIndicator());
-                  if (asyncSnapshot.error != null)
-                    return Center(child: Text('An error occurred!'));
                   return Consumer<FriendsProvider>(
                       builder: (context, data, child) {
                     List<Widget> list = [];

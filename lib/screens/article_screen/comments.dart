@@ -5,6 +5,7 @@ import '../../configurations/theme.dart';
 import '../../providers/article/comment_provider.dart';
 import '../../providers/article/comments_provider.dart';
 import '../../providers/user/profile_provider.dart';
+import '../../utils/my_logger.dart';
 import '../../utils/utils.dart';
 import '../../widgets/comment.dart';
 import 'comment_detail.dart';
@@ -32,11 +33,13 @@ class _CommentsState extends State<Comments> {
     if (widget.commentId != null) {
       // If this page comes from the message list, pop up comment detail. call once
       WidgetsBinding.instance.addPostFrameCallback((_) async {
-        CommentProvider commentProvider =
-            await Provider.of<CommentsProvider>(context, listen: false)
-                .fetchLevel1CommentByCommentId(
-                    widget.articleId, widget.commentId, profile.uid);
-        await goToCommentDetail(profile.uid, commentProvider);
+        await exceptionHandling(context, () async {
+          CommentProvider commentProvider =
+              await Provider.of<CommentsProvider>(context, listen: false)
+                  .fetchLevel1CommentByCommentId(
+                      widget.articleId, widget.commentId, profile.uid);
+          await goToCommentDetail(profile.uid, commentProvider);
+        });
       });
     }
   }
@@ -45,7 +48,9 @@ class _CommentsState extends State<Comments> {
     String uid,
     CommentProvider commentProvider,
   ) async {
-    await commentProvider.fetchLevel2ChildrenCommentList(uid);
+    exceptionHandling(context, () async {
+      await commentProvider.fetchLevel2ChildrenCommentList(uid);
+    });
     showModalBottomSheet(
         context: context,
         isScrollControlled: true,
@@ -61,6 +66,7 @@ class _CommentsState extends State<Comments> {
 
   @override
   Widget build(BuildContext context) {
+    MyLogger("Widget").v("Comments-build");
     return Consumer<CommentsProvider>(builder: (context, data, child) {
       List<CommentProvider> comments = data.items;
       List<Widget> list = [];

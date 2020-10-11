@@ -82,6 +82,7 @@ class CommentsProvider with ChangeNotifier {
 
   Future<void> addLevel1Comment(String articleId, String content,
       String creatorUid, String creatorName, String creatorImage) async {
+    if (articleId == null || creatorUid == null) return;
     _logger.i("CommentsProvider-addLevel1Comment");
     Map<String, dynamic> comment = {};
     comment[fCommentArticleId] = articleId;

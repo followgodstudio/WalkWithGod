@@ -3,11 +3,12 @@ import 'dart:async';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:logger_flutter/logger_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:walk_with_god/utils/utils.dart';
 
 import 'configurations/theme.dart';
+import 'providers/article/article_provider.dart';
 import 'providers/article/articles_provider.dart';
 import 'providers/article/comments_provider.dart';
 import 'providers/auth_provider.dart';
@@ -19,7 +20,6 @@ import 'providers/user/recent_read_provider.dart';
 import 'providers/user/saved_articles_provider.dart';
 import 'providers/user/setting_provider.dart';
 import 'screens/article_screen/article_screen.dart';
-import 'screens/auth_screen/email_auth_screen.dart';
 import 'screens/auth_screen/signup_screen.dart';
 import 'screens/home_screen/home_screen.dart';
 import 'screens/personal_management_screen/friends/friends_list_screen.dart';
@@ -39,7 +39,7 @@ import 'screens/personal_management_screen/setting/privacy_screen.dart';
 import 'screens/personal_management_screen/setting/setting_screen.dart';
 import 'screens/splash_screen.dart';
 import 'utils/my_logger.dart';
-import 'widgets/popup_dialog.dart';
+import 'utils/utils.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -52,6 +52,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     MyLogger("Widget").i("MyApp-build");
+    Logger.level = Level.info;
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(
@@ -59,6 +60,9 @@ class MyApp extends StatelessWidget {
           ),
           ChangeNotifierProvider(
             create: (_) => ArticlesProvider(),
+          ),
+          ChangeNotifierProvider(
+            create: (_) => ArticleProvider(),
           ),
           ChangeNotifierProvider(
             create: (_) => CommentsProvider(),
@@ -99,7 +103,7 @@ class MyApp extends StatelessWidget {
             ],
             child: LifeCycleManager(
               child: MaterialApp(
-                title: 'Walk With God',
+                title: 'Follow Him',
                 debugShowCheckedModeBanner: false,
                 theme: dayTheme,
                 home: NetworkManager(child: SplashScreen()),
@@ -121,7 +125,6 @@ class MyApp extends StatelessWidget {
                   NetworkScreen.routeName: (ctx) =>
                       NetworkManager(child: NetworkScreen()),
                   SavedArticlesScreen.routeName: (ctx) => SavedArticlesScreen(),
-                  EmailAuthScreen.routeName: (ctx) => EmailAuthScreen(),
                   HomeScreen.routeName: (ctx) =>
                       NetworkManager(child: HomeScreen()),
                   ArticleScreen.routeName: (ctx) =>

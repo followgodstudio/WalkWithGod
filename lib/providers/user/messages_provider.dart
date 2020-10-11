@@ -43,6 +43,7 @@ class MessagesProvider with ChangeNotifier {
         .orderBy(fCreatedDate, descending: true)
         .limit(limit)
         .get();
+    messagesCount = newMessageCount;
     _items = [];
     _appendMessageList(query, limit);
   }

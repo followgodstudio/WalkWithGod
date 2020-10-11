@@ -68,6 +68,21 @@ class ArticlesProvider with ChangeNotifier {
     setArticles(query, isContentNeeded, n);
   }
 
+  ArticleProvider findArticleInListById(String aid) {
+    return _articles.firstWhere((a) => a.id == aid, orElse: () {
+      return null;
+    });
+  }
+
+  Future<ArticleProvider> fetchArticlePreviewById(String aid) async {
+    ArticleProvider article = findArticleInListById(aid);
+    if (article != null) return article;
+    MyLogger("Provider").i("ArticlesProvider-fetchArticlePreviewById");
+    DocumentSnapshot data =
+        await FirebaseFirestore.instance.collection(cArticles).doc(aid).get();
+    return buildArticleByMap(data.id, data.data());
+  }
+
   void setArticles(QuerySnapshot query,
       [bool isContentNeeded = false, int limit = 10]) {
     query.docs.forEach((data) {
@@ -77,19 +92,6 @@ class ArticlesProvider with ChangeNotifier {
     if (query.docs.length > 0)
       _lastVisibleChild = query.docs[query.docs.length - 1];
     notifyListeners();
-  }
-
-  static Future<ArticleProvider> fetchArticlePreviewById(String aid) async {
-    MyLogger("Provider").i("ArticlesProvider-fetchArticlePreviewById");
-    DocumentSnapshot data =
-        await FirebaseFirestore.instance.collection(cArticles).doc(aid).get();
-    return buildArticleByMap(data.id, data.data());
-  }
-
-  ArticleProvider findById(String id) {
-    return _articles.firstWhere((a) => a.id == id, orElse: () {
-      return null;
-    });
   }
 
   static ArticleProvider buildArticleByMap(

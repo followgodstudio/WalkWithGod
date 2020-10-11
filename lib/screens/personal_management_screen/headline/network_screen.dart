@@ -8,6 +8,7 @@ import '../../../providers/user/friend_provider.dart';
 import '../../../providers/user/friends_provider.dart';
 import '../../../providers/user/profile_provider.dart';
 import '../../../providers/user/recent_read_provider.dart';
+import '../../../utils/utils.dart';
 import '../../../widgets/article_card_small.dart';
 import 'introduction.dart';
 
@@ -40,16 +41,16 @@ class NetworkScreen extends StatelessWidget {
                           Provider.of<ProfileProvider>(context, listen: false)
                               .friendsProvider;
                       return FutureBuilder(
-                          future: Future.wait([
-                            profile.fetchProfile(),
-                            friends.fetchFriendStatusByUserId(profile.uid)
-                          ]),
+                          future: exceptionHandling(context, () async {
+                            bool isUserExist = await profile.fetchProfile();
+                            FriendProvider friend = await friends
+                                .fetchFriendStatusByUserId(profile.uid);
+                            return [isUserExist, friend];
+                          }),
                           builder: (ctx, asyncSnapshot) {
                             if (asyncSnapshot.connectionState ==
                                 ConnectionState.waiting)
                               return Center(child: CircularProgressIndicator());
-                            if (asyncSnapshot.error != null)
-                              return Center(child: Text('An error occurred!'));
                             if (!asyncSnapshot.data[0])
                               return Center(child: Text("该用户不存在。"));
                             FriendProvider friend = asyncSnapshot.data[1];
@@ -190,7 +191,10 @@ class ReadStatus extends StatelessWidget {
                       onNotification: (ScrollNotification scrollInfo) {
                         if (scrollInfo.metrics.pixels ==
                             scrollInfo.metrics.maxScrollExtent) {
-                          profile.recentReadProvider.fetchMoreRecentRead();
+                          exceptionHandling(context, () async {
+                            await profile.recentReadProvider
+                                .fetchMoreRecentRead();
+                          });
                         }
                         return true;
                       },
