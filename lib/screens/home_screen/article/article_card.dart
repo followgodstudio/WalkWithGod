@@ -33,10 +33,18 @@ class ArticleCard extends StatelessWidget {
           future: _getImage(article.imageUrl),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                  child: CircularProgressIndicator(
-                strokeWidth: 1.0,
-              ));
+              return Card(
+                  elevation: 8.0,
+                  child: AspectRatio(
+                      aspectRatio: 7 / 8,
+                      child: FittedBox(
+                        child: Image.asset("assets/images/placeholder.png"),
+                        fit: BoxFit.fill,
+                      )));
+              // Center(
+              //     child: CircularProgressIndicator(
+              //   strokeWidth: 1.0,
+              // ));
             } else {
               if (snapshot.error != null) {
                 return Center(

@@ -81,19 +81,21 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
         body: SafeArea(
             child: RefreshIndicator(
-                onRefresh: () => refreshArticles(),
-                child: NotificationListener<ScrollNotification>(onNotification:
-                    (ScrollNotification scrollInfo) {
-                  if (scrollInfo.metrics.pixels ==
-                      scrollInfo.metrics.maxScrollExtent) {
-                    exceptionHandling(context, () async {
-                      await Provider.of<ArticlesProvider>(context,
-                              listen: false)
-                          .fetchMoreArticles(new DateTime.utc(1989, 11, 9));
-                    });
-                  }
-                  return true;
-                }, child:
+                onRefresh: refreshArticles,
+                child:
+                    //TODO: the following code seems not compatible with RefreshIndicator
+                    // NotificationListener<ScrollNotification>(onNotification:
+                    //     (ScrollNotification scrollInfo) {
+                    //   if (scrollInfo.metrics.pixels ==
+                    //       scrollInfo.metrics.maxScrollExtent) {
+                    //     exceptionHandling(context, () async {
+                    //       await Provider.of<ArticlesProvider>(context,
+                    //               listen: false)
+                    //           .fetchMoreArticles(new DateTime.utc(1989, 11, 9));
+                    //     });
+                    //   }
+                    //   return true;
+                    // }, child:
                     Consumer<ArticlesProvider>(builder: (context, data, child) {
                   refreshHeader(data.articles);
                   return CustomScrollView(controller: _controller, slivers: <
@@ -149,6 +151,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     ArticleList(),
                   ]);
-                })))));
+                })
+                // )
+                )));
   }
 }
