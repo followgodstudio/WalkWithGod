@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:walk_with_god/utils/utils.dart';
 
 import '../../../configurations/theme.dart';
 import '../../../providers/user/setting_provider.dart';
-import '../../../widgets/popup_dialog.dart';
+import '../../../utils/utils.dart';
 
 class CacheClearScreen extends StatelessWidget {
   static const routeName = '/cache_clear';

@@ -56,9 +56,7 @@ class AppInfoScreen extends StatelessWidget {
                           style: Theme.of(context).textTheme.buttonMedium1),
                     ),
                     FutureBuilder(
-                        future: Future.wait([
-                          PackageInfo.fromPlatform(),
-                        ]),
+                        future: PackageInfo.fromPlatform(),
                         builder: (ctx, asyncSnapshot) {
                           if (asyncSnapshot.connectionState ==
                               ConnectionState.waiting)

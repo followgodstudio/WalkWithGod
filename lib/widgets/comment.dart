@@ -9,7 +9,6 @@ import '../providers/user/profile_provider.dart';
 import '../screens/personal_management_screen/headline/network_screen.dart';
 import '../utils/utils.dart';
 import '../widgets/popup_comment.dart';
-import 'popup_dialog.dart';
 import 'profile_picture.dart';
 
 class Comment extends StatelessWidget {
@@ -53,8 +52,7 @@ class Comment extends StatelessWidget {
                       children: [
                         GestureDetector(
                             onTap: () {
-                              if (data.creatorUid == null ||
-                                  data.creatorUid.isEmpty) return;
+                              if (data.creatorUid == null) return;
                               Navigator.of(context).pushNamed(
                                 NetworkScreen.routeName,
                                 arguments: data.creatorUid,

@@ -114,14 +114,14 @@ class FriendsProvider with ChangeNotifier {
   }
 
   Future<void> removefollowInList(String userId) async {
-    _following.removeWhere((item) => item.friendUid == userId);
-    FriendProvider friend = _follower
-        .firstWhere((element) => element.friendUid == userId, orElse: () {
-      return null;
-    });
-    if (friend != null) friend.friendStatus = eFriendStatusFollower;
-    followingsCount -= 1;
-    notifyListeners();
+    // _following.removeWhere((item) => item.friendUid == userId);
+    // FriendProvider friend = _follower
+    //     .firstWhere((element) => element.friendUid == userId, orElse: () {
+    //   return null;
+    // });
+    // if (friend != null) friend.friendStatus = eFriendStatusFollower;
+    // followingsCount -= 1;
+    // notifyListeners();
 
     _logger.i("FriendsProvider-removefollowInList");
     // Update database

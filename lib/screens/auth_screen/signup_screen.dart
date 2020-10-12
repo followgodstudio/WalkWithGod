@@ -2,7 +2,6 @@ import 'package:apple_sign_in/apple_sign_in.dart' as apple;
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:international_phone_input/international_phone_input.dart';
 import 'package:provider/provider.dart';
 
@@ -12,7 +11,7 @@ import '../../utils/my_logger.dart';
 import '../../utils/utils.dart';
 import '../home_screen/home_screen.dart';
 
-enum AuthFormType { signIn, signUp, reset, anonymous, phone }
+enum AuthFormType { signIn, signUp, reset, phone }
 
 class SignupScreen extends StatefulWidget {
   static const routeName = '/signup';
@@ -44,7 +43,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
   _SignupScreenState({this.authFormType});
   final formKey = GlobalKey<FormState>();
-  String _email, _password, _name, _warning, _phone;
+  String _email, _password, _name, _phone;
 
   void routeHome() {
     Navigator.of(context).pushNamedAndRemoveUntil(
@@ -68,9 +67,6 @@ class _SignupScreenState extends State<SignupScreen> {
 
   bool validate() {
     final form = formKey.currentState;
-    if (authFormType == AuthFormType.anonymous) {
-      return true;
-    }
     form.save();
     if (form.validate()) {
       form.save();
@@ -82,7 +78,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
   void submit() async {
     if (validate()) {
-      try {
+      await exceptionHandling(context, () async {
         final auth = Provider.of<AuthProvider>(context, listen: false);
         switch (authFormType) {
           case AuthFormType.signIn:
@@ -95,80 +91,38 @@ class _SignupScreenState extends State<SignupScreen> {
             break;
           case AuthFormType.reset:
             await auth.sendPasswordResetEmail(_email);
-            setState(() {
-              _warning = "密码重置邮件已发送到：$_email";
-              authFormType = AuthFormType.signIn;
-            });
-            break;
-          case AuthFormType.anonymous:
-            await auth.singInAnonymously();
-            routeHome();
+            showPopUpDialog(context, true, "密码重置邮件已发送到：$_email");
             break;
           case AuthFormType.phone:
             MyLogger("Widget").i("SignupScreen-submit-" + _phone);
-            var result = await auth.createUserWithPhone(_phone, context);
-            if (_phone == "" || result == "error") {
-              setState(() {
-                _warning = "Your phone number could not be validated";
-              });
-            }
+            await auth.createUserWithPhone(_phone, context);
             break;
         }
-      } catch (e) {
-        setState(() {
-          _warning = e.message;
-        });
-      }
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final _width = MediaQuery.of(context).size.width;
-    final _height = MediaQuery.of(context).size.height;
-
-    if (authFormType == AuthFormType.anonymous) {
-      // TODO: can be removed???
-      submit();
-      return Scaffold(
-          backgroundColor: Theme.of(context).canvasColor,
-          body: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                SpinKitDoubleBounce(
-                  color: Colors.black,
-                ),
-                Text(
-                  "Loading",
-                  style: TextStyle(color: Colors.white),
-                ),
-              ],
-            ),
-          ));
-    } else {
-      return Scaffold(
-        body: SingleChildScrollView(
-          child: Container(
-            // color: Theme.of(context).canvasColor,
-            color: Theme.of(context).canvasColor,
-            height: _height,
-            width: _width,
-            child: SafeArea(
+    return Scaffold(
+      resizeToAvoidBottomPadding: true,
+      body: SingleChildScrollView(
+        child: Container(
+          color: Theme.of(context).canvasColor,
+          width: _width,
+          child: SafeArea(
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 50.0, vertical: 20),
               child: Column(
                 children: <Widget>[
-                  SizedBox(height: _height * 0.025),
-                  showAlert(),
-                  SizedBox(height: _height * 0.025),
                   buildHeaderText(),
-                  SizedBox(height: _height * 0.05),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 50.0),
-                    child: Form(
-                      key: formKey,
-                      child: Column(
-                        children: buildInputs() + buildButtons(),
-                      ),
+                  SizedBox(height: 20),
+                  Form(
+                    key: formKey,
+                    child: Column(
+                      children: buildInputs() + buildButtons(),
                     ),
                   ),
                 ],
@@ -176,45 +130,7 @@ class _SignupScreenState extends State<SignupScreen> {
             ),
           ),
         ),
-      );
-    }
-  }
-
-  Widget showAlert() {
-    if (_warning != null) {
-      return Container(
-        color: Colors.amberAccent,
-        width: double.infinity,
-        padding: EdgeInsets.all(8.0),
-        child: Row(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(right: 8.0),
-              child: Icon(Icons.error_outline),
-            ),
-            Expanded(
-              child: AutoSizeText(
-                _warning,
-                maxLines: 3,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: IconButton(
-                icon: Icon(Icons.close),
-                onPressed: () {
-                  setState(() {
-                    _warning = null;
-                  });
-                },
-              ),
-            )
-          ],
-        ),
-      );
-    }
-    return SizedBox(
-      height: 0,
+      ),
     );
   }
 
@@ -439,15 +355,11 @@ class _SignupScreenState extends State<SignupScreen> {
                 centered: true,
                 text: "Google账号登陆",
                 textStyle: Theme.of(context).textTheme.captionSmall2,
-                onPressed: () async {
-                  try {
+                onPressed: () {
+                  exceptionHandling(context, () async {
                     await _auth.signInWithGoogle();
                     routeHome();
-                  } catch (e) {
-                    setState(() {
-                      _warning = e.message + "。请使用其他方式登陆";
-                    });
-                  }
+                  });
                 },
               ),
               RaisedButton(
@@ -485,9 +397,11 @@ class _SignupScreenState extends State<SignupScreen> {
     final _auth = Provider.of<AuthProvider>(context, listen: false);
     if (_showAppleSignIn == true) {
       return apple.AppleSignInButton(
-        onPressed: () async {
-          await _auth.signInWithApple();
-          routeHome();
+        onPressed: () {
+          exceptionHandling(context, () async {
+            await _auth.signInWithApple();
+            routeHome();
+          });
         },
         style: apple.ButtonStyle.black,
       );

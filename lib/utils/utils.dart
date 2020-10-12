@@ -1,15 +1,42 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:palette_generator/palette_generator.dart';
-import 'package:walk_with_god/configurations/constants.dart';
 
+import '../exceptions/my_exception.dart';
 import '../widgets/popup_dialog.dart';
 import 'my_logger.dart';
 
+Future<dynamic> exceptionHandling(
+    BuildContext context, Future<dynamic> Function() function) async {
+  try {
+    return await function();
+  } on MyException catch (error) {
+    // Most exception should be translated to MyException
+    MyLogger("Firestore").e(error.message);
+    showPopUpDialog(context, false, error.message);
+  } on FirebaseAuthException catch (error) {
+    String message = error.message;
+    // handle some general exceptions, such as network
+    if (error.code == "network-request-failed") message = "网络不佳";
+    MyLogger("Firebase").e(message);
+    showPopUpDialog(context, false, "FirebaseException: " + message);
+  } on PlatformException catch (error) {
+    MyLogger("TODO-platform").e(error.message);
+    showPopUpDialog(context, false, "PlatformException:" + error.message);
+  } catch (error) {
+    MyLogger("TODO-error").wtf(error.message);
+    showPopUpDialog(context, false, "Error:" + error.message);
+  }
+}
+
 void showPopUpDialog(BuildContext context, bool isSuccess, String message,
-    [int durationMilliseconds = 2000]) {
+    {int durationMilliseconds, Function afterDismiss}) {
+  if (durationMilliseconds == null)
+    durationMilliseconds = isSuccess ? 1000 : 2000;
   Timer timer = Timer(Duration(milliseconds: durationMilliseconds), () {
     Navigator.of(context).pop(true);
   });
@@ -19,8 +46,8 @@ void showPopUpDialog(BuildContext context, bool isSuccess, String message,
       builder: (context) {
         return PopUpDialog(isSuccess, message);
       }).then((value) {
-    timer?.cancel();
-    timer = null;
+    timer.cancel();
+    if (afterDismiss != null) afterDismiss();
   });
 }
 

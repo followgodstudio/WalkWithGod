@@ -3,10 +3,12 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 
 import '../../configurations/constants.dart';
+import '../../exceptions/my_exception.dart';
 import '../../utils/my_logger.dart';
 import 'friends_provider.dart';
 import 'messages_provider.dart';
@@ -38,11 +40,11 @@ class ProfileProvider with ChangeNotifier {
   bool _isFetchedAll = false;
 
   ProfileProvider([this.uid]) {
-    _logger.i("ProfileProvider-init");
+    _logger.v("ProfileProvider-init");
   }
 
   Future<void> fetchAllUserData() async {
-    if (_isFetching || _isFetchedAll) return;
+    if (uid == null || _isFetching || _isFetchedAll) return;
     _logger.i("ProfileProvider-fetchAllUserData");
     _isFetchedAll = true;
     friendsProvider.setUserId(uid);
@@ -53,16 +55,20 @@ class ProfileProvider with ChangeNotifier {
 
     _isFetching = true;
     DateTime start = DateTime.now();
-
-    bool isUserExists = await fetchProfile();
-    if (!isUserExists) return false;
-    await savedArticlesProvider.fetchSavedList();
-    await friendsProvider.fetchFriendList(true, followersCount);
-    await friendsProvider.fetchFriendList(false);
-    await messagesProvider.fetchMessageList(messagesCount);
-    await settingProvider.fetchAboutUs();
-    await settingProvider.fetchNewestVersion();
-    await recentReadProvider.fetchRecentRead();
+    try {
+      bool isUserExists = await fetchProfile();
+      if (!isUserExists) throw MyException("用户数据缺失，请注销用户后重新注册");
+      await savedArticlesProvider.fetchSavedList();
+      await friendsProvider.fetchFriendList(true, followersCount);
+      await friendsProvider.fetchFriendList(false);
+      await messagesProvider.fetchMessageList(messagesCount);
+      await settingProvider.fetchAboutUs();
+      await settingProvider.fetchNewestVersion();
+      await recentReadProvider.fetchRecentRead();
+    } on Exception catch (error) {
+      _isFetching = false;
+      throw error;
+    }
 
     _isFetching = false;
     _logger.i("ProfileProvider-fetchAllUserData takes: " +
@@ -98,51 +104,57 @@ class ProfileProvider with ChangeNotifier {
 
   Future<bool> fetchProfile() async {
     _logger.i("ProfileProvider-fetchProfile");
-    DocumentSnapshot doc = await _db.collection(cUsers).doc(uid).get();
-    if (!doc.exists) return false; // User not exist
+    try {
+      DocumentSnapshot doc = await _db.collection(cUsers).doc(uid).get();
+      if (!doc.exists) return false; // User not exist
 
-    if (doc.data().containsKey(fUserName)) name = doc.get(fUserName);
-    if ((imageUrl == null || imageUrl.isEmpty) &&
-        doc.data().containsKey(fUserImageUrl))
-      imageUrl = doc.get(fUserImageUrl); // Only fetch once
+      if (doc.data().containsKey(fUserName)) name = doc.get(fUserName);
+      if ((imageUrl == null || imageUrl.isEmpty) &&
+          doc.data().containsKey(fUserImageUrl))
+        imageUrl = doc.get(fUserImageUrl); // Only fetch once
 
-    // fetch dynamic information
-    DocumentSnapshot docDynamic = await _db
-        .collection(cUsers)
-        .doc(uid)
-        .collection(cUserProfile)
-        .doc(dUserProfileDynamic)
-        .get();
-    if (docDynamic.exists && docDynamic.data().containsKey(fUserFollowersCount))
-      followersCount = docDynamic.get(fUserFollowersCount);
+      // fetch dynamic information
+      DocumentSnapshot docDynamic = await _db
+          .collection(cUsers)
+          .doc(uid)
+          .collection(cUserProfile)
+          .doc(dUserProfileDynamic)
+          .get();
+      if (docDynamic.exists &&
+          docDynamic.data().containsKey(fUserFollowersCount))
+        followersCount = docDynamic.get(fUserFollowersCount);
 
-    // fetch static information
-    DocumentSnapshot docStatic = await _db
-        .collection(cUsers)
-        .doc(uid)
-        .collection(cUserProfile)
-        .doc(dUserProfileStatic)
-        .get();
-    if (!docStatic.exists) return true;
-    if (docStatic.data().containsKey(fCreatedDate))
-      createdDate = (docStatic.get(fCreatedDate) as Timestamp).toDate();
-    if (docStatic.data().containsKey(fUserReadDuration))
-      recentReadProvider.readDuration =
-          docStatic.get(fUserReadDuration).floor();
-    if (docStatic.data().containsKey(fUserReadsCount))
-      recentReadProvider.readsCount = docStatic.get(fUserReadsCount);
-    if (docStatic.data().containsKey(fUserFollowingsCount))
-      friendsProvider.followingsCount = docStatic.get(fUserFollowingsCount);
-    if (docStatic.data().containsKey(fUserSavedArticlesCount))
-      savedArticlesProvider.savedArticlesCount =
-          docStatic.get(fUserSavedArticlesCount);
-    if (docStatic.data().containsKey(fSettingScreenAwake))
-      settingProvider.keepScreenAwake = docStatic.get(fSettingScreenAwake);
-    if (docStatic.data().containsKey(fSettingHideRecentRead))
-      settingProvider.hideRecentRead = docStatic.get(fSettingHideRecentRead);
-
-    notifyListeners();
-    return true;
+      // fetch static information
+      DocumentSnapshot docStatic = await _db
+          .collection(cUsers)
+          .doc(uid)
+          .collection(cUserProfile)
+          .doc(dUserProfileStatic)
+          .get();
+      if (!docStatic.exists) return true;
+      if (docStatic.data().containsKey(fCreatedDate))
+        createdDate = (docStatic.get(fCreatedDate) as Timestamp).toDate();
+      if (docStatic.data().containsKey(fUserReadDuration))
+        recentReadProvider.readDuration =
+            docStatic.get(fUserReadDuration).floor();
+      if (docStatic.data().containsKey(fUserReadsCount))
+        recentReadProvider.readsCount = docStatic.get(fUserReadsCount);
+      if (docStatic.data().containsKey(fUserFollowingsCount))
+        friendsProvider.followingsCount = docStatic.get(fUserFollowingsCount);
+      if (docStatic.data().containsKey(fUserSavedArticlesCount))
+        savedArticlesProvider.savedArticlesCount =
+            docStatic.get(fUserSavedArticlesCount);
+      if (docStatic.data().containsKey(fSettingScreenAwake))
+        settingProvider.keepScreenAwake = docStatic.get(fSettingScreenAwake);
+      if (docStatic.data().containsKey(fSettingHideRecentRead))
+        settingProvider.hideRecentRead = docStatic.get(fSettingHideRecentRead);
+      notifyListeners();
+      return true;
+    } on PlatformException catch (error) {
+      String message = error.message;
+      //TODO: define our error message here
+      throw (MyException(message));
+    }
   }
 
   Future<void> updateProfilePicture(File file) async {

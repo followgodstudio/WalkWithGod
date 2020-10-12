@@ -5,11 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:walk_with_god/utils/utils.dart';
 
 import '../../../configurations/theme.dart';
 import '../../../providers/user/profile_provider.dart';
-import '../../../widgets/popup_dialog.dart';
+import '../../../utils/utils.dart';
 
 class EditPictureScreen extends StatefulWidget {
   static const routeName = "/edit_picture";
@@ -70,15 +69,22 @@ class _EditPictureScreenState extends State<EditPictureScreen> {
               if (!_uploading)
                 FlatButton(
                     onPressed: () async {
+                      if (_uploading) return;
                       setState(() {
                         _uploading = true;
                       });
-                      await Provider.of<ProfileProvider>(context, listen: false)
-                          .updateProfilePicture(_imageFile);
+                      await exceptionHandling(context, () async {
+                        await Provider.of<ProfileProvider>(context,
+                                listen: false)
+                            .updateProfilePicture(_imageFile);
+                        showPopUpDialog(context, true, "上传成功",
+                            afterDismiss: () {
+                          Navigator.of(context).pop(true);
+                        });
+                      });
                       setState(() {
                         _uploading = false;
                       });
-                      showPopUpDialog(context, true, "上传成功");
                     },
                     child: Text("上传",
                         style: Theme.of(context).textTheme.captionMedium4),

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../../configurations/theme.dart';
 import '../../../providers/auth_provider.dart';
 import '../../../providers/user/setting_provider.dart';
+import '../../../utils/utils.dart';
 import '../../auth_screen/signup_screen.dart';
 import 'about_us_screen.dart';
 import 'app_info_screen.dart';
@@ -157,11 +158,14 @@ class SettingScreen extends StatelessWidget {
                         width: double.infinity,
                         child: FlatButton(
                             onPressed: () {
-                              Provider.of<AuthProvider>(context, listen: false)
-                                  .logout();
-                              Navigator.of(context).pushNamedAndRemoveUntil(
-                                  SignupScreen.routeName,
-                                  (Route<dynamic> route) => false);
+                              exceptionHandling(context, () async {
+                                await Provider.of<AuthProvider>(context,
+                                        listen: false)
+                                    .logout();
+                                Navigator.of(context).pushNamedAndRemoveUntil(
+                                    SignupScreen.routeName,
+                                    (Route<dynamic> route) => false);
+                              });
                             },
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),

@@ -5,6 +5,7 @@ import '../../../configurations/constants.dart';
 import '../../../configurations/theme.dart';
 import '../../../providers/user/friend_provider.dart';
 import '../../../providers/user/profile_provider.dart';
+import '../../../utils/utils.dart';
 import '../../../widgets/profile_picture.dart';
 
 class FriendItem extends StatelessWidget {
@@ -21,20 +22,22 @@ class FriendItem extends StatelessWidget {
                           style: Theme.of(context).textTheme.buttonMedium1)),
                   FlatButton(
                       onPressed: () {
-                        ProfileProvider profile = Provider.of<ProfileProvider>(
-                            context,
-                            listen: false);
-                        if (data.friendStatus == eFriendStatusFollowing ||
-                            data.friendStatus == eFriendStatusFriend) {
-                          data.unfollow(
-                              profile.uid, profile.name, profile.imageUrl);
-                          profile.friendsProvider
-                              .removefollowInList(data.friendUid);
-                        } else {
-                          data.follow(
-                              profile.uid, profile.name, profile.imageUrl);
-                          profile.friendsProvider.addFollowInList(data);
-                        }
+                        exceptionHandling(context, () async {
+                          ProfileProvider profile =
+                              Provider.of<ProfileProvider>(context,
+                                  listen: false);
+                          if (data.friendStatus == eFriendStatusFollowing ||
+                              data.friendStatus == eFriendStatusFriend) {
+                            await data.unfollow(
+                                profile.uid, profile.name, profile.imageUrl);
+                            await profile.friendsProvider
+                                .removefollowInList(data.friendUid);
+                          } else {
+                            await data.follow(
+                                profile.uid, profile.name, profile.imageUrl);
+                            await profile.friendsProvider.addFollowInList(data);
+                          }
+                        });
                       },
                       child: Text(
                           (data.friendStatus == eFriendStatusFollowing)

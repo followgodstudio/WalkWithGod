@@ -72,7 +72,7 @@ class SavedArticlesProvider with ChangeNotifier {
   }
 
   Future<void> fetchSavedStatusByArticleId(String articleId) async {
-    if (_userId == null) return;
+    if (_userId == null || articleId == null) return;
     ArticleProvider article =
         _articles.firstWhere((element) => element.id == articleId, orElse: () {
       return null;
@@ -93,6 +93,7 @@ class SavedArticlesProvider with ChangeNotifier {
   }
 
   Future<void> removeSavedByArticleId(String articleId) async {
+    if (_userId == null || articleId == null) return;
     _logger.i("SavedArticlesProvider-removeSavedByArticleId");
     _articles.removeWhere((item) => item.id == articleId);
     savedArticlesCount = _articles.length;
@@ -115,12 +116,14 @@ class SavedArticlesProvider with ChangeNotifier {
     await batch.commit();
   }
 
-  Future<void> addSavedByArticleId(String articleId) async {
+  Future<void> addSavedByArticleId(
+      String articleId, ArticlesProvider articlesProvider) async {
+    if (_userId == null || articleId == null) return;
     _logger.i("SavedArticlesProvider-addSavedByArticleId");
     _currentLike = true;
     // Get article info
     ArticleProvider article =
-        await ArticlesProvider.fetchArticlePreviewById(articleId);
+        await articlesProvider.fetchArticlePreviewById(articleId);
     _articles.insert(0, article);
     savedArticlesCount = _articles.length;
     notifyListeners();

@@ -5,15 +5,17 @@ import 'package:provider/provider.dart';
 import '../../configurations/theme.dart';
 import '../../providers/article/article_provider.dart';
 import '../../screens/personal_management_screen/headline/network_screen.dart';
+import '../../utils/my_logger.dart';
 import '../../utils/utils.dart';
 import '../../widgets/aricle_paragraph.dart';
 
 class ArticleBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Consumer<ArticleProvider>(
-      builder: (context, article, child) =>
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+    MyLogger("Widget").v("ArticleBody-build");
+    return Consumer<ArticleProvider>(builder: (context, article, child) {
+      if (article.id == null) return SizedBox();
+      return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Hero(
           tag: 'background' + article.id,
           child: Container(
@@ -108,7 +110,7 @@ class ArticleBody extends StatelessWidget {
         Center(
             child: Column(
                 children: [...article.content.map((e) => ArticleParagraph(e))]))
-      ]),
-    );
+      ]);
+    });
   }
 }

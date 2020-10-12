@@ -9,6 +9,7 @@ import '../providers/article/articles_provider.dart';
 import '../providers/splash_provider.dart';
 import '../providers/user/profile_provider.dart';
 import '../utils/my_logger.dart';
+import '../utils/utils.dart';
 import 'home_screen/home_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -19,18 +20,28 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   StatefulWidget nextScreen;
-  String _userId = "*"; // some value that is not an id and not null
   Timer _timer;
 
   @override
   void initState() {
     super.initState();
     startTime();
+    loadData();
   }
 
-  startTime() async {
-    var duration = Duration(seconds: 8);
-    _timer = Timer(duration, routeHome);
+  loadData() {
+    exceptionHandling(context, () async {
+      await Provider.of<SplashProvider>(context, listen: false)
+          .fetchSplashScreensData();
+      await Provider.of<ArticlesProvider>(context, listen: false)
+          .fetchArticlesByDate(new DateTime.utc(1989, 11, 9));
+      await Provider.of<ProfileProvider>(context, listen: false)
+          .fetchAllUserData();
+    });
+  }
+
+  startTime() {
+    _timer = Timer(Duration(seconds: 8), routeHome);
   }
 
   void routeHome() {
@@ -40,11 +51,6 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     MyLogger("Widget").i("SplashScreen-build");
-    Provider.of<SplashProvider>(context, listen: false)
-        .fetchSplashScreensData();
-    Provider.of<ProfileProvider>(context, listen: false).fetchAllUserData();
-    Provider.of<ArticlesProvider>(context, listen: false)
-        .fetchArticlesByDate(new DateTime.utc(1989, 11, 9));
     return Scaffold(body: SafeArea(
         child: Consumer<SplashProvider>(builder: (context, splash, child) {
       if (splash.imageUrl == null)
