@@ -6,6 +6,7 @@ import '../../../configurations/theme.dart';
 import '../../../providers/auth_provider.dart';
 import '../../../providers/user/setting_provider.dart';
 import '../../../utils/utils.dart';
+import '../../../widgets/navbar.dart';
 import '../../auth_screen/signup_screen.dart';
 import 'about_us_screen.dart';
 import 'app_info_screen.dart';
@@ -19,20 +20,7 @@ class SettingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title:
-              Text('系统设置', style: Theme.of(context).textTheme.captionMedium2),
-          elevation: 0,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios),
-            color: Theme.of(context).textTheme.buttonColor2,
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          backgroundColor: Theme.of(context).appBarTheme.color,
-        ),
+        appBar: NavBar(title: "系统设置"),
         body: SafeArea(
             child: SingleChildScrollView(
           child: Padding(

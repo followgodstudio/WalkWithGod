@@ -10,6 +10,7 @@ import '../../../providers/user/profile_provider.dart';
 import '../../../providers/user/recent_read_provider.dart';
 import '../../../utils/utils.dart';
 import '../../../widgets/article_card_small.dart';
+import '../../../widgets/navbar.dart';
 import 'introduction.dart';
 
 class NetworkScreen extends StatelessWidget {
@@ -20,17 +21,7 @@ class NetworkScreen extends StatelessWidget {
     final ProfileProvider myProfile =
         Provider.of<ProfileProvider>(context, listen: false);
     return Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios),
-            color: Theme.of(context).textTheme.buttonColor2,
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          backgroundColor: Theme.of(context).appBarTheme.color,
-        ),
+        appBar: NavBar(),
         body: SafeArea(
             child: SingleChildScrollView(
                 child: Padding(

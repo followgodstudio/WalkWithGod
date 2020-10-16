@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../../configurations/theme.dart';
 import '../../../providers/user/setting_provider.dart';
+import '../../../widgets/navbar.dart';
 import 'black_list_screen.dart';
 import 'delete_account_screen.dart';
 
@@ -13,19 +14,7 @@ class PrivacyScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text('隐私', style: Theme.of(context).textTheme.captionMedium2),
-          elevation: 0,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios),
-            color: Theme.of(context).textTheme.buttonColor2,
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          backgroundColor: Theme.of(context).appBarTheme.color,
-        ),
+        appBar: NavBar(title: "隐私"),
         body: SafeArea(
             child: SingleChildScrollView(
           child: Padding(

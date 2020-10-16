@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../../configurations/theme.dart';
 import '../../../providers/user/profile_provider.dart';
+import '../../../widgets/navbar.dart';
 import '../../../widgets/profile_picture.dart';
 import 'edit_image_screen.dart';
 
@@ -14,20 +15,7 @@ class EditProfileScreen extends StatelessWidget {
     ProfileProvider profile =
         Provider.of<ProfileProvider>(context, listen: false);
     return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title:
-              Text('编辑个人资料', style: Theme.of(context).textTheme.captionMedium2),
-          elevation: 0,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios),
-            color: Theme.of(context).textTheme.buttonColor2,
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          backgroundColor: Theme.of(context).appBarTheme.color,
-        ),
+        appBar: NavBar(title: "编辑个人资料"),
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(20.0),

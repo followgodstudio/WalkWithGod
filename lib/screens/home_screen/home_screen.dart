@@ -8,6 +8,7 @@ import '../../providers/user/profile_provider.dart';
 import '../../screens/personal_management_screen/personal_management_screen.dart';
 import '../../utils/my_logger.dart';
 import '../../utils/utils.dart';
+import '../../widgets/navbar.dart';
 import '../../widgets/profile_picture.dart';
 import 'article/article_list.dart';
 
@@ -98,21 +99,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     // }, child:
                     Consumer<ArticlesProvider>(builder: (context, data, child) {
                   refreshHeader(data.articles);
-                  return CustomScrollView(controller: _controller, slivers: <
-                      Widget>[
-                    SliverAppBar(
-                      toolbarHeight: 48.0,
-                      shadowColor: Theme.of(context).canvasColor,
-                      backgroundColor: Theme.of(context).canvasColor,
-                      pinned: true,
-                      automaticallyImplyLeading: false,
-                      flexibleSpace: Row(
-                        children: <Widget>[
-                          RawMaterialButton(
-                            constraints: BoxConstraints(),
-                            padding: EdgeInsets.only(left: 20),
-                            onPressed: () {},
-                            child: ValueListenableBuilder(
+                  return CustomScrollView(controller: _controller, slivers: [
+                    NavBar(
+                        hasBackButton: false,
+                        isSliverAppBar: true,
+                        titleWidget: Row(
+                          children: <Widget>[
+                            ValueListenableBuilder(
                               valueListenable: title,
                               builder: (context, String value, child) => Text(
                                 value,
@@ -120,24 +113,22 @@ class _HomeScreenState extends State<HomeScreen> {
                                     Theme.of(context).textTheme.captionMedium2,
                               ),
                             ),
-                          ),
-                          Container(
-                              height: 10,
-                              child: VerticalDivider(
-                                  color: Color.fromARGB(255, 128, 128, 128))),
-                          ValueListenableBuilder(
-                            valueListenable: formattedDate,
-                            builder: (context, String value, child) => Text(
-                              value,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .captionMainWideSpacing,
+                            Container(
+                                height: 20,
+                                child: VerticalDivider(
+                                    color: Color.fromARGB(255, 128, 128, 128))),
+                            ValueListenableBuilder(
+                              valueListenable: formattedDate,
+                              builder: (context, String value, child) => Text(
+                                value,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .captionMainWideSpacing,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      actions: [
-                        FlatButton(
+                          ],
+                        ),
+                        actionButton: FlatButton(
                           child: Consumer<ProfileProvider>(
                               builder: (ctx, profile, _) =>
                                   ProfilePicture(18.0, profile.imageUrl)),
@@ -146,9 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               PersonalManagementScreen.routeName,
                             );
                           },
-                        )
-                      ],
-                    ),
+                        )),
                     ArticleList(),
                   ]);
                 })

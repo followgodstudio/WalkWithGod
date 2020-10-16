@@ -5,6 +5,7 @@ import '../../../configurations/theme.dart';
 import '../../../providers/user/saved_articles_provider.dart';
 import '../../../utils/utils.dart';
 import '../../../widgets/article_card_small.dart';
+import '../../../widgets/navbar.dart';
 
 // TODO: add saved articles search
 class SavedArticlesScreen extends StatelessWidget {
@@ -12,20 +13,7 @@ class SavedArticlesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title:
-              Text('我的收藏', style: Theme.of(context).textTheme.captionMedium2),
-          elevation: 0,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios),
-            color: Theme.of(context).textTheme.buttonColor2,
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          backgroundColor: Theme.of(context).appBarTheme.color,
-        ),
+        appBar: NavBar(title: "我的收藏"),
         body: SafeArea(
           child: NotificationListener<ScrollNotification>(onNotification:
               (ScrollNotification scrollInfo) {

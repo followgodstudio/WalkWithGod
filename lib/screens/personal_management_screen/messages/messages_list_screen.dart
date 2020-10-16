@@ -5,6 +5,7 @@ import '../../../configurations/theme.dart';
 import '../../../providers/user/messages_provider.dart';
 import '../../../providers/user/profile_provider.dart';
 import '../../../utils/utils.dart';
+import '../../../widgets/navbar.dart';
 import 'message_item.dart';
 
 class MessagesListScreen extends StatelessWidget {
@@ -14,20 +15,7 @@ class MessagesListScreen extends StatelessWidget {
     ProfileProvider profile =
         Provider.of<ProfileProvider>(context, listen: false);
     return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title:
-              Text('我的消息', style: Theme.of(context).textTheme.captionMedium2),
-          elevation: 0,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios),
-            color: Theme.of(context).textTheme.buttonColor2,
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          backgroundColor: Theme.of(context).appBarTheme.color,
-        ),
+        appBar: NavBar(title: "我的消息"),
         body: SafeArea(
             child: NotificationListener<ScrollNotification>(
           onNotification: (ScrollNotification scrollInfo) {

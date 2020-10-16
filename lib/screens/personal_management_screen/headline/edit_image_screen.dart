@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import '../../../configurations/theme.dart';
 import '../../../providers/user/profile_provider.dart';
 import '../../../utils/utils.dart';
+import '../../../widgets/navbar.dart';
 
 class EditPictureScreen extends StatefulWidget {
   static const routeName = "/edit_picture";
@@ -45,17 +46,7 @@ class _EditPictureScreenState extends State<EditPictureScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios),
-          color: Theme.of(context).textTheme.buttonColor2,
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        backgroundColor: Theme.of(context).appBarTheme.color,
-      ),
+      appBar: NavBar(),
       // Preview the image and crop it
       body: Padding(
         padding: const EdgeInsets.all(20.0),

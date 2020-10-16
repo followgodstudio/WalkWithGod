@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../../configurations/theme.dart';
 import '../../../providers/user/setting_provider.dart';
+import '../../../widgets/navbar.dart';
 
 class AppInfoScreen extends StatelessWidget {
   static const routeName = '/app_info';
@@ -11,20 +12,7 @@ class AppInfoScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title:
-              Text('关于随行派', style: Theme.of(context).textTheme.captionMedium2),
-          elevation: 0,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios),
-            color: Theme.of(context).textTheme.buttonColor2,
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          backgroundColor: Theme.of(context).appBarTheme.color,
-        ),
+        appBar: NavBar(title: "关于随行派"),
         body: SafeArea(
             child: Padding(
           padding: const EdgeInsets.all(20.0),

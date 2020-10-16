@@ -6,6 +6,7 @@ import '../../../providers/user/friend_provider.dart';
 import '../../../providers/user/friends_provider.dart';
 import '../../../providers/user/profile_provider.dart';
 import '../../../utils/utils.dart';
+import '../../../widgets/navbar.dart';
 import 'friend_item.dart';
 
 // TODO: add wechat and facebook friends, add friends search
@@ -23,9 +24,8 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
     ProfileProvider profile =
         Provider.of<ProfileProvider>(context, listen: false);
     return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Row(
+        appBar: NavBar(
+          titleWidget: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               GestureDetector(
@@ -53,21 +53,6 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
                           : Theme.of(context).textTheme.buttonLargeGray)),
             ],
           ),
-          elevation: 0,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios),
-            color: Theme.of(context).textTheme.buttonColor2,
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          backgroundColor: Theme.of(context).appBarTheme.color,
-          actions: [
-            Placeholder(
-              color: Theme.of(context).appBarTheme.color,
-              fallbackWidth: 60,
-            ),
-          ],
         ),
         body: SafeArea(
             child: NotificationListener<ScrollNotification>(

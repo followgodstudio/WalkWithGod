@@ -9,6 +9,7 @@ import '../../providers/user/saved_articles_provider.dart';
 import '../../utils/my_logger.dart';
 import '../../utils/utils.dart';
 import '../../widgets/article_card_small.dart';
+import '../../widgets/navbar.dart';
 import '../auth_screen/signup_screen.dart';
 import 'friends/friends_list_screen.dart';
 import 'headline/edit_profile_screen.dart';
@@ -26,31 +27,19 @@ class PersonalManagementScreen extends StatelessWidget {
     bool isLoggedIn =
         (Provider.of<ProfileProvider>(context, listen: false).uid != null);
     return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text('我的', style: Theme.of(context).textTheme.captionMedium2),
-          elevation: 0,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios),
+        appBar: NavBar(
+          title: "我的",
+          actionButton: IconButton(
+            icon: Icon(Icons.settings),
             color: Theme.of(context).textTheme.buttonColor2,
             onPressed: () {
-              Navigator.of(context).pop();
+              if (!isLoggedIn) {
+                showPopUpDialog(context, false, "请登陆后再操作");
+              } else {
+                Navigator.of(context).pushNamed(SettingScreen.routeName);
+              }
             },
           ),
-          actions: [
-            IconButton(
-              icon: Icon(Icons.settings),
-              color: Theme.of(context).textTheme.buttonColor2,
-              onPressed: () {
-                if (!isLoggedIn) {
-                  showPopUpDialog(context, false, "请登陆后再操作");
-                } else {
-                  Navigator.of(context).pushNamed(SettingScreen.routeName);
-                }
-              },
-            ),
-          ],
-          backgroundColor: Theme.of(context).appBarTheme.color,
         ),
         body: SafeArea(
             child: SingleChildScrollView(
