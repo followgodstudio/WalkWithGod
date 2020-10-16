@@ -51,8 +51,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    Logger.level = Level.error;
     MyLogger("Widget").i("MyApp-build");
-    Logger.level = Level.info;
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(
