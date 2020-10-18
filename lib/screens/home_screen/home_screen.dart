@@ -10,7 +10,7 @@ import '../../utils/my_logger.dart';
 import '../../utils/utils.dart';
 import '../../widgets/navbar.dart';
 import '../../widgets/profile_picture.dart';
-import 'article/article_list.dart';
+import 'article_list.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = '/home';

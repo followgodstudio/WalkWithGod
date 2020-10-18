@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../configurations/theme.dart';
 import '../../providers/article/article_provider.dart';
-import '../../widgets/article_card_small.dart';
+import '../../widgets/article_card.dart';
 
 class SimilarArticles extends StatelessWidget {
   @override
@@ -22,7 +22,8 @@ class SimilarArticles extends StatelessWidget {
               height: 200,
               child: ListView(children: [
                 ...value.similarArticles
-                    .map((e) => ArticleCard(e, 4 / 5))
+                    .map((element) =>
+                        ArticleCard(article: element, verticalPadding: 12.5))
                     .toList(),
               ], scrollDirection: Axis.horizontal),
             ),

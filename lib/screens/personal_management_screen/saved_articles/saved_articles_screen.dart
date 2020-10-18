@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../../../configurations/theme.dart';
 import '../../../providers/user/saved_articles_provider.dart';
 import '../../../utils/utils.dart';
-import '../../../widgets/article_card_small.dart';
+import '../../../widgets/article_card.dart';
 import '../../../widgets/navbar.dart';
 
 // TODO: add saved articles search
@@ -53,7 +53,7 @@ class SavedArticlesScreen extends StatelessWidget {
                     delegate: SliverChildListDelegate(
                       [
                         ...saved.articles
-                            .map((element) => ArticleCard(element, 4 / 5))
+                            .map((element) => ArticleCard(article: element))
                             .toList()
                       ],
                     ),

@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:provider/provider.dart';
 
-import '../../../providers/article/articles_provider.dart';
-import '../../../utils/my_logger.dart';
-import 'article_card.dart';
+import '../../providers/article/articles_provider.dart';
+import '../../utils/my_logger.dart';
+import '../../widgets/article_card.dart';
 
 class ArticleList extends StatefulWidget {
   const ArticleList({
@@ -51,7 +51,12 @@ class _ArticleListState extends State<ArticleList> {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {
-          return ArticleCard(articlesData.articles[index]);
+          return ArticleCard(
+              article: articlesData.articles[index],
+              isSmall: false,
+              aspectRatio: 7 / 8,
+              horizontalPadding: 20.0,
+              verticalPadding: 12.5);
         },
         childCount:
             articlesData.articles == null ? 0 : articlesData.articles.length,

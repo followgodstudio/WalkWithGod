@@ -13,7 +13,7 @@ class RecentReadProvider with ChangeNotifier {
   String _userId;
   int readsCount = 0;
   int readDuration = 0;
-  List<String> _recentReadList = [];
+  List<String> recentReadStringList = [];
   List<ArticleProvider> recentRead = [];
   bool noMoreRecentRead = false;
   int _lastVisibleRecentRead = 0;
@@ -35,20 +35,20 @@ class RecentReadProvider with ChangeNotifier {
             isGreaterThanOrEqualTo: DateTime.now().subtract(Duration(days: 7)))
         .orderBy(fUpdatedDate, descending: true)
         .get();
-    _recentReadList = [];
+    recentReadStringList = [];
     recentRead = [];
     query.docs.forEach((data) {
-      _recentReadList.add(data.id);
+      recentReadStringList.add(data.id);
     });
     _lastVisibleRecentRead = 0;
-    await _appendRecentReadList();
+    await _appendrecentReadStringList();
   }
 
   Future<void> fetchMoreRecentRead() async {
     if (readsCount == 0 || noMoreRecentRead || _isFetchingRecentRead) return;
     _logger.i("RecentReadProvider-fetchMoreRecentRead");
     _isFetchingRecentRead = true;
-    await _appendRecentReadList();
+    await _appendrecentReadStringList();
     _isFetchingRecentRead = false;
   }
 
@@ -59,8 +59,8 @@ class RecentReadProvider with ChangeNotifier {
     _isUpdatingRecentRead = true;
 
     // update local variables
-    _recentReadList.removeWhere((item) => (item == articleProvider.id));
-    _recentReadList.insert(0, articleProvider.id);
+    recentReadStringList.removeWhere((item) => (item == articleProvider.id));
+    recentReadStringList.insert(0, articleProvider.id);
     recentRead.removeWhere((item) => (item.id == articleProvider.id));
     recentRead.insert(0, articleProvider);
 
@@ -107,20 +107,21 @@ class RecentReadProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> _appendRecentReadList() async {
-    if (_recentReadList.length == _lastVisibleRecentRead) return;
+  Future<void> _appendrecentReadStringList() async {
+    if (recentReadStringList.length <= _lastVisibleRecentRead) return;
     Map<String, int> itemsMap = {};
     int end = 10 + _lastVisibleRecentRead;
-    if (end >= _recentReadList.length) {
-      end = _recentReadList.length;
+    if (end >= recentReadStringList.length) {
+      end = recentReadStringList.length;
       noMoreRecentRead = true;
     }
     for (var i = _lastVisibleRecentRead; i < end; i++) {
-      itemsMap[_recentReadList[i]] = i;
+      itemsMap[recentReadStringList[i]] = i;
     }
     // Fetch Document's basic info, cannot be more than 10
+    // TODO: some articles may be removed.
     List<ArticleProvider> articles = await ArticlesProvider.fetchList(
-        _recentReadList.sublist(_lastVisibleRecentRead, end));
+        recentReadStringList.sublist(_lastVisibleRecentRead, end));
     // Reorganize by update date (orginal sequence)
     articles.sort((a, b) {
       return itemsMap[a.id].compareTo(itemsMap[b.id]);

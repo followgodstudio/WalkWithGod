@@ -52,6 +52,7 @@ void showPopUpDialog(BuildContext context, bool isSuccess, String message,
 }
 
 String getCreatedDuration(DateTime createdDate) {
+  createdDate = createdDate ?? DateTime.now().toUtc();
   int timeDiffInMins = DateTime.now().toUtc().difference(createdDate).inMinutes;
 
   if (timeDiffInMins < 60) {

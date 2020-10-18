@@ -7,9 +7,8 @@ import '../../../configurations/theme.dart';
 import '../../../providers/user/friend_provider.dart';
 import '../../../providers/user/friends_provider.dart';
 import '../../../providers/user/profile_provider.dart';
-import '../../../providers/user/recent_read_provider.dart';
 import '../../../utils/utils.dart';
-import '../../../widgets/article_card_small.dart';
+import '../../../widgets/article_card.dart';
 import '../../../widgets/navbar.dart';
 import 'introduction.dart';
 
@@ -36,6 +35,7 @@ class NetworkScreen extends StatelessWidget {
                             bool isUserExist = await profile.fetchProfile();
                             FriendProvider friend = await friends
                                 .fetchFriendStatusByUserId(profile.uid);
+                            await profile.recentReadProvider.fetchRecentRead();
                             return [isUserExist, friend];
                           }),
                           builder: (ctx, asyncSnapshot) {
@@ -172,13 +172,14 @@ class ReadStatus extends StatelessWidget {
               if (showRecentRead)
                 Text(
                     "共" +
-                        profile.recentReadProvider.readsCount.toString() +
+                        profile.recentReadProvider.recentReadStringList.length
+                            .toString() +
                         "篇文章",
                     style: Theme.of(context).textTheme.captionMain),
               if (showRecentRead && profile.recentReadProvider.readsCount > 0)
                 Container(
-                    height: 200,
-                    child: NotificationListener<ScrollNotification>(
+                  height: 200,
+                  child: NotificationListener<ScrollNotification>(
                       onNotification: (ScrollNotification scrollInfo) {
                         if (scrollInfo.metrics.pixels ==
                             scrollInfo.metrics.maxScrollExtent) {
@@ -189,17 +190,16 @@ class ReadStatus extends StatelessWidget {
                         }
                         return true;
                       },
-                      child: Consumer<RecentReadProvider>(
-                          builder: (context, value, child) =>
-                              ListView(children: [
-                                ...value.recentRead
-                                    .map((e) => ArticleCard(e, 4 / 5))
-                                    .toList(),
-                                if (!value.noMoreRecentRead &&
-                                    value.recentRead.length != 0)
-                                  Center(child: Icon(Icons.more_horiz))
-                              ], scrollDirection: Axis.horizontal)),
-                    ))
+                      child: ListView(children: [
+                        ...profile.recentReadProvider.recentRead
+                            .map((element) => ArticleCard(
+                                article: element, verticalPadding: 12.5))
+                            .toList(),
+                        if (!profile.recentReadProvider.noMoreRecentRead &&
+                            profile.recentReadProvider.recentRead.length != 0)
+                          Center(child: Icon(Icons.more_horiz))
+                      ], scrollDirection: Axis.horizontal)),
+                ),
             ]),
           );
         })

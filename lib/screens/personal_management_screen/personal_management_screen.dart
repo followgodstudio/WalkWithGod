@@ -8,7 +8,7 @@ import '../../providers/user/profile_provider.dart';
 import '../../providers/user/saved_articles_provider.dart';
 import '../../utils/my_logger.dart';
 import '../../utils/utils.dart';
-import '../../widgets/article_card_small.dart';
+import '../../widgets/article_card.dart';
 import '../../widgets/navbar.dart';
 import '../auth_screen/signup_screen.dart';
 import 'friends/friends_list_screen.dart';
@@ -107,7 +107,7 @@ class SavedArticles extends StatelessWidget {
       } else {
         List<Widget> list = [];
         saved.articles.forEach((element) {
-          list.add(ArticleCard(element, 4 / 5));
+          list.add(ArticleCard(article: element, verticalPadding: 12.5));
         });
         if (!saved.noMore) list.add(Center(child: Icon(Icons.more_horiz)));
         savedArticles = Container(

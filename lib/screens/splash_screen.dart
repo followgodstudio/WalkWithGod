@@ -69,17 +69,6 @@ class _SplashScreenState extends State<SplashScreen> {
                       child: Material(
                     child: CachedNetworkImage(
                       imageUrl: splash.imageUrl,
-                      imageBuilder: (context, imageProvider) => Container(
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: imageProvider,
-                            fit: BoxFit.contain,
-                          ),
-                        ),
-                      ),
-                      placeholder: (context, url) => CircularProgressIndicator(
-                        strokeWidth: 1.0,
-                      ),
                       errorWidget: (context, url, error) => Icon(Icons.error),
                     ),
                   )),

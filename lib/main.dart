@@ -1,10 +1,6 @@
-import 'dart:async';
-
-import 'package:connectivity/connectivity.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import 'package:logger_flutter/logger_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'configurations/theme.dart';
@@ -39,7 +35,7 @@ import 'screens/personal_management_screen/setting/privacy_screen.dart';
 import 'screens/personal_management_screen/setting/setting_screen.dart';
 import 'screens/splash_screen.dart';
 import 'utils/my_logger.dart';
-import 'utils/utils.dart';
+import 'widgets/network_manager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -51,7 +47,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    Logger.level = Level.error;
+    Logger.level = Level.info;
     MyLogger("Widget").i("MyApp-build");
     return MultiProvider(
         providers: [
@@ -174,44 +170,5 @@ class _LifeCycleManagerState extends State<LifeCycleManager>
   @override
   Widget build(BuildContext context) {
     return widget.child;
-  }
-}
-
-// To monitor whether network is available
-class NetworkManager extends StatefulWidget {
-  final Widget child;
-  NetworkManager({Key key, this.child}) : super(key: key);
-  _NetworkManagerState createState() => _NetworkManagerState();
-}
-
-class _NetworkManagerState extends State<NetworkManager> {
-  StreamSubscription<ConnectivityResult> subscription;
-  bool isConnected = true;
-
-  @override
-  void initState() {
-    super.initState();
-    checkNetwork();
-  }
-
-  @override
-  void dispose() {
-    subscription.cancel();
-    super.dispose();
-  }
-
-  Future<void> checkNetwork() async {
-    subscription = Connectivity()
-        .onConnectivityChanged
-        .listen((ConnectivityResult result) {
-      if (result == ConnectivityResult.none) {
-        showPopUpDialog(context, false, "请检查网络连接");
-      }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return LogConsoleOnShake(child: widget.child);
   }
 }

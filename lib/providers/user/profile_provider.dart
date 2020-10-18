@@ -41,18 +41,17 @@ class ProfileProvider with ChangeNotifier {
 
   ProfileProvider([this.uid]) {
     _logger.v("ProfileProvider-init");
+    friendsProvider.setUserId(uid);
+    savedArticlesProvider.setUserId(uid);
+    messagesProvider.setUserId(uid);
+    settingProvider.setUserId(uid);
+    recentReadProvider.setUserId(uid);
   }
 
   Future<void> fetchAllUserData() async {
     if (uid == null || _isFetching || _isFetchedAll) return;
     _logger.i("ProfileProvider-fetchAllUserData");
     _isFetchedAll = true;
-    friendsProvider.setUserId(uid);
-    savedArticlesProvider.setUserId(uid);
-    messagesProvider.setUserId(uid);
-    settingProvider.setUserId(uid);
-    recentReadProvider.setUserId(uid);
-
     _isFetching = true;
     DateTime start = DateTime.now();
     try {
