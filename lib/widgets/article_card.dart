@@ -110,7 +110,6 @@ class ArticleCard extends StatelessWidget {
                                 child: Text(
                                   article.title ?? "",
                                   maxLines: maxLines,
-                                  overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                       fontFamily: "Jinling",
                                       color: fontColor,

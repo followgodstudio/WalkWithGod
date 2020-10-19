@@ -51,7 +51,7 @@ class AppInfoScreen extends StatelessWidget {
                             return Center(child: CircularProgressIndicator());
                           if (asyncSnapshot.error != null)
                             return Center(child: Text('An error occurred'));
-                          String currentVersion = asyncSnapshot.data[0].version;
+                          String currentVersion = asyncSnapshot.data.version;
                           String newestVersion = Provider.of<SettingProvider>(
                                   context,
                                   listen: false)
