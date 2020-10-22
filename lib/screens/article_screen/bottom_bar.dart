@@ -8,6 +8,7 @@ import '../../providers/user/profile_provider.dart';
 import '../../providers/user/saved_articles_provider.dart';
 import '../../utils/my_logger.dart';
 import '../../utils/utils.dart';
+import '../../widgets/my_icon_button.dart';
 import '../../widgets/popup_comment.dart';
 import 'share_article.dart';
 
@@ -67,55 +68,41 @@ class BottomBar extends StatelessWidget {
               color: Theme.of(context).buttonColor),
         ),
       ),
-      SizedBox(
-        width: 55.0,
-        child: FlatButton(
-          onPressed: () {
-            showModalBottomSheet(
-                context: context,
-                isScrollControlled: true,
-                builder: (context) => ShareArticle(articleId));
-          },
-          child: Icon(
-            Icons.share,
-            size: 20.0,
-          ),
-          color: Theme.of(context).buttonColor,
-          shape: CircleBorder(),
-        ),
+      SizedBox(width: 3.0),
+      MyIconButton(
+        hasBorder: true,
+        icon: 'share',
+        onPressed: () {
+          showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              builder: (context) => ShareArticle(articleId));
+        },
       ),
-      SizedBox(
-          width: 55.0,
-          child: Consumer<SavedArticlesProvider>(
-              builder: (context, value, child) => FlatButton(
-                    onPressed: () {
-                      if (profile.uid == null) {
-                        showPopUpDialog(context, false, "请登陆后再操作");
-                      } else {
-                        if (value.currentLike) {
-                          value.removeSavedByArticleId(articleId);
-                        } else {
-                          value.addSavedByArticleId(
-                              articleId,
-                              Provider.of<ArticlesProvider>(context,
-                                  listen: false));
-                        }
-                      }
-                    },
-                    child: Icon(
-                      (profile.uid != null && value.currentLike)
-                          ? Icons.star
-                          : Icons.star_border,
-                      size: 20.0,
-                      color: (profile.uid != null && value.currentLike)
-                          ? Colors.white
-                          : Colors.black87,
-                    ),
-                    color: (profile.uid != null && value.currentLike)
-                        ? Colors.blue
-                        : Theme.of(context).buttonColor,
-                    shape: CircleBorder(),
-                  ))),
+      SizedBox(width: 10.0),
+      Consumer<SavedArticlesProvider>(
+        builder: (context, value, child) => (profile.uid != null &&
+                value.currentLike)
+            ? MyIconButton(
+                hasBorder: true,
+                isActive: true,
+                icon: 'save',
+                onPressed: () {
+                  value.removeSavedByArticleId(articleId);
+                })
+            : MyIconButton(
+                hasBorder: true,
+                icon: 'save_border',
+                onPressed: () {
+                  if (profile.uid == null) {
+                    showPopUpDialog(context, false, "请登陆后再操作");
+                  } else {
+                    value.addSavedByArticleId(articleId,
+                        Provider.of<ArticlesProvider>(context, listen: false));
+                  }
+                }),
+      ),
+      SizedBox(width: 10.0),
     ]));
   }
 }

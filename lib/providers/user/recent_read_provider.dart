@@ -40,6 +40,7 @@ class RecentReadProvider with ChangeNotifier {
     query.docs.forEach((data) {
       recentReadStringList.add(data.id);
     });
+    print(recentReadStringList);
     _lastVisibleRecentRead = 0;
     await _appendrecentReadStringList();
   }
@@ -123,6 +124,7 @@ class RecentReadProvider with ChangeNotifier {
     List<ArticleProvider> articles = await ArticlesProvider.fetchList(
         recentReadStringList.sublist(_lastVisibleRecentRead, end));
     // Reorganize by update date (orginal sequence)
+    print(articles);
     articles.sort((a, b) {
       return itemsMap[a.id].compareTo(itemsMap[b.id]);
     });

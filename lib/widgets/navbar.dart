@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 import '../configurations/theme.dart';
 import 'my_divider.dart';
+import 'my_icon_button.dart';
 
 class NavBar extends StatelessWidget implements PreferredSizeWidget {
   final double _prefferedHeight = 50.0;
   final String title;
   final Widget titleWidget;
   final Color backgroundColor;
-  final Color buttonColor;
   final bool isSliverAppBar;
   final bool isFix;
   final bool hasBackButton;
@@ -18,7 +18,6 @@ class NavBar extends StatelessWidget implements PreferredSizeWidget {
     this.title = "",
     this.titleWidget,
     this.backgroundColor,
-    this.buttonColor,
     this.isSliverAppBar = false,
     this.isFix = true,
     this.hasBackButton = true,
@@ -31,8 +30,6 @@ class NavBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     Color _backgroundColor = backgroundColor ?? Theme.of(context).canvasColor;
-    Color _buttonColor =
-        buttonColor ?? Theme.of(context).textTheme.buttonColor2;
     Widget _titleWidget = titleWidget ??
         Text(title, style: Theme.of(context).textTheme.captionMedium2);
     Widget action = actionButton;
@@ -43,9 +40,8 @@ class NavBar extends StatelessWidget implements PreferredSizeWidget {
       );
     Widget leadingBackButton;
     if (hasBackButton)
-      leadingBackButton = IconButton(
-        icon: Icon(Icons.arrow_back_ios),
-        color: _buttonColor,
+      leadingBackButton = MyIconButton(
+        icon: 'back',
         onPressed: () {
           Navigator.of(context).pop();
         },
@@ -68,7 +64,7 @@ class NavBar extends StatelessWidget implements PreferredSizeWidget {
       title: _titleWidget,
       leading: leadingBackButton,
       backgroundColor: _backgroundColor,
-      actions: [action],
+      actions: [action, SizedBox(width: 20.0)],
     );
   }
 }

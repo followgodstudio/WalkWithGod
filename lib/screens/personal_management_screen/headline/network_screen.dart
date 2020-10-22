@@ -40,7 +40,8 @@ class NetworkScreen extends StatelessWidget {
                           }),
                           builder: (ctx, asyncSnapshot) {
                             if (asyncSnapshot.connectionState ==
-                                ConnectionState.waiting)
+                                    ConnectionState.waiting ||
+                                asyncSnapshot.data == null)
                               return Center(child: CircularProgressIndicator());
                             if (!asyncSnapshot.data[0])
                               return Center(child: Text("该用户不存在。"));

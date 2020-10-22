@@ -37,7 +37,7 @@ final ThemeData dayTheme = new ThemeData(
         height: 1.8),
     bodyText2: TextStyle(
       color: Color.fromARGB(255, 77, 77, 77),
-      fontSize: 14.0,
+      fontSize: 16.0,
       fontFamily: 'LantingXianHei',
       letterSpacing: -0.1,
     ),

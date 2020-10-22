@@ -55,7 +55,7 @@ class _ArticleListState extends State<ArticleList> {
               article: articlesData.articles[index],
               isSmall: false,
               aspectRatio: 7 / 8,
-              horizontalPadding: 20.0,
+              horizontalPadding: 30.0,
               verticalPadding: 12.5);
         },
         childCount:

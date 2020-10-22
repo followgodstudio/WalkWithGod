@@ -9,6 +9,7 @@ import '../../providers/user/saved_articles_provider.dart';
 import '../../utils/my_logger.dart';
 import '../../utils/utils.dart';
 import '../../widgets/article_card.dart';
+import '../../widgets/my_icon_button.dart';
 import '../../widgets/navbar.dart';
 import '../auth_screen/signup_screen.dart';
 import 'friends/friends_list_screen.dart';
@@ -28,19 +29,16 @@ class PersonalManagementScreen extends StatelessWidget {
         (Provider.of<ProfileProvider>(context, listen: false).uid != null);
     return Scaffold(
         appBar: NavBar(
-          title: "我的",
-          actionButton: IconButton(
-            icon: Icon(Icons.settings),
-            color: Theme.of(context).textTheme.buttonColor2,
-            onPressed: () {
-              if (!isLoggedIn) {
-                showPopUpDialog(context, false, "请登陆后再操作");
-              } else {
-                Navigator.of(context).pushNamed(SettingScreen.routeName);
-              }
-            },
-          ),
-        ),
+            title: "我的",
+            actionButton: MyIconButton(
+                flutterIcon: Icons.settings,
+                onPressed: () {
+                  if (!isLoggedIn) {
+                    showPopUpDialog(context, false, "请登陆后再操作");
+                  } else {
+                    Navigator.of(context).pushNamed(SettingScreen.routeName);
+                  }
+                })),
         body: SafeArea(
             child: SingleChildScrollView(
           child: Padding(

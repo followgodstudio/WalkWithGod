@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import '../../../configurations/theme.dart';
 import '../../../providers/user/profile_provider.dart';
 import '../../../utils/utils.dart';
+import '../../../widgets/my_icon_button.dart';
 import '../../../widgets/navbar.dart';
 
 class EditPictureScreen extends StatefulWidget {
@@ -93,14 +94,14 @@ class _EditPictureScreenState extends State<EditPictureScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            IconButton(
-              icon: Icon(Icons.photo_camera),
+            MyIconButton(
+              flutterIcon: Icons.photo_camera,
               onPressed: () => _pickImage(ImageSource.camera),
             ),
-            IconButton(
-              icon: Icon(Icons.photo_library),
-              onPressed: () => _pickImage(ImageSource.gallery),
-            ),
+            MyIconButton(
+              flutterIcon: Icons.photo_library,
+              onPressed: () => _pickImage(ImageSource.camera),
+            )
           ],
         ),
       ),

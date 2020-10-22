@@ -81,7 +81,6 @@ flutter:
   uses-material-design: true
 
   assets:
-   - assets/images/icon.jpeg
    - assets/images/placeholder.png
    - assets/images/default_profile_picture.jpg
    - assets/images/wechat.png
@@ -89,6 +88,13 @@ flutter:
    - assets/images/facebook.png
    - assets/images/email.png
    - assets/images/app_logo.png
+   - assets/icons/back.png
+   - assets/icons/save.png
+   - assets/icons/save_border.png
+   - assets/icons/comment.png
+   - assets/icons/heart.png
+   - assets/icons/heart_border.png
+   - assets/icons/share.png
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

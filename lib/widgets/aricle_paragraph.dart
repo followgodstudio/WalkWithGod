@@ -10,23 +10,19 @@ class ArticleParagraph extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
-      child: Column(children: [
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Padding(
           padding: const EdgeInsets.only(bottom: 10.0),
-          child: Row(
-            children: [
-              _paragraph.subtitle == null || _paragraph.subtitle.isEmpty
-                  ? Container(
-                      width: 30,
-                      height: 4,
-                      color: Colors.yellow,
-                    )
-                  : SelectableText(
-                      _paragraph.subtitle,
-                      style: Theme.of(context).textTheme.subtitle1,
-                    )
-            ],
-          ),
+          child: _paragraph.subtitle == null || _paragraph.subtitle.isEmpty
+              ? Container(
+                  width: 30,
+                  height: 4,
+                  color: Colors.yellow,
+                )
+              : SelectableText(
+                  _paragraph.subtitle,
+                  style: Theme.of(context).textTheme.subtitle1,
+                ),
         ),
         Padding(
           padding: const EdgeInsets.only(bottom: 20.0),

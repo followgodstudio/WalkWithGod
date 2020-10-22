@@ -78,17 +78,20 @@ class ArticleCard extends StatelessWidget {
                     tag: 'background' + heroTag,
                     child: AspectRatio(
                         aspectRatio: aspectRatio,
-                        child: CachedNetworkImage(
-                            imageUrl: article.imageUrl,
-                            fit: BoxFit.cover,
-                            placeholder: (context, url) => imagePlaceholder,
-                            errorWidget: (context, url, error) =>
-                                imagePlaceholder))),
+                        child: (article.imageUrl == null)
+                            ? imagePlaceholder
+                            : CachedNetworkImage(
+                                imageUrl: article.imageUrl,
+                                fit: BoxFit.cover,
+                                placeholder: (context, url) => imagePlaceholder,
+                                errorWidget: (context, url, error) =>
+                                    imagePlaceholder))),
                 AspectRatio(
                   aspectRatio: aspectRatio,
                   child: FutureBuilder(
-                      future: useWhiteTextColor(
-                          CachedNetworkImageProvider(article.imageUrl)),
+                      future: useWhiteTextColor((article.imageUrl == null)
+                          ? null
+                          : CachedNetworkImageProvider(article.imageUrl)),
                       builder:
                           (BuildContext context, AsyncSnapshot<bool> snapshot) {
                         Color fontColor =
@@ -149,6 +152,7 @@ class ArticleCard extends StatelessWidget {
                                         child: Text(
                                           article.authorName ?? "匿名",
                                           style: captionStyle,
+                                          maxLines: 1,
                                         )),
                                   ),
                                   Expanded(child: SizedBox()),

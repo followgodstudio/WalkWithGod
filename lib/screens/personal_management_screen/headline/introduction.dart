@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../widgets/profile_picture.dart';
+import '../../../configurations/constants.dart';
 import '../../../configurations/theme.dart';
+import '../../../widgets/profile_picture.dart';
 
 class Introduction extends StatelessWidget {
   final String name;
@@ -15,7 +16,7 @@ class Introduction extends StatelessWidget {
         ProfilePicture(30.0, imageUrl),
         SizedBox(height: 20.0),
         Text(
-          (name == null || name.isEmpty) ? "弟兄姊妹" : name,
+          (name == null || name.isEmpty) ? defaultUserName : name,
           style: Theme.of(context).textTheme.captionMedium1,
         ),
       ],
