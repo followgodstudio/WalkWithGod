@@ -31,7 +31,7 @@ class PersonalManagementScreen extends StatelessWidget {
         appBar: NavBar(
             title: "我的",
             actionButton: MyIconButton(
-                flutterIcon: Icons.settings,
+                icon: "setting",
                 onPressed: () {
                   if (!isLoggedIn) {
                     showPopUpDialog(context, false, "请登陆后再操作");
@@ -211,8 +211,7 @@ class FriendsMessages extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Icon(Icons.arrow_forward_ios,
-                        size: 20.0, color: Color.fromARGB(255, 128, 128, 128)),
+                    MyIconButton(icon: "forward"),
                   ],
                 ),
               ),
@@ -248,8 +247,7 @@ class FriendsMessages extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Icon(Icons.arrow_forward_ios,
-                        size: 20.0, color: Color.fromARGB(255, 128, 128, 128)),
+                    MyIconButton(icon: "forward"),
                   ],
                 ),
               ),

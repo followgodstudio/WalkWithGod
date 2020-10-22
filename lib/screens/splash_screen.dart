@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:walk_with_god/widgets/my_icon_button.dart';
 
 import '../configurations/theme.dart';
 import '../providers/article/articles_provider.dart';
@@ -128,7 +129,6 @@ class _SplashScreenState extends State<SplashScreen> {
                       ))
                 ],
               ),
-              //Icon(Icons.arrow_right)
             ],
           ));
     })));

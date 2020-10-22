@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:walk_with_god/widgets/my_icon_button.dart';
 
 import '../../../configurations/constants.dart';
 import '../../../configurations/theme.dart';
@@ -48,21 +49,14 @@ class MessageItem extends StatelessWidget {
                 Row(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(
-                          left: 45, right: 8, top: 4, bottom: 8),
-                      child: Icon(
-                          data.type == eMessageTypeReply
-                              ? Icons.message
-                              : Icons.favorite_border,
-                          size: 15,
-                          color: data.isRead
-                              ? Color.fromARGB(255, 194, 194, 194)
-                              : Colors.black87),
-                    ),
+                        padding: const EdgeInsets.only(
+                            left: 45, right: 8, top: 4, bottom: 8),
+                        child: (data.type == eMessageTypeReply)
+                            ? MyIconButton(icon: "comment")
+                            : MyIconButton(icon: "heart")),
                     Text(
                       data.senderName +
-                          (data.type == eMessageTypeReply ? "评论" : "") +
-                          (data.type == eMessageTypeLike ? "点赞" : "") +
+                          (data.type == eMessageTypeReply ? "评论" : "点赞") +
                           "了你的留言。",
                       style: data.isRead
                           ? Theme.of(context).textTheme.captionMedium3

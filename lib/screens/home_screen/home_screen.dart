@@ -40,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void didChangeDependencies() {
-    var articleHeight = (MediaQuery.of(context).size.width - 40) / 7 * 8 + 25;
+    var articleHeight = (MediaQuery.of(context).size.width - 60) / 7 * 8 + 25;
     title = ValueNotifier<String>("今日");
     formattedDate = ValueNotifier<String>(formatter.format(new DateTime.now()));
     _controller.addListener(() {

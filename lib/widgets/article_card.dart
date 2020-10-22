@@ -27,6 +27,7 @@ class ArticleCard extends StatelessWidget {
     int maxLines = 2;
     double titleFontSize = 24;
     double avatarRadius = 15;
+    double eyebrowWidth = 42;
     String heroTag = article.id;
     if (isSmall) {
       textPadding = 5.0;
@@ -34,6 +35,7 @@ class ArticleCard extends StatelessWidget {
       maxLines = 3;
       titleFontSize = 16;
       avatarRadius = 10;
+      eyebrowWidth = 30;
       heroTag += "_";
     }
     Widget imagePlaceholder = Container(
@@ -108,6 +110,13 @@ class ArticleCard extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.end,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              Container(
+                                width: eyebrowWidth,
+                                child: Divider(
+                                    color: Color.fromARGB(255, 255, 235, 133),
+                                    thickness: 4.0),
+                              ),
+                              if (!isSmall) SizedBox(height: 5.0),
                               Hero(
                                 tag: 'title' + heroTag,
                                 child: Text(

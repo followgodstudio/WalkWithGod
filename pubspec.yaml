@@ -89,12 +89,14 @@ flutter:
    - assets/images/email.png
    - assets/images/app_logo.png
    - assets/icons/back.png
+   - assets/icons/forward.png
    - assets/icons/save.png
    - assets/icons/save_border.png
    - assets/icons/comment.png
    - assets/icons/heart.png
    - assets/icons/heart_border.png
    - assets/icons/share.png
+   - assets/icons/setting.png
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

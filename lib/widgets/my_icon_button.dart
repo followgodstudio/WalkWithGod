@@ -28,7 +28,9 @@ class MyIconButton extends StatelessWidget {
         : Icon(flutterIcon, color: isActive ? Colors.white : iconColor);
     if (!hasBorder)
       return GestureDetector(
-        onTap: () => onPressed(),
+        onTap: () {
+          if (onPressed != null) onPressed();
+        },
         child: _icon,
       );
     return Container(
