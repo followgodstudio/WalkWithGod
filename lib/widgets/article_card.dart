@@ -154,17 +154,18 @@ class ArticleCard extends StatelessWidget {
                                           ),
                                   ),
                                   SizedBox(width: space),
-                                  Hero(
-                                    tag: 'authorName' + heroTag,
-                                    child: Material(
-                                        color: Colors.transparent,
-                                        child: Text(
-                                          article.authorName ?? "匿名",
-                                          style: captionStyle,
-                                          maxLines: 1,
-                                        )),
+                                  Expanded(
+                                    child: Hero(
+                                      tag: 'authorName' + heroTag,
+                                      child: Material(
+                                          color: Colors.transparent,
+                                          child: Text(
+                                              article.authorName ?? "匿名",
+                                              style: captionStyle,
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis)),
+                                    ),
                                   ),
-                                  Expanded(child: SizedBox()),
                                   if (!isSmall)
                                     Text(
                                         getCreatedDuration(article.createdDate),
