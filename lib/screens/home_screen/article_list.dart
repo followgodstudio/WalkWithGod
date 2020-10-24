@@ -28,7 +28,7 @@ class _ArticleListState extends State<ArticleList> {
       size: Size(300, 300),
 
       // I want the dominant color of the top left section of the image
-      region: Offset.zero & Size(40, 40),
+      region: Offset(130, 130) & Size(40, 40),
     );
 
     Color dominantColor = paletteGenerator.dominantColor?.color;
@@ -36,8 +36,10 @@ class _ArticleListState extends State<ArticleList> {
     // Here's the problem
     // Sometimes dominantColor returns null
     // With black and white background colors in my tests
-    if (dominantColor == null)
+    if (dominantColor == null) {
       MyLogger("Widget").i('ArticleList-build-Dominant Color null');
+      dominantColor = Colors.white;
+    }
 
     return useWhiteForeground(dominantColor);
   }

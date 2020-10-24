@@ -92,7 +92,7 @@ class ArticleCard extends StatelessWidget {
                   aspectRatio: aspectRatio,
                   child: FutureBuilder(
                       future: useWhiteTextColor((article.imageUrl == null)
-                          ? null
+                          ? AssetImage('assets/images/placeholder.png')
                           : CachedNetworkImageProvider(article.imageUrl)),
                       builder:
                           (BuildContext context, AsyncSnapshot<bool> snapshot) {

@@ -106,8 +106,10 @@ Future<bool> useWhiteTextColor(ImageProvider image) async {
   // Here's the problem
   // Sometimes dominantColor returns null
   // With black and white background colors in my tests
-  if (dominantColor == null)
+  if (dominantColor == null) {
     MyLogger("Utils").i('Utils-useWhiteTextColor-Dominant Color null');
+    dominantColor = Colors.white;
+  }
 
   return useWhiteForeground(dominantColor);
 }
