@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../configurations/constants.dart';
 import '../../configurations/theme.dart';
 import '../../providers/article/comment_provider.dart';
 import '../../providers/article/comments_provider.dart';
@@ -70,24 +71,25 @@ class _CommentsState extends State<Comments> {
     return Consumer<CommentsProvider>(builder: (context, data, child) {
       List<CommentProvider> comments = data.items;
       List<Widget> list = [];
-      list.add(Divider(
-        indent: 15.0,
-        endIndent: 15.0,
-      ));
+      list.add(Divider());
       if (comments.length == 0) {
         list.add(Center(
             child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: EdgeInsets.all(verticalPadding),
           child: Text("暂无评论",
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.captionMedium3),
         )));
-        return Column(children: list);
+        return Padding(
+          padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+          child: Column(children: list),
+        );
       }
       for (var i = 0; i < comments.length; i++) {
         list.add(ChangeNotifierProvider.value(
           value: comments[i],
           child: FlatButton(
+              padding: const EdgeInsets.all(0),
               onPressed: () async {
                 await goToCommentDetail(profile.uid, comments[i]);
               },
@@ -103,7 +105,10 @@ class _CommentsState extends State<Comments> {
         child: Text(data.noMore ? "到底啦" : "加载更多",
             style: Theme.of(context).textTheme.captionMedium3),
       ));
-      return Column(children: list);
+      return Padding(
+        padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+        child: Column(children: list),
+      );
     });
   }
 }

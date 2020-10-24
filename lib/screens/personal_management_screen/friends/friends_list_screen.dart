@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../configurations/constants.dart';
 import '../../../configurations/theme.dart';
 import '../../../providers/user/friend_provider.dart';
 import '../../../providers/user/friends_provider.dart';
@@ -68,7 +69,8 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
           },
           child: SingleChildScrollView(
               child: Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: EdgeInsets.symmetric(
+                horizontal: horizontalPadding, vertical: verticalPadding),
             child: FutureBuilder(
                 future: exceptionHandling(context, () async {
                   _isFollower

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:walk_with_god/widgets/my_icon_button.dart';
 
 import '../../../configurations/constants.dart';
 import '../../../configurations/theme.dart';
 import '../../../providers/user/message_provider.dart';
+import '../../../widgets/my_icon_button.dart';
 import '../../../widgets/profile_picture.dart';
 import '../../article_screen/article_screen.dart';
 

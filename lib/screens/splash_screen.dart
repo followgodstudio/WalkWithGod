@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:walk_with_god/widgets/my_icon_button.dart';
+import 'package:walk_with_god/configurations/constants.dart';
 
 import '../configurations/theme.dart';
 import '../providers/article/articles_provider.dart';
@@ -57,6 +57,7 @@ class _SplashScreenState extends State<SplashScreen> {
       if (splash.imageUrl == null)
         return Center(child: CircularProgressIndicator());
       return FlatButton(
+          padding: const EdgeInsets.all(0),
           onPressed: () {
             _timer.cancel();
             routeHome();
@@ -65,9 +66,19 @@ class _SplashScreenState extends State<SplashScreen> {
             children: [
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 20, bottom: 4.0),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: horizontalPadding, vertical: verticalPadding),
                   child: Center(
-                      child: Material(
+                      child: Container(
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.grey.withOpacity(0.3),
+                            spreadRadius: 2,
+                            blurRadius: 20,
+                            offset: Offset(10, 10)),
+                      ],
+                    ),
                     child: CachedNetworkImage(
                       imageUrl: splash.imageUrl,
                       errorWidget: (context, url, error) => Icon(Icons.error),
@@ -102,15 +113,15 @@ class _SplashScreenState extends State<SplashScreen> {
               Row(
                 children: [
                   Container(
-                    width: 100,
-                    height: 50,
+                    width: 140,
+                    height: 70,
                     child: Image.asset("assets/images/app_logo.png"),
                   ),
                   Expanded(
                     child: SizedBox(),
                   ),
                   Container(
-                      height: 10,
+                      height: 20,
                       child: VerticalDivider(
                           color: Color.fromARGB(255, 128, 128, 128))),
                   FlatButton(

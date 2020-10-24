@@ -1,4 +1,6 @@
 String defaultUserName = "弟兄姊妹";
+double horizontalPadding = 30.0;
+double verticalPadding = 15.0;
 
 ///******** keys in Firestore ********///
 

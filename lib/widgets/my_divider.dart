@@ -6,7 +6,7 @@ class MyDivider extends StatelessWidget implements PreferredSizeWidget {
   final double thickness;
   final Color color;
 
-  MyDivider({this.indent = 0.0, this.thickness = 0.5, this.color});
+  MyDivider({this.indent = 0.0, this.thickness = 0.4, this.color});
 
   @override
   Size get preferredSize => Size.fromHeight(thickness);

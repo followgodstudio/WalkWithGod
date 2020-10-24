@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:provider/provider.dart';
 
+import '../../../configurations/constants.dart';
 import '../../../configurations/theme.dart';
 import '../../../providers/auth_provider.dart';
 import '../../../providers/user/setting_provider.dart';
@@ -24,7 +25,8 @@ class SettingScreen extends StatelessWidget {
         body: SafeArea(
             child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: EdgeInsets.symmetric(
+                horizontal: horizontalPadding, vertical: verticalPadding),
             child: Column(
               children: [
                 Consumer<SettingProvider>(

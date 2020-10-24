@@ -51,12 +51,12 @@ class _ArticleListState extends State<ArticleList> {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {
-          return ArticleCard(
-              article: articlesData.articles[index],
-              isSmall: false,
-              aspectRatio: 7 / 8,
-              horizontalPadding: 30.0,
-              verticalPadding: 12.5);
+          return Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 30.0, vertical: 12.5),
+            child: ArticleCard(
+                article: articlesData.articles[index], isSmall: false),
+          );
         },
         childCount:
             articlesData.articles == null ? 0 : articlesData.articles.length,

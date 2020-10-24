@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../configurations/constants.dart';
 import '../configurations/theme.dart';
 
 class PopUpComment extends StatefulWidget {
@@ -27,7 +28,8 @@ class _PopUpCommentState extends State<PopUpComment> {
     return Padding(
       padding: MediaQuery.of(context).viewInsets,
       child: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: EdgeInsets.symmetric(
+            horizontal: horizontalPadding, vertical: verticalPadding),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[

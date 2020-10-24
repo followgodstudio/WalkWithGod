@@ -166,6 +166,17 @@ class SavedArticlesProvider with ChangeNotifier {
     articles.forEach((element) {
       _articles.add(element);
     });
+    if (_noMore && savedArticlesCount != _articles.length) {
+      _logger.i("SavedArticlesProvider-savedArticlesCount updated to " +
+          _articles.length.toString());
+      await _db
+          .collection(cUsers)
+          .doc(_userId)
+          .collection(cUserProfile)
+          .doc(dUserProfileStatic)
+          .update({fUserSavedArticlesCount: _articles.length});
+      savedArticlesCount = _articles.length;
+    }
     notifyListeners();
   }
 }

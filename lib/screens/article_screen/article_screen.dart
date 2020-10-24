@@ -92,17 +92,9 @@ class _ArticleScreenState extends State<ArticleScreen> {
                 SliverToBoxAdapter(
                   child: Column(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: ArticleBody(),
-                      ),
+                      ArticleBody(),
                       SimilarArticles(),
-                      Padding(
-                        key: dataKey,
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                        child: Comments(
-                            articleId: _articleId, commentId: _commentId),
-                      ),
+                      Comments(articleId: _articleId, commentId: _commentId),
                     ],
                   ),
                 ),

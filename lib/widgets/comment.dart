@@ -34,11 +34,8 @@ class Comment extends StatelessWidget {
               // Avatar
               Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 4.0),
-                    child: ProfilePicture(
-                        15.0, data.creatorImage, data.creatorUid),
-                  ),
+                  SizedBox(height: 3.0),
+                  ProfilePicture(15.0, data.creatorImage, data.creatorUid),
                 ],
               ),
               // Others
@@ -133,6 +130,7 @@ class Comment extends StatelessWidget {
                           MyIconButton(
                               iconSize: iconSize,
                               icon: 'heart',
+                              iconColor: Colors.pink,
                               onPressed: () {
                                 if (profile.uid == null) {
                                   showPopUpDialog(context, false, "请登陆后再操作");
@@ -140,7 +138,7 @@ class Comment extends StatelessWidget {
                                   data.cancelLike(profile.uid);
                                 }
                               }),
-                        SizedBox(width: 9.0),
+                        SizedBox(width: 8.0),
                         Text(
                           data.likesCount.toString(),
                           style: Theme.of(context).textTheme.captionMedium1,

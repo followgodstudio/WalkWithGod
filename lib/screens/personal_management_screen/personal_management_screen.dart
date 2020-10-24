@@ -9,6 +9,7 @@ import '../../providers/user/saved_articles_provider.dart';
 import '../../utils/my_logger.dart';
 import '../../utils/utils.dart';
 import '../../widgets/article_card.dart';
+import '../../widgets/my_divider.dart';
 import '../../widgets/my_icon_button.dart';
 import '../../widgets/navbar.dart';
 import '../auth_screen/signup_screen.dart';
@@ -42,7 +43,7 @@ class PersonalManagementScreen extends StatelessWidget {
         body: SafeArea(
             child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: EdgeInsets.all(horizontalPadding),
             child: Column(children: <Widget>[
               HeadLine(isLoggedIn),
               SizedBox(height: 15),
@@ -105,11 +106,14 @@ class SavedArticles extends StatelessWidget {
       } else {
         List<Widget> list = [];
         saved.articles.forEach((element) {
-          list.add(ArticleCard(article: element, verticalPadding: 12.5));
+          list.add(Padding(
+            padding: const EdgeInsets.only(right: 10.0, top: 12.5, bottom: 20),
+            child: ArticleCard(article: element),
+          ));
         });
         if (!saved.noMore) list.add(Center(child: Icon(Icons.more_horiz)));
         savedArticles = Container(
-          height: 200,
+          height: 210,
           child: NotificationListener<ScrollNotification>(
               onNotification: (ScrollNotification scrollInfo) {
                 if (scrollInfo.metrics.pixels ==
@@ -172,7 +176,8 @@ class FriendsMessages extends StatelessWidget {
             return Center(child: CircularProgressIndicator());
           return Column(
             children: [
-              Divider(),
+              MyDivider(),
+              SizedBox(height: 5.0),
               FlatButton(
                 padding: const EdgeInsets.all(0),
                 onPressed: () {
@@ -211,7 +216,7 @@ class FriendsMessages extends StatelessWidget {
                         ),
                       ),
                     ),
-                    MyIconButton(icon: "forward"),
+                    MyIconButton(icon: "forward", iconSize: 12),
                   ],
                 ),
               ),
@@ -247,7 +252,7 @@ class FriendsMessages extends StatelessWidget {
                         ),
                       ),
                     ),
-                    MyIconButton(icon: "forward"),
+                    MyIconButton(icon: "forward", iconSize: 12),
                   ],
                 ),
               ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../configurations/constants.dart';
 import '../../../configurations/theme.dart';
 import '../../../providers/user/messages_provider.dart';
 import '../../../providers/user/profile_provider.dart';
@@ -42,7 +43,9 @@ class MessagesListScreen extends StatelessWidget {
                       if (data.items.length == 0) {
                         return Center(
                           child: Padding(
-                            padding: const EdgeInsets.all(20.0),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: horizontalPadding,
+                                vertical: verticalPadding),
                             child: Text("暂无消息",
                                 textAlign: TextAlign.center,
                                 style:

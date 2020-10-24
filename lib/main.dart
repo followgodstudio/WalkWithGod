@@ -41,8 +41,6 @@ import 'widgets/network_manager.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(statusBarColor: Colors.grey[50]));
   runApp(MyApp());
 }
 
@@ -50,6 +48,9 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarColor: Theme.of(context).canvasColor,
+        statusBarIconBrightness: Brightness.dark));
     Logger.level = Level.info;
     MyLogger("Widget").i("MyApp-build");
     return MultiProvider(

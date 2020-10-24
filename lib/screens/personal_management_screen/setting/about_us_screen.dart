@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../configurations/constants.dart';
 import '../../../configurations/theme.dart';
 import '../../../providers/user/setting_provider.dart';
 import '../../../widgets/navbar.dart';
@@ -15,7 +16,8 @@ class AboutUsScreen extends StatelessWidget {
         body: SafeArea(
             child: SingleChildScrollView(
           child: Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: EdgeInsets.symmetric(
+                  horizontal: horizontalPadding, vertical: verticalPadding),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

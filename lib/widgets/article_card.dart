@@ -11,14 +11,11 @@ class ArticleCard extends StatelessWidget {
   final ArticleProvider article;
   final bool isSmall;
   final double aspectRatio;
-  final double horizontalPadding;
-  final double verticalPadding;
-  ArticleCard(
-      {this.article,
-      this.isSmall = true,
-      this.aspectRatio = 4 / 5,
-      this.horizontalPadding = 0.0,
-      this.verticalPadding = 0.0});
+  ArticleCard({
+    this.article,
+    this.isSmall = true,
+    this.aspectRatio = 6 / 7,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +27,7 @@ class ArticleCard extends StatelessWidget {
     double eyebrowWidth = 42;
     String heroTag = article.id;
     if (isSmall) {
-      textPadding = 5.0;
+      textPadding = 10.0;
       space = 3.0;
       maxLines = 3;
       titleFontSize = 16;
@@ -40,145 +37,146 @@ class ArticleCard extends StatelessWidget {
     }
     Widget imagePlaceholder = Container(
         decoration: BoxDecoration(color: Theme.of(context).buttonColor));
-    return Padding(
-        padding: EdgeInsets.symmetric(
-            horizontal: horizontalPadding, vertical: verticalPadding),
-        child: FlatButton(
-          padding: const EdgeInsets.all(0),
-          onPressed: () {
-            if (isSmall) {
-              Navigator.of(context).pushNamed(
-                ArticleScreen.routeName,
+    Color fontColor = Colors.white;
+    TextStyle captionStyle =
+        TextStyle(fontFamily: "LantingXianHei", color: fontColor, fontSize: 12);
+    return Hero(
+      tag: heroTag,
+      child: FlatButton(
+        padding: const EdgeInsets.all(0),
+        onPressed: () {
+          if (isSmall) {
+            Navigator.of(context).pushNamed(
+              ArticleScreen.routeName,
+              arguments: {'articleId': article.id},
+            );
+          } else {
+            Navigator.of(context).push(PageRouteBuilder(
+              fullscreenDialog: true,
+              transitionDuration: Duration(milliseconds: 800),
+              pageBuilder: (context, animaton, secondaryAnimtaion) {
+                return NetworkManager(child: ArticleScreen());
+              },
+              settings: RouteSettings(
+                name: ArticleScreen.routeName,
                 arguments: {'articleId': article.id},
-              );
-            } else {
-              Navigator.of(context).push(PageRouteBuilder(
-                fullscreenDialog: true,
-                transitionDuration: Duration(milliseconds: 800),
-                pageBuilder: (context, animaton, secondaryAnimtaion) {
-                  return NetworkManager(child: ArticleScreen());
-                },
-                settings: RouteSettings(
-                  name: ArticleScreen.routeName,
-                  arguments: {'articleId': article.id},
-                ),
-                transitionsBuilder:
-                    (context, animation, secondaryAnimation, child) {
-                  return FadeTransition(
-                    opacity: animation,
-                    child: child,
-                  );
-                },
-              ));
-            }
-          },
-          child: Card(
-            elevation: 8.0,
-            child: Stack(
-              children: [
-                Hero(
-                    tag: 'background' + heroTag,
-                    child: AspectRatio(
-                        aspectRatio: aspectRatio,
-                        child: (article.imageUrl == null)
-                            ? imagePlaceholder
-                            : CachedNetworkImage(
-                                imageUrl: article.imageUrl,
-                                fit: BoxFit.cover,
-                                placeholder: (context, url) => imagePlaceholder,
-                                errorWidget: (context, url, error) =>
-                                    imagePlaceholder))),
-                AspectRatio(
-                  aspectRatio: aspectRatio,
-                  child: FutureBuilder(
-                      future: useWhiteTextColor((article.imageUrl == null)
-                          ? null
-                          : CachedNetworkImageProvider(article.imageUrl)),
-                      builder:
-                          (BuildContext context, AsyncSnapshot<bool> snapshot) {
-                        Color fontColor =
-                            (snapshot.data == null || snapshot.data)
-                                ? Colors.white
-                                : Colors.black;
-                        TextStyle captionStyle = TextStyle(
-                            fontFamily: "LantingXianHei",
-                            color: fontColor,
-                            fontSize: 12);
-                        return Padding(
-                          padding: EdgeInsets.all(textPadding),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                width: eyebrowWidth,
-                                child: Divider(
-                                    color: Color.fromARGB(255, 255, 235, 133),
-                                    thickness: 4.0),
-                              ),
-                              if (!isSmall) SizedBox(height: 5.0),
-                              Hero(
-                                tag: 'title' + heroTag,
-                                child: Text(
-                                  article.title ?? "",
-                                  maxLines: maxLines,
-                                  style: TextStyle(
-                                      fontFamily: "Jinling",
-                                      color: fontColor,
-                                      fontSize: titleFontSize),
-                                ),
-                              ),
-                              if (!isSmall) SizedBox(height: space),
-                              if (!isSmall)
-                                Text(
-                                  article.description ?? "",
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: captionStyle,
-                                ),
-                              Divider(color: fontColor),
-                              if (!isSmall) SizedBox(height: space),
-                              Row(
+              ),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                return FadeTransition(
+                  opacity: animation,
+                  child: child,
+                );
+              },
+            ));
+          }
+        },
+        child: Stack(
+          children: [
+            AspectRatio(
+                aspectRatio: aspectRatio,
+                child: Container(
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.grey.withOpacity(0.3),
+                          spreadRadius: 2,
+                          blurRadius: 20,
+                          offset: Offset(10, 10)),
+                    ],
+                  ),
+                  child: ShaderMask(
+                    shaderCallback: (rect) {
+                      return LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [Colors.transparent, Colors.black38],
+                      ).createShader(
+                          Rect.fromLTRB(0, 0, rect.width, rect.height));
+                    },
+                    blendMode: BlendMode.darken,
+                    child: (article.imageUrl == null)
+                        ? imagePlaceholder
+                        : CachedNetworkImage(
+                            imageUrl: article.imageUrl,
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => imagePlaceholder,
+                            errorWidget: (context, url, error) =>
+                                imagePlaceholder),
+                  ),
+                )),
+            AspectRatio(
+                aspectRatio: aspectRatio,
+                child: Padding(
+                    padding: EdgeInsets.all(textPadding),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: eyebrowWidth,
+                          child: Divider(
+                              color: Color.fromARGB(255, 255, 235, 133),
+                              thickness: 4.0),
+                        ),
+                        if (!isSmall) SizedBox(height: 5.0),
+                        Text(
+                          article.title ?? "",
+                          maxLines: maxLines,
+                          style: TextStyle(
+                              fontFamily: "Jinling",
+                              color: fontColor,
+                              fontSize: titleFontSize),
+                        ),
+                        if (!isSmall) SizedBox(height: space),
+                        if (!isSmall)
+                          Text(
+                            article.description ?? "",
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: captionStyle,
+                          ),
+                        Divider(color: fontColor),
+                        if (!isSmall) SizedBox(height: space),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(
+                              child: Row(
                                 children: [
-                                  Hero(
-                                    tag: 'icon' + heroTag,
-                                    child: (article.icon == null ||
-                                            article.icon.isEmpty)
-                                        ? Icon(Icons.album, color: fontColor)
-                                        : CircleAvatar(
-                                            radius: avatarRadius,
-                                            backgroundImage:
-                                                CachedNetworkImageProvider(
-                                                    article.icon),
-                                            backgroundColor: Colors.transparent,
-                                          ),
-                                  ),
+                                  (article.icon == null || article.icon.isEmpty)
+                                      ? Icon(Icons.album, color: fontColor)
+                                      : CircleAvatar(
+                                          radius: avatarRadius,
+                                          backgroundImage:
+                                              CachedNetworkImageProvider(
+                                                  article.icon),
+                                          backgroundColor: Colors.transparent,
+                                        ),
                                   SizedBox(width: space),
-                                  Hero(
-                                    tag: 'authorName' + heroTag,
+                                  Flexible(
                                     child: Material(
                                         color: Colors.transparent,
                                         child: Text(
                                           article.authorName ?? "匿名",
                                           style: captionStyle,
+                                          overflow: TextOverflow.ellipsis,
                                           maxLines: 1,
                                         )),
                                   ),
-                                  Expanded(child: SizedBox()),
-                                  if (!isSmall)
-                                    Text(
-                                        getCreatedDuration(article.createdDate),
-                                        style: captionStyle),
                                 ],
                               ),
-                            ],
-                          ),
-                        );
-                      }),
-                ),
-              ],
-            ),
-          ),
-        ));
+                            ),
+                            if (!isSmall)
+                              Text(getCreatedDuration(article.createdDate),
+                                  style: captionStyle),
+                          ],
+                        ),
+                      ],
+                    ))),
+          ],
+        ),
+      ),
+    );
   }
 }

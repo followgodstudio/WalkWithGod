@@ -40,11 +40,16 @@ class NavBar extends StatelessWidget implements PreferredSizeWidget {
       );
     Widget leadingBackButton;
     if (hasBackButton)
-      leadingBackButton = MyIconButton(
-        icon: 'back',
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
+      leadingBackButton = Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          MyIconButton(
+            icon: 'back',
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
       );
     if (!hasBackButton && titleWidget == null) leadingBackButton = SizedBox();
     if (isSliverAppBar)

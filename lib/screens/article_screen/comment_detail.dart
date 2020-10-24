@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../configurations/constants.dart';
 import '../../configurations/theme.dart';
 import '../../providers/article/comment_provider.dart';
 import '../../providers/user/profile_provider.dart';
@@ -46,7 +47,9 @@ class _CommentDetailState extends State<CommentDetail> {
                       child: SingleChildScrollView(
                           controller: _controller,
                           child: Padding(
-                            padding: const EdgeInsets.all(20.0),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: horizontalPadding,
+                                vertical: verticalPadding),
                             child: Consumer<CommentProvider>(
                                 child: Comment(),
                                 builder: (context, data, child) {
@@ -54,14 +57,11 @@ class _CommentDetailState extends State<CommentDetail> {
                                   list.add(child);
                                   if (data.childrenCount == 0) {
                                     list.add(Center(
-                                        child: Padding(
-                                      padding: const EdgeInsets.all(20.0),
-                                      child: Text("暂无回复",
-                                          textAlign: TextAlign.center,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .captionMedium3),
-                                    )));
+                                        child: Text("暂无回复",
+                                            textAlign: TextAlign.center,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .captionMedium3)));
                                     return Column(children: list);
                                   }
                                   for (var i = 0;

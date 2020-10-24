@@ -6,6 +6,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
+import '../../../configurations/constants.dart';
 import '../../../configurations/theme.dart';
 import '../../../providers/user/profile_provider.dart';
 import '../../../utils/utils.dart';
@@ -50,7 +51,8 @@ class _EditPictureScreenState extends State<EditPictureScreen> {
       appBar: NavBar(),
       // Preview the image and crop it
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: EdgeInsets.symmetric(
+            horizontal: horizontalPadding, vertical: verticalPadding),
         child: ListView(
           children: <Widget>[
             if (_imageFile == null)

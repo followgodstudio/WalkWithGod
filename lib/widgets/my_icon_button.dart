@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class MyIconButton extends StatelessWidget {
   final String icon;
@@ -23,8 +24,8 @@ class MyIconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget _icon = (icon != null)
-        ? Image.asset('assets/icons/' + icon + '.png',
-            width: iconSize, height: iconSize)
+        ? SvgPicture.asset('assets/icons/' + icon + '.svg',
+            height: iconSize, color: isActive ? Colors.white : iconColor)
         : Icon(flutterIcon, color: isActive ? Colors.white : iconColor);
     if (!hasBorder)
       return GestureDetector(

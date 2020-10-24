@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 
+import '../../../configurations/constants.dart';
 import '../../../configurations/theme.dart';
 import '../../../providers/user/setting_provider.dart';
 import '../../../widgets/navbar.dart';
@@ -15,7 +16,8 @@ class AppInfoScreen extends StatelessWidget {
         appBar: NavBar(title: "关于随行派"),
         body: SafeArea(
             child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: EdgeInsets.symmetric(
+              horizontal: horizontalPadding, vertical: verticalPadding),
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

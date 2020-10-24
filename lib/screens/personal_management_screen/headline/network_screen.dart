@@ -9,6 +9,7 @@ import '../../../providers/user/friends_provider.dart';
 import '../../../providers/user/profile_provider.dart';
 import '../../../utils/utils.dart';
 import '../../../widgets/article_card.dart';
+import '../../../widgets/my_divider.dart';
 import '../../../widgets/navbar.dart';
 import 'introduction.dart';
 
@@ -24,7 +25,9 @@ class NetworkScreen extends StatelessWidget {
         body: SafeArea(
             child: SingleChildScrollView(
                 child: Padding(
-                    padding: const EdgeInsets.all(20.0),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: horizontalPadding,
+                        vertical: verticalPadding),
                     child: Builder(builder: (BuildContext context) {
                       ProfileProvider profile = ProfileProvider(uid);
                       FriendsProvider friends =
@@ -179,7 +182,7 @@ class ReadStatus extends StatelessWidget {
                     style: Theme.of(context).textTheme.captionMain),
               if (showRecentRead && profile.recentReadProvider.readsCount > 0)
                 Container(
-                  height: 200,
+                  height: 220,
                   child: NotificationListener<ScrollNotification>(
                       onNotification: (ScrollNotification scrollInfo) {
                         if (scrollInfo.metrics.pixels ==
@@ -193,14 +196,18 @@ class ReadStatus extends StatelessWidget {
                       },
                       child: ListView(children: [
                         ...profile.recentReadProvider.recentRead
-                            .map((element) => ArticleCard(
-                                article: element, verticalPadding: 12.5))
+                            .map((element) => Padding(
+                                  padding: const EdgeInsets.only(
+                                      right: 10.0, top: 12.5, bottom: 30),
+                                  child: ArticleCard(article: element),
+                                ))
                             .toList(),
                         if (!profile.recentReadProvider.noMoreRecentRead &&
                             profile.recentReadProvider.recentRead.length != 0)
                           Center(child: Icon(Icons.more_horiz))
                       ], scrollDirection: Axis.horizontal)),
                 ),
+              MyDivider()
             ]),
           );
         })
