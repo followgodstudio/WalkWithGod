@@ -52,8 +52,11 @@ class MessageItem extends StatelessWidget {
                         padding: const EdgeInsets.only(
                             left: 45, right: 8, top: 4, bottom: 8),
                         child: (data.type == eMessageTypeReply)
-                            ? MyIconButton(icon: "comment")
-                            : MyIconButton(icon: "heart")),
+                            ? MyIconButton(icon: "comment", iconSize: 18.0)
+                            : MyIconButton(
+                                icon: 'heart',
+                                iconSize: 18.0,
+                                iconColor: Colors.pink[300])),
                     Text(
                       data.senderName +
                           (data.type == eMessageTypeReply ? "评论" : "点赞") +

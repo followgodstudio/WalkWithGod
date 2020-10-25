@@ -130,7 +130,7 @@ class Comment extends StatelessWidget {
                           MyIconButton(
                               iconSize: iconSize,
                               icon: 'heart',
-                              iconColor: Colors.pink,
+                              iconColor: Colors.pink[300],
                               onPressed: () {
                                 if (profile.uid == null) {
                                   showPopUpDialog(context, false, "请登陆后再操作");

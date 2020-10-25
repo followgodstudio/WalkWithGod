@@ -58,7 +58,7 @@ class _ArticleScreenState extends State<ArticleScreen> {
       await Provider.of<CommentsProvider>(context, listen: false)
           .fetchLevel1CommentListByArticleId(article.id, profile.uid);
       await article.fetchSimilarArticles();
-      await profile.recentReadProvider.updateRecentReadByArticleId(article);
+      await profile.recentReadProvider.addRecentRead(article);
     });
   }
 

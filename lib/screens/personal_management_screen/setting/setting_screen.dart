@@ -7,6 +7,7 @@ import '../../../configurations/theme.dart';
 import '../../../providers/auth_provider.dart';
 import '../../../providers/user/setting_provider.dart';
 import '../../../utils/utils.dart';
+import '../../../widgets/my_button.dart';
 import '../../../widgets/navbar.dart';
 import '../../auth_screen/signup_screen.dart';
 import 'about_us_screen.dart';
@@ -146,28 +147,19 @@ class SettingScreen extends StatelessWidget {
                     SizedBox(height: 20),
                     Container(
                         width: double.infinity,
-                        child: FlatButton(
-                            onPressed: () {
-                              exceptionHandling(context, () async {
-                                await Provider.of<AuthProvider>(context,
-                                        listen: false)
-                                    .logout();
-                                Navigator.of(context).pushNamedAndRemoveUntil(
-                                    SignupScreen.routeName,
-                                    (Route<dynamic> route) => false);
-                              });
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text("退出登录",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .captionMedium1),
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18.0),
-                            ),
-                            color: Theme.of(context).buttonColor)),
+                        child: MyTextButton(
+                          text: "退出登录",
+                          onPressed: () {
+                            exceptionHandling(context, () async {
+                              await Provider.of<AuthProvider>(context,
+                                      listen: false)
+                                  .logout();
+                              Navigator.of(context).pushNamedAndRemoveUntil(
+                                  SignupScreen.routeName,
+                                  (Route<dynamic> route) => false);
+                            });
+                          },
+                        )),
                   ],
                 )
               ],

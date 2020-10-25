@@ -52,10 +52,9 @@ class RecentReadProvider with ChangeNotifier {
     _isFetchingRecentRead = false;
   }
 
-  Future<void> updateRecentReadByArticleId(
-      ArticleProvider articleProvider) async {
+  Future<void> addRecentRead(ArticleProvider articleProvider) async {
     if (_isUpdatingRecentRead || _userId == null) return;
-    _logger.i("RecentReadProvider-updateRecentReadByArticleId");
+    _logger.i("RecentReadProvider-addRecentRead");
     _isUpdatingRecentRead = true;
 
     // update local variables
@@ -119,9 +118,17 @@ class RecentReadProvider with ChangeNotifier {
       itemsMap[recentReadStringList[i]] = i;
     }
     // Fetch Document's basic info, cannot be more than 10
-    // TODO: some articles may be removed.
     List<ArticleProvider> articles = await ArticlesProvider.fetchList(
         recentReadStringList.sublist(_lastVisibleRecentRead, end));
+    // Some articles may be deleted, need to remove it from list too
+    List<String> removedArticles = [];
+    for (var i = _lastVisibleRecentRead; i < end; i++) {
+      ArticleProvider tmp = articles.firstWhere(
+          (a) => a.id == recentReadStringList[i],
+          orElse: () => null);
+      if (tmp == null) removedArticles.add(recentReadStringList[i]);
+    }
+    recentReadStringList.removeWhere((a) => removedArticles.contains(a));
     // Reorganize by update date (orginal sequence)
     articles.sort((a, b) {
       return itemsMap[a.id].compareTo(itemsMap[b.id]);
@@ -129,7 +136,7 @@ class RecentReadProvider with ChangeNotifier {
     articles.forEach((element) {
       recentRead.add(element);
     });
-    _lastVisibleRecentRead = end;
+    _lastVisibleRecentRead = end - removedArticles.length;
     notifyListeners();
   }
 }

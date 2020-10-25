@@ -9,6 +9,7 @@ import '../../providers/user/saved_articles_provider.dart';
 import '../../utils/my_logger.dart';
 import '../../utils/utils.dart';
 import '../../widgets/article_card.dart';
+import '../../widgets/my_button.dart';
 import '../../widgets/my_divider.dart';
 import '../../widgets/my_icon_button.dart';
 import '../../widgets/navbar.dart';
@@ -75,7 +76,11 @@ class HeadLine extends StatelessWidget {
                   builder: (ctx, profile, _) =>
                       Introduction("你好，" + profile.name, profile.imageUrl)),
               SizedBox(height: 8.0),
-              FlatButton(
+              Container(
+                width: 100,
+                child: MyTextButton(
+                  text: isLoggedIn ? "编辑个人资料" : "请登陆 / 注册",
+                  isSmall: true,
                   onPressed: () {
                     if (isLoggedIn) {
                       Navigator.of(context)
@@ -84,12 +89,8 @@ class HeadLine extends StatelessWidget {
                       Navigator.of(context).pushNamed(SignupScreen.routeName);
                     }
                   },
-                  child: Text(isLoggedIn ? "编辑个人资料" : "请登陆 / 注册",
-                      style: Theme.of(context).textTheme.captionSmall2),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18.0),
-                  ),
-                  color: Theme.of(context).buttonColor),
+                ),
+              ),
             ],
           )),
     );
@@ -144,17 +145,14 @@ class SavedArticles extends StatelessWidget {
               ),
             ),
             if (saved.articles.length > 0)
-              FlatButton(
-                  onPressed: () {
-                    Navigator.of(context)
-                        .pushNamed(SavedArticlesScreen.routeName);
-                  },
-                  child: Text("查看全部",
-                      style: Theme.of(context).textTheme.captionSmall2),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18.0),
-                  ),
-                  color: Theme.of(context).buttonColor),
+              MyTextButton(
+                text: "查看全部",
+                isSmall: true,
+                onPressed: () {
+                  Navigator.of(context)
+                      .pushNamed(SavedArticlesScreen.routeName);
+                },
+              ),
           ],
         ),
         savedArticles,

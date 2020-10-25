@@ -7,8 +7,10 @@ import '../../../configurations/theme.dart';
 import '../../../providers/user/friend_provider.dart';
 import '../../../providers/user/friends_provider.dart';
 import '../../../providers/user/profile_provider.dart';
+import '../../../providers/user/recent_read_provider.dart';
 import '../../../utils/utils.dart';
 import '../../../widgets/article_card.dart';
+import '../../../widgets/my_button.dart';
 import '../../../widgets/my_divider.dart';
 import '../../../widgets/navbar.dart';
 import 'introduction.dart';
@@ -86,25 +88,28 @@ class FriendStatus extends StatelessWidget {
         buttonText = "已互相关注";
         isFollowing = true;
       }
-      return FlatButton(
-          onPressed: () {
-            if (isFollowing) {
-              friend.unfollow(
-                  myProfile.uid, myProfile.name, myProfile.imageUrl);
-              friends.removefollowInList(profile.uid);
-            } else {
-              friend.follow(myProfile.uid, myProfile.name, myProfile.imageUrl);
-              friends.addFollowInList(friend);
-            }
-          },
-          child: Text(buttonText,
-              style: isFollowing
-                  ? Theme.of(context).textTheme.bodyText2
-                  : Theme.of(context).textTheme.bodyTextWhite),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(18.0),
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Container(
+          width: 120,
+          child: MyTextButton(
+            text: buttonText,
+            style:
+                isFollowing ? TextButtonStyle.regular : TextButtonStyle.active,
+            onPressed: () {
+              if (isFollowing) {
+                friend.unfollow(
+                    myProfile.uid, myProfile.name, myProfile.imageUrl);
+                friends.removefollowInList(profile.uid);
+              } else {
+                friend.follow(
+                    myProfile.uid, myProfile.name, myProfile.imageUrl);
+                friends.addFollowInList(friend);
+              }
+            },
           ),
-          color: isFollowing ? Theme.of(context).buttonColor : Colors.blue);
+        ),
+      );
     });
   }
 }
@@ -166,49 +171,48 @@ class ReadStatus extends StatelessWidget {
               (!profile.settingProvider.hideRecentRead &&
                   (friend.friendStatus == eFriendStatusFollowing ||
                       friend.friendStatus == eFriendStatusFriend));
+          if (!showRecentRead) return SizedBox();
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 15.0),
-            child: Column(children: [
-              if (showRecentRead)
+            child: Consumer<RecentReadProvider>(
+              builder: (context, recentRead, child) => Column(children: [
                 Text("最近一周阅读",
                     style: Theme.of(context).textTheme.captionMedium1),
-              SizedBox(height: 8.0),
-              if (showRecentRead)
+                SizedBox(height: 8.0),
                 Text(
                     "共" +
-                        profile.recentReadProvider.recentReadStringList.length
-                            .toString() +
+                        recentRead.recentReadStringList.length.toString() +
                         "篇文章",
                     style: Theme.of(context).textTheme.captionMain),
-              if (showRecentRead && profile.recentReadProvider.readsCount > 0)
-                Container(
-                  height: 220,
-                  child: NotificationListener<ScrollNotification>(
-                      onNotification: (ScrollNotification scrollInfo) {
-                        if (scrollInfo.metrics.pixels ==
-                            scrollInfo.metrics.maxScrollExtent) {
-                          exceptionHandling(context, () async {
-                            await profile.recentReadProvider
-                                .fetchMoreRecentRead();
-                          });
-                        }
-                        return true;
-                      },
-                      child: ListView(children: [
-                        ...profile.recentReadProvider.recentRead
-                            .map((element) => Padding(
-                                  padding: const EdgeInsets.only(
-                                      right: 10.0, top: 12.5, bottom: 30),
-                                  child: ArticleCard(article: element),
-                                ))
-                            .toList(),
-                        if (!profile.recentReadProvider.noMoreRecentRead &&
-                            profile.recentReadProvider.recentRead.length != 0)
-                          Center(child: Icon(Icons.more_horiz))
-                      ], scrollDirection: Axis.horizontal)),
-                ),
-              MyDivider()
-            ]),
+                if (recentRead.readsCount > 0)
+                  Container(
+                    height: 220,
+                    child: NotificationListener<ScrollNotification>(
+                        onNotification: (ScrollNotification scrollInfo) {
+                          if (scrollInfo.metrics.pixels ==
+                              scrollInfo.metrics.maxScrollExtent) {
+                            exceptionHandling(context, () async {
+                              await recentRead.fetchMoreRecentRead();
+                            });
+                          }
+                          return true;
+                        },
+                        child: ListView(children: [
+                          ...recentRead.recentRead
+                              .map((element) => Padding(
+                                    padding: const EdgeInsets.only(
+                                        right: 10.0, top: 12.5, bottom: 30),
+                                    child: ArticleCard(article: element),
+                                  ))
+                              .toList(),
+                          if (!recentRead.noMoreRecentRead &&
+                              recentRead.recentRead.length != 0)
+                            Center(child: Icon(Icons.more_horiz))
+                        ], scrollDirection: Axis.horizontal)),
+                  ),
+                MyDivider()
+              ]),
+            ),
           );
         })
       ],

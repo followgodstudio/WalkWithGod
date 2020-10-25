@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../configurations/constants.dart';
-import '../configurations/theme.dart';
+import 'my_button.dart';
 
 class PopUpComment extends StatefulWidget {
   final String articleId;
@@ -31,16 +31,12 @@ class _PopUpCommentState extends State<PopUpComment> {
         padding: EdgeInsets.symmetric(
             horizontal: horizontalPadding, vertical: verticalPadding),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  widget.replyTo == null ? "添加留言" : "@" + widget.replyTo,
-                  style: TextStyle(fontSize: 15.0),
-                )
-              ],
+            Text(
+              widget.replyTo == null ? "添加留言" : "@" + widget.replyTo,
+              style: TextStyle(fontSize: 15.0),
             ),
             TextField(
               onChanged: (value) {
@@ -63,38 +59,28 @@ class _PopUpCommentState extends State<PopUpComment> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                GestureDetector(
-                  onTap: () {
+                MyTextButton(
+                  text: "取消",
+                  hasBorder: false,
+                  onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: Text("取消"),
                 ),
                 Container(
-                  width: 62.0,
-                  height: 32.0,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                      color: isEmpty
-                          ? Color.fromARGB(255, 246, 246, 246)
-                          : Color.fromARGB(255, 50, 197, 255)),
-                  child: FlatButton(
-                    padding: const EdgeInsets.all(0),
-                    child: Text(
-                      '发布',
+                  width: 60,
+                  child: MyTextButton(
+                      text: widget.replyTo == null ? "发布" : "回复",
+                      isSmall: false,
                       style: isEmpty
-                          ? Theme.of(context).textTheme.buttonMedium1
-                          : Theme.of(context).textTheme.bodyTextWhite,
-                    ),
-                    onPressed: () {
-                      if (!isEmpty) {
+                          ? TextButtonStyle.disabled
+                          : TextButtonStyle.active,
+                      onPressed: () {
                         Navigator.pop(context);
                         widget.onPressFunc(_commentController.text);
-                      }
-                    },
-                  ),
+                      }),
                 ),
               ],
-            )
+            ),
           ],
         ),
       ),
