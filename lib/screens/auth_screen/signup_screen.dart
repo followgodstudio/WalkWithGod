@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:international_phone_input/international_phone_input.dart';
 import 'package:provider/provider.dart';
+import 'package:walk_with_god/widgets/my_text_button.dart';
 
 import '../../configurations/theme.dart';
 import '../../providers/auth_provider.dart';
@@ -264,7 +265,7 @@ class _SignupScreenState extends State<SignupScreen> {
             ),
           ),
           onPressed: submit,
-          color: Colors.lightBlue,
+          color: MyColors.lightBlue,
           textColor: Theme.of(context).primaryTextTheme.button.color,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
@@ -275,20 +276,11 @@ class _SignupScreenState extends State<SignupScreen> {
       SizedBox(
         height: 10,
       ),
-      FlatButton(
-        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30),
-        ),
-        color: Colors.grey[100],
-        textColor: Theme.of(context).accentColor,
-        child: Text(
-          _switchButtonText,
-          style: TextStyle(
-            fontSize: 14.0,
-            fontFamily: 'LantingXianHei',
-          ),
-        ),
+      MyTextButton(
+        text: _switchButtonText,
+        width: 100,
+        isSmall: true,
+        textColor: MyColors.lightBlue,
         onPressed: () {
           switchFormState(_newFormState);
         },
@@ -302,28 +294,16 @@ class _SignupScreenState extends State<SignupScreen> {
       child: Column(
         children: [
           SizedBox(height: 15.0),
-          FlatButton(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 5.0),
-              child: Text(
-                "忘记密码?",
-                style: TextStyle(
-                  fontSize: 12.0,
-                  fontFamily: 'LantingXianHei',
-                ),
-              ),
-            ),
+          MyTextButton(
+            text: "忘记密码?",
+            width: 100,
+            isSmall: true,
+            textColor: MyColors.error,
             onPressed: () {
               setState(() {
                 authFormType = AuthFormType.reset;
               });
             },
-            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            textColor: Colors.red,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30),
-            ),
-            color: Colors.grey[100],
           ),
           SizedBox(height: 15.0),
         ],
@@ -363,7 +343,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 },
               ),
               RaisedButton(
-                color: Colors.green,
+                color: MyColors.suceess,
                 textColor: Colors.white,
                 child: Row(
                   children: <Widget>[

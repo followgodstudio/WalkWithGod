@@ -56,7 +56,7 @@ class MessageItem extends StatelessWidget {
                             : MyIconButton(
                                 icon: 'heart',
                                 iconSize: 18.0,
-                                iconColor: Colors.pink[300])),
+                                iconColor: MyColors.pink)),
                     Text(
                       data.senderName +
                           (data.type == eMessageTypeReply ? "评论" : "点赞") +

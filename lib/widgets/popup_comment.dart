@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../configurations/constants.dart';
-import 'my_button.dart';
+import 'my_text_button.dart';
 
 class PopUpComment extends StatefulWidget {
   final String articleId;
@@ -66,19 +66,17 @@ class _PopUpCommentState extends State<PopUpComment> {
                     Navigator.pop(context);
                   },
                 ),
-                Container(
-                  width: 60,
-                  child: MyTextButton(
-                      text: widget.replyTo == null ? "发布" : "回复",
-                      isSmall: false,
-                      style: isEmpty
-                          ? TextButtonStyle.disabled
-                          : TextButtonStyle.active,
-                      onPressed: () {
-                        Navigator.pop(context);
-                        widget.onPressFunc(_commentController.text);
-                      }),
-                ),
+                MyTextButton(
+                    width: 60,
+                    text: widget.replyTo == null ? "发布" : "回复",
+                    isSmall: false,
+                    style: isEmpty
+                        ? TextButtonStyle.disabled
+                        : TextButtonStyle.active,
+                    onPressed: () {
+                      Navigator.pop(context);
+                      widget.onPressFunc(_commentController.text);
+                    }),
               ],
             ),
           ],

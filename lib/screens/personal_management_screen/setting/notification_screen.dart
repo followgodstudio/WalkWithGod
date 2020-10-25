@@ -34,7 +34,7 @@ class NotificationScreen extends StatelessWidget {
                             width: 50.0,
                             height: 25.0,
                             toggleSize: 17.0,
-                            activeColor: Colors.blue[300],
+                            activeColor: MyColors.lightBlue,
                             value: setting.followingNotification,
                             onToggle: (value) {
                               setting.updateSetting(

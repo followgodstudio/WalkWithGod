@@ -9,7 +9,7 @@ import '../../providers/user/saved_articles_provider.dart';
 import '../../utils/my_logger.dart';
 import '../../utils/utils.dart';
 import '../../widgets/article_card.dart';
-import '../../widgets/my_button.dart';
+import '../../widgets/my_text_button.dart';
 import '../../widgets/my_divider.dart';
 import '../../widgets/my_icon_button.dart';
 import '../../widgets/navbar.dart';
@@ -76,20 +76,18 @@ class HeadLine extends StatelessWidget {
                   builder: (ctx, profile, _) =>
                       Introduction("你好，" + profile.name, profile.imageUrl)),
               SizedBox(height: 8.0),
-              Container(
+              MyTextButton(
                 width: 100,
-                child: MyTextButton(
-                  text: isLoggedIn ? "编辑个人资料" : "请登陆 / 注册",
-                  isSmall: true,
-                  onPressed: () {
-                    if (isLoggedIn) {
-                      Navigator.of(context)
-                          .pushNamed(EditProfileScreen.routeName);
-                    } else {
-                      Navigator.of(context).pushNamed(SignupScreen.routeName);
-                    }
-                  },
-                ),
+                text: isLoggedIn ? "编辑个人资料" : "请登陆 / 注册",
+                isSmall: true,
+                onPressed: () {
+                  if (isLoggedIn) {
+                    Navigator.of(context)
+                        .pushNamed(EditProfileScreen.routeName);
+                  } else {
+                    Navigator.of(context).pushNamed(SignupScreen.routeName);
+                  }
+                },
               ),
             ],
           )),

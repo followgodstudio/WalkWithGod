@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import '../configurations/theme.dart';
 import '../screens/home_screen/home_screen.dart';
 import '../utils/my_logger.dart';
 import 'user/profile_provider.dart';
@@ -180,7 +181,7 @@ class AuthProvider with ChangeNotifier {
                 FlatButton(
                   child: Text("确认"),
                   textColor: Colors.white,
-                  color: Colors.green,
+                  color: MyColors.suceess,
                   onPressed: () {
                     var _credential = PhoneAuthProvider.credential(
                         verificationId: verificationId,

@@ -6,7 +6,7 @@ import '../../../configurations/theme.dart';
 import '../../../providers/user/friend_provider.dart';
 import '../../../providers/user/profile_provider.dart';
 import '../../../utils/utils.dart';
-import '../../../widgets/my_button.dart';
+import '../../../widgets/my_text_button.dart';
 import '../../../widgets/profile_picture.dart';
 
 class FriendItem extends StatelessWidget {

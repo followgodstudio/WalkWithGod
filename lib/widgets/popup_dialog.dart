@@ -11,7 +11,7 @@ class PopUpDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-        backgroundColor: Color.fromARGB(255, 240, 240, 240),
+        backgroundColor: MyColors.lightGrey,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(18.0),
         ),
@@ -26,12 +26,12 @@ class PopUpDialog extends StatelessWidget {
               if (isSuccess)
                 Icon(
                   Icons.check_circle,
-                  color: Colors.green[300],
+                  color: MyColors.suceess,
                 ),
               if (!isSuccess)
                 Icon(
                   Icons.error,
-                  color: Colors.red,
+                  color: MyColors.error,
                 ),
               SizedBox(height: 4.0),
               Center(

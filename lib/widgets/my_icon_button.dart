@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../configurations/theme.dart';
+
 class MyIconButton extends StatelessWidget {
   final String icon;
   final double iconSize;
@@ -14,7 +16,7 @@ class MyIconButton extends StatelessWidget {
   MyIconButton(
       {this.icon,
       this.iconSize = 20,
-      this.iconColor = const Color.fromARGB(255, 128, 128, 128),
+      this.iconColor = MyColors.grey,
       this.buttonSize = 40,
       this.onPressed,
       this.hasBorder = false,
@@ -38,9 +40,7 @@ class MyIconButton extends StatelessWidget {
                   color: isActive ? Colors.white : iconColor, size: iconSize),
           color: !hasBorder
               ? Colors.transparent
-              : isActive
-                  ? Color.fromARGB(255, 50, 197, 255)
-                  : Theme.of(context).buttonColor,
+              : isActive ? MyColors.lightBlue : Theme.of(context).buttonColor,
           shape: hasBorder ? CircleBorder() : null),
     );
   }

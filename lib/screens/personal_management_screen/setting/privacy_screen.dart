@@ -46,7 +46,7 @@ class PrivacyScreen extends StatelessWidget {
                             width: 50.0,
                             height: 25.0,
                             toggleSize: 17.0,
-                            activeColor: Colors.blue[300],
+                            activeColor: MyColors.lightBlue,
                             value: setting.hideRecentRead,
                             onToggle: (value) {
                               setting.updateSetting(newHideRecentRead: value);
@@ -67,7 +67,7 @@ class PrivacyScreen extends StatelessWidget {
                               width: 50.0,
                               height: 25.0,
                               toggleSize: 17.0,
-                              activeColor: Colors.blue[300],
+                              activeColor: MyColors.lightBlue,
                               value: setting.allowFollowing,
                               onToggle: (value) {
                                 setting.updateSetting(newAllowFollowing: value);
@@ -88,7 +88,7 @@ class PrivacyScreen extends StatelessWidget {
                               width: 50.0,
                               height: 25.0,
                               toggleSize: 17.0,
-                              activeColor: Colors.blue[300],
+                              activeColor: MyColors.lightBlue,
                               value: setting.rejectStrangerMessage,
                               onToggle: (value) {
                                 setting.updateSetting(
@@ -116,7 +116,7 @@ class PrivacyScreen extends StatelessWidget {
                               style:
                                   Theme.of(context).textTheme.captionMedium1),
                           Icon(Icons.arrow_forward_ios,
-                              size: 15.0, color: Colors.blue[300])
+                              size: 15.0, color: MyColors.lightBlue)
                         ],
                       ),
                     ),
@@ -134,7 +134,7 @@ class PrivacyScreen extends StatelessWidget {
                               style:
                                   Theme.of(context).textTheme.captionMedium1),
                           Icon(Icons.arrow_forward_ios,
-                              size: 15.0, color: Colors.blue[300])
+                              size: 15.0, color: MyColors.lightBlue)
                         ],
                       ),
                     ),

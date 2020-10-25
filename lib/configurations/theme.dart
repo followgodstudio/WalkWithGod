@@ -1,34 +1,42 @@
 import 'package:flutter/material.dart';
 
+class MyColors {
+  static const Color black = Colors.black87;
+  static const Color lightBlue = Color.fromARGB(255, 50, 197, 255);
+  static const Color pink = Color.fromARGB(255, 239, 71, 111);
+  static const Color yellow = Color.fromARGB(255, 255, 235, 133);
+  static const Color lightGreen = Color.fromARGB(255, 195, 255, 235);
+  static const Color silver = Color.fromARGB(255, 240, 240, 240);
+  static const Color lightGrey = Color.fromARGB(255, 224, 224, 224);
+  static const Color grey = Color.fromARGB(255, 128, 128, 128);
+
+  static const Color error = Colors.red;
+  static const Color suceess = Color.fromARGB(255, 112, 193, 129);
+}
+
 final ThemeData dayTheme = new ThemeData(
-  primarySwatch: Colors.lightBlue,
   backgroundColor: Colors.white,
   appBarTheme: AppBarTheme(color: Colors.white),
-  accentColor: Color.fromARGB(255, 0, 169, 157),
-  buttonColor: Color.fromARGB(255, 239, 239, 239),
+  buttonColor: MyColors.silver,
   textTheme: TextTheme(
     headline1:
-        TextStyle(color: Colors.black87, fontSize: 30.0, fontFamily: 'Jinling'),
+        TextStyle(color: MyColors.black, fontSize: 30.0, fontFamily: 'Jinling'),
     headline2:
-        TextStyle(color: Colors.black87, fontSize: 26.0, fontFamily: 'Jinling'),
+        TextStyle(color: MyColors.black, fontSize: 26.0, fontFamily: 'Jinling'),
     headline3:
-        TextStyle(color: Colors.black87, fontSize: 22.0, fontFamily: 'Jinling'),
+        TextStyle(color: MyColors.black, fontSize: 22.0, fontFamily: 'Jinling'),
     headline4:
-        TextStyle(color: Colors.black87, fontSize: 30.0, fontFamily: 'Lanting'),
+        TextStyle(color: MyColors.black, fontSize: 30.0, fontFamily: 'Lanting'),
     headline5:
-        TextStyle(color: Colors.black87, fontSize: 26.0, fontFamily: 'Lanting'),
+        TextStyle(color: MyColors.black, fontSize: 26.0, fontFamily: 'Lanting'),
     headline6:
-        TextStyle(color: Colors.black87, fontSize: 22.0, fontFamily: 'Lanting'),
+        TextStyle(color: MyColors.black, fontSize: 22.0, fontFamily: 'Lanting'),
     subtitle1: TextStyle(
         color: Colors.black54,
         fontSize: 21.5,
         fontFamily: 'Jinling',
         letterSpacing: 2,
         height: 2),
-    subtitle2: TextStyle(
-        color: Color.fromARGB(255, 0, 169, 157),
-        fontSize: 16.0,
-        fontFamily: 'Song'),
     bodyText1: TextStyle(
         color: Color.fromARGB(255, 77, 77, 77),
         fontSize: 16.0,
@@ -43,42 +51,20 @@ final ThemeData dayTheme = new ThemeData(
     ),
     caption:
         TextStyle(color: Colors.grey[300], fontSize: 23.0, fontFamily: 'Song'),
-    overline: TextStyle(
-      decoration: TextDecoration.overline,
-      color: Color.fromARGB(255, 128, 128, 128),
-      fontSize: 10.0,
-      fontFamily: 'Lanting',
-      letterSpacing: -0.1,
-    ),
     button:
-        TextStyle(color: Colors.black87, fontSize: 29.0, fontFamily: 'Jinling'),
+        TextStyle(color: MyColors.black, fontSize: 29.0, fontFamily: 'Jinling'),
   ),
 );
 
 extension CustomStyles on TextTheme {
-  Color get buttonColor2 => const Color.fromARGB(255, 128, 128, 128);
-  TextStyle get error => const TextStyle(
-      fontSize: 15.0, color: Colors.red, fontWeight: FontWeight.bold);
   TextStyle get headerSmall1 => const TextStyle(
         fontSize: 14.0,
-        color: Colors.black,
+        color: MyColors.black,
         fontFamily: 'FangzhengTeYaSong',
         letterSpacing: -0.1,
       );
-  TextStyle get bodyText3 => const TextStyle(
-        fontSize: 10.0,
-        color: Colors.blue,
-        fontFamily: 'Lanting',
-        letterSpacing: -0.1,
-      );
-  TextStyle get bodyText4 => const TextStyle(
-        color: Color.fromARGB(255, 51, 102, 187),
-        fontSize: 14.0,
-        fontFamily: 'Lanting',
-        letterSpacing: -0.1,
-      );
   TextStyle get bodyTextBlack => const TextStyle(
-        color: Colors.black87,
+        color: MyColors.black,
         fontSize: 16.0,
         fontFamily: 'LantingXianHei',
         letterSpacing: -0.1,
@@ -89,46 +75,30 @@ extension CustomStyles on TextTheme {
         fontFamily: 'Lanting',
         letterSpacing: -0.1,
       );
-  TextStyle get bodyTextGray => const TextStyle(
-        color: const Color.fromARGB(255, 128, 128, 128),
-        fontSize: 14.0,
-        fontFamily: 'Lanting',
-        letterSpacing: -0.1,
-      );
   TextStyle get captionMain => const TextStyle(
         fontSize: 14.0,
-        color: Color.fromARGB(255, 128, 128, 128),
+        color: MyColors.grey,
         fontFamily: 'LantingXianHei',
       );
   TextStyle get captionMainWideSpacing => const TextStyle(
       fontSize: 14.0,
-      color: Color.fromARGB(255, 128, 128, 128),
+      color: MyColors.grey,
       fontFamily: 'LantingXianHei',
       letterSpacing: 1.3);
-  TextStyle get captionExtraSmall => const TextStyle(
-        fontSize: 6.0,
-        color: Color.fromARGB(255, 128, 128, 128),
-        fontFamily: 'LantingXianHei',
-      );
   TextStyle get captionSmall => const TextStyle(
         fontSize: 10.0,
-        color: Color.fromARGB(255, 128, 128, 128),
+        color: MyColors.grey,
         fontFamily: 'LantingXianHei',
       );
   TextStyle get captionSmall2 => const TextStyle(
         fontSize: 12.0,
-        color: Color.fromARGB(255, 128, 128, 128),
+        color: MyColors.grey,
         fontFamily: 'LantingXianHei',
       );
 
   TextStyle get captionSmallBlack => const TextStyle(
         fontSize: 12.0,
-        color: Colors.black87,
-        fontFamily: 'Lanting',
-      );
-  TextStyle get captionSmallBlue => const TextStyle(
-        fontSize: 12.0,
-        color: Color.fromARGB(255, 100, 181, 246),
+        color: MyColors.black,
         fontFamily: 'Lanting',
       );
   TextStyle get captionSmallWhite => const TextStyle(
@@ -148,8 +118,7 @@ extension CustomStyles on TextTheme {
       );
   TextStyle get captionMedium2 => const TextStyle(
         fontSize: 25.0,
-        //color: Color.fromARGB(255, 0, 169, 157),
-        color: Colors.black,
+        color: MyColors.black,
         fontFamily: 'FangzhengTeYaSong',
       );
   TextStyle get captionMedium3 => const TextStyle(
@@ -161,16 +130,6 @@ extension CustomStyles on TextTheme {
         fontSize: 14.0,
         color: Color.fromARGB(255, 77, 77, 77),
         fontFamily: 'LantingXianHei',
-      );
-  TextStyle get captionLarge1 => const TextStyle(
-        fontSize: 18.0,
-        color: Color.fromARGB(255, 0, 169, 157),
-        fontFamily: 'Lanting',
-      );
-  TextStyle get buttonSmall1 => const TextStyle(
-        fontSize: 10.0,
-        color: Color.fromARGB(255, 0, 0, 0),
-        fontFamily: 'Lanting',
       );
   TextStyle get buttonMedium1 => const TextStyle(
         fontSize: 15.0,
@@ -194,9 +153,4 @@ extension CustomStyles on TextTheme {
       );
 }
 
-final ThemeData nightTheme = new ThemeData(
-  primarySwatch: Colors.deepOrange,
-  backgroundColor: Color.fromARGB(255, 99, 12, 95),
-  appBarTheme: AppBarTheme(color: Colors.white),
-  accentColor: Colors.grey,
-);
+final ThemeData nightTheme = new ThemeData();

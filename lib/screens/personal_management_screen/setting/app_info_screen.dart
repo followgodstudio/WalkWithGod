@@ -35,7 +35,7 @@ class AppInfoScreen extends StatelessWidget {
                         ),
                         borderRadius: BorderRadius.circular(25.0),
                         border: Border.all(
-                          color: Color.fromARGB(255, 195, 255, 235),
+                          color: MyColors.lightGreen,
                           width: 2,
                         ),
                       ),

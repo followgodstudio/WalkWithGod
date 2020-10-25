@@ -73,7 +73,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     decoration: BoxDecoration(
                       boxShadow: [
                         BoxShadow(
-                            color: Colors.grey.withOpacity(0.3),
+                            color: MyColors.grey.withOpacity(0.3),
                             spreadRadius: 2,
                             blurRadius: 20,
                             offset: Offset(10, 10)),
@@ -121,9 +121,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     child: SizedBox(),
                   ),
                   Container(
-                      height: 20,
-                      child: VerticalDivider(
-                          color: Color.fromARGB(255, 128, 128, 128))),
+                      height: 20, child: VerticalDivider(color: MyColors.grey)),
                   FlatButton(
                       onPressed: () {
                         _timer.cancel();

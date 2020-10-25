@@ -75,7 +75,7 @@ class Comment extends StatelessWidget {
                           VerticalDivider(
                             indent: 4,
                             thickness: 1.2,
-                            color: Color.fromARGB(255, 224, 224, 224),
+                            color: MyColors.lightGrey,
                             width: 1.2,
                           ),
                           SizedBox(width: 8),
@@ -130,7 +130,7 @@ class Comment extends StatelessWidget {
                           MyIconButton(
                               iconSize: iconSize,
                               icon: 'heart',
-                              iconColor: Colors.pink[300],
+                              iconColor: MyColors.pink,
                               onPressed: () {
                                 if (profile.uid == null) {
                                   showPopUpDialog(context, false, "请登陆后再操作");

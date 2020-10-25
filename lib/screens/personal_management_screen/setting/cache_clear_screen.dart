@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:walk_with_god/widgets/my_text_button.dart';
 
 import '../../../configurations/constants.dart';
 import '../../../configurations/theme.dart';
@@ -52,22 +53,17 @@ class CacheClearScreen extends StatelessWidget {
                             ],
                           );
                         }),
-                    Container(
+                    MyTextButton(
                       height: 30,
-                      child: FlatButton(
-                          onPressed: () async {
-                            await Provider.of<SettingProvider>(context,
-                                    listen: false)
-                                .clearCache();
-                            showPopUpDialog(context, true, "完成清理");
-                          },
-                          child: Text("清 理",
-                              style:
-                                  Theme.of(context).textTheme.captionSmallBlue),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18.0),
-                          ),
-                          color: Theme.of(context).buttonColor),
+                      text: "清 理",
+                      isSmall: true,
+                      textColor: MyColors.lightBlue,
+                      onPressed: () async {
+                        await Provider.of<SettingProvider>(context,
+                                listen: false)
+                            .clearCache();
+                        showPopUpDialog(context, true, "完成清理");
+                      },
                     ),
                   ],
                 ),

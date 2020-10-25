@@ -7,7 +7,7 @@ import '../../../configurations/theme.dart';
 import '../../../providers/auth_provider.dart';
 import '../../../providers/user/setting_provider.dart';
 import '../../../utils/utils.dart';
-import '../../../widgets/my_button.dart';
+import '../../../widgets/my_text_button.dart';
 import '../../../widgets/navbar.dart';
 import '../../auth_screen/signup_screen.dart';
 import 'about_us_screen.dart';
@@ -43,7 +43,7 @@ class SettingScreen extends StatelessWidget {
                             width: 50.0,
                             height: 25.0,
                             toggleSize: 17.0,
-                            activeColor: Colors.blue[300],
+                            activeColor: MyColors.lightBlue,
                             value: setting.keepScreenAwake,
                             onToggle: (value) {
                               setting.updateSetting(newKeepScreenAwake: value);
@@ -70,7 +70,7 @@ class SettingScreen extends StatelessWidget {
                               style:
                                   Theme.of(context).textTheme.captionMedium1),
                           Icon(Icons.arrow_forward_ios,
-                              size: 15.0, color: Colors.blue[300])
+                              size: 15.0, color: MyColors.lightBlue)
                         ],
                       ),
                     ),
@@ -87,7 +87,7 @@ class SettingScreen extends StatelessWidget {
                               style:
                                   Theme.of(context).textTheme.captionMedium1),
                           Icon(Icons.arrow_forward_ios,
-                              size: 15.0, color: Colors.blue[300])
+                              size: 15.0, color: MyColors.lightBlue)
                         ],
                       ),
                     ),
@@ -104,7 +104,7 @@ class SettingScreen extends StatelessWidget {
                               style:
                                   Theme.of(context).textTheme.captionMedium1),
                           Icon(Icons.arrow_forward_ios,
-                              size: 15.0, color: Colors.blue[300])
+                              size: 15.0, color: MyColors.lightBlue)
                         ],
                       ),
                     ),
@@ -122,7 +122,7 @@ class SettingScreen extends StatelessWidget {
                               style:
                                   Theme.of(context).textTheme.captionMedium1),
                           Icon(Icons.arrow_forward_ios,
-                              size: 15.0, color: Colors.blue[300])
+                              size: 15.0, color: MyColors.lightBlue)
                         ],
                       ),
                     ),
@@ -139,27 +139,26 @@ class SettingScreen extends StatelessWidget {
                               style:
                                   Theme.of(context).textTheme.captionMedium1),
                           Icon(Icons.arrow_forward_ios,
-                              size: 15.0, color: Colors.blue[300])
+                              size: 15.0, color: MyColors.lightBlue)
                         ],
                       ),
                     ),
                     Divider(),
                     SizedBox(height: 20),
-                    Container(
-                        width: double.infinity,
-                        child: MyTextButton(
-                          text: "退出登录",
-                          onPressed: () {
-                            exceptionHandling(context, () async {
-                              await Provider.of<AuthProvider>(context,
-                                      listen: false)
-                                  .logout();
-                              Navigator.of(context).pushNamedAndRemoveUntil(
-                                  SignupScreen.routeName,
-                                  (Route<dynamic> route) => false);
-                            });
-                          },
-                        )),
+                    MyTextButton(
+                      width: double.infinity,
+                      text: "退出登录",
+                      onPressed: () {
+                        exceptionHandling(context, () async {
+                          await Provider.of<AuthProvider>(context,
+                                  listen: false)
+                              .logout();
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                              SignupScreen.routeName,
+                              (Route<dynamic> route) => false);
+                        });
+                      },
+                    ),
                   ],
                 )
               ],

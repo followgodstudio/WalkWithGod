@@ -115,8 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             Container(
                                 height: 20,
-                                child: VerticalDivider(
-                                    color: Color.fromARGB(255, 128, 128, 128))),
+                                child: VerticalDivider(color: MyColors.grey)),
                             ValueListenableBuilder(
                               valueListenable: formattedDate,
                               builder: (context, String value, child) => Text(

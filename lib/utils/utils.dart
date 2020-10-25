@@ -38,7 +38,7 @@ void showPopUpDialog(BuildContext context, bool isSuccess, String message,
   });
   showDialog(
       context: context,
-      barrierColor: Color.fromARGB(1, 255, 255, 255),
+      barrierColor: Color.fromARGB(1, 255, 255, 255), // Near transparent
       builder: (context) {
         return PopUpDialog(isSuccess, message);
       }).then((value) {

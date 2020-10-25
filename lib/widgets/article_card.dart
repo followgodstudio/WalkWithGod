@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
+import '../configurations/theme.dart';
 import '../providers/article/article_provider.dart';
 import '../screens/article_screen/article_screen.dart';
 import '../utils/utils.dart';
@@ -79,7 +80,7 @@ class ArticleCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     boxShadow: [
                       BoxShadow(
-                          color: Colors.grey.withOpacity(0.3),
+                          color: MyColors.grey.withOpacity(0.3),
                           spreadRadius: 2,
                           blurRadius: 20,
                           offset: Offset(10, 10)),
@@ -115,9 +116,8 @@ class ArticleCard extends StatelessWidget {
                       children: [
                         Container(
                           width: eyebrowWidth,
-                          child: Divider(
-                              color: Color.fromARGB(255, 255, 235, 133),
-                              thickness: 4.0),
+                          child:
+                              Divider(color: MyColors.yellow, thickness: 4.0),
                         ),
                         if (!isSmall) SizedBox(height: 5.0),
                         Text(

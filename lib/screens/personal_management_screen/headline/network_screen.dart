@@ -10,7 +10,7 @@ import '../../../providers/user/profile_provider.dart';
 import '../../../providers/user/recent_read_provider.dart';
 import '../../../utils/utils.dart';
 import '../../../widgets/article_card.dart';
-import '../../../widgets/my_button.dart';
+import '../../../widgets/my_text_button.dart';
 import '../../../widgets/my_divider.dart';
 import '../../../widgets/navbar.dart';
 import 'introduction.dart';
@@ -89,25 +89,21 @@ class FriendStatus extends StatelessWidget {
         isFollowing = true;
       }
       return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 15.0),
+        child: MyTextButton(
           width: 120,
-          child: MyTextButton(
-            text: buttonText,
-            style:
-                isFollowing ? TextButtonStyle.regular : TextButtonStyle.active,
-            onPressed: () {
-              if (isFollowing) {
-                friend.unfollow(
-                    myProfile.uid, myProfile.name, myProfile.imageUrl);
-                friends.removefollowInList(profile.uid);
-              } else {
-                friend.follow(
-                    myProfile.uid, myProfile.name, myProfile.imageUrl);
-                friends.addFollowInList(friend);
-              }
-            },
-          ),
+          text: buttonText,
+          style: isFollowing ? TextButtonStyle.regular : TextButtonStyle.active,
+          onPressed: () {
+            if (isFollowing) {
+              friend.unfollow(
+                  myProfile.uid, myProfile.name, myProfile.imageUrl);
+              friends.removefollowInList(profile.uid);
+            } else {
+              friend.follow(myProfile.uid, myProfile.name, myProfile.imageUrl);
+              friends.addFollowInList(friend);
+            }
+          },
         ),
       );
     });
@@ -122,10 +118,8 @@ class ReadStatus extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 4.0),
-          child: Divider(),
-        ),
+        Divider(),
+        SizedBox(height: 4.0),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30.0),
           child: Row(
@@ -173,7 +167,7 @@ class ReadStatus extends StatelessWidget {
                       friend.friendStatus == eFriendStatusFriend));
           if (!showRecentRead) return SizedBox();
           return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 15.0),
+            padding: const EdgeInsets.symmetric(vertical: 10.0),
             child: Consumer<RecentReadProvider>(
               builder: (context, recentRead, child) => Column(children: [
                 Text("最近一周阅读",

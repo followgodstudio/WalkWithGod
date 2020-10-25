@@ -10,6 +10,8 @@ class MyTextButton extends StatelessWidget {
   final bool hasBorder;
   final TextButtonStyle style;
   final bool isSmall;
+  final double height;
+  final double width;
   final Function onPressed;
 
   MyTextButton({
@@ -18,6 +20,8 @@ class MyTextButton extends StatelessWidget {
     this.hasBorder = true,
     this.style = TextButtonStyle.regular,
     this.isSmall = false,
+    this.height,
+    this.width,
     this.onPressed,
   });
 
@@ -26,9 +30,11 @@ class MyTextButton extends StatelessWidget {
     Color _textColor = textColor ??
         (style == TextButtonStyle.active
             ? Colors.white
-            : (style == TextButtonStyle.disabled ? Colors.grey : Colors.black));
+            : (style == TextButtonStyle.disabled
+                ? MyColors.grey
+                : MyColors.black));
     Color _buttonColor = style == TextButtonStyle.active
-        ? Color.fromARGB(255, 50, 197, 255)
+        ? MyColors.lightBlue
         : Theme.of(context).buttonColor;
     Widget _textChild = Text(text,
         style: isSmall
@@ -46,16 +52,21 @@ class MyTextButton extends StatelessWidget {
             if (onPressed != null) onPressed();
           },
           child: _textChild);
-    return FlatButton(
-      onPressed: () {
-        if (style == TextButtonStyle.disabled) return;
-        if (onPressed != null) onPressed();
-      },
-      child: _textChild,
-      color: _buttonColor,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
-      padding: const EdgeInsets.all(0),
-      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+    return Container(
+      width: width,
+      height: height,
+      child: FlatButton(
+        onPressed: () {
+          if (style == TextButtonStyle.disabled) return;
+          if (onPressed != null) onPressed();
+        },
+        child: _textChild,
+        color: _buttonColor,
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
+        padding: const EdgeInsets.all(0),
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      ),
     );
   }
 }

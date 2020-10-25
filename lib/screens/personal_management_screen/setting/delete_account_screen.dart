@@ -5,6 +5,7 @@ import '../../../configurations/constants.dart';
 import '../../../configurations/theme.dart';
 import '../../../providers/auth_provider.dart';
 import '../../../utils/utils.dart';
+import '../../../widgets/my_text_button.dart';
 import '../../../widgets/navbar.dart';
 import '../../auth_screen/signup_screen.dart';
 
@@ -57,28 +58,20 @@ class DeleteAccountScreen extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 20),
-                Container(
-                    width: double.infinity,
-                    child: FlatButton(
-                        onPressed: () {
-                          exceptionHandling(context, () async {
-                            await Provider.of<AuthProvider>(context,
-                                    listen: false)
-                                .deleteUser();
-                            Navigator.of(context).pushNamedAndRemoveUntil(
-                                SignupScreen.routeName,
-                                (Route<dynamic> route) => false);
-                          });
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text("我已知悉，并确认注销",
-                              style: Theme.of(context).textTheme.bodyTextWhite),
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18.0),
-                        ),
-                        color: Colors.blue[300])),
+                MyTextButton(
+                  width: double.infinity,
+                  text: "我已知悉，并确认注销",
+                  style: TextButtonStyle.active,
+                  onPressed: () {
+                    exceptionHandling(context, () async {
+                      await Provider.of<AuthProvider>(context, listen: false)
+                          .deleteUser();
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                          SignupScreen.routeName,
+                          (Route<dynamic> route) => false);
+                    });
+                  },
+                ),
               ],
             ),
           ),
@@ -96,8 +89,8 @@ class _Circle extends StatelessWidget {
       height: 40,
       child: Center(
           child: Text(index, style: Theme.of(context).textTheme.headline6)),
-      decoration: BoxDecoration(
-          shape: BoxShape.circle, color: Color.fromARGB(255, 195, 255, 235)),
+      decoration:
+          BoxDecoration(shape: BoxShape.circle, color: MyColors.lightGreen),
     );
   }
 }
