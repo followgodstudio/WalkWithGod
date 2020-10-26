@@ -37,7 +37,7 @@ class ShareArticle extends StatelessWidget {
                         shape: CircleBorder(),
                       ),
                     ),
-                    Text("微信", style: Theme.of(context).textTheme.captionMain)
+                    Text("微信", style: Theme.of(context).textTheme.captionGrey)
                   ],
                 ),
                 Column(
@@ -58,7 +58,7 @@ class ShareArticle extends StatelessWidget {
                         shape: CircleBorder(),
                       ),
                     ),
-                    Text("朋友圈", style: Theme.of(context).textTheme.captionMain)
+                    Text("朋友圈", style: Theme.of(context).textTheme.captionGrey)
                   ],
                 ),
                 Column(
@@ -80,7 +80,7 @@ class ShareArticle extends StatelessWidget {
                       ),
                     ),
                     Text("Facebook",
-                        style: Theme.of(context).textTheme.captionMain)
+                        style: Theme.of(context).textTheme.captionGrey)
                   ],
                 ),
                 Column(
@@ -101,7 +101,7 @@ class ShareArticle extends StatelessWidget {
                         shape: CircleBorder(),
                       ),
                     ),
-                    Text("电子邮件", style: Theme.of(context).textTheme.captionMain)
+                    Text("电子邮件", style: Theme.of(context).textTheme.captionGrey)
                   ],
                 ),
               ],
@@ -116,7 +116,7 @@ class ShareArticle extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text("取消",
-                      style: Theme.of(context).textTheme.captionSmall2),
+                      style: Theme.of(context).textTheme.captionSmall),
                 ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(18.0),

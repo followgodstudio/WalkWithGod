@@ -49,7 +49,7 @@ class CacheClearScreen extends StatelessWidget {
                                           "M",
                                       style: Theme.of(context)
                                           .textTheme
-                                          .captionMain)),
+                                          .captionGrey)),
                             ],
                           );
                         }),

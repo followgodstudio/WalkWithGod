@@ -63,7 +63,7 @@ class Comment extends StatelessWidget {
                             )),
                         Text(
                           getCreatedDuration(data.createdDate),
-                          style: Theme.of(context).textTheme.captionSmall2,
+                          style: Theme.of(context).textTheme.captionSmall,
                         )
                       ],
                     ),

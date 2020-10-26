@@ -40,7 +40,7 @@ class MyTextButton extends StatelessWidget {
         style: isSmall
             ? Theme.of(context)
                 .textTheme
-                .captionSmall2
+                .captionSmall
                 .copyWith(color: _textColor)
             : Theme.of(context)
                 .textTheme

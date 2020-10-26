@@ -128,40 +128,14 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
   fonts:
-    # - family: Schyler
-    #   fonts:
-    #     - asset: fonts/Schyler-Regular.ttf
-    #     - asset: fonts/Schyler-Italic.ttf
-    #       style: italic
-    # - family: Trajan Pro
-    #   fonts:
-    #     - asset: fonts/TrajanPro.ttf
-    #     - asset: fonts/TrajanPro_Bold.ttf
-    #       weight: 700
     - family: Song
       fonts:
-        - asset: fonts/LingDongQiCheChunTang-2.ttf
-    - family: Jinling
+        - asset: fonts/SourceHanSerifCN-Heavy.otf
+    - family: Hei
       fonts:
-        - asset: fonts/FZCUJINLJW--GB1-0.ttf
-    - family: Lanting
-      fonts:
-        - asset: fonts/FZLTZHK_GBK1_0.ttf
-    - family: LantingXianHei
-      fonts:
-        - asset: fonts/FZLTXHK--GBK1-0.TTF      
-    - family: FangzhengTeYaSong
-      fonts:
-        - asset: fonts/FZTYSFW--GB1-0.ttf        
-    - family: HelveticaNeue
-      fonts:
-        - asset: fonts/HelveticaNeueBold.ttf
-          weight: 700
-        - asset: fonts/HelveticaNeueHeavy.otf
+        - asset: fonts/SourceHanSansCN-Medium.otf
           weight: 500
-        - asset: fonts/HelveticaNeueMedium.ttf
+        - asset: fonts/SourceHanSansCN-Light.otf
           weight: 300
-        - asset: fonts/HelveticaNeueUltraLight.ttf
-          weight: 200
 
           

@@ -94,7 +94,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     child: Text(
                       splash.content,
                       textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.captionSmall2,
+                      style: Theme.of(context).textTheme.captionSmall,
                     ),
                   ),
                   Divider(
@@ -105,7 +105,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     padding: const EdgeInsets.symmetric(vertical: 2.0),
                     child: Text(
                       splash.author + " 作品 ",
-                      style: Theme.of(context).textTheme.captionSmall2,
+                      style: Theme.of(context).textTheme.captionSmall,
                     ),
                   ),
                 ]),
@@ -131,7 +131,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         children: [
                           Text(
                             "进入应用",
-                            style: Theme.of(context).textTheme.captionSmall2,
+                            style: Theme.of(context).textTheme.captionSmall,
                           ),
                           Icon(Icons.arrow_right)
                         ],

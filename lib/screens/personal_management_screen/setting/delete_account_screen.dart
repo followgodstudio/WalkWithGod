@@ -26,17 +26,17 @@ class DeleteAccountScreen extends StatelessWidget {
               children: [
                 SizedBox(height: 20),
                 Text("您正在申请注销该账号",
-                    style: Theme.of(context).textTheme.headline6),
+                    style: Theme.of(context).textTheme.headline5),
                 SizedBox(height: 20),
                 Text("账号注销后，你将永久性失去你账号中的所有内容，包括：",
-                    style: Theme.of(context).textTheme.bodyTextBlack),
+                    style: Theme.of(context).textTheme.bodyText1),
                 SizedBox(height: 20),
                 Row(
                   children: [
                     _Circle("1"),
                     SizedBox(width: 10),
                     Text("你所收藏的所有文章",
-                        style: Theme.of(context).textTheme.bodyTextBlack),
+                        style: Theme.of(context).textTheme.bodyText1),
                   ],
                 ),
                 SizedBox(height: 10),
@@ -45,7 +45,7 @@ class DeleteAccountScreen extends StatelessWidget {
                     _Circle("2"),
                     SizedBox(width: 10),
                     Text("你所关注的所有好友",
-                        style: Theme.of(context).textTheme.bodyTextBlack),
+                        style: Theme.of(context).textTheme.bodyText1),
                   ],
                 ),
                 SizedBox(height: 10),
@@ -54,7 +54,7 @@ class DeleteAccountScreen extends StatelessWidget {
                     _Circle("3"),
                     SizedBox(width: 10),
                     Text("你所收到的所有消息",
-                        style: Theme.of(context).textTheme.bodyTextBlack),
+                        style: Theme.of(context).textTheme.bodyText1),
                   ],
                 ),
                 SizedBox(height: 20),
@@ -88,7 +88,7 @@ class _Circle extends StatelessWidget {
       width: 40,
       height: 40,
       child: Center(
-          child: Text(index, style: Theme.of(context).textTheme.headline6)),
+          child: Text(index, style: Theme.of(context).textTheme.headline5)),
       decoration:
           BoxDecoration(shape: BoxShape.circle, color: MyColors.lightGreen),
     );

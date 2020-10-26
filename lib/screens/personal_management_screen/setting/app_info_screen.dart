@@ -60,13 +60,13 @@ class AppInfoScreen extends StatelessWidget {
                               .newestVersion;
                           return Column(children: [
                             Text(currentVersion,
-                                style: Theme.of(context).textTheme.captionMain),
+                                style: Theme.of(context).textTheme.captionGrey),
                             SizedBox(height: 10),
                             Text(
                                 (newestVersion == currentVersion)
                                     ? "当前已是最新版本"
                                     : "还不是最新版本，请升级",
-                                style: Theme.of(context).textTheme.captionMain)
+                                style: Theme.of(context).textTheme.captionGrey)
                           ]);
                         }),
                   ],

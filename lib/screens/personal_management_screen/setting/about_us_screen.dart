@@ -29,7 +29,7 @@ class AboutUsScreen extends StatelessWidget {
                   Text(
                       Provider.of<SettingProvider>(context, listen: false)
                           .whoAreWe,
-                      style: Theme.of(context).textTheme.bodyTextBlack),
+                      style: Theme.of(context).textTheme.bodyText1),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 15.0),
                     child: Text("我们的使命",
@@ -38,7 +38,7 @@ class AboutUsScreen extends StatelessWidget {
                   Text(
                       Provider.of<SettingProvider>(context, listen: false)
                           .ourMission,
-                      style: Theme.of(context).textTheme.bodyTextBlack),
+                      style: Theme.of(context).textTheme.bodyText1),
                 ],
               )),
         )));

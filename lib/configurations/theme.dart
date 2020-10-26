@@ -20,136 +20,108 @@ final ThemeData dayTheme = new ThemeData(
   buttonColor: MyColors.silver,
   textTheme: TextTheme(
     headline1:
-        TextStyle(color: MyColors.black, fontSize: 30.0, fontFamily: 'Jinling'),
+        TextStyle(color: MyColors.black, fontSize: 26.0, fontFamily: 'Song'),
     headline2:
-        TextStyle(color: MyColors.black, fontSize: 26.0, fontFamily: 'Jinling'),
+        TextStyle(color: MyColors.black, fontSize: 22.0, fontFamily: 'Song'),
     headline3:
-        TextStyle(color: MyColors.black, fontSize: 22.0, fontFamily: 'Jinling'),
+        TextStyle(color: MyColors.black, fontSize: 16.0, fontFamily: 'Song'),
     headline4:
-        TextStyle(color: MyColors.black, fontSize: 30.0, fontFamily: 'Lanting'),
-    headline5:
-        TextStyle(color: MyColors.black, fontSize: 26.0, fontFamily: 'Lanting'),
-    headline6:
-        TextStyle(color: MyColors.black, fontSize: 22.0, fontFamily: 'Lanting'),
+        TextStyle(color: MyColors.black, fontSize: 14.0, fontFamily: 'Song'),
+    headline5: TextStyle(
+      color: MyColors.black,
+      fontSize: 22.0,
+      fontFamily: 'Hei',
+      fontWeight: FontWeight.w500,
+    ),
     subtitle1: TextStyle(
         color: Colors.black54,
         fontSize: 21.5,
-        fontFamily: 'Jinling',
+        fontFamily: 'Song',
         letterSpacing: 2,
         height: 2),
     bodyText1: TextStyle(
         color: Color.fromARGB(255, 77, 77, 77),
         fontSize: 16.0,
-        fontFamily: 'LantingXianHei',
+        fontFamily: 'Hei',
+        fontWeight: FontWeight.w300,
         letterSpacing: 1.4,
         height: 1.8),
     bodyText2: TextStyle(
       color: Color.fromARGB(255, 77, 77, 77),
       fontSize: 16.0,
-      fontFamily: 'LantingXianHei',
+      fontFamily: 'Hei',
+      fontWeight: FontWeight.w300,
       letterSpacing: -0.1,
     ),
-    caption:
-        TextStyle(color: Colors.grey[300], fontSize: 23.0, fontFamily: 'Song'),
+    caption: TextStyle(
+      fontSize: 14.0,
+      color: MyColors.black,
+      fontFamily: 'Hei',
+      fontWeight: FontWeight.w300,
+    ),
     button:
-        TextStyle(color: MyColors.black, fontSize: 29.0, fontFamily: 'Jinling'),
+        TextStyle(color: MyColors.black, fontSize: 29.0, fontFamily: 'Song'),
   ),
 );
 
 extension CustomStyles on TextTheme {
-  TextStyle get headerSmall1 => const TextStyle(
-        fontSize: 14.0,
-        color: MyColors.black,
-        fontFamily: 'FangzhengTeYaSong',
-        letterSpacing: -0.1,
-      );
-  TextStyle get bodyTextBlack => const TextStyle(
-        color: MyColors.black,
-        fontSize: 16.0,
-        fontFamily: 'LantingXianHei',
-        letterSpacing: -0.1,
-      );
-  TextStyle get bodyTextWhite => const TextStyle(
-        color: Colors.white,
-        fontSize: 14.0,
-        fontFamily: 'Lanting',
-        letterSpacing: -0.1,
-      );
-  TextStyle get captionMain => const TextStyle(
-        fontSize: 14.0,
+  TextStyle get captionGrey => caption.copyWith(
         color: MyColors.grey,
-        fontFamily: 'LantingXianHei',
       );
-  TextStyle get captionMainWideSpacing => const TextStyle(
-      fontSize: 14.0,
-      color: MyColors.grey,
-      fontFamily: 'LantingXianHei',
-      letterSpacing: 1.3);
   TextStyle get captionSmall => const TextStyle(
-        fontSize: 10.0,
-        color: MyColors.grey,
-        fontFamily: 'LantingXianHei',
-      );
-  TextStyle get captionSmall2 => const TextStyle(
         fontSize: 12.0,
         color: MyColors.grey,
-        fontFamily: 'LantingXianHei',
+        fontFamily: 'Hei',
+        fontWeight: FontWeight.w300,
       );
 
   TextStyle get captionSmallBlack => const TextStyle(
         fontSize: 12.0,
         color: MyColors.black,
-        fontFamily: 'Lanting',
-      );
-  TextStyle get captionSmallWhite => const TextStyle(
-        fontSize: 14.0,
-        color: Color.fromARGB(255, 255, 255, 255),
-        fontFamily: 'LantingXianHei',
+        fontFamily: 'Hei',
+        fontWeight: FontWeight.w500,
       );
   TextStyle get captionMedium1 => const TextStyle(
         fontSize: 16.0,
         color: Color.fromARGB(255, 0, 0, 0),
-        fontFamily: 'Lanting',
-      );
-  TextStyle get captionMediumWhite => const TextStyle(
-        fontSize: 14.0,
-        color: Color.fromARGB(255, 255, 255, 255),
-        fontFamily: 'Lanting',
-      );
-  TextStyle get captionMedium2 => const TextStyle(
-        fontSize: 25.0,
-        color: MyColors.black,
-        fontFamily: 'FangzhengTeYaSong',
+        fontFamily: 'Hei',
+        fontWeight: FontWeight.w500,
       );
   TextStyle get captionMedium3 => const TextStyle(
         fontSize: 14.0,
         color: Color.fromARGB(255, 194, 194, 194),
-        fontFamily: 'LantingXianHei',
+        fontFamily: 'Hei',
+        fontWeight: FontWeight.w300,
       );
   TextStyle get captionMedium4 => const TextStyle(
         fontSize: 14.0,
         color: Color.fromARGB(255, 77, 77, 77),
-        fontFamily: 'LantingXianHei',
+        fontFamily: 'Hei',
+        fontWeight: FontWeight.w300,
       );
   TextStyle get buttonMedium1 => const TextStyle(
         fontSize: 15.0,
         color: Color.fromARGB(255, 0, 0, 0),
-        fontFamily: 'Lanting',
+        fontFamily: 'Hei',
+        fontWeight: FontWeight.w500,
       );
   TextStyle get buttonMediumGray => const TextStyle(
         fontSize: 15.0,
         color: Color.fromARGB(255, 194, 194, 194),
-        fontFamily: 'Lanting',
+        fontFamily: 'Hei',
+        fontWeight: FontWeight.w500,
       );
   TextStyle get buttonLarge1 => const TextStyle(
         fontSize: 20.0,
         color: Color.fromARGB(255, 0, 0, 0),
-        fontFamily: 'Lanting',
+        fontFamily: 'Hei',
+        fontWeight: FontWeight.w500,
       );
   TextStyle get buttonLargeGray => const TextStyle(
         fontSize: 20.0,
         color: Color.fromARGB(255, 194, 194, 194),
-        fontFamily: 'Lanting',
+        fontFamily: 'Hei',
+        fontWeight: FontWeight.w500,
       );
 }
 

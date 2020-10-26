@@ -23,7 +23,6 @@ class ArticleCard extends StatelessWidget {
     double textPadding = 20.0;
     double space = 8.0;
     int maxLines = 2;
-    double titleFontSize = 24;
     double avatarRadius = 15;
     double eyebrowWidth = 42;
     String heroTag = article.id;
@@ -31,7 +30,6 @@ class ArticleCard extends StatelessWidget {
       textPadding = 10.0;
       space = 3.0;
       maxLines = 3;
-      titleFontSize = 16;
       avatarRadius = 10;
       eyebrowWidth = 30;
       heroTag += "_";
@@ -40,7 +38,7 @@ class ArticleCard extends StatelessWidget {
         decoration: BoxDecoration(color: Theme.of(context).buttonColor));
     Color fontColor = Colors.white;
     TextStyle captionStyle =
-        TextStyle(fontFamily: "LantingXianHei", color: fontColor, fontSize: 12);
+        Theme.of(context).textTheme.caption.copyWith(color: fontColor);
     return Hero(
       tag: heroTag,
       child: FlatButton(
@@ -83,7 +81,7 @@ class ArticleCard extends StatelessWidget {
                           color: MyColors.grey.withOpacity(0.3),
                           spreadRadius: 2,
                           blurRadius: 20,
-                          offset: Offset(10, 10)),
+                          offset: Offset(0, 10)),
                     ],
                   ),
                   child: ShaderMask(
@@ -123,10 +121,15 @@ class ArticleCard extends StatelessWidget {
                         Text(
                           article.title ?? "",
                           maxLines: maxLines,
-                          style: TextStyle(
-                              fontFamily: "Jinling",
-                              color: fontColor,
-                              fontSize: titleFontSize),
+                          style: (isSmall)
+                              ? Theme.of(context)
+                                  .textTheme
+                                  .headline3
+                                  .copyWith(color: fontColor)
+                              : Theme.of(context)
+                                  .textTheme
+                                  .headline2
+                                  .copyWith(color: fontColor),
                         ),
                         if (!isSmall) SizedBox(height: space),
                         if (!isSmall)

@@ -150,7 +150,7 @@ class _SignupScreenState extends State<SignupScreen> {
       _headerText,
       maxLines: 1,
       textAlign: TextAlign.center,
-      style: Theme.of(context).textTheme.headline3,
+      style: Theme.of(context).textTheme.headline2,
     );
   }
 
@@ -260,7 +260,8 @@ class _SignupScreenState extends State<SignupScreen> {
               _submitButtonText,
               style: TextStyle(
                   fontSize: 14.0,
-                  fontFamily: 'LantingXianHei',
+                  fontFamily: 'Hei',
+                  fontWeight: FontWeight.w300,
                   color: Colors.white),
             ),
           ),
@@ -273,9 +274,7 @@ class _SignupScreenState extends State<SignupScreen> {
         ),
       ),
       showForgotPassword(_showForgotPassword),
-      SizedBox(
-        height: 10,
-      ),
+      SizedBox(height: 10),
       MyTextButton(
         text: _switchButtonText,
         width: 100,
@@ -334,7 +333,7 @@ class _SignupScreenState extends State<SignupScreen> {
               GoogleSignInButton(
                 centered: true,
                 text: "Google账号登陆",
-                textStyle: Theme.of(context).textTheme.captionSmall2,
+                textStyle: Theme.of(context).textTheme.captionSmall,
                 onPressed: () {
                   exceptionHandling(context, () async {
                     await _auth.signInWithGoogle();

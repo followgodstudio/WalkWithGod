@@ -23,7 +23,7 @@ class TopBar extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 5.0),
                   child: Text(
                     article.title ?? "",
-                    style: Theme.of(context).textTheme.headerSmall1,
+                    style: Theme.of(context).textTheme.headline4,
                   ),
                 ),
                 Row(
@@ -31,14 +31,14 @@ class TopBar extends StatelessWidget {
                   children: [
                     Text(
                       article.publisher ?? "随行",
-                      style: Theme.of(context).textTheme.captionSmall2,
+                      style: Theme.of(context).textTheme.captionSmall,
                     ),
                     Container(
                         height: 10,
                         child: VerticalDivider(color: MyColors.grey)),
                     Text(
                       article.authorName ?? "匿名",
-                      style: Theme.of(context).textTheme.captionSmall2,
+                      style: Theme.of(context).textTheme.captionSmall,
                     ),
                   ],
                 ),

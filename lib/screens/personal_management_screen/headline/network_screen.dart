@@ -130,7 +130,7 @@ class ReadStatus extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4.0),
                   child: Text(profile.recentReadProvider.readsCount.toString(),
-                      style: Theme.of(context).textTheme.headline6),
+                      style: Theme.of(context).textTheme.headline5),
                 ),
                 Text("篇文章", style: Theme.of(context).textTheme.captionMedium3)
               ]),
@@ -140,7 +140,7 @@ class ReadStatus extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 4.0),
                   child: Text(
                       profile.recentReadProvider.readDuration.toString(),
-                      style: Theme.of(context).textTheme.headline6),
+                      style: Theme.of(context).textTheme.headline5),
                 ),
                 Text("个小时", style: Theme.of(context).textTheme.captionMedium3)
               ]),
@@ -149,7 +149,7 @@ class ReadStatus extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4.0),
                   child: Text(profile.followersCount.toString(),
-                      style: Theme.of(context).textTheme.headline6),
+                      style: Theme.of(context).textTheme.headline5),
                 ),
                 Text("人关注", style: Theme.of(context).textTheme.captionMedium3)
               ]),
@@ -177,7 +177,7 @@ class ReadStatus extends StatelessWidget {
                     "共" +
                         recentRead.recentReadStringList.length.toString() +
                         "篇文章",
-                    style: Theme.of(context).textTheme.captionMain),
+                    style: Theme.of(context).textTheme.captionGrey),
                 if (recentRead.readsCount > 0)
                   Container(
                     height: 220,

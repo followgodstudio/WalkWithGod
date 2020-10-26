@@ -31,7 +31,7 @@ class NavBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     Color _backgroundColor = backgroundColor ?? Theme.of(context).canvasColor;
     Widget _titleWidget = titleWidget ??
-        Text(title, style: Theme.of(context).textTheme.captionMedium2);
+        Text(title, style: Theme.of(context).textTheme.headline2);
     Widget action = actionButton;
     if (action == null)
       action = Placeholder(

@@ -109,8 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               valueListenable: title,
                               builder: (context, String value, child) => Text(
                                 value,
-                                style:
-                                    Theme.of(context).textTheme.captionMedium2,
+                                style: Theme.of(context).textTheme.headline1,
                               ),
                             ),
                             Container(
@@ -120,9 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               valueListenable: formattedDate,
                               builder: (context, String value, child) => Text(
                                 value,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .captionMainWideSpacing,
+                                style: Theme.of(context).textTheme.captionGrey,
                               ),
                             ),
                           ],

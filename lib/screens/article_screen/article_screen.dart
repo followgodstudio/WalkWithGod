@@ -39,12 +39,14 @@ class _ArticleScreenState extends State<ArticleScreen> {
     if (_fetchedAllData) return;
     _fetchedAllData = true;
     exceptionHandling(context, () async {
+      print(articleId);
       ArticlesProvider articles =
           Provider.of<ArticlesProvider>(context, listen: false);
       ArticleProvider article =
           Provider.of<ArticleProvider>(context, listen: false);
       ArticleProvider _article = articles.findArticleInListById(articleId);
       article.deepCopy(_article, false);
+      print(article.id);
       if (_article == null) {
         _article = await Provider.of<ArticlesProvider>(context, listen: false)
             .fetchArticlePreviewById(articleId);

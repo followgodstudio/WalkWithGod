@@ -138,7 +138,7 @@ class SavedArticles extends StatelessWidget {
                       style: Theme.of(context).textTheme.captionMedium1),
                   SizedBox(height: 8.0),
                   Text("共" + saved.savedArticlesCount.toString() + "篇收藏",
-                      style: Theme.of(context).textTheme.captionMain),
+                      style: Theme.of(context).textTheme.captionGrey),
                 ],
               ),
             ),
@@ -206,7 +206,7 @@ class FriendsMessages extends StatelessWidget {
                                           "人",
                                       style: Theme.of(context)
                                           .textTheme
-                                          .captionSmall2,
+                                          .captionGrey,
                                     )),
                           ],
                         ),
@@ -242,7 +242,7 @@ class FriendsMessages extends StatelessWidget {
                                   snapshot.data[fUserUnreadMsgCount]
                                       .toString() +
                                   "条未读",
-                              style: Theme.of(context).textTheme.captionSmall2,
+                              style: Theme.of(context).textTheme.captionGrey,
                             ),
                           ],
                         ),
