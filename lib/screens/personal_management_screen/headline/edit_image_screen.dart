@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:walk_with_god/widgets/my_text_button.dart';
 
 import '../../../configurations/constants.dart';
 import '../../../configurations/theme.dart';
@@ -56,36 +57,29 @@ class _EditPictureScreenState extends State<EditPictureScreen> {
         child: ListView(
           children: <Widget>[
             if (_imageFile == null)
-              Text("请选择一张图片上传",
-                  style: Theme.of(context).textTheme.captionMedium4),
+              Text("请选择一张图片上传", style: Theme.of(context).textTheme.bodyText1),
             if (_imageFile != null) ...[
               Image.file(_imageFile),
               if (!_uploading)
-                FlatButton(
-                    onPressed: () async {
-                      if (_uploading) return;
-                      setState(() {
-                        _uploading = true;
+                MyTextButton(
+                  text: "上传",
+                  onPressed: () async {
+                    if (_uploading) return;
+                    setState(() {
+                      _uploading = true;
+                    });
+                    await exceptionHandling(context, () async {
+                      await Provider.of<ProfileProvider>(context, listen: false)
+                          .updateProfilePicture(_imageFile);
+                      showPopUpDialog(context, true, "上传成功", afterDismiss: () {
+                        Navigator.of(context).pop(true);
                       });
-                      await exceptionHandling(context, () async {
-                        await Provider.of<ProfileProvider>(context,
-                                listen: false)
-                            .updateProfilePicture(_imageFile);
-                        showPopUpDialog(context, true, "上传成功",
-                            afterDismiss: () {
-                          Navigator.of(context).pop(true);
-                        });
-                      });
-                      setState(() {
-                        _uploading = false;
-                      });
-                    },
-                    child: Text("上传",
-                        style: Theme.of(context).textTheme.captionMedium4),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18.0),
-                    ),
-                    color: Theme.of(context).buttonColor),
+                    });
+                    setState(() {
+                      _uploading = false;
+                    });
+                  },
+                ),
               if (_uploading) Center(child: CircularProgressIndicator()),
             ]
           ],
@@ -98,10 +92,14 @@ class _EditPictureScreenState extends State<EditPictureScreen> {
           children: <Widget>[
             MyIconButton(
               flutterIcon: Icons.photo_camera,
+              iconSize: 25,
+              padding: 10,
               onPressed: () => _pickImage(ImageSource.camera),
             ),
             MyIconButton(
               flutterIcon: Icons.photo_library,
+              iconSize: 25,
+              padding: 10,
               onPressed: () => _pickImage(ImageSource.camera),
             )
           ],

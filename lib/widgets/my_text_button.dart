@@ -38,16 +38,13 @@ class MyTextButton extends StatelessWidget {
         : Theme.of(context).buttonColor;
     Widget _textChild = Text(text,
         style: isSmall
-            ? Theme.of(context)
-                .textTheme
-                .captionSmall
-                .copyWith(color: _textColor)
+            ? Theme.of(context).textTheme.button.copyWith(color: _textColor)
             : Theme.of(context)
                 .textTheme
                 .captionMedium1
                 .copyWith(color: _textColor));
     if (!hasBorder)
-      return GestureDetector(
+      return InkWell(
           onTap: () {
             if (onPressed != null) onPressed();
           },

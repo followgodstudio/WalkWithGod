@@ -49,7 +49,7 @@ class MessagesListScreen extends StatelessWidget {
                             child: Text("暂无消息",
                                 textAlign: TextAlign.center,
                                 style:
-                                    Theme.of(context).textTheme.captionMedium3),
+                                    Theme.of(context).textTheme.captionMedium2),
                           ),
                         );
                       }
@@ -67,7 +67,7 @@ class MessagesListScreen extends StatelessWidget {
                       list.add(Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(data.noMore ? "到底啦" : "加载更多",
-                            style: Theme.of(context).textTheme.captionMedium3),
+                            style: Theme.of(context).textTheme.captionMedium2),
                       ));
                       return Column(children: list);
                     });

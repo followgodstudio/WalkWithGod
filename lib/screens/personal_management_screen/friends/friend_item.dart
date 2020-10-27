@@ -21,7 +21,7 @@ class FriendItem extends StatelessWidget {
                   SizedBox(width: 10),
                   Expanded(
                       child: Text(data.friendName,
-                          style: Theme.of(context).textTheme.buttonMedium1)),
+                          style: Theme.of(context).textTheme.captionMedium1)),
                   MyTextButton(
                     text: (data.friendStatus == eFriendStatusFollowing)
                         ? "已关注"

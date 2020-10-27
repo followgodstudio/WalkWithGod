@@ -39,27 +39,24 @@ class _ArticleScreenState extends State<ArticleScreen> {
     if (_fetchedAllData) return;
     _fetchedAllData = true;
     exceptionHandling(context, () async {
-      print(articleId);
       ArticlesProvider articles =
           Provider.of<ArticlesProvider>(context, listen: false);
       ArticleProvider article =
           Provider.of<ArticleProvider>(context, listen: false);
       ArticleProvider _article = articles.findArticleInListById(articleId);
-      article.deepCopy(_article, false);
-      print(article.id);
       if (_article == null) {
         _article = await Provider.of<ArticlesProvider>(context, listen: false)
             .fetchArticlePreviewById(articleId);
-        article.deepCopy(_article, true);
       }
-      await article.fetchArticleContent();
+      await _article.fetchArticleContent();
+      await _article.fetchSimilarArticles();
+      article.deepCopy(_article);
       ProfileProvider profile =
           Provider.of<ProfileProvider>(context, listen: false);
       await profile.savedArticlesProvider
           .fetchSavedStatusByArticleId(article.id);
       await Provider.of<CommentsProvider>(context, listen: false)
           .fetchLevel1CommentListByArticleId(article.id, profile.uid);
-      await article.fetchSimilarArticles();
       await profile.recentReadProvider.addRecentRead(article);
     });
   }

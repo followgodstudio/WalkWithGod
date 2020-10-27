@@ -36,7 +36,7 @@ class PersonalManagementScreen extends StatelessWidget {
                 icon: "setting",
                 onPressed: () {
                   if (!isLoggedIn) {
-                    showPopUpDialog(context, false, "请登陆后再操作");
+                    showPopUpDialog(context, false, "请登录后再操作");
                   } else {
                     Navigator.of(context).pushNamed(SettingScreen.routeName);
                   }
@@ -44,12 +44,16 @@ class PersonalManagementScreen extends StatelessWidget {
         body: SafeArea(
             child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.all(horizontalPadding),
+            padding: EdgeInsets.symmetric(vertical: verticalPadding),
             child: Column(children: <Widget>[
               HeadLine(isLoggedIn),
               SizedBox(height: 15),
               if (isLoggedIn) SavedArticles(),
-              if (isLoggedIn) FriendsMessages(),
+              if (isLoggedIn)
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+                  child: FriendsMessages(),
+                ),
             ]),
           ),
         )));
@@ -75,10 +79,10 @@ class HeadLine extends StatelessWidget {
               Consumer<ProfileProvider>(
                   builder: (ctx, profile, _) =>
                       Introduction("你好，" + profile.name, profile.imageUrl)),
-              SizedBox(height: 8.0),
+              SizedBox(height: 10.0),
               MyTextButton(
                 width: 100,
-                text: isLoggedIn ? "编辑个人资料" : "请登陆 / 注册",
+                text: isLoggedIn ? "编辑个人资料" : "请登录 / 注册",
                 isSmall: true,
                 onPressed: () {
                   if (isLoggedIn) {
@@ -103,7 +107,7 @@ class SavedArticles extends StatelessWidget {
       if (saved.articles.length == 0) {
         savedArticles = SizedBox(height: 8.0);
       } else {
-        List<Widget> list = [];
+        List<Widget> list = [SizedBox(width: horizontalPadding)];
         saved.articles.forEach((element) {
           list.add(Padding(
             padding: const EdgeInsets.only(right: 10.0, top: 12.5, bottom: 20),
@@ -111,6 +115,7 @@ class SavedArticles extends StatelessWidget {
           ));
         });
         if (!saved.noMore) list.add(Center(child: Icon(Icons.more_horiz)));
+        list.add(SizedBox(width: horizontalPadding - 10.0));
         savedArticles = Container(
           height: 210,
           child: NotificationListener<ScrollNotification>(
@@ -126,32 +131,39 @@ class SavedArticles extends StatelessWidget {
         );
       }
       return Column(children: [
-        Divider(),
-        Row(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+          child: Column(
+            children: [
+              Divider(),
+              Row(
                 children: [
-                  SizedBox(height: 8.0),
-                  Text("我的收藏",
-                      style: Theme.of(context).textTheme.captionMedium1),
-                  SizedBox(height: 8.0),
-                  Text("共" + saved.savedArticlesCount.toString() + "篇收藏",
-                      style: Theme.of(context).textTheme.captionGrey),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 8.0),
+                        Text("我的收藏",
+                            style: Theme.of(context).textTheme.captionMedium1),
+                        SizedBox(height: 8.0),
+                        Text("共" + saved.savedArticlesCount.toString() + "篇收藏",
+                            style: Theme.of(context).textTheme.captionGrey),
+                      ],
+                    ),
+                  ),
+                  if (saved.articles.length > 0)
+                    MyTextButton(
+                      text: "查看全部",
+                      isSmall: true,
+                      onPressed: () {
+                        Navigator.of(context)
+                            .pushNamed(SavedArticlesScreen.routeName);
+                      },
+                    ),
                 ],
               ),
-            ),
-            if (saved.articles.length > 0)
-              MyTextButton(
-                text: "查看全部",
-                isSmall: true,
-                onPressed: () {
-                  Navigator.of(context)
-                      .pushNamed(SavedArticlesScreen.routeName);
-                },
-              ),
-          ],
+            ],
+          ),
         ),
         savedArticles,
       ]);

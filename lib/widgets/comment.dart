@@ -63,7 +63,7 @@ class Comment extends StatelessWidget {
                             )),
                         Text(
                           getCreatedDuration(data.createdDate),
-                          style: Theme.of(context).textTheme.captionSmall,
+                          style: Theme.of(context).textTheme.captionMedium2,
                         )
                       ],
                     ),
@@ -91,7 +91,9 @@ class Comment extends StatelessWidget {
                                           text: "@" + data.replyToName + ": ",
                                           style: Theme.of(context)
                                               .textTheme
-                                              .captionMedium1,
+                                              .bodyText1
+                                              .copyWith(
+                                                  fontWeight: FontWeight.w500),
                                           recognizer: new TapGestureRecognizer()
                                             ..onTap = () {
                                               if (data.replyToUid == null ||
@@ -104,7 +106,7 @@ class Comment extends StatelessWidget {
                                     TextSpan(
                                       text: data.content,
                                       style:
-                                          Theme.of(context).textTheme.bodyText2,
+                                          Theme.of(context).textTheme.bodyText1,
                                     )
                                   ],
                                 ),
@@ -120,36 +122,36 @@ class Comment extends StatelessWidget {
                       children: [
                         if (profile.uid == null || !data.like)
                           MyIconButton(
+                              label: data.likesCount.toString(),
                               iconSize: iconSize,
                               icon: 'heart_border',
                               onPressed: () {
-                                data.addLike(profile.uid, profile.name,
-                                    profile.imageUrl);
+                                if (profile.uid == null) {
+                                  showPopUpDialog(context, false, "请登录后再操作");
+                                } else {
+                                  data.addLike(profile.uid, profile.name,
+                                      profile.imageUrl);
+                                }
                               }),
                         if (profile.uid != null && data.like)
                           MyIconButton(
+                              label: data.likesCount.toString(),
                               iconSize: iconSize,
                               icon: 'heart',
                               iconColor: MyColors.pink,
                               onPressed: () {
-                                if (profile.uid == null) {
-                                  showPopUpDialog(context, false, "请登陆后再操作");
-                                } else {
-                                  data.cancelLike(profile.uid);
-                                }
+                                data.cancelLike(profile.uid);
                               }),
-                        SizedBox(width: 8.0),
-                        Text(
-                          data.likesCount.toString(),
-                          style: Theme.of(context).textTheme.captionMedium1,
-                        ),
-                        SizedBox(width: 50.0),
+                        SizedBox(width: 60.0),
                         MyIconButton(
                             iconSize: iconSize,
                             icon: 'comment',
+                            label: data.childrenCount != null
+                                ? data.childrenCount.toString()
+                                : "回复",
                             onPressed: () async {
                               if (profile.uid == null) {
-                                showPopUpDialog(context, false, "请登陆后再操作");
+                                showPopUpDialog(context, false, "请登录后再操作");
                               } else {
                                 if (onStartComment != null)
                                   await onStartComment();
@@ -174,13 +176,6 @@ class Comment extends StatelessWidget {
                                         ));
                               }
                             }),
-                        SizedBox(width: 8.0),
-                        Text(
-                          data.childrenCount != null
-                              ? data.childrenCount.toString()
-                              : "回复",
-                          style: Theme.of(context).textTheme.captionMedium1,
-                        ),
                       ],
                     ),
                     SizedBox(height: 15.0),

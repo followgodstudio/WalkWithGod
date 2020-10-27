@@ -39,7 +39,7 @@ class SavedArticlesScreen extends StatelessWidget {
                           child: Text("暂无收藏",
                               textAlign: TextAlign.center,
                               style:
-                                  Theme.of(context).textTheme.captionMedium3),
+                                  Theme.of(context).textTheme.captionMedium2),
                         ),
                       ),
                     ],
@@ -75,7 +75,7 @@ class SavedArticlesScreen extends StatelessWidget {
                             child: Text(saved.noMore ? "到底啦" : "加载更多",
                                 style: Theme.of(context)
                                     .textTheme
-                                    .captionMedium3)),
+                                    .captionMedium2)),
                       ),
                     ],
                   ),

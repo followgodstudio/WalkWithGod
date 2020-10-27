@@ -40,27 +40,24 @@ final ThemeData dayTheme = new ThemeData(
         letterSpacing: 2,
         height: 2),
     bodyText1: TextStyle(
-        color: Color.fromARGB(255, 77, 77, 77),
+        color: MyColors.black,
         fontSize: 16.0,
         fontFamily: 'Hei',
         fontWeight: FontWeight.w300,
         letterSpacing: 1.4,
         height: 1.8),
-    bodyText2: TextStyle(
-      color: Color.fromARGB(255, 77, 77, 77),
-      fontSize: 16.0,
-      fontFamily: 'Hei',
-      fontWeight: FontWeight.w300,
-      letterSpacing: -0.1,
-    ),
     caption: TextStyle(
       fontSize: 14.0,
       color: MyColors.black,
       fontFamily: 'Hei',
       fontWeight: FontWeight.w300,
     ),
-    button:
-        TextStyle(color: MyColors.black, fontSize: 29.0, fontFamily: 'Song'),
+    button: TextStyle(
+      fontSize: 12.0,
+      color: MyColors.black,
+      fontFamily: 'Hei',
+      fontWeight: FontWeight.w500,
+    ),
   ),
 );
 
@@ -74,52 +71,21 @@ extension CustomStyles on TextTheme {
         fontFamily: 'Hei',
         fontWeight: FontWeight.w300,
       );
-
-  TextStyle get captionSmallBlack => const TextStyle(
-        fontSize: 12.0,
+  TextStyle get captionMedium1 => const TextStyle(
+        fontSize: 16.0,
         color: MyColors.black,
         fontFamily: 'Hei',
         fontWeight: FontWeight.w500,
       );
-  TextStyle get captionMedium1 => const TextStyle(
-        fontSize: 16.0,
-        color: Color.fromARGB(255, 0, 0, 0),
-        fontFamily: 'Hei',
-        fontWeight: FontWeight.w500,
-      );
-  TextStyle get captionMedium3 => const TextStyle(
+  TextStyle get captionMedium2 => const TextStyle(
         fontSize: 14.0,
-        color: Color.fromARGB(255, 194, 194, 194),
+        color: MyColors.grey,
         fontFamily: 'Hei',
         fontWeight: FontWeight.w300,
       );
-  TextStyle get captionMedium4 => const TextStyle(
-        fontSize: 14.0,
-        color: Color.fromARGB(255, 77, 77, 77),
-        fontFamily: 'Hei',
-        fontWeight: FontWeight.w300,
-      );
-  TextStyle get buttonMedium1 => const TextStyle(
-        fontSize: 15.0,
-        color: Color.fromARGB(255, 0, 0, 0),
-        fontFamily: 'Hei',
-        fontWeight: FontWeight.w500,
-      );
-  TextStyle get buttonMediumGray => const TextStyle(
-        fontSize: 15.0,
-        color: Color.fromARGB(255, 194, 194, 194),
-        fontFamily: 'Hei',
-        fontWeight: FontWeight.w500,
-      );
-  TextStyle get buttonLarge1 => const TextStyle(
+  TextStyle get buttonLarge => const TextStyle(
         fontSize: 20.0,
-        color: Color.fromARGB(255, 0, 0, 0),
-        fontFamily: 'Hei',
-        fontWeight: FontWeight.w500,
-      );
-  TextStyle get buttonLargeGray => const TextStyle(
-        fontSize: 20.0,
-        color: Color.fromARGB(255, 194, 194, 194),
+        color: MyColors.black,
         fontFamily: 'Hei',
         fontWeight: FontWeight.w500,
       );

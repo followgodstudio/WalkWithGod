@@ -33,12 +33,12 @@ class BottomBar extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   Text("您可以在此添加想法",
-                      style: Theme.of(context).textTheme.captionMedium3),
+                      style: Theme.of(context).textTheme.captionMedium2),
                 ],
               ),
               onPressed: () {
                 if (profile.uid == null) {
-                  showPopUpDialog(context, false, "请登陆后再操作");
+                  showPopUpDialog(context, false, "请登录后再操作");
                 } else {
                   showModalBottomSheet(
                       context: context,
@@ -95,7 +95,7 @@ class BottomBar extends StatelessWidget {
                 icon: 'save_border',
                 onPressed: () {
                   if (profile.uid == null) {
-                    showPopUpDialog(context, false, "请登陆后再操作");
+                    showPopUpDialog(context, false, "请登录后再操作");
                   } else {
                     value.addSavedByArticleId(articleId,
                         Provider.of<ArticlesProvider>(context, listen: false));

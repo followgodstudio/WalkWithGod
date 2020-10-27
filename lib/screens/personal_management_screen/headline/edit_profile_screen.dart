@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:walk_with_god/widgets/my_text_button.dart';
 
 import '../../../configurations/constants.dart';
 import '../../../configurations/theme.dart';
@@ -28,7 +29,7 @@ class EditProfileScreen extends StatelessWidget {
                   children: [
                     Text(
                       "头像",
-                      style: Theme.of(context).textTheme.buttonMedium1,
+                      style: Theme.of(context).textTheme.captionMedium1,
                     ),
                     FlatButton(
                         onPressed: () {
@@ -50,17 +51,19 @@ class EditProfileScreen extends StatelessWidget {
                   children: [
                     Text(
                       "昵称",
-                      style: Theme.of(context).textTheme.buttonMedium1,
+                      style: Theme.of(context).textTheme.captionMedium1,
                     ),
                     Expanded(
                       child: TextField(
                         controller: _nameController,
                         textAlign: TextAlign.end,
-                        style: Theme.of(context).textTheme.buttonMedium1,
+                        style: Theme.of(context).textTheme.captionMedium1,
                         decoration: InputDecoration.collapsed(
                             hintText: profile.name,
-                            hintStyle:
-                                Theme.of(context).textTheme.buttonMediumGray),
+                            hintStyle: Theme.of(context)
+                                .textTheme
+                                .captionMedium1
+                                .copyWith(color: MyColors.grey)),
                       ),
                     ),
                   ],
@@ -69,17 +72,14 @@ class EditProfileScreen extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 10.0),
                   child: Divider(),
                 ),
-                FlatButton(
-                    onPressed: () {
-                      profile.updateProfile(newName: _nameController.text);
-                      Navigator.of(context).pop();
-                    },
-                    child: Text("保存",
-                        style: Theme.of(context).textTheme.captionMedium4),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18.0),
-                    ),
-                    color: Theme.of(context).buttonColor),
+                MyTextButton(
+                  width: double.infinity,
+                  text: "保存",
+                  onPressed: () {
+                    profile.updateProfile(newName: _nameController.text);
+                    Navigator.of(context).pop();
+                  },
+                ),
               ],
             ),
           ),

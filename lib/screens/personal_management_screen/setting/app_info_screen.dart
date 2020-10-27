@@ -43,7 +43,7 @@ class AppInfoScreen extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Text("随行派",
-                          style: Theme.of(context).textTheme.buttonMedium1),
+                          style: Theme.of(context).textTheme.captionMedium1),
                     ),
                     FutureBuilder(
                         future: PackageInfo.fromPlatform(),

@@ -19,13 +19,12 @@ class TopBar extends StatelessWidget {
           return Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5.0),
-                  child: Text(
-                    article.title ?? "",
-                    style: Theme.of(context).textTheme.headline4,
-                  ),
+                Text(
+                  article.title ?? "",
+                  style: Theme.of(context).textTheme.headline4,
+                  overflow: TextOverflow.ellipsis,
                 ),
+                SizedBox(height: 5.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -36,9 +35,12 @@ class TopBar extends StatelessWidget {
                     Container(
                         height: 10,
                         child: VerticalDivider(color: MyColors.grey)),
-                    Text(
-                      article.authorName ?? "匿名",
-                      style: Theme.of(context).textTheme.captionSmall,
+                    Flexible(
+                      child: Text(
+                        article.authorName ?? "匿名",
+                        style: Theme.of(context).textTheme.captionSmall,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   ],
                 ),

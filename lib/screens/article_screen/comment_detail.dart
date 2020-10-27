@@ -61,7 +61,7 @@ class _CommentDetailState extends State<CommentDetail> {
                                             textAlign: TextAlign.center,
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .captionMedium3)));
+                                                .captionMedium2)));
                                     return Column(children: list);
                                   }
                                   for (var i = 0;
@@ -84,7 +84,7 @@ class _CommentDetailState extends State<CommentDetail> {
                                         data.noMoreChild ? "到底啦" : "加载更多",
                                         style: Theme.of(context)
                                             .textTheme
-                                            .captionMedium3),
+                                            .captionMedium2),
                                   ));
                                   return Column(children: list);
                                 }),

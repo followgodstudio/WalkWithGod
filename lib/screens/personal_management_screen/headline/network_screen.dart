@@ -10,8 +10,8 @@ import '../../../providers/user/profile_provider.dart';
 import '../../../providers/user/recent_read_provider.dart';
 import '../../../utils/utils.dart';
 import '../../../widgets/article_card.dart';
-import '../../../widgets/my_text_button.dart';
 import '../../../widgets/my_divider.dart';
+import '../../../widgets/my_text_button.dart';
 import '../../../widgets/navbar.dart';
 import 'introduction.dart';
 
@@ -27,9 +27,7 @@ class NetworkScreen extends StatelessWidget {
         body: SafeArea(
             child: SingleChildScrollView(
                 child: Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: horizontalPadding,
-                        vertical: verticalPadding),
+                    padding: EdgeInsets.symmetric(vertical: verticalPadding),
                     child: Builder(builder: (BuildContext context) {
                       ProfileProvider profile = ProfileProvider(uid);
                       FriendsProvider friends =
@@ -62,6 +60,7 @@ class NetworkScreen extends StatelessWidget {
                                   Introduction(profile.name, profile.imageUrl),
                                   if (uid != myProfile.uid)
                                     FriendStatus(myProfile, profile),
+                                  SizedBox(height: 10.0),
                                   ReadStatus(myProfile, profile),
                                 ]));
                           });
@@ -89,7 +88,7 @@ class FriendStatus extends StatelessWidget {
         isFollowing = true;
       }
       return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 15.0),
+        padding: EdgeInsets.only(top: 10.0),
         child: MyTextButton(
           width: 120,
           text: buttonText,
@@ -118,47 +117,61 @@ class ReadStatus extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Divider(),
-        SizedBox(height: 4.0),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+          child: Column(
             children: [
-              Column(children: [
-                Text("已完成", style: Theme.of(context).textTheme.bodyText2),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4.0),
-                  child: Text(profile.recentReadProvider.readsCount.toString(),
-                      style: Theme.of(context).textTheme.headline5),
+              Divider(),
+              SizedBox(height: 4.0),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(children: [
+                      Text("已完成",
+                          style: Theme.of(context).textTheme.captionMedium1),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4.0),
+                        child: Text(
+                            profile.recentReadProvider.readsCount.toString(),
+                            style: Theme.of(context).textTheme.headline5),
+                      ),
+                      Text("篇文章",
+                          style: Theme.of(context).textTheme.captionMedium2)
+                    ]),
+                    Column(children: [
+                      Text("已阅读",
+                          style: Theme.of(context).textTheme.captionMedium1),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4.0),
+                        child: Text(
+                            profile.recentReadProvider.readDuration.toString(),
+                            style: Theme.of(context).textTheme.headline5),
+                      ),
+                      Text("个小时",
+                          style: Theme.of(context).textTheme.captionMedium2)
+                    ]),
+                    Column(children: [
+                      Text("共有",
+                          style: Theme.of(context).textTheme.captionMedium1),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4.0),
+                        child: Text(profile.followersCount.toString(),
+                            style: Theme.of(context).textTheme.headline5),
+                      ),
+                      Text("人关注",
+                          style: Theme.of(context).textTheme.captionMedium2)
+                    ]),
+                  ],
                 ),
-                Text("篇文章", style: Theme.of(context).textTheme.captionMedium3)
-              ]),
-              Column(children: [
-                Text("已阅读", style: Theme.of(context).textTheme.bodyText2),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4.0),
-                  child: Text(
-                      profile.recentReadProvider.readDuration.toString(),
-                      style: Theme.of(context).textTheme.headline5),
-                ),
-                Text("个小时", style: Theme.of(context).textTheme.captionMedium3)
-              ]),
-              Column(children: [
-                Text("共有", style: Theme.of(context).textTheme.bodyText2),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4.0),
-                  child: Text(profile.followersCount.toString(),
-                      style: Theme.of(context).textTheme.headline5),
-                ),
-                Text("人关注", style: Theme.of(context).textTheme.captionMedium3)
-              ]),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4.0),
+                child: Divider(),
+              ),
             ],
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 4.0),
-          child: Divider(),
         ),
         Consumer<FriendProvider>(builder: (context, friend, child) {
           bool showRecentRead = profile.uid == myProfile.uid ||
@@ -192,6 +205,7 @@ class ReadStatus extends StatelessWidget {
                           return true;
                         },
                         child: ListView(children: [
+                          SizedBox(width: horizontalPadding),
                           ...recentRead.recentRead
                               .map((element) => Padding(
                                     padding: const EdgeInsets.only(
@@ -201,7 +215,8 @@ class ReadStatus extends StatelessWidget {
                               .toList(),
                           if (!recentRead.noMoreRecentRead &&
                               recentRead.recentRead.length != 0)
-                            Center(child: Icon(Icons.more_horiz))
+                            Center(child: Icon(Icons.more_horiz)),
+                          SizedBox(width: horizontalPadding - 10.0),
                         ], scrollDirection: Axis.horizontal)),
                   ),
                 MyDivider()

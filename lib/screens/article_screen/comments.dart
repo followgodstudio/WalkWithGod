@@ -78,7 +78,7 @@ class _CommentsState extends State<Comments> {
           padding: EdgeInsets.all(verticalPadding),
           child: Text("暂无评论",
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.captionMedium3),
+              style: Theme.of(context).textTheme.captionMedium2),
         )));
         return Padding(
           padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
@@ -103,7 +103,7 @@ class _CommentsState extends State<Comments> {
       list.add(Padding(
         padding: const EdgeInsets.all(8.0),
         child: Text(data.noMore ? "到底啦" : "加载更多",
-            style: Theme.of(context).textTheme.captionMedium3),
+            style: Theme.of(context).textTheme.captionMedium2),
       ));
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: horizontalPadding),

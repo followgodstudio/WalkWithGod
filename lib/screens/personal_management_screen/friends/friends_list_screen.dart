@@ -38,8 +38,11 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
                   },
                   child: Text('我关注的',
                       style: _isFollower
-                          ? Theme.of(context).textTheme.buttonLargeGray
-                          : Theme.of(context).textTheme.buttonLarge1)),
+                          ? Theme.of(context)
+                              .textTheme
+                              .buttonLarge
+                              .copyWith(color: MyColors.grey)
+                          : Theme.of(context).textTheme.buttonLarge)),
               SizedBox(width: 20.0),
               GestureDetector(
                   onTap: () {
@@ -50,8 +53,11 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
                   },
                   child: Text('关注我的',
                       style: _isFollower
-                          ? Theme.of(context).textTheme.buttonLarge1
-                          : Theme.of(context).textTheme.buttonLargeGray)),
+                          ? Theme.of(context).textTheme.buttonLarge
+                          : Theme.of(context)
+                              .textTheme
+                              .buttonLarge
+                              .copyWith(color: MyColors.grey))),
             ],
           ),
         ),
@@ -89,7 +95,7 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
                     if (items.length == 0) {
                       list.add(Center(
                         child: Text(_isFollower ? "还没有人关注你" : "你还没有关注的人",
-                            style: Theme.of(context).textTheme.captionMedium3),
+                            style: Theme.of(context).textTheme.captionMedium2),
                       ));
                       return Column(children: list);
                     }
@@ -106,7 +112,7 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
                           _isFollower
                               ? (data.noMoreFollower ? "到底啦" : "加载更多")
                               : (data.noMoreFollowing ? "到底啦" : "加载更多"),
-                          style: Theme.of(context).textTheme.captionMedium3),
+                          style: Theme.of(context).textTheme.captionMedium2),
                     ));
                     return Column(children: list);
                   });

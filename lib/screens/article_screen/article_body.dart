@@ -15,6 +15,7 @@ class ArticleBody extends StatelessWidget {
       if (article.id == null) return SizedBox();
       return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         ArticleCard(article: article, isSmall: false),
+        SizedBox(height: 10.0),
         Padding(
             padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
             child: Column(

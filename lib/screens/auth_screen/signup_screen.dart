@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:international_phone_input/international_phone_input.dart';
 import 'package:provider/provider.dart';
-import 'package:walk_with_god/widgets/my_text_button.dart';
 
 import '../../configurations/theme.dart';
 import '../../providers/auth_provider.dart';
 import '../../utils/my_logger.dart';
 import '../../utils/utils.dart';
+import '../../widgets/my_text_button.dart';
 import '../home_screen/home_screen.dart';
 
 enum AuthFormType { signIn, signUp, reset, phone }
@@ -105,13 +105,11 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final _width = MediaQuery.of(context).size.width;
     return Scaffold(
       resizeToAvoidBottomPadding: true,
       body: SingleChildScrollView(
         child: Container(
           color: Theme.of(context).canvasColor,
-          width: _width,
           child: SafeArea(
             child: Padding(
               padding:
@@ -138,7 +136,7 @@ class _SignupScreenState extends State<SignupScreen> {
   AutoSizeText buildHeaderText() {
     String _headerText;
     if (authFormType == AuthFormType.signIn) {
-      _headerText = "电子邮箱登陆";
+      _headerText = "电子邮箱登录";
     } else if (authFormType == AuthFormType.reset) {
       _headerText = "找回密码";
     } else if (authFormType == AuthFormType.phone) {
@@ -232,49 +230,35 @@ class _SignupScreenState extends State<SignupScreen> {
     if (authFormType == AuthFormType.signIn) {
       _switchButtonText = "注册新邮箱";
       _newFormState = "signUp";
-      _submitButtonText = "登陆";
+      _submitButtonText = "登录";
       _showForgotPassword = true;
     } else if (authFormType == AuthFormType.reset) {
-      _switchButtonText = "使用邮箱登陆";
+      _switchButtonText = "使用邮箱登录";
       _newFormState = "signIn";
       _submitButtonText = "发送链接";
       _showSocial = false;
     } else if (authFormType == AuthFormType.phone) {
-      _switchButtonText = "使用邮箱登陆";
+      _switchButtonText = "使用邮箱登录";
       _newFormState = "signIn";
       _submitButtonText = "获取验证码";
       _showSocial = false;
     } else {
-      _switchButtonText = "使用邮箱登陆";
+      _switchButtonText = "使用邮箱登录";
       _newFormState = "signIn";
       _submitButtonText = "确认信息并注册";
     }
 
     return [
-      Container(
-        width: MediaQuery.of(context).size.width * 0.7,
-        child: FlatButton(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              _submitButtonText,
-              style: TextStyle(
-                  fontSize: 14.0,
-                  fontFamily: 'Hei',
-                  fontWeight: FontWeight.w300,
-                  color: Colors.white),
-            ),
-          ),
-          onPressed: submit,
-          color: MyColors.lightBlue,
-          textColor: Theme.of(context).primaryTextTheme.button.color,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30),
-          ),
-        ),
+      SizedBox(height: 10.0),
+      MyTextButton(
+        width: double.infinity,
+        text: _submitButtonText,
+        style: TextButtonStyle.active,
+        onPressed: submit,
       ),
+      SizedBox(height: 10.0),
       showForgotPassword(_showForgotPassword),
-      SizedBox(height: 10),
+      SizedBox(height: 10.0),
       MyTextButton(
         text: _switchButtonText,
         width: 100,
@@ -294,7 +278,7 @@ class _SignupScreenState extends State<SignupScreen> {
         children: [
           SizedBox(height: 15.0),
           MyTextButton(
-            text: "忘记密码?",
+            text: "忘记密码",
             width: 100,
             isSmall: true,
             textColor: MyColors.error,
@@ -332,7 +316,7 @@ class _SignupScreenState extends State<SignupScreen> {
               SizedBox(height: 10),
               GoogleSignInButton(
                 centered: true,
-                text: "Google账号登陆",
+                text: "Google账号登录",
                 textStyle: Theme.of(context).textTheme.captionSmall,
                 onPressed: () {
                   exceptionHandling(context, () async {
@@ -350,7 +334,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     Padding(
                       padding: const EdgeInsets.only(
                           left: 14.0, top: 10.0, bottom: 10.0),
-                      child: Text("使用手机号码登陆", style: TextStyle(fontSize: 18)),
+                      child: Text("使用手机号码登录", style: TextStyle(fontSize: 18)),
                     )
                   ],
                 ),

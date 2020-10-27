@@ -34,14 +34,22 @@ class MessageItem extends StatelessWidget {
                       Expanded(
                           child: Text(data.senderName,
                               style: data.isRead
-                                  ? Theme.of(context).textTheme.buttonMediumGray
-                                  : Theme.of(context).textTheme.buttonMedium1)),
+                                  ? Theme.of(context)
+                                      .textTheme
+                                      .captionMedium1
+                                      .copyWith(color: MyColors.grey)
+                                  : Theme.of(context)
+                                      .textTheme
+                                      .captionMedium1)),
                       SizedBox(width: 10),
                       Text(
                         DateFormat('yyyy年M月d日 HH:mm a').format(data.createDate),
                         style: data.isRead
                             ? Theme.of(context).textTheme.captionSmall
-                            : Theme.of(context).textTheme.captionSmallBlack,
+                            : Theme.of(context)
+                                .textTheme
+                                .captionSmall
+                                .copyWith(color: MyColors.black),
                       ),
                     ],
                   ),
@@ -50,7 +58,7 @@ class MessageItem extends StatelessWidget {
                   children: [
                     Padding(
                         padding: const EdgeInsets.only(
-                            left: 45, right: 8, top: 4, bottom: 8),
+                            left: 55, right: 8, top: 4, bottom: 8),
                         child: (data.type == eMessageTypeReply)
                             ? MyIconButton(icon: "comment", iconSize: 18.0)
                             : MyIconButton(
@@ -62,8 +70,11 @@ class MessageItem extends StatelessWidget {
                           (data.type == eMessageTypeReply ? "评论" : "点赞") +
                           "了你的留言。",
                       style: data.isRead
-                          ? Theme.of(context).textTheme.captionMedium3
-                          : Theme.of(context).textTheme.captionMedium4,
+                          ? Theme.of(context).textTheme.captionMedium2
+                          : Theme.of(context)
+                              .textTheme
+                              .captionMedium2
+                              .copyWith(color: MyColors.grey),
                     ),
                   ],
                 ),

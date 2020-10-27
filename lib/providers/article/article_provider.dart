@@ -28,7 +28,7 @@ class ArticleProvider with ChangeNotifier {
   DateTime createdDate;
   String publisher;
   List<Paragraph> content = [];
-  List<ArticleProvider> _similarArticles = [];
+  List<ArticleProvider> similarArticles = [];
   bool isSaved;
   bool isFetchedSimilarArticles = false;
 
@@ -43,10 +43,6 @@ class ArticleProvider with ChangeNotifier {
       this.imageUrl,
       this.publisher});
 
-  List<ArticleProvider> get similarArticles {
-    return [..._similarArticles];
-  }
-
   Future<void> fetchSimilarArticles([limit = loadLimit]) async {
     if (isFetchedSimilarArticles) return;
     _logger.i("ArticleProvider-fetchSimilarArticles");
@@ -58,10 +54,10 @@ class ArticleProvider with ChangeNotifier {
         .orderBy(fCreatedDate, descending: true)
         .limit(limit)
         .get();
-    _similarArticles = [];
+    similarArticles = [];
     query.docs.forEach((data) {
       if (data.id != this.id)
-        _similarArticles
+        similarArticles
             .add(ArticlesProvider.buildArticleByMap(data.id, data.data()));
     });
     notifyListeners();
@@ -88,7 +84,7 @@ class ArticleProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void deepCopy(ArticleProvider target, bool isNotify) {
+  void deepCopy(ArticleProvider target) {
     if (target == null) return;
     id = target.id;
     title = target.title;
@@ -99,6 +95,8 @@ class ArticleProvider with ChangeNotifier {
     createdDate = target.createdDate;
     imageUrl = target.imageUrl;
     publisher = target.publisher;
-    if (isNotify) notifyListeners();
+    content = target.content;
+    similarArticles = target.similarArticles;
+    notifyListeners();
   }
 }
