@@ -5,7 +5,6 @@ import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 import 'configurations/theme.dart';
-import 'providers/article/article_provider.dart';
 import 'providers/article/articles_provider.dart';
 import 'providers/article/comments_provider.dart';
 import 'providers/auth_provider.dart';
@@ -34,7 +33,8 @@ import 'screens/personal_management_screen/setting/delete_account_screen.dart';
 import 'screens/personal_management_screen/setting/notification_screen.dart';
 import 'screens/personal_management_screen/setting/privacy_screen.dart';
 import 'screens/personal_management_screen/setting/setting_screen.dart';
-import 'screens/splash_screen.dart';
+import 'screens/test_html_list.dart';
+import 'screens/test_html_screen.dart';
 import 'utils/my_logger.dart';
 import 'widgets/network_manager.dart';
 
@@ -103,8 +103,10 @@ class MyApp extends StatelessWidget {
                 title: 'Follow Him',
                 debugShowCheckedModeBanner: false,
                 theme: dayTheme,
-                home: NetworkManager(child: SplashScreen()),
+                home: TestHtmlList(), //NetworkManager(child: SplashScreen()),
                 routes: {
+                  TestHtmlScreen.routeName: (ctx) => TestHtmlScreen(),
+                  AppInfoScreen.routeName: (ctx) => AppInfoScreen(),
                   PersonalManagementScreen.routeName: (ctx) =>
                       NetworkManager(child: PersonalManagementScreen()),
                   SettingScreen.routeName: (ctx) => SettingScreen(),
