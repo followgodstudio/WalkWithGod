@@ -24,85 +24,89 @@ class BottomBar extends StatelessWidget {
     ProfileProvider profile =
         Provider.of<ProfileProvider>(context, listen: false);
     return BottomAppBar(
+        color: Theme.of(context).canvasColor,
         child: Row(children: [
-      Expanded(
-        child: Padding(
-          padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-          child: FlatButton(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Text("您可以在此添加想法",
-                      style: Theme.of(context).textTheme.captionMedium2),
-                ],
-              ),
-              onPressed: () {
-                if (profile.uid == null) {
-                  showPopUpDialog(context, false, "请登录后再操作");
-                } else {
-                  showModalBottomSheet(
-                      context: context,
-                      isScrollControlled: true,
-                      builder: (context) => PopUpComment(
-                            articleId: articleId,
-                            onPressFunc: (String content) async {
-                              exceptionHandling(rootContext, () async {
-                                await Provider.of<CommentsProvider>(context,
-                                        listen: false)
-                                    .addLevel1Comment(
-                                        articleId,
-                                        content,
-                                        profile.uid,
-                                        profile.name,
-                                        profile.imageUrl);
-                                onLeaveCommentScroll();
-                                showPopUpDialog(rootContext, true, "你刚刚发布了留言");
-                              });
-                            },
-                          ));
-                }
-              },
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(18.0),
-              ),
-              color: Theme.of(context).buttonColor),
-        ),
-      ),
-      SizedBox(width: 3.0),
-      MyIconButton(
-        hasBorder: true,
-        icon: 'share',
-        onPressed: () {
-          showModalBottomSheet(
-              context: context,
-              isScrollControlled: true,
-              builder: (context) => ShareArticle(articleId));
-        },
-      ),
-      SizedBox(width: 10.0),
-      Consumer<SavedArticlesProvider>(
-        builder: (context, value, child) => (profile.uid != null &&
-                value.currentLike)
-            ? MyIconButton(
-                hasBorder: true,
-                isActive: true,
-                icon: 'save',
-                onPressed: () {
-                  value.removeSavedByArticleId(articleId);
-                })
-            : MyIconButton(
-                hasBorder: true,
-                icon: 'save_border',
-                onPressed: () {
-                  if (profile.uid == null) {
-                    showPopUpDialog(context, false, "请登录后再操作");
-                  } else {
-                    value.addSavedByArticleId(articleId,
-                        Provider.of<ArticlesProvider>(context, listen: false));
-                  }
-                }),
-      ),
-      SizedBox(width: 10.0),
-    ]));
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: FlatButton(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Text("您可以在此添加想法",
+                          style: Theme.of(context).textTheme.captionMedium2),
+                    ],
+                  ),
+                  onPressed: () {
+                    if (profile.uid == null) {
+                      showPopUpDialog(context, false, "请登录后再操作");
+                    } else {
+                      showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          builder: (context) => PopUpComment(
+                                articleId: articleId,
+                                onPressFunc: (String content) async {
+                                  exceptionHandling(rootContext, () async {
+                                    await Provider.of<CommentsProvider>(context,
+                                            listen: false)
+                                        .addLevel1Comment(
+                                            articleId,
+                                            content,
+                                            profile.uid,
+                                            profile.name,
+                                            profile.imageUrl);
+                                    onLeaveCommentScroll();
+                                    showPopUpDialog(
+                                        rootContext, true, "你刚刚发布了留言");
+                                  });
+                                },
+                              ));
+                    }
+                  },
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0),
+                  ),
+                  color: Theme.of(context).buttonColor),
+            ),
+          ),
+          SizedBox(width: 3.0),
+          MyIconButton(
+            hasBorder: true,
+            icon: 'share',
+            onPressed: () {
+              showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  builder: (context) => ShareArticle(articleId));
+            },
+          ),
+          SizedBox(width: 10.0),
+          Consumer<SavedArticlesProvider>(
+            builder: (context, value, child) =>
+                (profile.uid != null && value.currentLike)
+                    ? MyIconButton(
+                        hasBorder: true,
+                        isActive: true,
+                        icon: 'save',
+                        onPressed: () {
+                          value.removeSavedByArticleId(articleId);
+                        })
+                    : MyIconButton(
+                        hasBorder: true,
+                        icon: 'save_border',
+                        onPressed: () {
+                          if (profile.uid == null) {
+                            showPopUpDialog(context, false, "请登录后再操作");
+                          } else {
+                            value.addSavedByArticleId(
+                                articleId,
+                                Provider.of<ArticlesProvider>(context,
+                                    listen: false));
+                          }
+                        }),
+          ),
+          SizedBox(width: 10.0),
+        ]));
   }
 }

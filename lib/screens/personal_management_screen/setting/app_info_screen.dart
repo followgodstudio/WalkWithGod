@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../../configurations/constants.dart';
 import '../../../configurations/theme.dart';
 import '../../../providers/user/setting_provider.dart';
+import '../../../widgets/my_progress_indicator.dart';
 import '../../../widgets/navbar.dart';
 
 class AppInfoScreen extends StatelessWidget {
@@ -50,7 +51,7 @@ class AppInfoScreen extends StatelessWidget {
                         builder: (ctx, asyncSnapshot) {
                           if (asyncSnapshot.connectionState ==
                               ConnectionState.waiting)
-                            return Center(child: CircularProgressIndicator());
+                            return MyProgressIndicator();
                           if (asyncSnapshot.error != null)
                             return Center(child: Text('An error occurred'));
                           String currentVersion = asyncSnapshot.data.version;

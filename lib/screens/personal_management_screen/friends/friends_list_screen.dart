@@ -7,6 +7,7 @@ import '../../../providers/user/friend_provider.dart';
 import '../../../providers/user/friends_provider.dart';
 import '../../../providers/user/profile_provider.dart';
 import '../../../utils/utils.dart';
+import '../../../widgets/my_progress_indicator.dart';
 import '../../../widgets/navbar.dart';
 import 'friend_item.dart';
 
@@ -86,7 +87,7 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
                 }),
                 builder: (ctx, asyncSnapshot) {
                   if (asyncSnapshot.connectionState == ConnectionState.waiting)
-                    return Center(child: CircularProgressIndicator());
+                    return MyProgressIndicator();
                   return Consumer<FriendsProvider>(
                       builder: (context, data, child) {
                     List<Widget> list = [];

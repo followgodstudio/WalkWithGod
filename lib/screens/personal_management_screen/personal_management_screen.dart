@@ -9,9 +9,10 @@ import '../../providers/user/saved_articles_provider.dart';
 import '../../utils/my_logger.dart';
 import '../../utils/utils.dart';
 import '../../widgets/article_card.dart';
-import '../../widgets/my_text_button.dart';
 import '../../widgets/my_divider.dart';
 import '../../widgets/my_icon_button.dart';
+import '../../widgets/my_progress_indicator.dart';
+import '../../widgets/my_text_button.dart';
 import '../../widgets/navbar.dart';
 import '../auth_screen/signup_screen.dart';
 import 'friends/friends_list_screen.dart';
@@ -180,8 +181,7 @@ class FriendsMessages extends StatelessWidget {
         builder: (BuildContext context,
             AsyncSnapshot<Map<String, dynamic>> snapshot) {
           if (snapshot.connectionState != ConnectionState.active ||
-              snapshot.data == null)
-            return Center(child: CircularProgressIndicator());
+              snapshot.data == null) return MyProgressIndicator();
           return Column(
             children: [
               MyDivider(),

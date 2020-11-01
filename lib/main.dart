@@ -62,9 +62,6 @@ class MyApp extends StatelessWidget {
             create: (_) => ArticlesProvider(),
           ),
           ChangeNotifierProvider(
-            create: (_) => ArticleProvider(),
-          ),
-          ChangeNotifierProvider(
             create: (_) => CommentsProvider(),
           ),
           ChangeNotifierProvider<SplashProvider>(

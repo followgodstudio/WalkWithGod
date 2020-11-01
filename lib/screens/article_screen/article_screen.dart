@@ -22,7 +22,8 @@ class ArticleScreen extends StatefulWidget {
   _ArticleScreenState createState() => _ArticleScreenState();
 }
 
-class _ArticleScreenState extends State<ArticleScreen> {
+class _ArticleScreenState extends State<ArticleScreen>
+    with TickerProviderStateMixin {
   bool _fetchedAllData = false;
 
   final dataKey = new GlobalKey();
@@ -35,19 +36,14 @@ class _ArticleScreenState extends State<ArticleScreen> {
     });
   }
 
-  void fetchAllArticleData(BuildContext context, String articleId) {
+  void fetchAllArticleData(
+      BuildContext context, ArticleProvider article, String articleId) {
     if (_fetchedAllData) return;
     _fetchedAllData = true;
     exceptionHandling(context, () async {
-      ArticlesProvider articles =
-          Provider.of<ArticlesProvider>(context, listen: false);
-      ArticleProvider article =
-          Provider.of<ArticleProvider>(context, listen: false);
-      ArticleProvider _article = articles.findArticleInListById(articleId);
-      if (_article == null) {
-        _article = await Provider.of<ArticlesProvider>(context, listen: false)
-            .fetchArticlePreviewById(articleId);
-      }
+      ArticleProvider _article =
+          await Provider.of<ArticlesProvider>(context, listen: false)
+              .fetchArticlePreviewById(articleId);
       await _article.fetchArticleContent();
       await _article.fetchSimilarArticles();
       article.deepCopy(_article);
@@ -70,49 +66,55 @@ class _ArticleScreenState extends State<ArticleScreen> {
     final HideNavbar hiding = HideNavbar();
     ProfileProvider profile =
         Provider.of<ProfileProvider>(context, listen: false);
-    fetchAllArticleData(context, _articleId);
-    return Scaffold(
-      body: SafeArea(
-        child: NotificationListener<ScrollNotification>(
-            onNotification: (ScrollNotification scrollInfo) {
-              if (scrollInfo.metrics.pixels ==
-                  scrollInfo.metrics.maxScrollExtent) {
-                exceptionHandling(context, () async {
-                  await Provider.of<CommentsProvider>(context, listen: false)
-                      .fetchMoreLevel1Comments(profile.uid);
-                });
-              }
-              return true;
-            },
-            child: CustomScrollView(
-              controller: hiding.controller,
-              slivers: <Widget>[
-                TopBar(),
-                SliverToBoxAdapter(
-                  child: Column(
-                    children: [
-                      ArticleBody(),
-                      SimilarArticles(),
-                      Comments(articleId: _articleId, commentId: _commentId),
-                    ],
-                  ),
-                ),
-              ],
-            )),
-      ),
-      bottomNavigationBar: ValueListenableBuilder(
-        valueListenable: hiding.visible,
-        builder: (context, bool value, child) => AnimatedContainer(
-          duration: Duration(milliseconds: 300),
-          height: value ? 60.0 : 0.0,
-          child: value
-              ? BottomBar(_articleId, _scrollToComment)
-              : Container(
-                  color: Colors.white,
-                ),
-        ),
-      ),
-    );
+    ArticleProvider article =
+        Provider.of<ArticlesProvider>(context, listen: false)
+            .findArticleInListById(_articleId);
+    fetchAllArticleData(context, article, _articleId);
+    return ChangeNotifierProvider.value(
+        value: article,
+        child: Scaffold(
+          body: SafeArea(
+            child: NotificationListener<ScrollNotification>(
+                onNotification: (ScrollNotification scrollInfo) {
+                  if (scrollInfo.metrics.pixels ==
+                      scrollInfo.metrics.maxScrollExtent) {
+                    exceptionHandling(context, () async {
+                      await Provider.of<CommentsProvider>(context,
+                              listen: false)
+                          .fetchMoreLevel1Comments(profile.uid);
+                    });
+                  }
+                  return true;
+                },
+                child: CustomScrollView(
+                  controller: hiding.controller,
+                  slivers: <Widget>[
+                    TopBar(),
+                    SliverToBoxAdapter(
+                      child: Column(
+                        children: [
+                          ArticleBody(),
+                          SimilarArticles(),
+                          Comments(
+                              key: dataKey,
+                              articleId: _articleId,
+                              commentId: _commentId),
+                        ],
+                      ),
+                    ),
+                  ],
+                )),
+          ),
+          bottomNavigationBar: ValueListenableBuilder(
+            valueListenable: hiding.visible,
+            builder: (context, bool value, child) => AnimatedSize(
+              vsync: this,
+              duration: Duration(milliseconds: 300),
+              child:
+                  value ? BottomBar(_articleId, _scrollToComment) : SizedBox(),
+            ),
+          ),
+        ));
   }
 }
 

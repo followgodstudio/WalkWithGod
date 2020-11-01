@@ -11,6 +11,7 @@ import '../providers/splash_provider.dart';
 import '../providers/user/profile_provider.dart';
 import '../utils/my_logger.dart';
 import '../utils/utils.dart';
+import '../widgets/my_progress_indicator.dart';
 import 'home_screen/home_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -54,8 +55,7 @@ class _SplashScreenState extends State<SplashScreen> {
     MyLogger("Widget").i("SplashScreen-build");
     return Scaffold(body: SafeArea(
         child: Consumer<SplashProvider>(builder: (context, splash, child) {
-      if (splash.imageUrl == null)
-        return Center(child: CircularProgressIndicator());
+      if (splash.imageUrl == null) return MyProgressIndicator();
       return FlatButton(
           padding: const EdgeInsets.all(0),
           onPressed: () {

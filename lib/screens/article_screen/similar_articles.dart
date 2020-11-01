@@ -9,8 +9,9 @@ import '../../widgets/article_card.dart';
 class SimilarArticles extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Consumer<ArticleProvider>(builder: (context, value, child) {
-      if (value.similarArticles.length == 0) return SizedBox();
+    return Consumer<ArticleProvider>(builder: (context, article, child) {
+      if (article.id == null || article.similarArticles.length == 0)
+        return SizedBox();
       return Column(
         children: [
           Padding(
@@ -28,7 +29,7 @@ class SimilarArticles extends StatelessWidget {
             height: 210,
             child: ListView(children: [
               SizedBox(width: horizontalPadding),
-              ...value.similarArticles
+              ...article.similarArticles
                   .map((element) => Padding(
                         padding: const EdgeInsets.only(
                             right: 10.0, top: 12.5, bottom: 20),

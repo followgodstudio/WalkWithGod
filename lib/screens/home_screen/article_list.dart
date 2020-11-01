@@ -17,7 +17,9 @@ class ArticleList extends StatelessWidget {
             padding: EdgeInsets.symmetric(
                 horizontal: horizontalPadding, vertical: 12.5),
             child: ArticleCard(
-                article: articlesData.articles[index], isSmall: false),
+                hasDescription: true,
+                article: articlesData.articles[index],
+                isSmall: false),
           );
         },
         childCount:

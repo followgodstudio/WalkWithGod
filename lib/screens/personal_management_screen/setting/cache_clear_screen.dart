@@ -5,6 +5,7 @@ import '../../../configurations/constants.dart';
 import '../../../configurations/theme.dart';
 import '../../../providers/user/setting_provider.dart';
 import '../../../utils/utils.dart';
+import '../../../widgets/my_progress_indicator.dart';
 import '../../../widgets/my_text_button.dart';
 import '../../../widgets/navbar.dart';
 
@@ -32,7 +33,7 @@ class CacheClearScreen extends StatelessWidget {
                         builder: (ctx, asyncSnapshot) {
                           if (asyncSnapshot.connectionState ==
                               ConnectionState.waiting)
-                            return Center(child: CircularProgressIndicator());
+                            return MyProgressIndicator();
                           if (asyncSnapshot.error != null)
                             return Center(child: Text('An error occurred'));
                           return Column(

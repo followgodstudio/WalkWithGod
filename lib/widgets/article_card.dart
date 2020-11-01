@@ -11,10 +11,12 @@ import 'network_manager.dart';
 class ArticleCard extends StatelessWidget {
   final ArticleProvider article;
   final bool isSmall;
+  final bool hasDescription;
   final double aspectRatio;
   ArticleCard({
     this.article,
     this.isSmall = true,
+    this.hasDescription = false,
     this.aspectRatio = 6 / 7,
   });
 
@@ -132,7 +134,7 @@ class ArticleCard extends StatelessWidget {
                                   .copyWith(color: fontColor),
                         ),
                         if (!isSmall) SizedBox(height: space),
-                        if (!isSmall)
+                        if (hasDescription)
                           Text(
                             article.description ?? "",
                             maxLines: 2,

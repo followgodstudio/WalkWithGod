@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../configurations/constants.dart';
 import '../../configurations/theme.dart';
+import '../../providers/article/article_provider.dart';
 import '../../providers/article/comment_provider.dart';
 import '../../providers/article/comments_provider.dart';
 import '../../providers/user/profile_provider.dart';
@@ -68,47 +69,50 @@ class _CommentsState extends State<Comments> {
   @override
   Widget build(BuildContext context) {
     MyLogger("Widget").v("Comments-build");
-    return Consumer<CommentsProvider>(builder: (context, data, child) {
-      List<CommentProvider> comments = data.items;
-      List<Widget> list = [];
-      list.add(Divider());
-      if (comments.length == 0) {
-        list.add(Center(
-            child: Padding(
-          padding: EdgeInsets.all(verticalPadding),
-          child: Text("暂无评论",
-              textAlign: TextAlign.center,
+    return Consumer<ArticleProvider>(builder: (context, article, child) {
+      if (article.id == null || article.content.length == 0) return SizedBox();
+      return Consumer<CommentsProvider>(builder: (context, data, child) {
+        List<CommentProvider> comments = data.items;
+        List<Widget> list = [];
+        list.add(Divider());
+        if (comments.length == 0) {
+          list.add(Center(
+              child: Padding(
+            padding: EdgeInsets.all(verticalPadding),
+            child: Text("暂无评论",
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.captionMedium2),
+          )));
+          return Padding(
+            padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+            child: Column(children: list),
+          );
+        }
+        for (var i = 0; i < comments.length; i++) {
+          list.add(ChangeNotifierProvider.value(
+            value: comments[i],
+            child: FlatButton(
+                padding: const EdgeInsets.all(0),
+                onPressed: () async {
+                  await goToCommentDetail(profile.uid, comments[i]);
+                },
+                child: Comment(
+                  onStartComment: () =>
+                      goToCommentDetail(profile.uid, comments[i]),
+                  onSubmitComment: onSubmitComment,
+                )),
+          ));
+        }
+        list.add(Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(data.noMore ? "到底啦" : "加载更多",
               style: Theme.of(context).textTheme.captionMedium2),
-        )));
+        ));
         return Padding(
           padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
           child: Column(children: list),
         );
-      }
-      for (var i = 0; i < comments.length; i++) {
-        list.add(ChangeNotifierProvider.value(
-          value: comments[i],
-          child: FlatButton(
-              padding: const EdgeInsets.all(0),
-              onPressed: () async {
-                await goToCommentDetail(profile.uid, comments[i]);
-              },
-              child: Comment(
-                onStartComment: () =>
-                    goToCommentDetail(profile.uid, comments[i]),
-                onSubmitComment: onSubmitComment,
-              )),
-        ));
-      }
-      list.add(Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Text(data.noMore ? "到底啦" : "加载更多",
-            style: Theme.of(context).textTheme.captionMedium2),
-      ));
-      return Padding(
-        padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-        child: Column(children: list),
-      );
+      });
     });
   }
 }

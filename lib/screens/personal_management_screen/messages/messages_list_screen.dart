@@ -6,6 +6,7 @@ import '../../../configurations/theme.dart';
 import '../../../providers/user/messages_provider.dart';
 import '../../../providers/user/profile_provider.dart';
 import '../../../utils/utils.dart';
+import '../../../widgets/my_progress_indicator.dart';
 import '../../../widgets/navbar.dart';
 import 'message_item.dart';
 
@@ -36,8 +37,7 @@ class MessagesListScreen extends StatelessWidget {
                   }),
                   builder: (ctx, asyncSnapshot) {
                     if (asyncSnapshot.connectionState ==
-                        ConnectionState.waiting)
-                      return Center(child: CircularProgressIndicator());
+                        ConnectionState.waiting) return MyProgressIndicator();
                     return Consumer<MessagesProvider>(
                         builder: (context, data, child) {
                       if (data.items.length == 0) {

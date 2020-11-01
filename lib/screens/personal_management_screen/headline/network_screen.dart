@@ -11,6 +11,7 @@ import '../../../providers/user/recent_read_provider.dart';
 import '../../../utils/utils.dart';
 import '../../../widgets/article_card.dart';
 import '../../../widgets/my_divider.dart';
+import '../../../widgets/my_progress_indicator.dart';
 import '../../../widgets/my_text_button.dart';
 import '../../../widgets/navbar.dart';
 import 'introduction.dart';
@@ -45,7 +46,7 @@ class NetworkScreen extends StatelessWidget {
                             if (asyncSnapshot.connectionState ==
                                     ConnectionState.waiting ||
                                 asyncSnapshot.data == null)
-                              return Center(child: CircularProgressIndicator());
+                              return MyProgressIndicator();
                             if (!asyncSnapshot.data[0])
                               return Center(child: Text("该用户不存在。"));
                             FriendProvider friend = asyncSnapshot.data[1];

@@ -70,13 +70,13 @@ class ArticlesProvider with ChangeNotifier {
 
   ArticleProvider findArticleInListById(String aid) {
     return _articles.firstWhere((a) => a.id == aid, orElse: () {
-      return null;
+      return ArticleProvider();
     });
   }
 
   Future<ArticleProvider> fetchArticlePreviewById(String aid) async {
     ArticleProvider article = findArticleInListById(aid);
-    if (article != null) return article;
+    if (article.id != null) return article;
     MyLogger("Provider").i("ArticlesProvider-fetchArticlePreviewById");
     DocumentSnapshot data =
         await FirebaseFirestore.instance.collection(cArticles).doc(aid).get();

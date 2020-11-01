@@ -26,13 +26,15 @@ Future<dynamic> exceptionHandling(
   } on PlatformException catch (error) {
     MyLogger("TODO-platform").e(error.message);
     showPopUpDialog(context, false, "PlatformException:" + error.message);
+  } on Exception catch (error) {
+    print(error);
   }
 }
 
 void showPopUpDialog(BuildContext context, bool isSuccess, String message,
     {int durationMilliseconds, Function afterDismiss}) {
   if (durationMilliseconds == null)
-    durationMilliseconds = isSuccess ? 100000 : 2000;
+    durationMilliseconds = isSuccess ? 1000 : 2000;
   Timer timer = Timer(Duration(milliseconds: durationMilliseconds), () {
     Navigator.of(context).pop(true);
   });
