@@ -156,7 +156,7 @@ class SavedArticlesProvider with ChangeNotifier {
       itemsMap[docs[i].id] = i;
     }
     if (docs.length < limit) _noMore = true;
-    _lastVisible = query.docs[query.docs.length - 1];
+    _lastVisible = docs[docs.length - 1];
     // Fetch Document's basic info, cannot be more than 10
     List<ArticleProvider> articles = await ArticlesProvider.fetchList(items);
     // Reorganize by update date (orginal sequence)

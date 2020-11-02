@@ -7,6 +7,7 @@ import '../../providers/article/comment_provider.dart';
 import '../../providers/user/profile_provider.dart';
 import '../../utils/utils.dart';
 import '../../widgets/comment.dart';
+import '../../widgets/my_bottom_indicator.dart';
 
 class CommentDetail extends StatefulWidget {
   final String articleId;
@@ -78,14 +79,7 @@ class _CommentDetailState extends State<CommentDetail> {
                                     ));
                                   }
                                   list.add(Divider());
-                                  list.add(Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                        data.noMoreChild ? "到底啦" : "加载更多",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .captionMedium2),
-                                  ));
+                                  list.add(MyBottomIndicator(data.noMoreChild));
                                   return Column(children: list);
                                 }),
                           )),

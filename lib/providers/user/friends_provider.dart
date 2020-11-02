@@ -190,15 +190,13 @@ class FriendsProvider with ChangeNotifier {
         _follower.add(_buildFriendByMap(data.id, data.data()));
       });
       if (docs.length < limit) _noMoreFollower = true;
-      if (docs.length > 0)
-        _lastVisibleFollower = query.docs[query.docs.length - 1];
+      if (docs.length > 0) _lastVisibleFollower = docs[docs.length - 1];
     } else {
       docs.forEach((data) {
         _following.add(_buildFriendByMap(data.id, data.data()));
       });
       if (docs.length < limit) _noMoreFollowing = true;
-      if (docs.length > 0)
-        _lastVisibleFollowing = query.docs[query.docs.length - 1];
+      if (docs.length > 0) _lastVisibleFollowing = docs[docs.length - 1];
     }
     notifyListeners();
   }

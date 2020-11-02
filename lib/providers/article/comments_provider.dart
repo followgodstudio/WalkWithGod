@@ -114,7 +114,7 @@ class CommentsProvider with ChangeNotifier {
       _items.add(_buildLevel1CommentByMap(docs[i].id, docs[i].data(), isLike));
     }
     _isFetching = false;
-    _lastVisible = query.docs[query.docs.length - 1];
+    _lastVisible = docs[docs.length - 1];
     notifyListeners();
   }
 

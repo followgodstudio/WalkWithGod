@@ -243,7 +243,7 @@ class CommentProvider with ChangeNotifier {
       notifyListeners();
       return;
     }
-    query.docs.forEach((doc) {
+    docs.forEach((doc) {
       // Fetch if current user like
       bool isLike = false;
       if (doc.data().containsKey(fCommentReplyLikes) && userId != null) {
@@ -251,7 +251,7 @@ class CommentProvider with ChangeNotifier {
       }
       children.add(_buildLevel2CommentByMap(doc.id, doc.data(), isLike));
     });
-    _lastVisibleChild = query.docs[query.docs.length - 1];
+    _lastVisibleChild = docs[docs.length - 1];
     notifyListeners();
   }
 

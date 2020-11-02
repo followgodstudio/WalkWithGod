@@ -6,6 +6,7 @@ import '../../../configurations/theme.dart';
 import '../../../providers/user/messages_provider.dart';
 import '../../../providers/user/profile_provider.dart';
 import '../../../utils/utils.dart';
+import '../../../widgets/my_bottom_indicator.dart';
 import '../../../widgets/my_progress_indicator.dart';
 import '../../../widgets/navbar.dart';
 import 'message_item.dart';
@@ -63,12 +64,7 @@ class MessagesListScreen extends StatelessWidget {
                           child: MessageItem(),
                         ));
                       }
-
-                      list.add(Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(data.noMore ? "到底啦" : "加载更多",
-                            style: Theme.of(context).textTheme.captionMedium2),
-                      ));
+                      list.add(MyBottomIndicator(data.noMore));
                       return Column(children: list);
                     });
                   })),

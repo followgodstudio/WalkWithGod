@@ -5,7 +5,6 @@ import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 import 'configurations/theme.dart';
-import 'providers/article/article_provider.dart';
 import 'providers/article/articles_provider.dart';
 import 'providers/article/comments_provider.dart';
 import 'providers/auth_provider.dart';
