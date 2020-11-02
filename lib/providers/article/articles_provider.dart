@@ -11,11 +11,14 @@ class ArticlesProvider with ChangeNotifier {
   DocumentSnapshot _lastVisibleChild;
   bool _noMoreChild = false;
   bool _isFetching = false;
-
   List<ArticleProvider> _articles = [];
 
   List<ArticleProvider> get articles {
     return [..._articles];
+  }
+
+  bool get noMoreChild {
+    return _noMoreChild;
   }
 
   static Future<List<ArticleProvider>> fetchList(List<String> aids) async {
@@ -32,12 +35,10 @@ class ArticlesProvider with ChangeNotifier {
   }
 
   Future<void> fetchArticlesByDate(
-      [DateTime dateTime,
-      int n = loadLimit,
-      bool isContentNeeded = false]) async {
+      [DateTime dateTime, int n = loadLimit]) async {
     _logger.i("ArticlesProvider-fetchArticlesByDate");
-    if (dateTime == null) dateTime = DateTime.now();
-
+    if (dateTime == null) dateTime = DateTime.utc(1989, 11, 9);
+    _isFetching = true;
     QuerySnapshot query = await _fdb
         .collection(cArticles)
         .where(fCreatedDate, isGreaterThanOrEqualTo: dateTime)
@@ -45,18 +46,15 @@ class ArticlesProvider with ChangeNotifier {
         .limit(n)
         .get();
     _articles = [];
-    setArticles(query, isContentNeeded, n);
+    _isFetching = false;
+    setArticles(query, n);
   }
 
-  Future<void> fetchMoreArticles(
-      [DateTime dateTime,
-      int n = loadLimit,
-      bool isContentNeeded = false]) async {
+  Future<void> fetchMoreArticles([DateTime dateTime, int n = loadLimit]) async {
     if (_noMoreChild || _isFetching) return;
     _logger.i("ArticlesProvider-fetchMoreArticles");
+    if (dateTime == null) dateTime = DateTime.utc(1989, 11, 9);
     _isFetching = true;
-    if (dateTime == null) dateTime = DateTime.now();
-
     QuerySnapshot query = await _fdb
         .collection(cArticles)
         .where(fCreatedDate, isGreaterThanOrEqualTo: dateTime)
@@ -65,7 +63,7 @@ class ArticlesProvider with ChangeNotifier {
         .limit(n)
         .get();
     _isFetching = false;
-    setArticles(query, isContentNeeded, n);
+    setArticles(query, n);
   }
 
   ArticleProvider findArticleInListById(String aid) {
@@ -83,14 +81,17 @@ class ArticlesProvider with ChangeNotifier {
     return buildArticleByMap(data.id, data.data());
   }
 
-  void setArticles(QuerySnapshot query,
-      [bool isContentNeeded = false, int limit = 10]) {
-    query.docs.forEach((data) {
+  void setArticles(QuerySnapshot query, int limit) {
+    List<DocumentSnapshot> docs = query.docs;
+    if (docs.length < limit) _noMoreChild = true;
+    if (docs.length == 0) {
+      notifyListeners();
+      return;
+    }
+    docs.forEach((data) {
       _articles.add(buildArticleByMap(data.id, data.data()));
     });
-    if (query.docs.length < limit) _noMoreChild = true;
-    if (query.docs.length > 0)
-      _lastVisibleChild = query.docs[query.docs.length - 1];
+    _lastVisibleChild = docs[docs.length - 1];
     notifyListeners();
   }
 

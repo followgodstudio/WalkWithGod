@@ -113,7 +113,7 @@ class MessagesProvider with ChangeNotifier {
       _items.add(_buildMessageByMap(data.id, data.data()));
     });
     if (docs.length < limit) _noMore = true;
-    if (docs.length > 0) _lastVisible = query.docs[query.docs.length - 1];
+    if (docs.length > 0) _lastVisible = docs[docs.length - 1];
     notifyListeners();
   }
 

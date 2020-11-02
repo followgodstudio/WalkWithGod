@@ -10,6 +10,7 @@ import '../../providers/user/profile_provider.dart';
 import '../../utils/my_logger.dart';
 import '../../utils/utils.dart';
 import '../../widgets/comment.dart';
+import '../../widgets/my_bottom_indicator.dart';
 import 'comment_detail.dart';
 
 class Comments extends StatefulWidget {
@@ -103,11 +104,7 @@ class _CommentsState extends State<Comments> {
                 )),
           ));
         }
-        list.add(Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(data.noMore ? "到底啦" : "加载更多",
-              style: Theme.of(context).textTheme.captionMedium2),
-        ));
+        list.add(MyBottomIndicator(data.noMore));
         return Padding(
           padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
           child: Column(children: list),

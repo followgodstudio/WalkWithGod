@@ -36,7 +36,7 @@ class _SplashScreenState extends State<SplashScreen> {
       await Provider.of<SplashProvider>(context, listen: false)
           .fetchSplashScreensData();
       await Provider.of<ArticlesProvider>(context, listen: false)
-          .fetchArticlesByDate(new DateTime.utc(1989, 11, 9));
+          .fetchArticlesByDate();
       await Provider.of<ProfileProvider>(context, listen: false)
           .fetchAllUserData();
     });

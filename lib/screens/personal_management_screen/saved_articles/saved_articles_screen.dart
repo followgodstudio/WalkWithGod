@@ -6,6 +6,7 @@ import '../../../configurations/theme.dart';
 import '../../../providers/user/saved_articles_provider.dart';
 import '../../../utils/utils.dart';
 import '../../../widgets/article_card.dart';
+import '../../../widgets/my_bottom_indicator.dart';
 import '../../../widgets/navbar.dart';
 
 // TODO: add saved articles search
@@ -69,14 +70,7 @@ class SavedArticlesScreen extends StatelessWidget {
                   delegate: SliverChildListDelegate(
                     [
                       Divider(indent: 30, endIndent: 30),
-                      Center(
-                        child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(saved.noMore ? "到底啦" : "加载更多",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .captionMedium2)),
-                      ),
+                      MyBottomIndicator(saved.noMore),
                     ],
                   ),
                 ),

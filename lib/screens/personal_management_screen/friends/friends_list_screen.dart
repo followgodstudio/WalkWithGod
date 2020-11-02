@@ -7,6 +7,7 @@ import '../../../providers/user/friend_provider.dart';
 import '../../../providers/user/friends_provider.dart';
 import '../../../providers/user/profile_provider.dart';
 import '../../../utils/utils.dart';
+import '../../../widgets/my_bottom_indicator.dart';
 import '../../../widgets/my_progress_indicator.dart';
 import '../../../widgets/navbar.dart';
 import 'friend_item.dart';
@@ -107,14 +108,9 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
                       ));
                     }
                     list.add(Divider());
-                    list.add(Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                          _isFollower
-                              ? (data.noMoreFollower ? "到底啦" : "加载更多")
-                              : (data.noMoreFollowing ? "到底啦" : "加载更多"),
-                          style: Theme.of(context).textTheme.captionMedium2),
-                    ));
+                    list.add(MyBottomIndicator(_isFollower
+                        ? data.noMoreFollower
+                        : data.noMoreFollowing));
                     return Column(children: list);
                   });
                 }),

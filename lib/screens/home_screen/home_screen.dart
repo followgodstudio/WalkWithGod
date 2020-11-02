@@ -8,6 +8,7 @@ import '../../providers/user/profile_provider.dart';
 import '../../screens/personal_management_screen/personal_management_screen.dart';
 import '../../utils/my_logger.dart';
 import '../../utils/utils.dart';
+import '../../widgets/my_bottom_indicator.dart';
 import '../../widgets/navbar.dart';
 import '../../widgets/profile_picture.dart';
 import 'article_list.dart';
@@ -68,7 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> refreshArticles() async {
     await exceptionHandling(context, () async {
       await Provider.of<ArticlesProvider>(context, listen: false)
-          .fetchArticlesByDate(new DateTime.utc(1989, 11, 9));
+          .fetchArticlesByDate();
     });
   }
 
@@ -81,63 +82,72 @@ class _HomeScreenState extends State<HomeScreen> {
     });
     return Scaffold(
         body: SafeArea(
-            child: RefreshIndicator(
-                onRefresh: refreshArticles,
-                child:
-                    //TODO: the following code seems not compatible with RefreshIndicator
-                    // NotificationListener<ScrollNotification>(onNotification:
-                    //     (ScrollNotification scrollInfo) {
-                    //   if (scrollInfo.metrics.pixels ==
-                    //       scrollInfo.metrics.maxScrollExtent) {
-                    //     exceptionHandling(context, () async {
-                    //       await Provider.of<ArticlesProvider>(context,
-                    //               listen: false)
-                    //           .fetchMoreArticles(new DateTime.utc(1989, 11, 9));
-                    //     });
-                    //   }
-                    //   return true;
-                    // }, child:
-                    Consumer<ArticlesProvider>(builder: (context, data, child) {
-                  refreshHeader(data.articles);
-                  return CustomScrollView(controller: _controller, slivers: [
-                    NavBar(
-                        hasBackButton: false,
-                        isSliverAppBar: true,
-                        titleWidget: Row(
-                          children: <Widget>[
-                            ValueListenableBuilder(
-                              valueListenable: title,
-                              builder: (context, String value, child) => Text(
-                                value,
-                                style: Theme.of(context).textTheme.headline1,
-                              ),
-                            ),
-                            Container(
-                                height: 20,
-                                child: VerticalDivider(color: MyColors.grey)),
-                            ValueListenableBuilder(
-                              valueListenable: formattedDate,
-                              builder: (context, String value, child) => Text(
-                                value,
-                                style: Theme.of(context).textTheme.captionGrey,
-                              ),
-                            ),
-                          ],
-                        ),
-                        actionButton: FlatButton(
-                          child: Consumer<ProfileProvider>(
-                              builder: (ctx, profile, _) =>
-                                  ProfilePicture(18.0, profile.imageUrl)),
-                          onPressed: () {
-                            Navigator.of(context).pushNamed(
-                              PersonalManagementScreen.routeName,
-                            );
-                          },
-                        )),
-                    ArticleList(),
-                  ]);
-                })
-                // )
-                )));
+            child: NotificationListener<ScrollNotification>(
+                onNotification: (ScrollNotification scrollInfo) {
+                  if (scrollInfo.metrics.pixels ==
+                      scrollInfo.metrics.maxScrollExtent) {
+                    exceptionHandling(context, () async {
+                      await Provider.of<ArticlesProvider>(context,
+                              listen: false)
+                          .fetchMoreArticles(new DateTime.utc(1989, 11, 9));
+                    });
+                  }
+                  return true;
+                },
+                child: RefreshIndicator(
+                    onRefresh: refreshArticles,
+                    child: Consumer<ArticlesProvider>(
+                        builder: (context, articles, child) {
+                      refreshHeader(articles.articles);
+                      return CustomScrollView(
+                          controller: _controller,
+                          slivers: [
+                            NavBar(
+                                hasBackButton: false,
+                                isSliverAppBar: true,
+                                titleWidget: Row(
+                                  children: <Widget>[
+                                    ValueListenableBuilder(
+                                      valueListenable: title,
+                                      builder: (context, String value, child) =>
+                                          Text(
+                                        value,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline1,
+                                      ),
+                                    ),
+                                    Container(
+                                        height: 20,
+                                        child: VerticalDivider(
+                                            color: MyColors.grey)),
+                                    ValueListenableBuilder(
+                                      valueListenable: formattedDate,
+                                      builder: (context, String value, child) =>
+                                          Text(
+                                        value,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .captionGrey,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                actionButton: FlatButton(
+                                  child: Consumer<ProfileProvider>(
+                                      builder: (ctx, profile, _) =>
+                                          ProfilePicture(
+                                              18.0, profile.imageUrl)),
+                                  onPressed: () {
+                                    Navigator.of(context).pushNamed(
+                                      PersonalManagementScreen.routeName,
+                                    );
+                                  },
+                                )),
+                            ArticleList(),
+                            SliverToBoxAdapter(
+                                child: MyBottomIndicator(articles.noMoreChild)),
+                          ]);
+                    })))));
   }
 }
