@@ -28,6 +28,7 @@ class ArticleProvider with ChangeNotifier {
   DateTime createdDate;
   String publisher;
   List<Paragraph> content = [];
+  String contentHtml;
   List<ArticleProvider> similarArticles = [];
   bool isSaved;
   bool isFetchedSimilarArticles = false;
@@ -72,15 +73,28 @@ class ArticleProvider with ChangeNotifier {
         .collection(cArticleContent)
         .orderBy(fContentIndex)
         .get();
-    if (querySnapshot == null) return;
-    content = [];
-    querySnapshot.docs.forEach((element) {
-      String subtitle = "";
-      if (element.data().containsKey(fContentSubtitle))
-        subtitle = element.get(fContentSubtitle);
-      content
-          .add(Paragraph(subtitle: subtitle, body: element.get(fContentBody)));
-    });
+    if (querySnapshot.docs.length > 0) {
+      content = [];
+      querySnapshot.docs.forEach((element) {
+        String subtitle = "";
+        if (element.data().containsKey(fContentSubtitle))
+          subtitle = element.get(fContentSubtitle);
+        content.add(
+            Paragraph(subtitle: subtitle, body: element.get(fContentBody)));
+      });
+    }
+    // Get content html
+    querySnapshot = await _fdb
+        .collection(cArticles)
+        .doc(id)
+        .collection(cArticleContentHtml)
+        .get();
+    if (querySnapshot.docs.length > 0) {
+      contentHtml = "";
+      querySnapshot.docs.forEach((element) {
+        contentHtml += element.get(fContentBody);
+      });
+    }
     notifyListeners();
   }
 

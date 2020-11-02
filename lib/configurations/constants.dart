@@ -96,6 +96,7 @@ const String fArticleImageUrl = 'image_url';
 const String fArticleAuthorName = 'author_name';
 const String fArticleAuthorUid = 'author_uid';
 const String cArticleContent = 'content';
+const String cArticleContentHtml = 'content_html';
 const String fArticleIcon = 'icon';
 const String fArticlePublisher = 'publisher';
 

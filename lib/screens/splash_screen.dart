@@ -15,7 +15,7 @@ import '../widgets/my_progress_indicator.dart';
 import 'home_screen/home_screen.dart';
 
 class SplashScreen extends StatefulWidget {
-  static const routeHomeName = '/splash';
+  static const routeName = '/splash';
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }

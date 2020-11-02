@@ -34,7 +34,7 @@ final ThemeData dayTheme = new ThemeData(
       fontWeight: FontWeight.w500,
     ),
     subtitle1: TextStyle(
-        color: Colors.black54,
+        color: MyColors.black,
         fontSize: 21.5,
         fontFamily: 'Song',
         letterSpacing: 2,
