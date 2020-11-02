@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
+import 'package:walk_with_god/screens/test.dart';
 
 import 'configurations/theme.dart';
 import 'providers/article/articles_provider.dart';
@@ -102,7 +103,7 @@ class MyApp extends StatelessWidget {
                 title: 'Follow Him',
                 debugShowCheckedModeBanner: false,
                 theme: dayTheme,
-                home: NetworkManager(child: SplashScreen()),
+                home: Test(), // NetworkManager(child: SplashScreen()),
                 routes: {
                   SplashScreen.routeName: (ctx) =>
                       NetworkManager(child: SplashScreen()),
