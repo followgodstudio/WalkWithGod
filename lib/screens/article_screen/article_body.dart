@@ -24,7 +24,7 @@ class _ArticleBodyState extends State<ArticleBody> {
       if (article.id == null || article.content.length == 0)
         return MyProgressIndicator();
       return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        ArticleCard(article: article, isSmall: false),
+        ArticleCard(article: article, style: ArticleCardStyle.title),
         SizedBox(height: 10.0),
         if (article.contentHtml != null)
           Center(

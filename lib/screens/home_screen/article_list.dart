@@ -19,7 +19,7 @@ class ArticleList extends StatelessWidget {
             child: ArticleCard(
                 hasDescription: true,
                 article: articlesData.articles[index],
-                isSmall: false),
+                style: ArticleCardStyle.large),
           );
         },
         childCount:

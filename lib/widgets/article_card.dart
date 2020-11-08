@@ -7,15 +7,17 @@ import '../screens/article_screen/article_screen.dart';
 import '../utils/utils.dart';
 import 'network_manager.dart';
 
+enum ArticleCardStyle { small, large, title }
+
 /// Takes the max size that's available
 class ArticleCard extends StatelessWidget {
   final ArticleProvider article;
-  final bool isSmall;
+  final ArticleCardStyle style;
   final bool hasDescription;
   final double aspectRatio;
   ArticleCard({
     this.article,
-    this.isSmall = true,
+    this.style = ArticleCardStyle.small,
     this.hasDescription = false,
     this.aspectRatio = 6 / 7,
   });
@@ -28,13 +30,17 @@ class ArticleCard extends StatelessWidget {
     double avatarRadius = 15;
     double eyebrowWidth = 42;
     String heroTag = article.id;
-    if (isSmall) {
+    double shadowOpacity = 0.3;
+    if (style == ArticleCardStyle.small) {
       textPadding = 10.0;
       space = 3.0;
       maxLines = 3;
       avatarRadius = 10;
       eyebrowWidth = 30;
       heroTag += "_";
+    } else if (style == ArticleCardStyle.title) {
+      shadowOpacity = 0.0;
+      textPadding = 30.0;
     }
     Widget imagePlaceholder = Container(
         decoration: BoxDecoration(color: Theme.of(context).buttonColor));
@@ -46,12 +52,12 @@ class ArticleCard extends StatelessWidget {
       child: FlatButton(
         padding: const EdgeInsets.all(0),
         onPressed: () {
-          if (isSmall) {
+          if (style == ArticleCardStyle.small) {
             Navigator.of(context).pushNamed(
               ArticleScreen.routeName,
               arguments: {'articleId': article.id},
             );
-          } else {
+          } else if (style == ArticleCardStyle.large) {
             Navigator.of(context).push(PageRouteBuilder(
               fullscreenDialog: true,
               transitionDuration: Duration(milliseconds: 800),
@@ -80,7 +86,7 @@ class ArticleCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     boxShadow: [
                       BoxShadow(
-                          color: MyColors.grey.withOpacity(0.3),
+                          color: MyColors.grey.withOpacity(shadowOpacity),
                           spreadRadius: 2,
                           blurRadius: 20,
                           offset: Offset(0, 10)),
@@ -119,11 +125,12 @@ class ArticleCard extends StatelessWidget {
                           child:
                               Divider(color: MyColors.yellow, thickness: 4.0),
                         ),
-                        if (!isSmall) SizedBox(height: 5.0),
+                        if (style != ArticleCardStyle.small)
+                          SizedBox(height: 5.0),
                         Text(
                           article.title ?? "",
                           maxLines: maxLines,
-                          style: (isSmall)
+                          style: (style == ArticleCardStyle.small)
                               ? Theme.of(context)
                                   .textTheme
                                   .headline3
@@ -133,7 +140,8 @@ class ArticleCard extends StatelessWidget {
                                   .headline2
                                   .copyWith(color: fontColor),
                         ),
-                        if (!isSmall) SizedBox(height: space),
+                        if (style != ArticleCardStyle.small)
+                          SizedBox(height: space),
                         if (hasDescription)
                           Text(
                             article.description ?? "",
@@ -142,7 +150,8 @@ class ArticleCard extends StatelessWidget {
                             style: captionStyle,
                           ),
                         Divider(color: fontColor),
-                        if (!isSmall) SizedBox(height: space),
+                        if (style != ArticleCardStyle.small)
+                          SizedBox(height: space),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -172,7 +181,7 @@ class ArticleCard extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            if (!isSmall)
+                            if (style != ArticleCardStyle.small)
                               Text(getCreatedDuration(article.createdDate),
                                   style: captionStyle),
                           ],
