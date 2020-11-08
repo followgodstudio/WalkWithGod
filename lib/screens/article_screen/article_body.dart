@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:walk_with_god/screens/article_screen/article_body_html.dart';
+import 'package:walk_with_god/widgets/my_text_button.dart';
 
 import '../../configurations/constants.dart';
 import '../../providers/article/article_provider.dart';
@@ -8,8 +8,7 @@ import '../../utils/my_logger.dart';
 import '../../widgets/aricle_paragraph.dart';
 import '../../widgets/article_card.dart';
 import '../../widgets/my_progress_indicator.dart';
-import '../../widgets/my_text_button.dart';
-import 'article_body_html2.dart';
+import 'article_body_html.dart';
 
 class ArticleBody extends StatefulWidget {
   @override
@@ -17,8 +16,7 @@ class ArticleBody extends StatefulWidget {
 }
 
 class _ArticleBodyState extends State<ArticleBody> {
-  int index = 0;
-  List<String> styles = ["default", "flutter_html", "easy_web_view"];
+  bool showHtml = false;
   @override
   Widget build(BuildContext context) {
     MyLogger("Widget").v("ArticleBody-build");
@@ -31,25 +29,25 @@ class _ArticleBodyState extends State<ArticleBody> {
         if (article.contentHtml != null)
           Center(
             child: MyTextButton(
-              text: "On " + styles[index] + " screen, switch?",
+              text: showHtml
+                  ? "Switch to default screen"
+                  : "Switch to html screen",
               style: TextButtonStyle.active,
-              width: 300,
+              width: 250,
               onPressed: () {
                 setState(() {
-                  index = (index + 1) % 3;
+                  showHtml = !showHtml;
                 });
               },
             ),
           ),
         Padding(
             padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-            child: (index == 1)
+            child: (showHtml)
                 ? ArticleBodyHtml(article.contentHtml)
-                : (index == 2)
-                    ? ArticleBodyHtml2(article.contentHtml)
-                    : Column(children: [
-                        ...article.content.map((e) => ArticleParagraph(e))
-                      ]))
+                : Column(children: [
+                    ...article.content.map((e) => ArticleParagraph(e))
+                  ]))
       ]);
     });
   }
