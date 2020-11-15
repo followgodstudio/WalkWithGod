@@ -11,6 +11,7 @@ class PopUpDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+        elevation: 0,
         backgroundColor: MyColors.silver,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(18.0),

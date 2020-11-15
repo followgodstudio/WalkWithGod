@@ -48,6 +48,7 @@ class BottomBar extends StatelessWidget {
                             context: context,
                             isScrollControlled: true,
                             builder: (context) => PopUpComment(
+                                  isReply: false,
                                   articleId: articleId,
                                   onPressFunc: (String content) async {
                                     exceptionHandling(rootContext, () async {
@@ -62,7 +63,7 @@ class BottomBar extends StatelessWidget {
                                               profile.imageUrl);
                                       onLeaveCommentScroll();
                                       showPopUpDialog(
-                                          rootContext, true, "你刚刚发布了留言");
+                                          rootContext, true, "你刚刚发布了想法");
                                     });
                                   },
                                 ));
@@ -92,7 +93,8 @@ class BottomBar extends StatelessWidget {
                 (profile.uid != null && value.currentLike)
                     ? MyIconButton(
                         hasBorder: true,
-                        isActive: true,
+                        buttonColor: MyColors.lightBlue,
+                        iconColor: Colors.white,
                         icon: 'save',
                         onPressed: () {
                           value.removeSavedByArticleId(articleId);

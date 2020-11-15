@@ -8,10 +8,10 @@ class MyIconButton extends StatelessWidget {
   final String label;
   final double iconSize;
   final Color iconColor;
+  final Color buttonColor;
   final double buttonSize;
   final double padding;
   final bool hasBorder;
-  final bool isActive;
   final Function onPressed;
   final IconData flutterIcon;
 
@@ -20,22 +20,19 @@ class MyIconButton extends StatelessWidget {
       this.label,
       this.iconSize = 20,
       this.iconColor = MyColors.grey,
+      this.buttonColor,
       this.buttonSize = 40,
       this.padding = 0,
       this.onPressed,
       this.hasBorder = false,
-      this.isActive = false,
       this.flutterIcon});
 
   @override
   Widget build(BuildContext context) {
     Widget _icon = (icon != null)
         ? SvgPicture.asset('assets/icons/' + icon + '.svg',
-            width: iconSize,
-            height: iconSize,
-            color: isActive ? Colors.white : iconColor)
-        : Icon(flutterIcon,
-            color: isActive ? Colors.white : iconColor, size: iconSize);
+            width: iconSize, height: iconSize, color: iconColor)
+        : Icon(flutterIcon, color: iconColor, size: iconSize);
     if (label != null)
       return InkWell(
           onTap: onPressed,
@@ -50,6 +47,7 @@ class MyIconButton extends StatelessWidget {
               ],
             ),
           ));
+    Color _buttonColor = buttonColor ?? Theme.of(context).buttonColor;
     return Padding(
       padding: EdgeInsets.all(padding),
       child: Container(
@@ -60,9 +58,7 @@ class MyIconButton extends StatelessWidget {
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             onPressed: onPressed,
             child: _icon,
-            color: !hasBorder
-                ? Colors.transparent
-                : isActive ? MyColors.lightBlue : Theme.of(context).buttonColor,
+            color: !hasBorder ? Colors.transparent : _buttonColor,
             shape: hasBorder ? CircleBorder() : null),
       ),
     );

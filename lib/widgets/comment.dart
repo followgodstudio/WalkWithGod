@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -15,13 +17,19 @@ import 'profile_picture.dart';
 class Comment extends StatelessWidget {
   final Function onStartComment;
   final Function onSubmitComment;
-  Comment({Key key, this.onStartComment, this.onSubmitComment})
+  final bool showIconButton;
+  Comment(
+      {Key key,
+      this.onStartComment,
+      this.onSubmitComment,
+      this.showIconButton = true})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
     ProfileProvider profile =
         Provider.of<ProfileProvider>(context, listen: false);
     double iconSize = 18.0;
+    double iconSpacing = 60.0;
     return Consumer<CommentProvider>(builder: (context, data, child) {
       final bool isLevel2Comment = (data.parent != null);
       return Column(
@@ -117,68 +125,93 @@ class Comment extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 20.0),
+                    if (!showIconButton)
+                      Row(children: [
+                        Text(data.likesCount.toString() + "个赞",
+                            style: Theme.of(context).textTheme.captionMedium2),
+                        SizedBox(width: iconSpacing),
+                        Text(data.childrenCount.toString() + "条回复",
+                            style: Theme.of(context).textTheme.captionMedium2),
+                      ]),
                     // Icons
-                    Row(
-                      children: [
-                        if (profile.uid == null || !data.like)
+                    if (showIconButton)
+                      Row(
+                        children: [
+                          if (profile.uid == null || !data.like)
+                            MyIconButton(
+                                label: data.likesCount.toString(),
+                                iconSize: iconSize,
+                                icon: 'heart_border',
+                                onPressed: () {
+                                  if (profile.uid == null) {
+                                    showPopUpDialog(context, false, "请登录后再操作");
+                                  } else {
+                                    data.addLike(profile.uid, profile.name,
+                                        profile.imageUrl);
+                                  }
+                                }),
+                          if (profile.uid != null && data.like)
+                            MyIconButton(
+                                label: data.likesCount.toString(),
+                                iconSize: iconSize,
+                                icon: 'heart',
+                                iconColor: MyColors.pink,
+                                onPressed: () {
+                                  data.cancelLike(profile.uid);
+                                }),
+                          SizedBox(width: iconSpacing),
                           MyIconButton(
-                              label: data.likesCount.toString(),
                               iconSize: iconSize,
-                              icon: 'heart_border',
-                              onPressed: () {
+                              icon: 'comment',
+                              label: data.childrenCount != null
+                                  ? data.childrenCount.toString()
+                                  : "回复",
+                              onPressed: () async {
                                 if (profile.uid == null) {
                                   showPopUpDialog(context, false, "请登录后再操作");
                                 } else {
-                                  data.addLike(profile.uid, profile.name,
-                                      profile.imageUrl);
+                                  int timeLag;
+                                  if (onStartComment != null) {
+                                    timeLag = 200;
+                                    await onStartComment();
+                                  }
+                                  if (!isLevel2Comment &&
+                                      data.childrenCount != null &&
+                                      data.childrenCount > 0) return;
+                                  Function showAddCommentPage =
+                                      () => showModalBottomSheet(
+                                          context: context,
+                                          isScrollControlled: true,
+                                          builder: (context) => PopUpComment(
+                                                isReply: true,
+                                                replyTo: isLevel2Comment
+                                                    ? data.creatorName
+                                                    : null,
+                                                articleId: data.articleId,
+                                                onPressFunc:
+                                                    (String content) async {
+                                                  await data.addLevel2Comment(
+                                                      content,
+                                                      profile.uid,
+                                                      profile.name,
+                                                      profile.imageUrl,
+                                                      isLevel2Comment);
+                                                  if (onSubmitComment != null)
+                                                    await onSubmitComment();
+                                                },
+                                              ));
+                                  if (timeLag != null) {
+                                    Timer(Duration(milliseconds: timeLag), () {
+                                      showAddCommentPage();
+                                    });
+                                  } else {
+                                    showAddCommentPage();
+                                  }
                                 }
                               }),
-                        if (profile.uid != null && data.like)
-                          MyIconButton(
-                              label: data.likesCount.toString(),
-                              iconSize: iconSize,
-                              icon: 'heart',
-                              iconColor: MyColors.pink,
-                              onPressed: () {
-                                data.cancelLike(profile.uid);
-                              }),
-                        SizedBox(width: 60.0),
-                        MyIconButton(
-                            iconSize: iconSize,
-                            icon: 'comment',
-                            label: data.childrenCount != null
-                                ? data.childrenCount.toString()
-                                : "回复",
-                            onPressed: () async {
-                              if (profile.uid == null) {
-                                showPopUpDialog(context, false, "请登录后再操作");
-                              } else {
-                                if (onStartComment != null)
-                                  await onStartComment();
-                                showModalBottomSheet(
-                                    context: context,
-                                    isScrollControlled: true,
-                                    builder: (context) => PopUpComment(
-                                          replyTo: isLevel2Comment
-                                              ? data.creatorName
-                                              : null,
-                                          articleId: data.articleId,
-                                          onPressFunc: (String content) async {
-                                            await data.addLevel2Comment(
-                                                content,
-                                                profile.uid,
-                                                profile.name,
-                                                profile.imageUrl,
-                                                isLevel2Comment);
-                                            if (onSubmitComment != null)
-                                              await onSubmitComment();
-                                          },
-                                        ));
-                              }
-                            }),
-                      ],
-                    ),
-                    SizedBox(height: 15.0),
+                        ],
+                      ),
+                    SizedBox(height: 10.0),
                   ],
                 ),
               ),

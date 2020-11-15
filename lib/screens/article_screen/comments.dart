@@ -64,7 +64,7 @@ class _CommentsState extends State<Comments> {
   }
 
   void onSubmitComment() {
-    showPopUpDialog(context, true, "你刚刚发布了留言");
+    showPopUpDialog(context, true, "你刚刚发布了回复");
   }
 
   @override

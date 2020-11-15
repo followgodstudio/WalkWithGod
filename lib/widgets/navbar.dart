@@ -32,11 +32,7 @@ class NavBar extends StatelessWidget implements PreferredSizeWidget {
     Widget _titleWidget = titleWidget ??
         Text(title, style: Theme.of(context).textTheme.headline2);
     Widget action = actionButton;
-    if (action == null)
-      action = Placeholder(
-        color: _backgroundColor,
-        fallbackWidth: 60,
-      );
+    if (action == null) action = SizedBox(width: 60);
     Widget leadingBackButton;
     if (hasBackButton)
       leadingBackButton = Column(
@@ -74,6 +70,7 @@ class NavBar extends StatelessWidget implements PreferredSizeWidget {
       leading: leadingBackButton,
       backgroundColor: _backgroundColor,
       actions: [action, SizedBox(width: 30.0)],
+      brightness: Brightness.light,
     );
   }
 }

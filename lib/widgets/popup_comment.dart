@@ -8,10 +8,12 @@ class PopUpComment extends StatefulWidget {
   final String articleId;
   final Function(String) onPressFunc;
   final String replyTo;
+  final bool isReply;
 
   PopUpComment({
     @required this.articleId,
     @required this.onPressFunc,
+    @required this.isReply,
     this.replyTo,
     Key key,
   }) : super(key: key);
@@ -26,6 +28,10 @@ class _PopUpCommentState extends State<PopUpComment> {
 
   @override
   Widget build(BuildContext context) {
+    String commentName = widget.isReply ? "回复" : "想法";
+    String buttonText = widget.isReply ? "回复" : "发布";
+    String title =
+        widget.replyTo == null ? "添加$commentName" : "@" + widget.replyTo;
     return Padding(
       padding: MediaQuery.of(context).viewInsets,
       child: Padding(
@@ -35,8 +41,7 @@ class _PopUpCommentState extends State<PopUpComment> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Text(widget.replyTo == null ? "添加留言" : "@" + widget.replyTo,
-                style: Theme.of(context).textTheme.captionMedium1),
+            Text(title, style: Theme.of(context).textTheme.captionMedium1),
             TextField(
               onChanged: (value) {
                 setState(() {
@@ -48,7 +53,7 @@ class _PopUpCommentState extends State<PopUpComment> {
               maxLines: 3,
               controller: _commentController,
               decoration: InputDecoration.collapsed(
-                hintText: "请写下你的留言",
+                hintText: "请写下您的$commentName",
                 hintStyle: TextStyle(fontSize: 15.0),
               ),
             ),
@@ -67,7 +72,7 @@ class _PopUpCommentState extends State<PopUpComment> {
                 ),
                 MyTextButton(
                     width: 60,
-                    text: widget.replyTo == null ? "发布" : "回复",
+                    text: buttonText,
                     isSmall: false,
                     style: isEmpty
                         ? TextButtonStyle.disabled
