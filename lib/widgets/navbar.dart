@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../configurations/theme.dart';
 import 'my_divider.dart';
 import 'my_icon_button.dart';
 
@@ -43,11 +42,16 @@ class NavBar extends StatelessWidget implements PreferredSizeWidget {
       leadingBackButton = Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          MyIconButton(
-            icon: 'back',
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
+          Row(
+            children: [
+              SizedBox(width: 30),
+              MyIconButton(
+                icon: 'back',
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
           ),
         ],
       );
@@ -69,7 +73,7 @@ class NavBar extends StatelessWidget implements PreferredSizeWidget {
       title: _titleWidget,
       leading: leadingBackButton,
       backgroundColor: _backgroundColor,
-      actions: [action, SizedBox(width: 20.0)],
+      actions: [action, SizedBox(width: 30.0)],
     );
   }
 }

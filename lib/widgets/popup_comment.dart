@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../configurations/constants.dart';
+import '../configurations/theme.dart';
 import 'my_text_button.dart';
 
 class PopUpComment extends StatefulWidget {
@@ -34,10 +35,8 @@ class _PopUpCommentState extends State<PopUpComment> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Text(
-              widget.replyTo == null ? "添加留言" : "@" + widget.replyTo,
-              style: TextStyle(fontSize: 15.0),
-            ),
+            Text(widget.replyTo == null ? "添加留言" : "@" + widget.replyTo,
+                style: Theme.of(context).textTheme.captionMedium1),
             TextField(
               onChanged: (value) {
                 setState(() {

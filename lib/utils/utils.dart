@@ -34,7 +34,7 @@ Future<dynamic> exceptionHandling(
 void showPopUpDialog(BuildContext context, bool isSuccess, String message,
     {int durationMilliseconds, Function afterDismiss}) {
   if (durationMilliseconds == null)
-    durationMilliseconds = isSuccess ? 1000 : 2000;
+    durationMilliseconds = isSuccess ? 100000 : 2000;
   Timer timer = Timer(Duration(milliseconds: durationMilliseconds), () {
     Navigator.of(context).pop(true);
   });

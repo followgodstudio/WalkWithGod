@@ -26,51 +26,56 @@ class BottomBar extends StatelessWidget {
     return BottomAppBar(
         color: Theme.of(context).canvasColor,
         child: Row(children: [
+          SizedBox(width: 15),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: FlatButton(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      Text("您可以在此添加想法",
-                          style: Theme.of(context).textTheme.captionMedium2),
-                    ],
-                  ),
-                  onPressed: () {
-                    if (profile.uid == null) {
-                      showPopUpDialog(context, false, "请登录后再操作");
-                    } else {
-                      showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          builder: (context) => PopUpComment(
-                                articleId: articleId,
-                                onPressFunc: (String content) async {
-                                  exceptionHandling(rootContext, () async {
-                                    await Provider.of<CommentsProvider>(context,
-                                            listen: false)
-                                        .addLevel1Comment(
-                                            articleId,
-                                            content,
-                                            profile.uid,
-                                            profile.name,
-                                            profile.imageUrl);
-                                    onLeaveCommentScroll();
-                                    showPopUpDialog(
-                                        rootContext, true, "你刚刚发布了留言");
-                                  });
-                                },
-                              ));
-                    }
-                  },
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18.0),
-                  ),
-                  color: Theme.of(context).buttonColor),
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Container(
+                height: 40,
+                child: FlatButton(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Text("您可以在此添加想法",
+                            style: Theme.of(context).textTheme.captionMedium2),
+                      ],
+                    ),
+                    onPressed: () {
+                      if (profile.uid == null) {
+                        showPopUpDialog(context, false, "请登录后再操作");
+                      } else {
+                        showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            builder: (context) => PopUpComment(
+                                  articleId: articleId,
+                                  onPressFunc: (String content) async {
+                                    exceptionHandling(rootContext, () async {
+                                      await Provider.of<CommentsProvider>(
+                                              context,
+                                              listen: false)
+                                          .addLevel1Comment(
+                                              articleId,
+                                              content,
+                                              profile.uid,
+                                              profile.name,
+                                              profile.imageUrl);
+                                      onLeaveCommentScroll();
+                                      showPopUpDialog(
+                                          rootContext, true, "你刚刚发布了留言");
+                                    });
+                                  },
+                                ));
+                      }
+                    },
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18.0),
+                    ),
+                    color: Theme.of(context).buttonColor),
+              ),
             ),
           ),
-          SizedBox(width: 3.0),
+          SizedBox(width: 10.0),
           MyIconButton(
             hasBorder: true,
             icon: 'share',
@@ -106,7 +111,7 @@ class BottomBar extends StatelessWidget {
                           }
                         }),
           ),
-          SizedBox(width: 10.0),
+          SizedBox(width: 15.0),
         ]));
   }
 }

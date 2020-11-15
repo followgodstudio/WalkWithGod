@@ -97,9 +97,12 @@ class ArticleCard extends StatelessWidget {
                       return LinearGradient(
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
-                        colors: [Colors.transparent, Colors.black38],
-                      ).createShader(
-                          Rect.fromLTRB(0, 0, rect.width, rect.height));
+                        colors: [
+                          Colors.transparent,
+                          Color.fromARGB(210, 0, 0, 0)
+                        ],
+                      ).createShader(Rect.fromLTRB(
+                          0, rect.height * 0.33, rect.width, rect.height));
                     },
                     blendMode: BlendMode.darken,
                     child: (article.imageUrl == null)
@@ -159,7 +162,8 @@ class ArticleCard extends StatelessWidget {
                               child: Row(
                                 children: [
                                   (article.icon == null || article.icon.isEmpty)
-                                      ? Icon(Icons.album, color: fontColor)
+                                      ? Icon(Icons.album,
+                                          color: fontColor, size: 30)
                                       : CircleAvatar(
                                           radius: avatarRadius,
                                           backgroundImage:

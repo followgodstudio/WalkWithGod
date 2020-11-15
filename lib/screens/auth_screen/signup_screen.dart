@@ -1,14 +1,16 @@
 import 'package:apple_sign_in/apple_sign_in.dart' as apple;
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:international_phone_input/international_phone_input.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:provider/provider.dart';
 
+import '../../configurations/constants.dart';
 import '../../configurations/theme.dart';
 import '../../providers/auth_provider.dart';
 import '../../utils/my_logger.dart';
 import '../../utils/utils.dart';
+import '../../widgets/my_icon_button.dart';
 import '../../widgets/my_text_button.dart';
 import '../home_screen/home_screen.dart';
 
@@ -28,6 +30,7 @@ class SignupScreen extends StatefulWidget {
 class _SignupScreenState extends State<SignupScreen> {
   AuthFormType authFormType;
   bool _showAppleSignIn = false;
+  final TextEditingController controller = TextEditingController();
 
   @override
   void initState() {
@@ -53,17 +56,14 @@ class _SignupScreenState extends State<SignupScreen> {
 
   void switchFormState(String state) {
     formKey.currentState.reset();
-    if (state == "signUp") {
+    AuthFormType newType = AuthFormType.values
+        .firstWhere((e) => e.toString() == "AuthFormType." + state, orElse: () {
+      return null;
+    });
+    if (newType != null)
       setState(() {
-        authFormType = AuthFormType.signUp;
+        authFormType = newType;
       });
-    } else if (state == 'home') {
-      routeHome();
-    } else {
-      setState(() {
-        authFormType = AuthFormType.signIn;
-      });
-    }
   }
 
   bool validate() {
@@ -112,8 +112,8 @@ class _SignupScreenState extends State<SignupScreen> {
           color: Theme.of(context).canvasColor,
           child: SafeArea(
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 50.0, vertical: 20),
+              padding: EdgeInsets.symmetric(
+                  horizontal: horizontalPadding, vertical: verticalPadding),
               child: Column(
                 children: <Widget>[
                   buildHeaderText(),
@@ -192,6 +192,27 @@ class _SignupScreenState extends State<SignupScreen> {
     }
 
     if (authFormType == AuthFormType.phone) {
+      textFields.add(InternationalPhoneNumberInput(
+        onInputChanged: (PhoneNumber number) {
+          print(number.phoneNumber);
+        },
+        onInputValidated: (bool value) {
+          print(value);
+        },
+        selectorConfig: SelectorConfig(
+          selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+          backgroundColor: Theme.of(context).canvasColor,
+        ),
+        ignoreBlank: false,
+        autoValidateMode: AutovalidateMode.disabled,
+        textStyle: Theme.of(context).textTheme.bodyText1,
+        selectorTextStyle: Theme.of(context).textTheme.bodyText1,
+        hintText: "请输入手机号码",
+        initialValue: PhoneNumber(isoCode: 'US'),
+        textFieldController: controller,
+        // inputBorder: OutlineInputBorder(),
+      ));
+      textFields.add(SizedBox(height: 10));
       textFields.add(
         InternationalPhoneInput(
             decoration: buildSignUpInputDecoration("请输入手机号码"),
@@ -225,7 +246,6 @@ class _SignupScreenState extends State<SignupScreen> {
   List<Widget> buildButtons() {
     String _switchButtonText, _newFormState, _submitButtonText;
     bool _showForgotPassword = false;
-    bool _showSocial = true;
 
     if (authFormType == AuthFormType.signIn) {
       _switchButtonText = "注册新邮箱";
@@ -236,12 +256,8 @@ class _SignupScreenState extends State<SignupScreen> {
       _switchButtonText = "使用邮箱登录";
       _newFormState = "signIn";
       _submitButtonText = "发送链接";
-      _showSocial = false;
     } else if (authFormType == AuthFormType.phone) {
-      _switchButtonText = "使用邮箱登录";
-      _newFormState = "signIn";
       _submitButtonText = "获取验证码";
-      _showSocial = false;
     } else {
       _switchButtonText = "使用邮箱登录";
       _newFormState = "signIn";
@@ -257,22 +273,40 @@ class _SignupScreenState extends State<SignupScreen> {
         onPressed: submit,
       ),
       SizedBox(height: 10.0),
-      showForgotPassword(_showForgotPassword),
+      forgotPasswordButton(_showForgotPassword),
       SizedBox(height: 10.0),
-      MyTextButton(
-        text: _switchButtonText,
+      switchEmailStateButton(_switchButtonText, _newFormState),
+      SizedBox(height: 10.0),
+      Divider(),
+      SizedBox(height: 10.0),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          if (_showAppleSignIn) buildSwitchButton("apple"),
+          buildSwitchButton("google"),
+          buildSwitchButton("phone"),
+          buildSwitchButton("email"),
+        ],
+      ),
+    ];
+  }
+
+  Widget switchEmailStateButton(String switchButtonText, String newFormState) {
+    return Visibility(
+      child: MyTextButton(
+        text: switchButtonText,
         width: 100,
         isSmall: true,
         textColor: MyColors.lightBlue,
         onPressed: () {
-          switchFormState(_newFormState);
+          switchFormState(newFormState);
         },
       ),
-      buildSocialIcons(_showSocial),
-    ];
+      visible: switchButtonText != null,
+    );
   }
 
-  Widget showForgotPassword(bool visible) {
+  Widget forgotPasswordButton(bool visible) {
     return Visibility(
       child: Column(
         children: [
@@ -295,81 +329,27 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
-  Widget buildSocialIcons(bool visible) {
+  Widget buildSwitchButton(String target) {
     final _auth = Provider.of<AuthProvider>(context, listen: false);
-    return Visibility(
-      child: Row(children: [
-        Expanded(
-          flex: 1,
-          child: Container(),
-        ),
-        Expanded(
-          flex: 10,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Divider(
-                color: Colors.white,
-              ),
-              SizedBox(height: 10),
-              buildAppleSignIn(_auth),
-              SizedBox(height: 10),
-              GoogleSignInButton(
-                centered: true,
-                text: "Google账号登录",
-                textStyle: Theme.of(context).textTheme.captionSmall,
-                onPressed: () {
-                  exceptionHandling(context, () async {
-                    await _auth.signInWithGoogle();
-                    routeHome();
-                  });
-                },
-              ),
-              RaisedButton(
-                color: MyColors.suceess,
-                textColor: Colors.white,
-                child: Row(
-                  children: <Widget>[
-                    Icon(Icons.phone),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 14.0, top: 10.0, bottom: 10.0),
-                      child: Text("使用手机号码登录", style: TextStyle(fontSize: 18)),
-                    )
-                  ],
-                ),
-                onPressed: () {
-                  setState(() {
-                    authFormType = AuthFormType.phone;
-                  });
-                },
-              ),
-            ],
-          ),
-        ),
-        Expanded(
-          flex: 1,
-          child: Container(),
-        ),
-      ]),
-      visible: visible,
-    );
-  }
-
-  Widget buildAppleSignIn(_auth) {
-    final _auth = Provider.of<AuthProvider>(context, listen: false);
-    if (_showAppleSignIn == true) {
-      return apple.AppleSignInButton(
-        onPressed: () {
+    return MyIconButton(
+      icon: target,
+      iconColor: MyColors.black,
+      hasBorder: true,
+      buttonSize: 50.0,
+      onPressed: () {
+        if (target == "phone") switchFormState(target);
+        if (target == "email") switchFormState("signIn");
+        if (target == "google")
+          exceptionHandling(context, () async {
+            await _auth.signInWithGoogle();
+            routeHome();
+          });
+        if (target == "apple")
           exceptionHandling(context, () async {
             await _auth.signInWithApple();
             routeHome();
           });
-        },
-        style: apple.ButtonStyle.black,
-      );
-    } else {
-      return Container();
-    }
+      },
+    );
   }
 }

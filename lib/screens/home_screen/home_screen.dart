@@ -107,6 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 isSliverAppBar: true,
                                 titleWidget: Row(
                                   children: <Widget>[
+                                    SizedBox(width: 15),
                                     ValueListenableBuilder(
                                       valueListenable: title,
                                       builder: (context, String value, child) =>

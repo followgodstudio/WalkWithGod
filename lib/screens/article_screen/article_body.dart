@@ -21,10 +21,10 @@ class _ArticleBodyState extends State<ArticleBody> {
   Widget build(BuildContext context) {
     MyLogger("Widget").v("ArticleBody-build");
     return Consumer<ArticleProvider>(builder: (context, article, child) {
-      if (article.id == null || article.content.length == 0)
-        return MyProgressIndicator();
       return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        ArticleCard(article: article, style: ArticleCardStyle.title),
+        if (article.id == null) MyProgressIndicator(),
+        if (article.id != null)
+          ArticleCard(article: article, style: ArticleCardStyle.title),
         SizedBox(height: 10.0),
         if (article.contentHtml != null)
           Center(
@@ -41,13 +41,14 @@ class _ArticleBodyState extends State<ArticleBody> {
               },
             ),
           ),
-        Padding(
-            padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-            child: (showHtml)
-                ? ArticleBodyHtml(article.contentHtml)
-                : Column(children: [
-                    ...article.content.map((e) => ArticleParagraph(e))
-                  ]))
+        if (article.content.length > 0)
+          Padding(
+              padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+              child: (showHtml)
+                  ? ArticleBodyHtml(article.contentHtml)
+                  : Column(children: [
+                      ...article.content.map((e) => ArticleParagraph(e))
+                    ]))
       ]);
     });
   }
