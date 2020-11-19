@@ -1,8 +1,6 @@
 import 'package:apple_sign_in/apple_sign_in.dart' as apple;
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:international_phone_input/international_phone_input.dart';
-import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:provider/provider.dart';
 
 import '../../configurations/constants.dart';
@@ -13,6 +11,7 @@ import '../../utils/utils.dart';
 import '../../widgets/my_icon_button.dart';
 import '../../widgets/my_text_button.dart';
 import '../home_screen/home_screen.dart';
+import 'country_code_select.dart';
 
 enum AuthFormType { signIn, signUp, reset, phone }
 
@@ -28,9 +27,13 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
+  _SignupScreenState({this.authFormType});
+  final formKey = GlobalKey<FormState>();
+  String _email, _password, _name;
   AuthFormType authFormType;
   bool _showAppleSignIn = false;
-  final TextEditingController controller = TextEditingController();
+  String countryCode = "+1";
+  String phoneNumber = "";
 
   @override
   void initState() {
@@ -44,10 +47,6 @@ class _SignupScreenState extends State<SignupScreen> {
       _showAppleSignIn = isAvailable;
     });
   }
-
-  _SignupScreenState({this.authFormType});
-  final formKey = GlobalKey<FormState>();
-  String _email, _password, _name, _phone;
 
   void routeHome() {
     Navigator.of(context).pushNamedAndRemoveUntil(
@@ -95,6 +94,7 @@ class _SignupScreenState extends State<SignupScreen> {
             showPopUpDialog(context, true, "密码重置邮件已发送到：$_email");
             break;
           case AuthFormType.phone:
+            String _phone = countryCode + phoneNumber;
             MyLogger("Widget").i("SignupScreen-submit-" + _phone);
             await auth.createUserWithPhone(_phone, context);
             break;
@@ -152,13 +152,6 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
-  void onPhoneNumberChange(
-      String number, String internationalizedPhoneNumber, String isoCode) {
-    setState(() {
-      _phone = internationalizedPhoneNumber;
-    });
-  }
-
   List<Widget> buildInputs() {
     List<Widget> textFields = [];
 
@@ -192,35 +185,42 @@ class _SignupScreenState extends State<SignupScreen> {
     }
 
     if (authFormType == AuthFormType.phone) {
-      textFields.add(InternationalPhoneNumberInput(
-        onInputChanged: (PhoneNumber number) {
-          print(number.phoneNumber);
-        },
-        onInputValidated: (bool value) {
-          print(value);
-        },
-        selectorConfig: SelectorConfig(
-          selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
-          backgroundColor: Theme.of(context).canvasColor,
-        ),
-        ignoreBlank: false,
-        autoValidateMode: AutovalidateMode.disabled,
-        textStyle: Theme.of(context).textTheme.bodyText1,
-        selectorTextStyle: Theme.of(context).textTheme.bodyText1,
-        hintText: "请输入手机号码",
-        initialValue: PhoneNumber(isoCode: 'US'),
-        textFieldController: controller,
-        // inputBorder: OutlineInputBorder(),
-      ));
-      textFields.add(SizedBox(height: 10));
-      textFields.add(
-        InternationalPhoneInput(
-            decoration: buildSignUpInputDecoration("请输入手机号码"),
-            onPhoneNumberChange: onPhoneNumberChange,
-            initialPhoneNumber: _phone,
-            initialSelection: 'US',
-            showCountryCodes: true),
+      Widget phoneWidget = Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          FlatButton(
+              onPressed: () {
+                showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    builder: (context) => CountryCodeSelect((newCode) {
+                          setState(() {
+                            this.countryCode = newCode;
+                          });
+                        }));
+              },
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(this.countryCode,
+                      style: Theme.of(context).textTheme.bodyText1),
+                  Icon(Icons.arrow_drop_down),
+                ],
+              )),
+          Expanded(
+            child: Container(
+              height: 50,
+              child: TextFormField(
+                style: Theme.of(context).textTheme.bodyText1,
+                decoration: buildSignUpInputDecoration("请输入手机号码"),
+                keyboardType: TextInputType.number,
+                onSaved: (value) => phoneNumber = value,
+              ),
+            ),
+          ),
+        ],
       );
+      textFields.add(phoneWidget);
       textFields.add(SizedBox(height: 20));
     }
 
@@ -280,12 +280,27 @@ class _SignupScreenState extends State<SignupScreen> {
       Divider(),
       SizedBox(height: 10.0),
       Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          if (_showAppleSignIn) buildSwitchButton("apple"),
-          buildSwitchButton("google"),
-          buildSwitchButton("phone"),
-          buildSwitchButton("email"),
+          if (_showAppleSignIn)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 18.0),
+              child: buildSwitchButton("apple"),
+            ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 18.0),
+            child: buildSwitchButton("google"),
+          ),
+          if (authFormType != AuthFormType.phone)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 18.0),
+              child: buildSwitchButton("phone"),
+            ),
+          if (authFormType != AuthFormType.signIn)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 18.0),
+              child: buildSwitchButton("email"),
+            ),
         ],
       ),
     ];
