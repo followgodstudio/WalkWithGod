@@ -108,24 +108,21 @@ class _SignupScreenState extends State<SignupScreen> {
     return Scaffold(
       resizeToAvoidBottomPadding: true,
       body: SingleChildScrollView(
-        child: Container(
-          color: Theme.of(context).canvasColor,
-          child: SafeArea(
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: horizontalPadding, vertical: verticalPadding),
-              child: Column(
-                children: <Widget>[
-                  buildHeaderText(),
-                  SizedBox(height: 20),
-                  Form(
-                    key: formKey,
-                    child: Column(
-                      children: buildInputs() + buildButtons(),
-                    ),
+        child: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+                horizontal: horizontalPadding, vertical: verticalPadding),
+            child: Column(
+              children: <Widget>[
+                buildHeaderText(),
+                SizedBox(height: 20),
+                Form(
+                  key: formKey,
+                  child: Column(
+                    children: buildInputs() + buildButtons(),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),

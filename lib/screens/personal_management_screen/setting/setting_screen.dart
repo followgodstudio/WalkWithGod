@@ -13,6 +13,7 @@ import '../../auth_screen/signup_screen.dart';
 import 'about_us_screen.dart';
 import 'app_info_screen.dart';
 import 'cache_clear_screen.dart';
+import 'feedback_screen.dart';
 import 'notification_screen.dart';
 import 'privacy_screen.dart';
 
@@ -136,6 +137,23 @@ class SettingScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text("关于我们",
+                              style:
+                                  Theme.of(context).textTheme.captionMedium1),
+                          Icon(Icons.arrow_forward_ios,
+                              size: 15.0, color: MyColors.lightBlue)
+                        ],
+                      ),
+                    ),
+                    FlatButton(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      onPressed: () {
+                        Navigator.of(context)
+                            .pushNamed(FeedbackScreen.routeName);
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("用户建议",
                               style:
                                   Theme.of(context).textTheme.captionMedium1),
                           Icon(Icons.arrow_forward_ios,

@@ -3,10 +3,12 @@ import 'dart:async';
 import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
-import '../configurations/theme.dart';
+import '../exceptions/my_exception.dart';
+import '../exceptions/my_exception.dart';
+import '../screens/auth_screen/phone_verification_screen.dart';
 import '../screens/home_screen/home_screen.dart';
 import '../utils/my_logger.dart';
 import 'user/profile_provider.dart';
@@ -136,13 +138,6 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  Future updateUserName(String name, User currentUser) async {
-    // var userUpdateInfo = UserUpdateInfo();
-    // userUpdateInfo.displayName = name;
-    await currentUser.updateProfile(displayName: name);
-    await currentUser.reload();
-  }
-
   Future<void> createUserWithPhone(String phone, BuildContext context) async {
     _auth.verifyPhoneNumber(
         phoneNumber: phone,
@@ -165,39 +160,9 @@ class AuthProvider with ChangeNotifier {
               exception.message);
         },
         codeSent: (String verificationId, [int forceResendingToken]) {
-          final _codeController = TextEditingController();
-          _logger.i(
-              "AuthProvider-createUserWithPhone-Code sent: " + verificationId);
-          showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (context) => AlertDialog(
-              title: Text("请输入验证码"),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[TextField(controller: _codeController)],
-              ),
-              actions: <Widget>[
-                FlatButton(
-                  child: Text("确认"),
-                  textColor: Colors.white,
-                  color: MyColors.suceess,
-                  onPressed: () {
-                    var _credential = PhoneAuthProvider.credential(
-                        verificationId: verificationId,
-                        smsCode: _codeController.text.trim());
-                    _auth
-                        .signInWithCredential(_credential)
-                        .then((UserCredential result) {
-                      if (result.additionalUserInfo.isNewUser) {
-                        ProfileProvider(result.user.uid).initProfile();
-                      }
-                      _routeHome(context);
-                    });
-                  },
-                )
-              ],
-            ),
+          Navigator.of(context).pushNamed(
+            PhoneVerificationScreen.routeName,
+            arguments: {'verificationId': verificationId, 'phoneNumber': phone},
           );
         },
         codeAutoRetrievalTimeout: (String verificationId) {
@@ -206,10 +171,36 @@ class AuthProvider with ChangeNotifier {
         });
   }
 
+  Future<void> verifyPhoneCode(
+      BuildContext context, String verificationId, String smsCode) async {
+    var _credential = PhoneAuthProvider.credential(
+        verificationId: verificationId, smsCode: smsCode);
+    try {
+      UserCredential result = await _auth.signInWithCredential(_credential);
+      if (result.additionalUserInfo.isNewUser) {
+        ProfileProvider(result.user.uid).initProfile();
+      }
+      _routeHome(context);
+    } on FirebaseAuthException catch (error) {
+      String message = error.message;
+      if (error.code == "missing-verification-code") {
+        message = "验证码错误";
+      }
+      throw (MyException(message));
+    }
+  }
+
   Future<void> deleteUser() async {
     await ProfileProvider(_userId).deleteProfile();
     await _auth.currentUser.delete();
     _userId = null;
+  }
+
+  Future updateUserName(String name, User currentUser) async {
+    // var userUpdateInfo = UserUpdateInfo();
+    // userUpdateInfo.displayName = name;
+    await currentUser.updateProfile(displayName: name);
+    await currentUser.reload();
   }
 
   void _routeHome(BuildContext context) {
