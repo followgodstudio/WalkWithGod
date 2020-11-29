@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
@@ -17,14 +19,46 @@ class PhoneVerificationScreen extends StatefulWidget {
 }
 
 class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
-  bool isEmpty = true;
+  Timer resendTimer;
+  int restTime;
+  String smsCode;
+
+  void startTimer() {
+    setState(() {
+      restTime = 60;
+    });
+    const oneSec = const Duration(seconds: 1);
+    resendTimer = new Timer.periodic(
+      oneSec,
+      (Timer timer) => setState(
+        () {
+          if (restTime < 1) {
+            timer.cancel();
+          } else {
+            restTime = restTime - 1;
+          }
+        },
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    startTimer();
+  }
+
+  @override
+  void dispose() {
+    resendTimer.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final Map parameter = ModalRoute.of(context).settings.arguments as Map;
-    final String phoneNumber = parameter["phoneNumber"];
-    final String verificationId = parameter["verificationId"];
-    final textEditingController = TextEditingController();
+    final String phoneNumber =
+        ModalRoute.of(context).settings.arguments as String;
+    final _auth = Provider.of<AuthProvider>(context, listen: false);
     return Scaffold(
       resizeToAvoidBottomPadding: true,
       appBar: NavBar(),
@@ -53,8 +87,9 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
                           .copyWith(fontWeight: FontWeight.w500)),
                 ],
               ),
-              SizedBox(height: 30),
+              SizedBox(height: 40),
               PinCodeTextField(
+                autoFocus: true,
                 appContext: context,
                 pastedTextStyle: TextStyle(
                   color: Colors.grey,
@@ -80,17 +115,39 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
                 textStyle: TextStyle(fontSize: 20, height: 1.6),
                 backgroundColor: Theme.of(context).canvasColor,
                 enableActiveFill: true,
-                controller: textEditingController,
                 keyboardType: TextInputType.number,
+                onChanged: (v) {
+                  setState(() {
+                    smsCode = v;
+                  });
+                },
                 onCompleted: (v) {
-                  final _auth =
-                      Provider.of<AuthProvider>(context, listen: false);
                   exceptionHandling(context, () async {
-                    await _auth.verifyPhoneCode(context, verificationId,
-                        textEditingController.text.trim());
+                    await _auth.verifyPhoneCode(context, smsCode);
                   });
                 },
               ),
+              SizedBox(height: 20),
+              if (restTime > 0)
+                Text("重新发送（" + restTime.toString() + "s）",
+                    style: Theme.of(context)
+                        .textTheme
+                        .captionMedium1
+                        .copyWith(color: MyColors.lightGrey)),
+              if (restTime == 0)
+                FlatButton(
+                    padding: EdgeInsets.zero,
+                    onPressed: () async {
+                      await exceptionHandling(context, () async {
+                        await _auth.signInWithPhone(phoneNumber, context, true);
+                      });
+                      startTimer();
+                    },
+                    child: Text("重新发送",
+                        style: Theme.of(context)
+                            .textTheme
+                            .captionMedium1
+                            .copyWith(color: MyColors.deepBlue))),
             ]),
           ),
         ),

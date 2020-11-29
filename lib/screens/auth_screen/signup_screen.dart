@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import '../../configurations/constants.dart';
 import '../../configurations/theme.dart';
 import '../../providers/auth_provider.dart';
-import '../../utils/my_logger.dart';
 import '../../utils/utils.dart';
 import '../../widgets/my_icon_button.dart';
 import '../../widgets/my_text_button.dart';
@@ -95,8 +94,9 @@ class _SignupScreenState extends State<SignupScreen> {
             break;
           case AuthFormType.phone:
             String _phone = countryCode + phoneNumber;
-            MyLogger("Widget").i("SignupScreen-submit-" + _phone);
-            await auth.createUserWithPhone(_phone, context);
+            await exceptionHandling(context, () async {
+              await auth.signInWithPhone(_phone, context);
+            });
             break;
         }
       });

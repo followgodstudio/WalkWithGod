@@ -10,7 +10,6 @@ import '../../../providers/user/profile_provider.dart';
 import '../../../providers/user/recent_read_provider.dart';
 import '../../../utils/utils.dart';
 import '../../../widgets/article_card.dart';
-import '../../../widgets/my_divider.dart';
 import '../../../widgets/my_progress_indicator.dart';
 import '../../../widgets/my_text_button.dart';
 import '../../../widgets/navbar.dart';
@@ -220,7 +219,6 @@ class ReadStatus extends StatelessWidget {
                           SizedBox(width: horizontalPadding - 10.0),
                         ], scrollDirection: Axis.horizontal)),
                   ),
-                MyDivider()
               ]),
             ),
           );

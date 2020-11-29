@@ -25,22 +25,22 @@ class _ArticleBodyState extends State<ArticleBody> {
         if (article.id == null) MyProgressIndicator(),
         if (article.id != null)
           ArticleCard(article: article, style: ArticleCardStyle.title),
-        SizedBox(height: 10.0),
-        if (article.contentHtml != null)
-          Center(
-            child: MyTextButton(
-              text: showHtml
-                  ? "Switch to default screen"
-                  : "Switch to html screen",
-              style: TextButtonStyle.active,
-              width: 250,
-              onPressed: () {
-                setState(() {
-                  showHtml = !showHtml;
-                });
-              },
-            ),
-          ),
+        // SizedBox(height: 10.0),
+        // if (article.contentHtml != null)
+        //   Center(
+        //     child: MyTextButton(
+        //       text: showHtml
+        //           ? "Switch to default screen"
+        //           : "Switch to html screen",
+        //       style: TextButtonStyle.active,
+        //       width: 250,
+        //       onPressed: () {
+        //         setState(() {
+        //           showHtml = !showHtml;
+        //         });
+        //       },
+        //     ),
+        //   ),
         if (article.content.length > 0)
           Padding(
               padding: EdgeInsets.symmetric(horizontal: horizontalPadding),

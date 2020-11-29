@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class MyColors {
   static const Color black = Colors.black87;
+  static const Color deepBlue = Color.fromARGB(255, 0, 77, 106);
   static const Color lightBlue = Color.fromARGB(255, 50, 197, 255);
   static const Color pink = Color.fromARGB(255, 239, 71, 111);
   static const Color yellow = Color.fromARGB(255, 255, 235, 133);
