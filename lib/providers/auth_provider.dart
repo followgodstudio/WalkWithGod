@@ -147,7 +147,7 @@ class AuthProvider with ChangeNotifier {
       await _auth.verifyPhoneNumber(
           forceResendingToken: _forceResendingToken,
           phoneNumber: phone,
-          timeout: Duration(seconds: 300),
+          timeout: Duration(seconds: 60),
           verificationCompleted: (PhoneAuthCredential authCredential) async {
             UserCredential result =
                 await _auth.signInWithCredential(authCredential);
@@ -165,7 +165,7 @@ class AuthProvider with ChangeNotifier {
             if (exception.code == 'invalid-phone-number') {
               message = "无效的电话号码";
             } else if (exception.code == 'too-many-requests') {
-              message = "您尝试的次数太多，请稍后再试";
+              message = "您已在四个小时内给这个手机号发送过五次验证码，请稍后再试";
             }
             showPopUpDialog(context, false, message);
           },
