@@ -21,7 +21,6 @@ class SettingProvider with ChangeNotifier {
   bool followingNotification = false;
   String ourMission = "";
   String whoAreWe = "";
-  String newestVersion = "";
   double imageCacheSize = 0;
   int imageCacheNumber = 0;
 
@@ -35,13 +34,6 @@ class SettingProvider with ChangeNotifier {
         await _db.collection(cAppInfo).doc(dAppInfoAboutUs).get();
     ourMission = doc.get(fAppInfoOurMission);
     whoAreWe = doc.get(fAppInfoWhoAreWe);
-  }
-
-  Future<void> fetchNewestVersion() async {
-    _logger.i("SettingProvider-fetchNewestVersion");
-    DocumentSnapshot doc =
-        await _db.collection(cAppInfo).doc(dAppInfoVersion).get();
-    newestVersion = doc.get(fAppInfoNewestVersion);
   }
 
   Future<void> updateCacheSize() async {

@@ -16,6 +16,7 @@ import 'providers/user/recent_read_provider.dart';
 import 'providers/user/saved_articles_provider.dart';
 import 'providers/user/setting_provider.dart';
 import 'screens/article_screen/article_screen.dart';
+import 'screens/auth_screen/phone_verification_screen.dart';
 import 'screens/auth_screen/signup_screen.dart';
 import 'screens/home_screen/home_screen.dart';
 import 'screens/personal_management_screen/friends/friends_list_screen.dart';
@@ -30,6 +31,7 @@ import 'screens/personal_management_screen/setting/app_info_screen.dart';
 import 'screens/personal_management_screen/setting/black_list_screen.dart';
 import 'screens/personal_management_screen/setting/cache_clear_screen.dart';
 import 'screens/personal_management_screen/setting/delete_account_screen.dart';
+import 'screens/personal_management_screen/setting/feedback_screen.dart';
 import 'screens/personal_management_screen/setting/notification_screen.dart';
 import 'screens/personal_management_screen/setting/privacy_screen.dart';
 import 'screens/personal_management_screen/setting/setting_screen.dart';
@@ -110,6 +112,7 @@ class MyApp extends StatelessWidget {
                       NetworkManager(child: PersonalManagementScreen()),
                   SettingScreen.routeName: (ctx) => SettingScreen(),
                   PrivacyScreen.routeName: (ctx) => PrivacyScreen(),
+                  FeedbackScreen.routeName: (ctx) => FeedbackScreen(),
                   NotificationScreen.routeName: (ctx) => NotificationScreen(),
                   CacheClearScreen.routeName: (ctx) => CacheClearScreen(),
                   AppInfoScreen.routeName: (ctx) => AppInfoScreen(),
@@ -129,6 +132,8 @@ class MyApp extends StatelessWidget {
                       NetworkManager(child: ArticleScreen()),
                   SignupScreen.routeName: (ctx) => NetworkManager(
                       child: SignupScreen(authFormType: AuthFormType.signIn)),
+                  PhoneVerificationScreen.routeName: (ctx) =>
+                      NetworkManager(child: PhoneVerificationScreen()),
                 },
               ),
             ),

@@ -3,12 +3,15 @@ import 'dart:async';
 import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-import '../configurations/theme.dart';
+import '../exceptions/my_exception.dart';
+import '../screens/auth_screen/phone_verification_screen.dart';
 import '../screens/home_screen/home_screen.dart';
 import '../utils/my_logger.dart';
+import '../utils/utils.dart';
 import 'user/profile_provider.dart';
 
 class AuthProvider with ChangeNotifier {
@@ -16,6 +19,9 @@ class AuthProvider with ChangeNotifier {
   FirebaseAuth _auth = FirebaseAuth.instance;
   MyLogger _logger = MyLogger("Provider");
   String _userId;
+  int _forceResendingToken;
+  String _verificationId;
+
   final GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: <String>[
       'email',
@@ -126,8 +132,7 @@ class AuthProvider with ChangeNotifier {
         break;
 
       case AuthorizationStatus.error:
-        _logger.e(
-            "AuthProvider-signInWithApple-Sign In Failed ${result.error.localizedDescription}");
+        throw (MyException("登陆失败：${result.error.localizedDescription}"));
         break;
 
       case AuthorizationStatus.cancelled:
@@ -136,80 +141,84 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  Future updateUserName(String name, User currentUser) async {
-    // var userUpdateInfo = UserUpdateInfo();
-    // userUpdateInfo.displayName = name;
-    await currentUser.updateProfile(displayName: name);
-    await currentUser.reload();
+  Future<void> signInWithPhone(String phone, BuildContext context,
+      [bool isResend = false]) async {
+    try {
+      await _auth.verifyPhoneNumber(
+          forceResendingToken: _forceResendingToken,
+          phoneNumber: phone,
+          timeout: Duration(seconds: 60),
+          verificationCompleted: (PhoneAuthCredential authCredential) async {
+            UserCredential result =
+                await _auth.signInWithCredential(authCredential);
+            User user = result.user;
+            _routeHome(context);
+
+            if (user != null) {
+              _routeHome(context);
+            } else {
+              showPopUpDialog(context, false, "登陆失败: verificationCompleted");
+            }
+          },
+          verificationFailed: (FirebaseAuthException exception) {
+            String message = "短信验证失败: " + exception.message;
+            if (exception.code == 'invalid-phone-number') {
+              message = "无效的电话号码";
+            } else if (exception.code == 'too-many-requests') {
+              message = "您已在四个小时内给这个手机号发送过五次验证码，请稍后再试";
+            }
+            showPopUpDialog(context, false, message);
+          },
+          codeSent: (String verificationId, int forceResendingToken) {
+            _forceResendingToken = forceResendingToken;
+            _verificationId = verificationId;
+            if (isResend) {
+              showPopUpDialog(context, true, "验证码已重新发送");
+            } else {
+              Navigator.of(context).pushNamed(
+                PhoneVerificationScreen.routeName,
+                arguments: phone,
+              );
+            }
+          },
+          codeAutoRetrievalTimeout: (String verificationId) {
+            _logger.i("AuthProvider-signInWithPhone-codeAutoRetrievalTimeout");
+          });
+    } on PlatformException catch (error) {
+      String message = error.message;
+      throw (MyException(message));
+    }
   }
 
-  Future<void> createUserWithPhone(String phone, BuildContext context) async {
-    _auth.verifyPhoneNumber(
-        phoneNumber: phone,
-        timeout: Duration(seconds: 60),
-        verificationCompleted: (PhoneAuthCredential authCredential) async {
-          _logger.i("AuthProvider-createUserWithPhone-Verification completed");
-          UserCredential result =
-              await _auth.signInWithCredential(authCredential);
-          User user = result.user;
-          _routeHome(context);
-
-          if (user != null) {
-            _routeHome(context);
-          } else {
-            _logger.i("AuthProvider-createUserWithPhone-Error");
-          }
-        },
-        verificationFailed: (FirebaseAuthException exception) {
-          _logger.e("AuthProvider-createUserWithPhone-Verification failed: " +
-              exception.message);
-        },
-        codeSent: (String verificationId, [int forceResendingToken]) {
-          final _codeController = TextEditingController();
-          _logger.i(
-              "AuthProvider-createUserWithPhone-Code sent: " + verificationId);
-          showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (context) => AlertDialog(
-              title: Text("请输入验证码"),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[TextField(controller: _codeController)],
-              ),
-              actions: <Widget>[
-                FlatButton(
-                  child: Text("确认"),
-                  textColor: Colors.white,
-                  color: MyColors.suceess,
-                  onPressed: () {
-                    var _credential = PhoneAuthProvider.credential(
-                        verificationId: verificationId,
-                        smsCode: _codeController.text.trim());
-                    _auth
-                        .signInWithCredential(_credential)
-                        .then((UserCredential result) {
-                      if (result.additionalUserInfo.isNewUser) {
-                        ProfileProvider(result.user.uid).initProfile();
-                      }
-                      _routeHome(context);
-                    });
-                  },
-                )
-              ],
-            ),
-          );
-        },
-        codeAutoRetrievalTimeout: (String verificationId) {
-          verificationId = verificationId;
-          _logger.e("AuthProvider-createUserWithPhone-Send code time out");
-        });
+  Future<void> verifyPhoneCode(BuildContext context, String smsCode) async {
+    var _credential = PhoneAuthProvider.credential(
+        verificationId: _verificationId, smsCode: smsCode);
+    try {
+      UserCredential result = await _auth.signInWithCredential(_credential);
+      if (result.additionalUserInfo.isNewUser) {
+        ProfileProvider(result.user.uid).initProfile();
+      }
+      _routeHome(context);
+    } on FirebaseAuthException catch (error) {
+      String message = error.message;
+      if (error.code == "invalid-verification-code") {
+        message = "验证码错误";
+      }
+      throw (MyException(message));
+    }
   }
 
   Future<void> deleteUser() async {
     await ProfileProvider(_userId).deleteProfile();
     await _auth.currentUser.delete();
     _userId = null;
+  }
+
+  Future updateUserName(String name, User currentUser) async {
+    // var userUpdateInfo = UserUpdateInfo();
+    // userUpdateInfo.displayName = name;
+    await currentUser.updateProfile(displayName: name);
+    await currentUser.reload();
   }
 
   void _routeHome(BuildContext context) {

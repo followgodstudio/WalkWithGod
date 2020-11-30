@@ -62,7 +62,6 @@ class ProfileProvider with ChangeNotifier {
       await friendsProvider.fetchFriendList(false);
       await messagesProvider.fetchMessageList(messagesCount);
       await settingProvider.fetchAboutUs();
-      await settingProvider.fetchNewestVersion();
       await recentReadProvider.fetchRecentRead();
     } on Exception catch (error) {
       _isFetching = false;
