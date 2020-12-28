@@ -54,6 +54,7 @@ dependencies:
   pin_code_fields: ^6.0.1
   launch_review: ^2.0.0
   new_version: ^0.0.5
+  firebase_messaging: ^6.0.9
 
 dev_dependencies:
   flutter_test:

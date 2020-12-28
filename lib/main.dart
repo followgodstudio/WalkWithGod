@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
@@ -152,11 +153,14 @@ class LifeCycleManager extends StatefulWidget {
 class _LifeCycleManagerState extends State<LifeCycleManager>
     with WidgetsBindingObserver {
   DateTime _start;
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+
   @override
   void initState() {
     super.initState();
     _start = DateTime.now();
     WidgetsBinding.instance.addObserver(this);
+    initFCM();
   }
 
   @override
@@ -177,5 +181,27 @@ class _LifeCycleManagerState extends State<LifeCycleManager>
   @override
   Widget build(BuildContext context) {
     return widget.child;
+  }
+
+  static Future<dynamic> myBackgroundMessageHandler(
+      Map<String, dynamic> message) async {
+    print("onBackgroundMessage: $message");
+    return 0;
+  }
+
+  void initFCM() {
+    print("initFCM");
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print("onMessage: $message");
+      },
+      onBackgroundMessage: myBackgroundMessageHandler,
+      onLaunch: (Map<String, dynamic> message) async {
+        print("onLaunch: $message");
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print("onResume: $message");
+      },
+    );
   }
 }
