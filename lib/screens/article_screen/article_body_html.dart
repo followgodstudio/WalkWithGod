@@ -8,14 +8,11 @@ import '../../utils/my_logger.dart';
 class ArticleBodyHtml extends StatelessWidget {
   final String htmlData;
   ArticleBodyHtml(this.htmlData);
-  String htmlData1 =
-      '''<h1> Title <em>important</em> <a>link</a> <span>span</span></h1> 
-      <p> paragraph <em>important</em> <a>link</a> <span>span</span></p>''';
 
   @override
   Widget build(BuildContext context) {
     return Html(
-      data: htmlData1,
+      data: htmlData,
       style: {
         "h1": Style(
           color: MyColors.black,

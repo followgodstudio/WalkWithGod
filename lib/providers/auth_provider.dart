@@ -1,12 +1,15 @@
 import 'dart:async';
 
 import 'package:apple_sign_in/apple_sign_in.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import '../configurations/constants.dart';
 import '../exceptions/my_exception.dart';
 import '../screens/auth_screen/phone_verification_screen.dart';
 import '../screens/home_screen/home_screen.dart';
@@ -17,6 +20,8 @@ import 'user/profile_provider.dart';
 class AuthProvider with ChangeNotifier {
   StreamSubscription userAuthSub;
   FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   MyLogger _logger = MyLogger("Provider");
   String _userId;
   int _forceResendingToken;
@@ -73,6 +78,7 @@ class AuthProvider with ChangeNotifier {
         email: email, password: password);
 
     _userId = result.user.uid;
+    addFirebaseMsgToken();
     notifyListeners();
   }
 
@@ -82,6 +88,7 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<void> logout() async {
+    removeFirebaseMsgToken();
     await _auth.signOut();
     _userId = null;
     //notifyListeners();
@@ -224,5 +231,26 @@ class AuthProvider with ChangeNotifier {
   void _routeHome(BuildContext context) {
     Navigator.of(context).pushNamedAndRemoveUntil(
         HomeScreen.routeName, (Route<dynamic> route) => false);
+  }
+
+  Future<void> addFirebaseMsgToken() async {
+    var token = await _firebaseMessaging.getToken();
+    await _db
+        .collection(cUsers)
+        .doc(_userId)
+        .collection(cUserProfile)
+        .doc(dUserProfileFbMsgToken)
+        .set({token: Timestamp.fromDate(DateTime.now())},
+            SetOptions(merge: true));
+  }
+
+  Future<void> removeFirebaseMsgToken() async {
+    var token = await _firebaseMessaging.getToken();
+    await _db
+        .collection(cUsers)
+        .doc(_userId)
+        .collection(cUserProfile)
+        .doc(dUserProfileFbMsgToken)
+        .set({token: FieldValue.delete()}, SetOptions(merge: true));
   }
 }

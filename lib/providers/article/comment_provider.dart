@@ -131,8 +131,15 @@ class CommentProvider with ChangeNotifier {
       });
     }
     // Send the creator a message
-    await MessagesProvider.sendMessage(eMessageTypeLike, userId, userName,
-        userImage, creatorUid, articleId, parent == null ? id : parent);
+    await MessagesProvider.sendMessage(
+        eMessageTypeLike,
+        userId,
+        userName,
+        userImage,
+        creatorUid,
+        articleId,
+        parent == null ? id : parent,
+        content);
   }
 
   Future<void> cancelLike(String userId) async {
@@ -233,7 +240,8 @@ class CommentProvider with ChangeNotifier {
         l2creatorImage,
         creatorUid,
         articleId,
-        comment[fCommentParent]);
+        comment[fCommentParent],
+        l2content);
   }
 
   void _appendLevel2CommentList(QuerySnapshot query, String userId, int limit) {

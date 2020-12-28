@@ -9,6 +9,7 @@ import 'providers/article/articles_provider.dart';
 import 'providers/article/comments_provider.dart';
 import 'providers/auth_provider.dart';
 import 'providers/splash_provider.dart';
+import 'providers/user/notification_provider.dart';
 import 'providers/user/friends_provider.dart';
 import 'providers/user/messages_provider.dart';
 import 'providers/user/profile_provider.dart';
@@ -67,6 +68,9 @@ class MyApp extends StatelessWidget {
           ),
           ChangeNotifierProvider<SplashProvider>(
             create: (_) => SplashProvider(),
+          ),
+          ChangeNotifierProvider<NotificationProvider>(
+            create: (_) => NotificationProvider(),
           ),
           ChangeNotifierProxyProvider<AuthProvider, ProfileProvider>(
               create: (_) => ProfileProvider(),

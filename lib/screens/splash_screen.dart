@@ -8,6 +8,7 @@ import '../configurations/constants.dart';
 import '../configurations/theme.dart';
 import '../providers/article/articles_provider.dart';
 import '../providers/splash_provider.dart';
+import '../providers/user/notification_provider.dart';
 import '../providers/user/profile_provider.dart';
 import '../utils/my_logger.dart';
 import '../utils/utils.dart';
@@ -21,7 +22,6 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  StatefulWidget nextScreen;
   Timer _timer;
 
   @override
@@ -39,6 +39,8 @@ class _SplashScreenState extends State<SplashScreen> {
           .fetchArticlesByDate();
       await Provider.of<ProfileProvider>(context, listen: false)
           .fetchAllUserData();
+      Provider.of<NotificationProvider>(context, listen: false)
+          .initNotification();
     });
   }
 

@@ -40,6 +40,7 @@ const String dAppInfoVersion = "version";
 
 const String dUserProfileDynamic = "dynamic";
 const String dUserProfileStatic = "static";
+const String dUserProfileFbMsgToken = "token";
 
 // Third level collection names
 

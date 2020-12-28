@@ -72,7 +72,8 @@ class MessagesProvider with ChangeNotifier {
       String senderImage,
       String receiverUid,
       String articleId,
-      String commentId) async {
+      String commentId,
+      String content) async {
     MyLogger("Provider").i("MessagesProvider-sendMessage");
     Map<String, dynamic> data = {};
     data[fMessageType] = type;
@@ -84,6 +85,7 @@ class MessagesProvider with ChangeNotifier {
     data[fMessageCommentId] = commentId;
     data[fCreatedDate] = Timestamp.now();
     data[fMessageIsRead] = false;
+    data[fMessageContent] = content;
 
     final FirebaseFirestore _db = FirebaseFirestore.instance;
     WriteBatch batch = _db.batch();
