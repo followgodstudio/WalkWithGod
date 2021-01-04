@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
-import 'package:walk_with_god/utils/utils.dart';
 
 import '../../../configurations/constants.dart';
+import '../../../utils/utils.dart';
 import '../../../widgets/my_text_button.dart';
 import '../../../widgets/navbar.dart';
 

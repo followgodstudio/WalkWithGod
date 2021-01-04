@@ -32,17 +32,24 @@ Future<dynamic> exceptionHandling(
 }
 
 void showPopUpDialog(BuildContext context, bool isSuccess, String message,
-    {int durationMilliseconds, Function afterDismiss}) {
+    {int durationMilliseconds, Function afterDismiss, Function onPressed}) {
   if (durationMilliseconds == null)
     durationMilliseconds = isSuccess ? 1000 : 2000;
   Timer timer = Timer(Duration(milliseconds: durationMilliseconds), () {
     Navigator.of(context).pop(true);
   });
+  Function _onPressed = (onPressed == null)
+      ? null
+      : () {
+          Navigator.of(context).pop();
+          onPressed();
+          timer.cancel();
+        };
   showDialog(
       context: context,
       barrierColor: Color.fromARGB(1, 255, 255, 255), // Near transparent
       builder: (context) {
-        return PopUpDialog(isSuccess, message);
+        return PopUpDialog(isSuccess, message, onPressed: _onPressed);
       }).then((value) {
     timer.cancel();
     if (afterDismiss != null) afterDismiss();

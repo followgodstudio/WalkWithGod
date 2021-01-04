@@ -60,26 +60,28 @@ class AuthProvider with ChangeNotifier {
   // Email & Password Sign Up
   Future<String> createUserWithEmailAndPassword(
       String email, String password, String name) async {
-    final authResult = await _auth.createUserWithEmailAndPassword(
+    UserCredential authResult = await _auth.createUserWithEmailAndPassword(
       email: email,
       password: password,
     );
-
-    await ProfileProvider(authResult.user.uid).initProfile();
-    _userId = authResult.user.uid;
-    notifyListeners();
-    // Update the username
-    return authResult.user.uid;
+    return await userLoggedIn(authResult);
   }
 
   // Email & Password Sign In
   Future<void> signInWithEmailAndPassword(String email, String password) async {
-    var result = await _auth.signInWithEmailAndPassword(
+    UserCredential authResult = await _auth.signInWithEmailAndPassword(
         email: email, password: password);
+    await userLoggedIn(authResult);
+  }
 
-    _userId = result.user.uid;
+  Future<String> userLoggedIn(authResult) async {
+    if (authResult.additionalUserInfo.isNewUser) {
+      await ProfileProvider(authResult.user.uid).initProfile();
+    }
+    _userId = authResult.user.uid;
     addFirebaseMsgToken();
     notifyListeners();
+    return _userId;
   }
 
   // Reset Password
@@ -102,13 +104,8 @@ class AuthProvider with ChangeNotifier {
       idToken: _googleAuth.idToken,
       accessToken: _googleAuth.accessToken,
     );
-
     var authResult = await _auth.signInWithCredential(credential);
-    if (authResult.additionalUserInfo.isNewUser) {
-      await ProfileProvider(authResult.user.uid).initProfile();
-    }
-
-    return authResult.user.uid;
+    return await userLoggedIn(authResult);
   }
 
   // APPLE
@@ -156,16 +153,10 @@ class AuthProvider with ChangeNotifier {
           phoneNumber: phone,
           timeout: Duration(seconds: 60),
           verificationCompleted: (PhoneAuthCredential authCredential) async {
-            UserCredential result =
+            UserCredential authResult =
                 await _auth.signInWithCredential(authCredential);
-            User user = result.user;
+            await userLoggedIn(authResult);
             _routeHome(context);
-
-            if (user != null) {
-              _routeHome(context);
-            } else {
-              showPopUpDialog(context, false, "登陆失败: verificationCompleted");
-            }
           },
           verificationFailed: (FirebaseAuthException exception) {
             String message = "短信验证失败: " + exception.message;
@@ -201,10 +192,8 @@ class AuthProvider with ChangeNotifier {
     var _credential = PhoneAuthProvider.credential(
         verificationId: _verificationId, smsCode: smsCode);
     try {
-      UserCredential result = await _auth.signInWithCredential(_credential);
-      if (result.additionalUserInfo.isNewUser) {
-        ProfileProvider(result.user.uid).initProfile();
-      }
+      UserCredential authResult = await _auth.signInWithCredential(_credential);
+      await userLoggedIn(authResult);
       _routeHome(context);
     } on FirebaseAuthException catch (error) {
       String message = error.message;

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:walk_with_god/widgets/my_text_button.dart';
 
 import '../../configurations/constants.dart';
 import '../../providers/article/article_provider.dart';
@@ -8,6 +7,7 @@ import '../../utils/my_logger.dart';
 import '../../widgets/aricle_paragraph.dart';
 import '../../widgets/article_card.dart';
 import '../../widgets/my_progress_indicator.dart';
+import '../../widgets/my_text_button.dart';
 import 'article_body_html.dart';
 
 class ArticleBody extends StatefulWidget {

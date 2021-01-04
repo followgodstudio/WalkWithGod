@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
-import 'package:walk_with_god/utils/utils.dart';
 
 import '../../configurations/constants.dart';
 import '../../configurations/theme.dart';
 import '../../providers/auth_provider.dart';
+import '../../utils/utils.dart';
 import '../../widgets/navbar.dart';
 
 class PhoneVerificationScreen extends StatefulWidget {

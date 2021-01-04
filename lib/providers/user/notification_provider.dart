@@ -2,8 +2,11 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+import '../../screens/article_screen/article_screen.dart';
 import '../../screens/personal_management_screen/messages/messages_list_screen.dart';
 import '../../utils/my_logger.dart';
+import '../../utils/utils.dart';
+import 'messages_provider.dart';
 
 class NotificationProvider with ChangeNotifier {
   BuildContext _context;
@@ -14,7 +17,7 @@ class NotificationProvider with ChangeNotifier {
 
   void initNotification() {
     initLocalNotification();
-    // initFirebaseMessaging();
+    initFirebaseMessaging();
   }
 
   void initLocalNotification() {
@@ -29,36 +32,46 @@ class NotificationProvider with ChangeNotifier {
 
   static Future<dynamic> myBackgroundMessageHandler(
       Map<String, dynamic> message) async {
-    if (message.containsKey('data')) {
-      // Handle data message
-      print("onBackgroukdMessage: $message");
-      final dynamic data = message['data'];
-    }
-
-    if (message.containsKey('notification')) {
-      // Handle notification message
-      final dynamic notification = message['notification'];
-      print("onBackgroukdMessage: $message");
-    }
-    print("onBackgroukdMessage: $message");
-    // Or do other work.
+    showPopupNotification(
+        message['notification']['title'], message['notification']['body']);
   }
 
   void initFirebaseMessaging() {
     _logger.i("NotificationProvider-initFirebaseMessaging");
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
-        showNotification(
-            message['notification']['title'], message['notification']['body']);
-        print("onMessage: $message");
+        _logger.i("NotificationProvider-onMessage-$message");
+        showPopUpDialog(
+          _context,
+          true,
+          message['notification']['title'],
+          durationMilliseconds: 3000,
+          onPressed: () {
+            navigateToDetail(message);
+          },
+        );
       },
-      onBackgroundMessage: null,
+      onBackgroundMessage: myBackgroundMessageHandler,
       onLaunch: (Map<String, dynamic> message) async {
-        print("onLaunch: $message");
+        _logger.i("NotificationProvider-onLaunch-$message");
+        navigateToDetail(message);
       },
       onResume: (Map<String, dynamic> message) async {
-        print("onResume: $message");
+        _logger.i("NotificationProvider-onResume-$message");
+        navigateToDetail(message);
       },
+    );
+  }
+
+  void navigateToDetail(Map<String, dynamic> message) {
+    String articleId = message['data']['article_id'];
+    String messageId = message['data']['message_id'];
+    String commentId = message['data']['comment_id'];
+    String userId = message['data']['user_id'];
+    MessagesProvider.markMessageAsRead(userId, messageId);
+    Navigator.of(_context).pushNamed(
+      ArticleScreen.routeName,
+      arguments: {"articleId": articleId, "commentId": commentId},
     );
   }
 
@@ -71,12 +84,16 @@ class NotificationProvider with ChangeNotifier {
     Navigator.of(_context).pushNamed(MessagesListScreen.routeName);
   }
 
-  showNotification(String title, String message) async {
+  static showPopupNotification(String title, String message) async {
     var android = AndroidNotificationDetails('id', 'channel ', 'description',
         priority: Priority.high, importance: Importance.max);
     var iOS = IOSNotificationDetails();
     var platform = new NotificationDetails(android: android, iOS: iOS);
-    await flutterLocalNotificationsPlugin.show(0, title, message, platform,
+    await FlutterLocalNotificationsPlugin().show(0, title, message, platform,
         payload: 'Welcome to the Local Notification demo');
+  }
+
+  showInAppNotification(String title, String message) async {
+    showPopUpDialog(_context, true, title);
   }
 }

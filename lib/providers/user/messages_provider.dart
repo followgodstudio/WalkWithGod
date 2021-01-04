@@ -64,6 +64,28 @@ class MessagesProvider with ChangeNotifier {
     _appendMessageList(query, limit);
   }
 
+  static Future<void> markMessageAsRead(
+      String receiverUid, String messageId) async {
+    MessageProvider message = MessageProvider(
+        id: messageId,
+        articleId: null,
+        commentId: null,
+        senderUid: null,
+        senderName: null,
+        senderImage: null,
+        receiverUid: receiverUid,
+        type: null,
+        createDate: null,
+        isRead: null);
+    message.markMessageAsRead(true);
+  }
+
+  MessageProvider findMessageInItem(String messageId) {
+    return _items.firstWhere((a) => a.id == messageId, orElse: () {
+      return null;
+    });
+  }
+
   // Used by other classes
   static Future<void> sendMessage(
       String type,

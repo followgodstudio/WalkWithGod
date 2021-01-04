@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:walk_with_god/widgets/my_divider.dart';
-import 'package:walk_with_god/widgets/my_icon_button.dart';
-import 'package:walk_with_god/widgets/popup_comment.dart';
 
 import '../../configurations/constants.dart';
 import '../../configurations/theme.dart';
@@ -11,6 +8,9 @@ import '../../providers/user/profile_provider.dart';
 import '../../utils/utils.dart';
 import '../../widgets/comment.dart';
 import '../../widgets/my_bottom_indicator.dart';
+import '../../widgets/my_divider.dart';
+import '../../widgets/my_icon_button.dart';
+import '../../widgets/popup_comment.dart';
 
 class CommentDetail extends StatefulWidget {
   final String articleId;
