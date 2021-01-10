@@ -10,7 +10,7 @@ import '../../configurations/constants.dart';
 import '../../utils/my_logger.dart';
 
 class SettingProvider with ChangeNotifier {
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  var fdb;
   MyLogger _logger = MyLogger("Provider");
   String _userId;
   bool keepScreenAwake = false;
@@ -24,14 +24,20 @@ class SettingProvider with ChangeNotifier {
   double imageCacheSize = 0;
   int imageCacheNumber = 0;
 
+  SettingProvider({this.fdb});
+
   void setUserId(String userId) {
     _userId = userId;
+  }
+
+  String get userId {
+    return _userId;
   }
 
   Future<void> fetchAboutUs() async {
     _logger.i("SettingProvider-fetchAboutUs");
     DocumentSnapshot doc =
-        await _db.collection(cAppInfo).doc(dAppInfoAboutUs).get();
+        await fdb.collection(cAppInfo).doc(dAppInfoAboutUs).get();
     ourMission = doc.get(fAppInfoOurMission);
     whoAreWe = doc.get(fAppInfoWhoAreWe);
   }
@@ -85,7 +91,7 @@ class SettingProvider with ChangeNotifier {
     //   followingNotification =
     //       data[fSettingFollowingNotification] = newFollowingNotification;
     if (data.isNotEmpty) {
-      await _db
+      await fdb
           .collection(cUsers)
           .doc(_userId)
           .collection(cUserProfile)
