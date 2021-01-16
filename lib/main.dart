@@ -39,15 +39,20 @@ import 'screens/personal_management_screen/setting/setting_screen.dart';
 import 'screens/splash_screen.dart';
 import 'utils/my_logger.dart';
 import 'widgets/network_manager.dart';
+import 'configurations/app_config.dart';
+import 'environment.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  runApp(MyApp());
-}
+// void main() async {
+//   WidgetsFlutterBinding.ensureInitialized();
+//   await Firebase.initializeApp();
+//   runApp(MyApp());
+// }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+  final Environment environment;
+
+  const MyApp({Key key, this.environment}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -105,7 +110,7 @@ class MyApp extends StatelessWidget {
             ],
             child: LifeCycleManager(
               child: MaterialApp(
-                title: 'Follow Him',
+                title: AppConfig.of(context).appTitle,
                 debugShowCheckedModeBanner: false,
                 theme: dayTheme,
                 home: NetworkManager(child: SplashScreen()),

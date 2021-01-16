@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1091903247025",
+    "project_id": "walkwithgod-dev",
+    "storage_bucket": "walkwithgod-dev.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1091903247025:android:22bcb2e6ebdc70c0548890",
+        "android_client_info": {
+          "package_name": "com.suixing.walk_with_god.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1091903247025-ie5eerk3upujbcjbn87rcpgm3v11eusd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDff9x-ZEAAQ0B9jTxxDMcbYw1L5FcoxPQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1091903247025-ie5eerk3upujbcjbn87rcpgm3v11eusd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
