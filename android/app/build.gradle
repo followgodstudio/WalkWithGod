@@ -34,6 +34,8 @@ def keystoreProperties = new Properties()
 android {
     compileSdkVersion 29
 
+    buildToolsVersion "29.0.2"
+
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
@@ -52,6 +54,17 @@ android {
         versionName flutterVersionName
     }
 
+    flavorDimensions "default"
+    productFlavors {
+        dev {
+            dimension "default"
+            applicationIdSuffix ".dev"
+        }
+        prod {
+            dimension "default"
+        }
+    }
+
     signingConfigs {
        release {
            keyAlias keystoreProperties['keyAlias']
@@ -66,15 +79,6 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.release
-        }
-    }
-
-    flavorDimensions "app"
-
-    productFlavors {
-        dev {
-            dimension "app"
-            resValue "string", "app_name", "Dev Flavo"
         }
     }
 }

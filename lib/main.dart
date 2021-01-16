@@ -51,7 +51,7 @@ import 'environment.dart';
 class MyApp extends StatelessWidget {
   final Environment environment;
 
-  const MyApp({Key key, this.environment}) : super(key: key);
+  const MyApp({Key key, @required this.environment}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
