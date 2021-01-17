@@ -7,7 +7,7 @@ import '../article/article_provider.dart';
 import '../article/articles_provider.dart';
 
 class SavedArticlesProvider with ChangeNotifier {
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  var fdb;
   MyLogger _logger = MyLogger("Provider");
   String _userId;
   int savedArticlesCount = 0;
@@ -19,7 +19,8 @@ class SavedArticlesProvider with ChangeNotifier {
 
   // getters and setters
 
-  void setUserId(String userId) {
+  void setProvider(dynamic fdb, String userId) {
+    this.fdb = fdb;
     _userId = userId;
   }
 
@@ -41,7 +42,7 @@ class SavedArticlesProvider with ChangeNotifier {
     if (_isFetching) return;
     _logger.i("SavedArticlesProvider-fetchSavedList");
     _isFetching = true;
-    QuerySnapshot query = await _db
+    QuerySnapshot query = await fdb
         .collection(cUsers)
         .doc(_userId)
         .collection(cUserSavedarticles)
@@ -59,7 +60,7 @@ class SavedArticlesProvider with ChangeNotifier {
     if (_userId == null || _noMore || _isFetching) return;
     _logger.i("SavedArticlesProvider-fetchMoreSavedArticles");
     _isFetching = true;
-    QuerySnapshot query = await _db
+    QuerySnapshot query = await fdb
         .collection(cUsers)
         .doc(_userId)
         .collection(cUserSavedarticles)
@@ -81,7 +82,7 @@ class SavedArticlesProvider with ChangeNotifier {
       _currentLike = true;
     } else {
       _logger.i("SavedArticlesProvider-fetchSavedStatusByArticleId");
-      DocumentSnapshot doc = await _db
+      DocumentSnapshot doc = await fdb
           .collection(cUsers)
           .doc(_userId)
           .collection(cUserSavedarticles)
@@ -100,14 +101,14 @@ class SavedArticlesProvider with ChangeNotifier {
     _currentLike = false;
     notifyListeners();
     // Update remote database
-    WriteBatch batch = _db.batch();
-    batch.delete(_db
+    WriteBatch batch = fdb.batch();
+    batch.delete(fdb
         .collection(cUsers)
         .doc(_userId)
         .collection(cUserSavedarticles)
         .doc(articleId));
     batch.update(
-        _db
+        fdb
             .collection(cUsers)
             .doc(_userId)
             .collection(cUserProfile)
@@ -128,16 +129,16 @@ class SavedArticlesProvider with ChangeNotifier {
     savedArticlesCount = _articles.length;
     notifyListeners();
     // Update remote database
-    WriteBatch batch = _db.batch();
+    WriteBatch batch = fdb.batch();
     batch.set(
-        _db
+        fdb
             .collection(cUsers)
             .doc(_userId)
             .collection(cUserSavedarticles)
             .doc(articleId),
         {fCreatedDate: Timestamp.now()});
     batch.update(
-        _db
+        fdb
             .collection(cUsers)
             .doc(_userId)
             .collection(cUserProfile)
@@ -169,7 +170,7 @@ class SavedArticlesProvider with ChangeNotifier {
     if (_noMore && savedArticlesCount != _articles.length) {
       _logger.i("SavedArticlesProvider-savedArticlesCount updated to " +
           _articles.length.toString());
-      await _db
+      await fdb
           .collection(cUsers)
           .doc(_userId)
           .collection(cUserProfile)

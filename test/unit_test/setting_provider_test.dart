@@ -12,8 +12,7 @@ void main() {
         .collection(cAppInfo)
         .doc(dAppInfoAboutUs)
         .set({fAppInfoOurMission: ourMission, fAppInfoWhoAreWe: whoAreWe});
-    final settingProvider = SettingProvider(fdb: instance);
-    settingProvider.setUserId("V1");
+    final settingProvider = SettingProvider(fdb: instance, userId: "V1");
     expect(settingProvider.userId, "V1");
 
     expect(settingProvider.ourMission, "");

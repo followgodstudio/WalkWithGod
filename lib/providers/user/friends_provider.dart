@@ -6,7 +6,7 @@ import '../../utils/my_logger.dart';
 import 'friend_provider.dart';
 
 class FriendsProvider with ChangeNotifier {
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  var fdb;
   MyLogger _logger = MyLogger("Provider");
   String _userId;
   int followingsCount = 0;
@@ -21,8 +21,9 @@ class FriendsProvider with ChangeNotifier {
 
   // getters and setters
 
-  void setUserId(String userId) {
-    _userId = userId;
+  void setProvider(dynamic fdb, String userId) {
+    this.fdb = fdb;
+    this._userId = userId;
   }
 
   List<FriendProvider> get follower {
@@ -57,7 +58,7 @@ class FriendsProvider with ChangeNotifier {
     }
     _logger.i("FriendsProvider-fetchFriendList-" +
         (isFollower ? "follower" : "following"));
-    QuerySnapshot query = await _db
+    QuerySnapshot query = await fdb
         .collection(cUsers)
         .doc(_userId)
         .collection(cUserFriends)
@@ -81,7 +82,7 @@ class FriendsProvider with ChangeNotifier {
       lastVisible = _lastVisibleFollower;
     }
     _isFetching = true;
-    QuerySnapshot query = await _db
+    QuerySnapshot query = await fdb
         .collection(cUsers)
         .doc(_userId)
         .collection(cUserFriends)
@@ -97,7 +98,7 @@ class FriendsProvider with ChangeNotifier {
 
   Future<FriendProvider> fetchFriendStatusByUserId(String userId) async {
     _logger.i("FriendsProvider-fetchFriendStatusByUserId");
-    DocumentSnapshot doc = await _db
+    DocumentSnapshot doc = await fdb
         .collection(cUsers)
         .doc(_userId)
         .collection(cUserFriends)
@@ -125,16 +126,16 @@ class FriendsProvider with ChangeNotifier {
 
     _logger.i("FriendsProvider-removefollowInList");
     // Update database
-    WriteBatch batch = _db.batch();
+    WriteBatch batch = fdb.batch();
     batch.update(
-        _db
+        fdb
             .collection(cUsers)
             .doc(_userId)
             .collection(cUserProfile)
             .doc(dUserProfileStatic),
         {fUserFollowingsCount: FieldValue.increment(-1)});
     batch.update(
-        _db
+        fdb
             .collection(cUsers)
             .doc(userId)
             .collection(cUserProfile)
@@ -165,16 +166,16 @@ class FriendsProvider with ChangeNotifier {
 
     _logger.i("FriendsProvider-addFollowInList");
     // Update database
-    WriteBatch batch = _db.batch();
+    WriteBatch batch = fdb.batch();
     batch.update(
-        _db
+        fdb
             .collection(cUsers)
             .doc(_userId)
             .collection(cUserProfile)
             .doc(dUserProfileStatic),
         {fUserFollowingsCount: FieldValue.increment(1)});
     batch.update(
-        _db
+        fdb
             .collection(cUsers)
             .doc(friend.friendUid)
             .collection(cUserProfile)

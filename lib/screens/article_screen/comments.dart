@@ -57,10 +57,8 @@ class _CommentsState extends State<Comments> {
     showModalBottomSheet(
         context: context,
         isScrollControlled: true,
-        builder: (context) => CommentDetail(
-              articleId: widget.articleId,
-              commentProvider: commentProvider,
-            ));
+        builder: (context) => ChangeNotifierProvider.value(
+            value: commentProvider, child: CommentDetail()));
   }
 
   void onSubmitComment() {
@@ -91,18 +89,19 @@ class _CommentsState extends State<Comments> {
         }
         for (var i = 0; i < comments.length; i++) {
           list.add(ChangeNotifierProvider.value(
-            value: comments[i],
-            child: FlatButton(
-                padding: const EdgeInsets.all(0),
-                onPressed: () async {
-                  await goToCommentDetail(profile.uid, comments[i]);
-                },
-                child: Comment(
-                  onStartComment: () =>
-                      goToCommentDetail(profile.uid, comments[i]),
-                  onSubmitComment: onSubmitComment,
-                )),
-          ));
+              value: comments[i],
+              builder: (context, _) {
+                return FlatButton(
+                    padding: const EdgeInsets.all(0),
+                    onPressed: () async {
+                      await goToCommentDetail(profile.uid, comments[i]);
+                    },
+                    child: Comment(
+                      onStartComment: () =>
+                          goToCommentDetail(profile.uid, comments[i]),
+                      onSubmitComment: onSubmitComment,
+                    ));
+              }));
         }
         list.add(MyBottomIndicator(data.noMore));
         return Padding(

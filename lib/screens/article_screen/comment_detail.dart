@@ -13,10 +13,6 @@ import '../../widgets/my_icon_button.dart';
 import '../../widgets/popup_comment.dart';
 
 class CommentDetail extends StatefulWidget {
-  final String articleId;
-  final CommentProvider commentProvider;
-  CommentDetail({this.articleId, this.commentProvider});
-
   @override
   _CommentDetailState createState() => _CommentDetailState();
 }
@@ -35,60 +31,57 @@ class _CommentDetailState extends State<CommentDetail> {
     String _userId = Provider.of<ProfileProvider>(context, listen: false).uid;
     return Container(
         height: 0.9 * MediaQuery.of(context).size.height,
-        child: ChangeNotifierProvider.value(
-            value: widget.commentProvider,
-            child: Column(
-              children: [
-                Expanded(
-                  child: NotificationListener<ScrollNotification>(
-                    onNotification: (ScrollNotification scrollInfo) {
-                      if (scrollInfo.metrics.pixels ==
-                          scrollInfo.metrics.maxScrollExtent) {
-                        Provider.of<CommentProvider>(context, listen: false)
-                            .fetchMoreLevel2ChildrenComments(_userId);
-                      }
-                      return true;
-                    },
-                    child: SingleChildScrollView(
-                        controller: _controller,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: horizontalPadding,
-                              vertical: verticalPadding),
-                          child: Consumer<CommentProvider>(
-                              child: Comment(showIconButton: false),
-                              builder: (context, data, child) {
-                                List<Widget> list = [];
-                                list.add(child);
-                                if (data.childrenCount == 0) {
-                                  list.add(Center(
-                                      child: Text("暂无回复",
-                                          textAlign: TextAlign.center,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .captionMedium2)));
-                                  return Column(children: list);
-                                }
-                                for (var i = 0; i < data.children.length; i++) {
-                                  list.add(ChangeNotifierProvider.value(
-                                    value: data.children[i],
-                                    child: Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 40.0),
-                                        child: Comment(
-                                            onSubmitComment: onSubmitComment)),
-                                  ));
-                                }
-                                list.add(Divider());
-                                list.add(MyBottomIndicator(data.noMoreChild));
-                                return Column(children: list);
-                              }),
-                        )),
-                  ),
-                ),
-                CommentBottomBar(onSubmitComment),
-              ],
-            )));
+        child: Column(
+          children: [
+            Expanded(
+              child: NotificationListener<ScrollNotification>(
+                onNotification: (ScrollNotification scrollInfo) {
+                  if (scrollInfo.metrics.pixels ==
+                      scrollInfo.metrics.maxScrollExtent) {
+                    Provider.of<CommentProvider>(context, listen: false)
+                        .fetchMoreLevel2ChildrenComments(_userId);
+                  }
+                  return true;
+                },
+                child: SingleChildScrollView(
+                    controller: _controller,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: horizontalPadding,
+                          vertical: verticalPadding),
+                      child: Consumer<CommentProvider>(
+                          child: Comment(showIconButton: false),
+                          builder: (context, data, child) {
+                            List<Widget> list = [];
+                            list.add(child);
+                            if (data.childrenCount == 0) {
+                              list.add(Center(
+                                  child: Text("暂无回复",
+                                      textAlign: TextAlign.center,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .captionMedium2)));
+                              return Column(children: list);
+                            }
+                            for (var i = 0; i < data.children.length; i++) {
+                              list.add(ChangeNotifierProvider.value(
+                                value: data.children[i],
+                                child: Padding(
+                                    padding: const EdgeInsets.only(left: 40.0),
+                                    child: Comment(
+                                        onSubmitComment: onSubmitComment)),
+                              ));
+                            }
+                            list.add(Divider());
+                            list.add(MyBottomIndicator(data.noMoreChild));
+                            return Column(children: list);
+                          }),
+                    )),
+              ),
+            ),
+            CommentBottomBar(onSubmitComment),
+          ],
+        ));
   }
 }
 

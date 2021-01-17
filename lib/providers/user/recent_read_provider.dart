@@ -8,7 +8,7 @@ import '../article/article_provider.dart';
 import '../article/articles_provider.dart';
 
 class RecentReadProvider with ChangeNotifier {
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  var fdb;
   MyLogger _logger = MyLogger("Provider");
   String _userId;
   int readsCount = 0;
@@ -20,14 +20,15 @@ class RecentReadProvider with ChangeNotifier {
   bool _isFetchingRecentRead = false; // To avoid frequently request
   bool _isUpdatingRecentRead = false; // To avoid frequently request
 
-  void setUserId(String userId) {
+  void setProvider(dynamic fdb, String userId) {
+    this.fdb = fdb;
     _userId = userId;
   }
 
   Future<void> fetchRecentRead() async {
     if (readsCount == 0) return;
     _logger.i("RecentReadProvider-fetchRecentRead");
-    QuerySnapshot query = await _db
+    QuerySnapshot query = await fdb
         .collection(cUsers)
         .doc(_userId)
         .collection(cUserReadHistory)
@@ -64,19 +65,19 @@ class RecentReadProvider with ChangeNotifier {
     recentRead.insert(0, articleProvider);
 
     // update remote database
-    DocumentReference user = _db
+    DocumentReference user = fdb
         .collection(cUsers)
         .doc(_userId)
         .collection(cUserProfile)
         .doc(dUserProfileStatic);
-    DocumentReference history = _db
+    DocumentReference history = fdb
         .collection(cUsers)
         .doc(_userId)
         .collection(cUserReadHistory)
         .doc(articleProvider.id);
     DocumentSnapshot doc = await history.get();
 
-    WriteBatch batch = _db.batch();
+    WriteBatch batch = fdb.batch();
     if (doc.exists) {
       // Update read history timestamp
       batch.update(history, {fUpdatedDate: Timestamp.now()});
@@ -96,7 +97,7 @@ class RecentReadProvider with ChangeNotifier {
     if (_userId == null) return;
     _logger.i("RecentReadProvider-updateReadDuration");
     int timeDiffInSecond = DateTime.now().difference(start).inSeconds;
-    await _db
+    await fdb
         .collection(cUsers)
         .doc(_userId)
         .collection(cUserProfile)

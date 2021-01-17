@@ -19,7 +19,6 @@ import 'package:walk_with_god/screens/personal_management_screen/personal_manage
 import 'package:walk_with_god/screens/personal_management_screen/setting/black_list_screen.dart';
 
 void main() async {
-  // test(description, body)
   testWidgets('Test Black List', (WidgetTester tester) async {
     await tester
         .pumpWidget(MaterialApp(title: 'Follow Him', home: BlackListScreen()));

@@ -6,7 +6,7 @@ import '../../utils/my_logger.dart';
 import 'message_provider.dart';
 
 class MessagesProvider with ChangeNotifier {
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  var fdb;
   MyLogger _logger = MyLogger("Provider");
   String _userId;
   int messagesCount = 0;
@@ -18,7 +18,8 @@ class MessagesProvider with ChangeNotifier {
 
   // getters and setters
 
-  void setUserId(String userId) {
+  void setProvider(dynamic fdb, String userId) {
+    this.fdb = fdb;
     _userId = userId;
   }
 
@@ -36,7 +37,7 @@ class MessagesProvider with ChangeNotifier {
       [int limit = loadLimit]) async {
     if (newMessageCount == messagesCount) return; // do not need to refresh
     _logger.i("MessagesProvider-fetchMessageList");
-    QuerySnapshot query = await _db
+    QuerySnapshot query = await fdb
         .collection(cUsers)
         .doc(_userId)
         .collection(cUserMessages)
@@ -52,7 +53,7 @@ class MessagesProvider with ChangeNotifier {
     if (_userId == null || _isFetching) return;
     _logger.i("MessagesProvider-fetchMoreMessages");
     _isFetching = true;
-    QuerySnapshot query = await _db
+    QuerySnapshot query = await fdb
         .collection(cUsers)
         .doc(_userId)
         .collection(cUserMessages)
@@ -109,16 +110,16 @@ class MessagesProvider with ChangeNotifier {
     data[fMessageIsRead] = false;
     data[fMessageContent] = content;
 
-    final FirebaseFirestore _db = FirebaseFirestore.instance;
-    WriteBatch batch = _db.batch();
+    final FirebaseFirestore fdb = FirebaseFirestore.instance;
+    WriteBatch batch = fdb.batch();
 
     // Add document
     var newDocRef =
-        _db.collection(cUsers).doc(receiverUid).collection(cUserMessages).doc();
+        fdb.collection(cUsers).doc(receiverUid).collection(cUserMessages).doc();
     batch.set(newDocRef, data);
     // Increase message and unread message count by 1
     batch.update(
-        _db
+        fdb
             .collection(cUsers)
             .doc(receiverUid)
             .collection(cUserProfile)

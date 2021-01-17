@@ -17,7 +17,7 @@ import 'saved_articles_provider.dart';
 import 'setting_provider.dart';
 
 class ProfileProvider with ChangeNotifier {
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final FirebaseFirestore fdb = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
   MyLogger _logger = MyLogger("Provider");
   // Basic info
@@ -41,11 +41,11 @@ class ProfileProvider with ChangeNotifier {
 
   ProfileProvider([this.uid]) {
     _logger.v("ProfileProvider-init");
-    friendsProvider.setUserId(uid);
-    savedArticlesProvider.setUserId(uid);
-    messagesProvider.setUserId(uid);
-    settingProvider.setUserId(uid);
-    recentReadProvider.setUserId(uid);
+    friendsProvider.setProvider(fdb, uid);
+    savedArticlesProvider.setProvider(fdb, uid);
+    messagesProvider.setProvider(fdb, uid);
+    settingProvider.setProvider(fdb, uid);
+    recentReadProvider.setProvider(fdb, uid);
   }
 
   Future<void> fetchAllUserData() async {
@@ -75,7 +75,7 @@ class ProfileProvider with ChangeNotifier {
   }
 
   Stream<Map<String, int>> fetchProfileStream() {
-    Stream<DocumentSnapshot> stream = _db
+    Stream<DocumentSnapshot> stream = fdb
         .collection(cUsers)
         .doc(uid)
         .collection(cUserProfile)
@@ -103,7 +103,7 @@ class ProfileProvider with ChangeNotifier {
   Future<bool> fetchProfile() async {
     _logger.i("ProfileProvider-fetchProfile");
     try {
-      DocumentSnapshot doc = await _db.collection(cUsers).doc(uid).get();
+      DocumentSnapshot doc = await fdb.collection(cUsers).doc(uid).get();
       if (!doc.exists) return false; // User not exist
 
       if (doc.data().containsKey(fUserName)) name = doc.get(fUserName);
@@ -112,7 +112,7 @@ class ProfileProvider with ChangeNotifier {
         imageUrl = doc.get(fUserImageUrl); // Only fetch once
 
       // fetch dynamic information
-      DocumentSnapshot docDynamic = await _db
+      DocumentSnapshot docDynamic = await fdb
           .collection(cUsers)
           .doc(uid)
           .collection(cUserProfile)
@@ -123,7 +123,7 @@ class ProfileProvider with ChangeNotifier {
         followersCount = docDynamic.get(fUserFollowersCount);
 
       // fetch static information
-      DocumentSnapshot docStatic = await _db
+      DocumentSnapshot docStatic = await fdb
           .collection(cUsers)
           .doc(uid)
           .collection(cUserProfile)
@@ -184,7 +184,7 @@ class ProfileProvider with ChangeNotifier {
         newImageUrl != imageUrl) imageUrl = data[fUserImageUrl] = newImageUrl;
     if (data.isNotEmpty) {
       _logger.i("ProfileProvider-updateProfilePicture");
-      await _db.collection(cUsers).doc(uid).update(data);
+      await fdb.collection(cUsers).doc(uid).update(data);
       notifyListeners();
     }
   }
@@ -192,14 +192,14 @@ class ProfileProvider with ChangeNotifier {
   Future<void> initProfile() async {
     _logger.i("ProfileProvider-initProfile");
     createdDate = DateTime.now();
-    await _db.collection(cUsers).doc(uid).set({fUserName: name});
-    await _db
+    await fdb.collection(cUsers).doc(uid).set({fUserName: name});
+    await fdb
         .collection(cUsers)
         .doc(uid)
         .collection(cUserProfile)
         .doc(dUserProfileDynamic)
         .set({});
-    await _db
+    await fdb
         .collection(cUsers)
         .doc(uid)
         .collection(cUserProfile)
@@ -210,6 +210,6 @@ class ProfileProvider with ChangeNotifier {
 
   Future<void> deleteProfile() async {
     _logger.i("ProfileProvider-deleteProfile");
-    await _db.collection(cUsers).doc(uid).delete();
+    await fdb.collection(cUsers).doc(uid).delete();
   }
 }

@@ -12,7 +12,7 @@ import '../../utils/my_logger.dart';
 class SettingProvider with ChangeNotifier {
   var fdb;
   MyLogger _logger = MyLogger("Provider");
-  String _userId;
+  String userId;
   bool keepScreenAwake = false;
   bool hideRecentRead = false;
   bool allowFollowing = false;
@@ -24,14 +24,11 @@ class SettingProvider with ChangeNotifier {
   double imageCacheSize = 0;
   int imageCacheNumber = 0;
 
-  SettingProvider({this.fdb});
+  SettingProvider({this.fdb, this.userId});
 
-  void setUserId(String userId) {
-    _userId = userId;
-  }
-
-  String get userId {
-    return _userId;
+  void setProvider(dynamic fdb, String userId) {
+    this.fdb = fdb;
+    this.userId = userId;
   }
 
   Future<void> fetchAboutUs() async {
@@ -93,7 +90,7 @@ class SettingProvider with ChangeNotifier {
     if (data.isNotEmpty) {
       await fdb
           .collection(cUsers)
-          .doc(_userId)
+          .doc(this.userId)
           .collection(cUserProfile)
           .doc(dUserProfileStatic)
           .update(data);
