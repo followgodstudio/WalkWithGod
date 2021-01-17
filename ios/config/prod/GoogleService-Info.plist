@@ -3,21 +3,23 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>1091903247025-ojkrhl37h8gepiq14ff1vue167c748ki.apps.googleusercontent.com</string>
+	<string>21802022919-ogjhm1a2nqu4ldi39dj2m4n9serng6qf.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.1091903247025-ojkrhl37h8gepiq14ff1vue167c748ki</string>
+	<string>com.googleusercontent.apps.21802022919-ogjhm1a2nqu4ldi39dj2m4n9serng6qf</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>21802022919-4te0vrmmla3c3rj239827jasi8qguh6c.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyBU83Pk3FiwT7_qLzw4cs0-O_kTWRJn9is</string>
+	<string>AIzaSyCjxNfROi_XPygNdWr33AkaJR9bqUuZg9w</string>
 	<key>GCM_SENDER_ID</key>
-	<string>1091903247025</string>
+	<string>21802022919</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.suixing.walkWithGod.dev</string>
+	<string>com.example.walkWithGod</string>
 	<key>PROJECT_ID</key>
-	<string>walkwithgod-dev</string>
+	<string>walkwithgod-73ee8</string>
 	<key>STORAGE_BUCKET</key>
-	<string>walkwithgod-dev.appspot.com</string>
+	<string>walkwithgod-73ee8.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +31,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:1091903247025:ios:7ec4883b24247912548890</string>
+	<string>1:21802022919:ios:e08399e23d5e49508092a2</string>
+	<key>DATABASE_URL</key>
+	<string>https://walkwithgod-73ee8.firebaseio.com</string>
 </dict>
 </plist>
