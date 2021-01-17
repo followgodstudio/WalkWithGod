@@ -79,7 +79,7 @@ class ProfileProvider with ChangeNotifier {
         .collection(cUsers)
         .doc(uid)
         .collection(cUserProfile)
-        .doc(dUserProfileDynamic)
+        .doc(dUserProfileStatistics)
         .snapshots();
     return stream.map((DocumentSnapshot doc) {
       Map<String, int> data = {
@@ -116,7 +116,7 @@ class ProfileProvider with ChangeNotifier {
           .collection(cUsers)
           .doc(uid)
           .collection(cUserProfile)
-          .doc(dUserProfileDynamic)
+          .doc(dUserProfileStatistics)
           .get();
       if (docDynamic.exists &&
           docDynamic.data().containsKey(fUserFollowersCount))
@@ -127,7 +127,7 @@ class ProfileProvider with ChangeNotifier {
           .collection(cUsers)
           .doc(uid)
           .collection(cUserProfile)
-          .doc(dUserProfileStatic)
+          .doc(dUserProfileStatistics)
           .get();
       if (!docStatic.exists) return true;
       if (docStatic.data().containsKey(fCreatedDate))
@@ -197,13 +197,13 @@ class ProfileProvider with ChangeNotifier {
         .collection(cUsers)
         .doc(uid)
         .collection(cUserProfile)
-        .doc(dUserProfileDynamic)
+        .doc(dUserProfileStatistics)
         .set({});
     await fdb
         .collection(cUsers)
         .doc(uid)
         .collection(cUserProfile)
-        .doc(dUserProfileStatic)
+        .doc(dUserProfileStatistics)
         .set({fCreatedDate: Timestamp.fromDate(createdDate)});
     notifyListeners();
   }

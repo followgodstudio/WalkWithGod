@@ -112,7 +112,7 @@ class SavedArticlesProvider with ChangeNotifier {
             .collection(cUsers)
             .doc(_userId)
             .collection(cUserProfile)
-            .doc(dUserProfileStatic),
+            .doc(dUserProfileStatistics),
         {fUserSavedArticlesCount: savedArticlesCount});
     await batch.commit();
   }
@@ -142,7 +142,7 @@ class SavedArticlesProvider with ChangeNotifier {
             .collection(cUsers)
             .doc(_userId)
             .collection(cUserProfile)
-            .doc(dUserProfileStatic),
+            .doc(dUserProfileStatistics),
         {fUserSavedArticlesCount: savedArticlesCount});
     await batch.commit();
   }
@@ -174,7 +174,7 @@ class SavedArticlesProvider with ChangeNotifier {
           .collection(cUsers)
           .doc(_userId)
           .collection(cUserProfile)
-          .doc(dUserProfileStatic)
+          .doc(dUserProfileStatistics)
           .update({fUserSavedArticlesCount: _articles.length});
       savedArticlesCount = _articles.length;
     }

@@ -15,13 +15,13 @@ Future<void> addCollection() async {
     //     .collection(cUsers)
     //     .doc(element.id)
     //     .collection(cUserProfile)
-    //     .doc(dUserProfileStatic)
+    //     .doc(dUserProfileStatistics)
     //     .set({fCreatedDate: Timestamp.now()});
     // await _db
     //     .collection(cUsers)
     //     .doc(element.id)
     //     .collection(cUserProfile)
-    //     .doc(dUserProfileDynamic)
+    //     .doc(dUserProfileStatistics)
     //     .set({});
   });
 }

@@ -51,7 +51,7 @@ class MessageProvider with ChangeNotifier {
             .collection(cUsers)
             .doc(receiverUid)
             .collection(cUserProfile)
-            .doc(dUserProfileDynamic),
+            .doc(dUserProfileStatistics),
         {fUserUnreadMsgCount: FieldValue.increment(-1)});
     await batch.commit();
   }

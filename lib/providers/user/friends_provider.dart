@@ -132,14 +132,14 @@ class FriendsProvider with ChangeNotifier {
             .collection(cUsers)
             .doc(_userId)
             .collection(cUserProfile)
-            .doc(dUserProfileStatic),
+            .doc(dUserProfileStatistics),
         {fUserFollowingsCount: FieldValue.increment(-1)});
     batch.update(
         fdb
             .collection(cUsers)
             .doc(userId)
             .collection(cUserProfile)
-            .doc(dUserProfileDynamic),
+            .doc(dUserProfileStatistics),
         {fUserFollowersCount: FieldValue.increment(-1)});
     await batch.commit();
   }
@@ -172,14 +172,14 @@ class FriendsProvider with ChangeNotifier {
             .collection(cUsers)
             .doc(_userId)
             .collection(cUserProfile)
-            .doc(dUserProfileStatic),
+            .doc(dUserProfileStatistics),
         {fUserFollowingsCount: FieldValue.increment(1)});
     batch.update(
         fdb
             .collection(cUsers)
             .doc(friend.friendUid)
             .collection(cUserProfile)
-            .doc(dUserProfileDynamic),
+            .doc(dUserProfileStatistics),
         {fUserFollowersCount: FieldValue.increment(1)});
     await batch.commit();
   }

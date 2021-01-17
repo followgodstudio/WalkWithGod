@@ -38,8 +38,8 @@ const String cUserSavedarticles = "saved_articles";
 const String dAppInfoAboutUs = "about_us";
 const String dAppInfoVersion = "version";
 
-const String dUserProfileDynamic = "dynamic";
-const String dUserProfileStatic = "static";
+const String dUserProfileSettings = "settings";
+const String dUserProfileStatistics = "statistics";
 const String dUserProfileFbMsgToken = "token";
 
 // Third level collection names

@@ -123,7 +123,7 @@ class MessagesProvider with ChangeNotifier {
             .collection(cUsers)
             .doc(receiverUid)
             .collection(cUserProfile)
-            .doc(dUserProfileDynamic),
+            .doc(dUserProfileStatistics),
         {
           fUserMessagesCount: FieldValue.increment(1),
           fUserUnreadMsgCount: FieldValue.increment(1)

@@ -69,7 +69,7 @@ class RecentReadProvider with ChangeNotifier {
         .collection(cUsers)
         .doc(_userId)
         .collection(cUserProfile)
-        .doc(dUserProfileStatic);
+        .doc(dUserProfileStatistics);
     DocumentReference history = fdb
         .collection(cUsers)
         .doc(_userId)
@@ -101,7 +101,7 @@ class RecentReadProvider with ChangeNotifier {
         .collection(cUsers)
         .doc(_userId)
         .collection(cUserProfile)
-        .doc(dUserProfileStatic)
+        .doc(dUserProfileStatistics)
         .update(
             {fUserReadDuration: FieldValue.increment(timeDiffInSecond / 3600)});
     notifyListeners();

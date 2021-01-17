@@ -92,7 +92,7 @@ class SettingProvider with ChangeNotifier {
           .collection(cUsers)
           .doc(this.userId)
           .collection(cUserProfile)
-          .doc(dUserProfileStatic)
+          .doc(dUserProfileStatistics)
           .update(data);
       notifyListeners();
     }
