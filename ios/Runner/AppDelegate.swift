@@ -7,9 +7,9 @@ import Flutter
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
-    GeneratedPluginRegistrant.register(with: self)
-    if (@available(iOS 10.0, *)) {
-      [UNUserNotificationCenter currentNotificationCenter].delegate = (id<UNUserNotificationCenterDelegate>) self;
+    if #available(iOS 10.0, *) {
+      GeneratedPluginRegistrant.register(with: self)
+      UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
     }
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
