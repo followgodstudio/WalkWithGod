@@ -7,6 +7,7 @@ import '../../screens/personal_management_screen/messages/messages_list_screen.d
 import '../../utils/my_logger.dart';
 import '../../utils/utils.dart';
 import 'messages_provider.dart';
+import 'dart:io' show Platform;
 
 class NotificationProvider with ChangeNotifier {
   BuildContext _context;
@@ -51,7 +52,7 @@ class NotificationProvider with ChangeNotifier {
           },
         );
       },
-      onBackgroundMessage: myBackgroundMessageHandler,
+      onBackgroundMessage: Platform.isIOS ? null : myBackgroundMessageHandler,
       onLaunch: (Map<String, dynamic> message) async {
         _logger.i("NotificationProvider-onLaunch-$message");
         navigateToDetail(message);
