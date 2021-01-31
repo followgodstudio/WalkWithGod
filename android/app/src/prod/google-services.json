@@ -1,0 +1,131 @@
+{
+  "project_info": {
+    "project_number": "21802022919",
+    "firebase_url": "https://walkwithgod-73ee8.firebaseio.com",
+    "project_id": "walkwithgod-73ee8",
+    "storage_bucket": "walkwithgod-73ee8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:21802022919:android:b9208f68c19ffa4c8092a2",
+        "android_client_info": {
+          "package_name": "com.example.walk_with_god"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "21802022919-4te0vrmmla3c3rj239827jasi8qguh6c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.walk_with_god",
+            "certificate_hash": "b7f49edd9f08810f8756ce377af71424cbbe4a64"
+          }
+        },
+        {
+          "client_id": "21802022919-s5ebuk4885tjlspbovo77jg2vqld7k1d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.walk_with_god",
+            "certificate_hash": "2266581a4a57fe103f1b69fc5ebdfdbfb4803ab0"
+          }
+        },
+        {
+          "client_id": "21802022919-psc5aigtlo0ovljjp3cnlmlbnu55h2j1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBqW1gj125aXlB5NyaqNWogfoIulRtttI0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "21802022919-24luec12hbrusquh6peq70p6n75bit6i.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "21802022919-ogjhm1a2nqu4ldi39dj2m4n9serng6qf.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.walkWithGod"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:21802022919:android:4b9f7f235bfa6b658092a2",
+        "android_client_info": {
+          "package_name": "com.suixing.walk_with_god"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "21802022919-d12hkm3rjvslms81uhieta4uc1pnbllv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.suixing.walk_with_god",
+            "certificate_hash": "40b13f0a70e7b016ab5df6977a65f05b93e1dc7a"
+          }
+        },
+        {
+          "client_id": "21802022919-qr6d3mfhbadh0lm73h372c7hblp5r96l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.suixing.walk_with_god",
+            "certificate_hash": "2266581a4a57fe103f1b69fc5ebdfdbfb4803ab0"
+          }
+        },
+        {
+          "client_id": "21802022919-t2q7mu9jq2prrg5be66fg901a3vevg90.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.suixing.walk_with_god",
+            "certificate_hash": "deb721c644931cbf331424b8315aa772e74222b9"
+          }
+        },
+        {
+          "client_id": "21802022919-vabci7mo3nttqgrrgu8dtjbqigsrqcoo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.suixing.walk_with_god",
+            "certificate_hash": "6122639b9ae3cca3ddc353d592aa881e481f95f7"
+          }
+        },
+        {
+          "client_id": "21802022919-psc5aigtlo0ovljjp3cnlmlbnu55h2j1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBqW1gj125aXlB5NyaqNWogfoIulRtttI0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "21802022919-24luec12hbrusquh6peq70p6n75bit6i.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "21802022919-ogjhm1a2nqu4ldi39dj2m4n9serng6qf.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.walkWithGod"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
