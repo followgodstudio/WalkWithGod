@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../configurations/constants.dart';
 import '../../configurations/theme.dart';
 import '../../providers/user/friends_provider.dart';
+import '../../providers/user/messages_provider.dart';
 import '../../providers/user/profile_provider.dart';
 import '../../providers/user/saved_articles_provider.dart';
 import '../../utils/my_logger.dart';
@@ -11,7 +12,6 @@ import '../../utils/utils.dart';
 import '../../widgets/article_card.dart';
 import '../../widgets/my_divider.dart';
 import '../../widgets/my_icon_button.dart';
-import '../../widgets/my_progress_indicator.dart';
 import '../../widgets/my_text_button.dart';
 import '../../widgets/navbar.dart';
 import '../auth_screen/signup_screen.dart';
@@ -43,21 +43,31 @@ class PersonalManagementScreen extends StatelessWidget {
                   }
                 })),
         body: SafeArea(
-            child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: verticalPadding),
-            child: Column(children: <Widget>[
-              HeadLine(isLoggedIn),
-              SizedBox(height: 15),
-              if (isLoggedIn) SavedArticles(),
-              if (isLoggedIn)
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-                  child: FriendsMessages(),
-                ),
-            ]),
+            child: RefreshIndicator(
+          onRefresh: () async {
+            refreshProfile(context);
+          },
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: verticalPadding),
+              child: Column(children: <Widget>[
+                HeadLine(isLoggedIn),
+                SizedBox(height: 15),
+                if (isLoggedIn) SavedArticles(),
+                if (isLoggedIn)
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: horizontalPadding),
+                    child: FriendsMessages(),
+                  ),
+              ]),
+            ),
           ),
         )));
+  }
+
+  Future<void> refreshProfile(BuildContext context) async {
+    await Provider.of<ProfileProvider>(context, listen: false).fetchProfile();
   }
 }
 
@@ -175,98 +185,86 @@ class SavedArticles extends StatelessWidget {
 class FriendsMessages extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<Map<String, dynamic>>(
-        stream: Provider.of<ProfileProvider>(context, listen: false)
-            .fetchProfileStream(),
-        builder: (BuildContext context,
-            AsyncSnapshot<Map<String, dynamic>> snapshot) {
-          if (snapshot.connectionState != ConnectionState.active ||
-              snapshot.data == null) return MyProgressIndicator();
-          return Column(
+    FriendsProvider friends =
+        Provider.of<FriendsProvider>(context, listen: false);
+    MessagesProvider messages =
+        Provider.of<MessagesProvider>(context, listen: false);
+    return Column(
+      children: [
+        MyDivider(),
+        SizedBox(height: 5.0),
+        FlatButton(
+          padding: const EdgeInsets.all(0),
+          onPressed: () {
+            Navigator.of(context).pushNamed(FriendsListScreen.routeName);
+          },
+          child: Row(
             children: [
-              MyDivider(),
-              SizedBox(height: 5.0),
-              FlatButton(
-                padding: const EdgeInsets.all(0),
-                onPressed: () {
-                  Navigator.of(context).pushNamed(FriendsListScreen.routeName);
-                },
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              "我的好友",
-                              style: Theme.of(context).textTheme.captionMedium1,
-                            ),
-                            SizedBox(height: 8.0),
-                            Consumer<FriendsProvider>(
-                                builder: (ctx, value, _) => Text(
-                                      "共" +
-                                          (snapshot.data[fUserFollowersCount] ==
-                                                  null
-                                              ? 0
-                                              : snapshot
-                                                  .data[fUserFollowersCount]
-                                                  .toString()) +
-                                          "人关注我, 已关注" +
-                                          value.followingsCount.toString() +
-                                          "人",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .captionGrey,
-                                    )),
-                          ],
-                        ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        "我的好友",
+                        style: Theme.of(context).textTheme.captionMedium1,
                       ),
-                    ),
-                    MyIconButton(icon: "forward", iconSize: 12),
-                  ],
+                      SizedBox(height: 8.0),
+                      Consumer<FriendsProvider>(
+                          builder: (ctx, value, _) => Text(
+                                "共" +
+                                    friends.followersCount.toString() +
+                                    "人关注我, 已关注" +
+                                    friends.followingsCount.toString() +
+                                    "人",
+                                style: Theme.of(context).textTheme.captionGrey,
+                              )),
+                    ],
+                  ),
                 ),
               ),
-              Divider(),
-              FlatButton(
-                padding: const EdgeInsets.all(0),
-                onPressed: () {
-                  Navigator.of(context).pushNamed(MessagesListScreen.routeName);
-                },
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              "我的消息",
-                              style: Theme.of(context).textTheme.captionMedium1,
-                            ),
-                            SizedBox(height: 8.0),
-                            Text(
-                              "共" +
-                                  snapshot.data[fUserMessagesCount].toString() +
-                                  "条消息, " +
-                                  snapshot.data[fUserUnreadMsgCount]
-                                      .toString() +
-                                  "条未读",
-                              style: Theme.of(context).textTheme.captionGrey,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    MyIconButton(icon: "forward", iconSize: 12),
-                  ],
-                ),
-              ),
-              Divider(),
+              MyIconButton(icon: "forward", iconSize: 12),
             ],
-          );
-        });
+          ),
+        ),
+        Divider(),
+        FlatButton(
+          padding: const EdgeInsets.all(0),
+          onPressed: () {
+            Navigator.of(context).pushNamed(MessagesListScreen.routeName);
+          },
+          child: Row(
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        "我的消息",
+                        style: Theme.of(context).textTheme.captionMedium1,
+                      ),
+                      SizedBox(height: 8.0),
+                      Text(
+                        "共" +
+                            messages.messagesCount.toString() +
+                            "条消息, " +
+                            messages.unreadMessagesCount.toString() +
+                            "条未读",
+                        style: Theme.of(context).textTheme.captionGrey,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              MyIconButton(icon: "forward", iconSize: 12),
+            ],
+          ),
+        ),
+        Divider(),
+      ],
+    );
   }
 }

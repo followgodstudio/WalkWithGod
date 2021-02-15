@@ -29,7 +29,8 @@ const String cArticleComments = "comments";
 
 const String cUserProfile = "profile";
 const String cUserReadHistory = "read_history";
-const String cUserFriends = "friends";
+const String cUserFollowings = "followings";
+const String cUserFollowers = "followers";
 const String cUserMessages = "messages";
 const String cUserSavedarticles = "saved_articles";
 
@@ -88,8 +89,6 @@ const String eFriendStatusFollower = "follower";
 const String eFriendStatusFriend = "friend";
 const String fFriendName = "name";
 const String fFriendImageUrl = "image_url";
-const String fFriendFollowingDate = "following_date";
-const String fFriendFollowerDate = "follower_date";
 
 const String fArticleTitle = 'title';
 const String fArticleDescription = 'description';

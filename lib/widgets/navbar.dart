@@ -65,7 +65,7 @@ class NavBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       centerTitle: true,
       elevation: 0,
-      bottom: MyDivider(indent: 20),
+      bottom: MyDivider(padding: EdgeInsets.symmetric(horizontal: 20.0)),
       title: _titleWidget,
       leading: leadingBackButton,
       backgroundColor: _backgroundColor,

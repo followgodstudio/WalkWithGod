@@ -14,7 +14,7 @@ class MessageProvider with ChangeNotifier {
   final String senderImage;
   final String receiverUid;
   final String type;
-  final DateTime createDate;
+  final DateTime createdDate;
   bool isRead;
 
   MessageProvider({
@@ -26,7 +26,7 @@ class MessageProvider with ChangeNotifier {
     @required this.senderImage,
     @required this.receiverUid,
     @required this.type,
-    @required this.createDate,
+    @required this.createdDate,
     @required this.isRead,
   });
 
@@ -37,22 +37,11 @@ class MessageProvider with ChangeNotifier {
     notifyListeners();
 
     // Update document
-    WriteBatch batch = _db.batch();
-    batch.update(
-        _db
-            .collection(cUsers)
-            .doc(receiverUid)
-            .collection(cUserMessages)
-            .doc(id),
-        {fMessageIsRead: read});
-    // Update unread count
-    batch.update(
-        _db
-            .collection(cUsers)
-            .doc(receiverUid)
-            .collection(cUserProfile)
-            .doc(dUserProfileStatistics),
-        {fUserUnreadMsgCount: FieldValue.increment(-1)});
-    await batch.commit();
+    await _db
+        .collection(cUsers)
+        .doc(receiverUid)
+        .collection(cUserMessages)
+        .doc(id)
+        .update({fMessageIsRead: read});
   }
 }

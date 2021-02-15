@@ -81,10 +81,7 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
                 horizontal: horizontalPadding, vertical: verticalPadding),
             child: FutureBuilder(
                 future: exceptionHandling(context, () async {
-                  _isFollower
-                      ? profile.friendsProvider
-                          .fetchFriendList(_isFollower, profile.followersCount)
-                      : profile.friendsProvider.refreshFollowingList();
+                  profile.friendsProvider.fetchFriendList(_isFollower);
                 }),
                 builder: (ctx, asyncSnapshot) {
                   if (asyncSnapshot.connectionState == ConnectionState.waiting)

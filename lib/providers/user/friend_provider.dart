@@ -19,96 +19,34 @@ class FriendProvider with ChangeNotifier {
     this.friendStatus,
   });
 
-  // will be called by friends_provider
-  Future<void> follow(String userId, String name, String imageUrl) async {
+  Future<void> follow(String userId) async {
     _logger.i("FriendProvider-follow");
-    if (friendStatus == eFriendStatusFollowing ||
-        friendStatus == eFriendStatusFriend) return;
-    DateTime followingDate = DateTime.now();
     friendStatus = (friendStatus == eFriendStatusFollower)
         ? eFriendStatusFriend
         : eFriendStatusFollowing;
     notifyListeners();
-
-    // Update remote database
-    WriteBatch batch = _db.batch();
-
-    // Update current user's document
-    batch.set(
-        _db
-            .collection(cUsers)
-            .doc(userId)
-            .collection(cUserFriends)
-            .doc(friendUid),
-        {
-          fFriendName: friendName,
-          fFriendImageUrl: friendImageUrl,
-          fFriendFollowingDate: Timestamp.fromDate(followingDate),
-          fFriendStatus: friendStatus
-        },
-        SetOptions(merge: true));
-
-    // Update followed user's document
-    batch.set(
-        _db
-            .collection(cUsers)
-            .doc(friendUid)
-            .collection(cUserFriends)
-            .doc(userId),
-        {
-          fFriendName: name,
-          fFriendImageUrl: imageUrl,
-          fFriendFollowerDate: Timestamp.fromDate(followingDate),
-          fFriendStatus: (friendStatus == eFriendStatusFriend
-              ? eFriendStatusFriend
-              : eFriendStatusFollower)
-        },
-        SetOptions(merge: true));
-
-    await batch.commit();
+    _db
+        .collection(cUsers)
+        .doc(userId)
+        .collection(cUserFollowings)
+        .doc(friendUid)
+        .set({
+      fFriendName: friendName,
+      fFriendImageUrl: friendImageUrl,
+      fCreatedDate: Timestamp.fromDate(DateTime.now()),
+      fFriendStatus: friendStatus
+    }, SetOptions(merge: true));
   }
 
-  Future<void> unfollow(String userId, String name, String imageUrl) async {
+  Future<void> unfollow(String userId) async {
     _logger.i("FriendProvider-unfollow");
-    if (friendStatus != eFriendStatusFollowing &&
-        friendStatus != eFriendStatusFriend) return;
-    friendStatus =
-        (friendStatus == eFriendStatusFriend) ? eFriendStatusFollower : null;
+    friendStatus = null;
     notifyListeners();
-
-    // Update remote database
-    WriteBatch batch = _db.batch();
-
-    if (friendStatus != null) {
-      // They were friends
-      batch.set(
-          _db
-              .collection(cUsers)
-              .doc(userId)
-              .collection(cUserFriends)
-              .doc(friendUid),
-          {fFriendStatus: friendStatus},
-          SetOptions(merge: true));
-      batch.set(
-          _db
-              .collection(cUsers)
-              .doc(friendUid)
-              .collection(cUserFriends)
-              .doc(userId),
-          {fFriendStatus: eFriendStatusFollowing},
-          SetOptions(merge: true));
-    } else {
-      batch.delete(_db
-          .collection(cUsers)
-          .doc(userId)
-          .collection(cUserFriends)
-          .doc(friendUid));
-      batch.delete(_db
-          .collection(cUsers)
-          .doc(friendUid)
-          .collection(cUserFriends)
-          .doc(userId));
-    }
-    await batch.commit();
+    _db
+        .collection(cUsers)
+        .doc(userId)
+        .collection(cUserFollowings)
+        .doc(friendUid)
+        .delete();
   }
 }

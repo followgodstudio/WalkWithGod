@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_switch/flutter_switch.dart';
 import 'package:provider/provider.dart';
 
 import '../../../configurations/constants.dart';
-import '../../../configurations/theme.dart';
 import '../../../providers/user/setting_provider.dart';
+import '../../../widgets/my_divider.dart';
 import '../../../widgets/navbar.dart';
+import '../../../widgets/setting_item.dart';
+import '../../../widgets/setting_nav.dart';
 import 'black_list_screen.dart';
 import 'delete_account_screen.dart';
 
@@ -26,118 +27,43 @@ class PrivacyScreen extends StatelessWidget {
                 Consumer<SettingProvider>(
                   builder: (context, setting, child) => Column(
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("隐藏你最近的阅读内容",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .captionMedium1),
-                              SizedBox(height: 4),
-                              Text("开启后，关注你的好友将看不到你的\"最近阅读\"内容。",
-                                  style:
-                                      Theme.of(context).textTheme.captionSmall),
-                            ],
-                          ),
-                          FlutterSwitch(
-                            width: 50.0,
-                            height: 25.0,
-                            toggleSize: 17.0,
-                            activeColor: MyColors.lightBlue,
-                            value: setting.hideRecentRead,
-                            onToggle: (value) {
-                              setting.updateSetting(newHideRecentRead: value);
-                            },
-                          ),
-                        ],
-                      ),
-                      Divider(),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text("关注你须获得你的同意TODO",
-                                style:
-                                    Theme.of(context).textTheme.captionMedium1),
-                            FlutterSwitch(
-                              width: 50.0,
-                              height: 25.0,
-                              toggleSize: 17.0,
-                              activeColor: MyColors.lightBlue,
-                              value: setting.allowFollowing,
-                              onToggle: (value) {
-                                setting.updateSetting(newAllowFollowing: value);
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text("不接受未关注人的私信TODO",
-                                style:
-                                    Theme.of(context).textTheme.captionMedium1),
-                            FlutterSwitch(
-                              width: 50.0,
-                              height: 25.0,
-                              toggleSize: 17.0,
-                              activeColor: MyColors.lightBlue,
-                              value: setting.rejectStrangerMessage,
-                              onToggle: (value) {
+                      SettingItem(
+                          title: "隐藏你最近的阅读内容",
+                          description: "开启后，关注你的好友将看不到你的\"最近阅读\"内容。",
+                          switchValue: setting.hideRecentRead,
+                          switchFunction: (value) => {
+                                setting.updateSetting(newHideRecentRead: value)
+                              }),
+                      SizedBox(height: 16.0),
+                      MyDivider(),
+                      SizedBox(height: 16.0),
+                      SettingItem(
+                          title: "关注你须获得你的同意TODO",
+                          description: "开启后，只有你同意的用户才可以关注你，以及查看你的\"最近阅读\"内容。",
+                          switchValue: setting.allowFollowing,
+                          switchFunction: (value) => {
+                                setting.updateSetting(newAllowFollowing: value)
+                              }),
+                      SizedBox(height: 16.0),
+                      SettingItem(
+                          title: "不接受未关注人的私信TODO",
+                          switchValue: setting.rejectStrangerMessage,
+                          switchFunction: (value) => {
                                 setting.updateSetting(
-                                    newRejectStrangerMessage: value);
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
+                                    newRejectStrangerMessage: value)
+                              }),
+                      SizedBox(height: 16.0),
                     ],
                   ),
                 ),
                 Column(
                   children: [
-                    FlatButton(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      onPressed: () {
-                        Navigator.of(context)
-                            .pushNamed(BlackListScreen.routeName);
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("黑名单TODO",
-                              style:
-                                  Theme.of(context).textTheme.captionMedium1),
-                          Icon(Icons.arrow_forward_ios,
-                              size: 15.0, color: MyColors.lightBlue)
-                        ],
-                      ),
-                    ),
+                    SettingNav(
+                        title: "黑名单TODO", routeName: BlackListScreen.routeName),
                     Divider(),
-                    FlatButton(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      onPressed: () {
-                        Navigator.of(context)
-                            .pushNamed(DeleteAccountScreen.routeName);
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("注销用户",
-                              style:
-                                  Theme.of(context).textTheme.captionMedium1),
-                          Icon(Icons.arrow_forward_ios,
-                              size: 15.0, color: MyColors.lightBlue)
-                        ],
-                      ),
-                    ),
+                    SettingNav(
+                        title: "注销用户",
+                        routeName: DeleteAccountScreen.routeName),
                     Divider(),
                   ],
                 )

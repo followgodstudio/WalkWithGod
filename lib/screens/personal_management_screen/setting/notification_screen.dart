@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_switch/flutter_switch.dart';
 import 'package:provider/provider.dart';
 
 import '../../../configurations/constants.dart';
-import '../../../configurations/theme.dart';
 import '../../../providers/user/setting_provider.dart';
 import '../../../widgets/navbar.dart';
+import '../../../widgets/setting_item.dart';
 
 class NotificationScreen extends StatelessWidget {
   static const routeName = '/notification';
@@ -24,25 +23,14 @@ class NotificationScreen extends StatelessWidget {
                 Consumer<SettingProvider>(
                   builder: (context, setting, child) => Column(
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("接受新关注提醒TODO",
-                              style:
-                                  Theme.of(context).textTheme.captionMedium1),
-                          FlutterSwitch(
-                            width: 50.0,
-                            height: 25.0,
-                            toggleSize: 17.0,
-                            activeColor: MyColors.lightBlue,
-                            value: setting.followingNotification,
-                            onToggle: (value) {
-                              setting.updateSetting(
-                                  newFollowingNotification: value);
-                            },
-                          ),
-                        ],
-                      ),
+                      SettingItem(
+                          title: "接受新关注提醒",
+                          description: "关闭后，其他用户关注你时，将不再通知你。",
+                          switchValue: setting.followingNotification,
+                          switchFunction: (value) => {
+                                setting.updateSetting(
+                                    newFollowingNotification: value)
+                              }),
                     ],
                   ),
                 ),

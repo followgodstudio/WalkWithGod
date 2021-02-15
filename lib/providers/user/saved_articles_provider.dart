@@ -101,20 +101,12 @@ class SavedArticlesProvider with ChangeNotifier {
     _currentLike = false;
     notifyListeners();
     // Update remote database
-    WriteBatch batch = fdb.batch();
-    batch.delete(fdb
+    await fdb
         .collection(cUsers)
         .doc(_userId)
         .collection(cUserSavedarticles)
-        .doc(articleId));
-    batch.update(
-        fdb
-            .collection(cUsers)
-            .doc(_userId)
-            .collection(cUserProfile)
-            .doc(dUserProfileStatistics),
-        {fUserSavedArticlesCount: savedArticlesCount});
-    await batch.commit();
+        .doc(articleId)
+        .delete();
   }
 
   Future<void> addSavedByArticleId(
@@ -129,22 +121,12 @@ class SavedArticlesProvider with ChangeNotifier {
     savedArticlesCount = _articles.length;
     notifyListeners();
     // Update remote database
-    WriteBatch batch = fdb.batch();
-    batch.set(
-        fdb
-            .collection(cUsers)
-            .doc(_userId)
-            .collection(cUserSavedarticles)
-            .doc(articleId),
-        {fCreatedDate: Timestamp.now()});
-    batch.update(
-        fdb
-            .collection(cUsers)
-            .doc(_userId)
-            .collection(cUserProfile)
-            .doc(dUserProfileStatistics),
-        {fUserSavedArticlesCount: savedArticlesCount});
-    await batch.commit();
+    fdb
+        .collection(cUsers)
+        .doc(_userId)
+        .collection(cUserSavedarticles)
+        .doc(articleId)
+        .set({fCreatedDate: Timestamp.now()});
   }
 
   Future<void> _appendSavedList(QuerySnapshot query, int limit) async {
@@ -167,17 +149,6 @@ class SavedArticlesProvider with ChangeNotifier {
     articles.forEach((element) {
       _articles.add(element);
     });
-    if (_noMore && savedArticlesCount != _articles.length) {
-      _logger.i("SavedArticlesProvider-savedArticlesCount updated to " +
-          _articles.length.toString());
-      await fdb
-          .collection(cUsers)
-          .doc(_userId)
-          .collection(cUserProfile)
-          .doc(dUserProfileStatistics)
-          .update({fUserSavedArticlesCount: _articles.length});
-      savedArticlesCount = _articles.length;
-    }
     notifyListeners();
   }
 }

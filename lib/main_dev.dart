@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:walk_with_god/environment.dart';
+import 'environment.dart';
 import 'configurations/app_config.dart';
 import 'main.dart';
 

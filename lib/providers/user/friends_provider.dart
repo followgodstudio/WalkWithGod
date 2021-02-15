@@ -44,26 +44,19 @@ class FriendsProvider with ChangeNotifier {
 
   // methods
 
-  Future<void> fetchFriendList(bool isFollower,
-      [int newFollowersCount, int limit = loadLimit]) async {
-    List<String> whereIn = [eFriendStatusFollowing, eFriendStatusFriend];
-    String orderBy = fFriendFollowingDate;
+  Future<void> fetchFriendList(bool isFollower, [int limit = loadLimit]) async {
+    _logger.i("FriendsProvider-fetchFriendList-" +
+        (isFollower ? "follower" : "following"));
     if (isFollower) {
-      if (followersCount == newFollowersCount) return; // Do not need update
-      whereIn = [eFriendStatusFollower, eFriendStatusFriend];
-      orderBy = fFriendFollowerDate;
       _follower = [];
     } else {
       _following = [];
     }
-    _logger.i("FriendsProvider-fetchFriendList-" +
-        (isFollower ? "follower" : "following"));
     QuerySnapshot query = await fdb
         .collection(cUsers)
         .doc(_userId)
-        .collection(cUserFriends)
-        .where(fFriendStatus, whereIn: whereIn)
-        .orderBy(orderBy, descending: true)
+        .collection(isFollower ? cUserFollowers : cUserFollowings)
+        .orderBy(fCreatedDate, descending: true)
         .limit(limit)
         .get();
     _appendFriendsList(query, limit, isFollower);
@@ -72,23 +65,18 @@ class FriendsProvider with ChangeNotifier {
   Future<void> fetchMoreFriends(bool isFollower,
       [int limit = loadLimit]) async {
     if (_userId == null || _isFetching) return;
-    _logger.i("FriendsProvider-fetchMoreFriends");
-    List<String> whereIn = [eFriendStatusFollowing, eFriendStatusFriend];
-    String orderBy = fFriendFollowingDate;
+    _logger.i("FriendsProvider-fetchMoreFriends-" +
+        (isFollower ? "follower" : "following"));
     DocumentSnapshot lastVisible = _lastVisibleFollowing;
     if (isFollower) {
-      whereIn = [eFriendStatusFollower, eFriendStatusFriend];
-      orderBy = fFriendFollowerDate;
       lastVisible = _lastVisibleFollower;
     }
     _isFetching = true;
     QuerySnapshot query = await fdb
         .collection(cUsers)
         .doc(_userId)
-        .collection(cUserFriends)
+        .collection(isFollower ? cUserFollowers : cUserFollowings)
         .orderBy(fCreatedDate, descending: true)
-        .where(fFriendStatus, whereIn: whereIn)
-        .orderBy(orderBy, descending: true)
         .startAfterDocument(lastVisible)
         .limit(limit)
         .get();
@@ -98,90 +86,49 @@ class FriendsProvider with ChangeNotifier {
 
   Future<FriendProvider> fetchFriendStatusByUserId(String userId) async {
     _logger.i("FriendsProvider-fetchFriendStatusByUserId");
-    DocumentSnapshot doc = await fdb
+    DocumentSnapshot follower = await fdb
         .collection(cUsers)
         .doc(_userId)
-        .collection(cUserFriends)
+        .collection(cUserFollowers)
         .doc(userId)
         .get();
-    if (doc.exists) return _buildFriendByMap(doc.id, doc.data());
+    DocumentSnapshot following = await fdb
+        .collection(cUsers)
+        .doc(_userId)
+        .collection(cUserFollowings)
+        .doc(userId)
+        .get();
+    if (following.exists)
+      return _buildFriendByMap(following.id, following.data());
+    //TODO: cannot find followers doc here
+    if (follower.exists) return _buildFriendByMap(follower.id, follower.data());
     return null;
   }
 
-  Future<void> refreshFollowingList() async {
-    _following.removeWhere((item) =>
-        (item.friendStatus != eFriendStatusFollowing &&
-            item.friendStatus != eFriendStatusFriend));
-  }
-
   Future<void> removefollowInList(String userId) async {
-    // _following.removeWhere((item) => item.friendUid == userId);
-    // FriendProvider friend = _follower
-    //     .firstWhere((element) => element.friendUid == userId, orElse: () {
-    //   return null;
-    // });
-    // if (friend != null) friend.friendStatus = eFriendStatusFollower;
-    // followingsCount -= 1;
-    // notifyListeners();
-
     _logger.i("FriendsProvider-removefollowInList");
-    // Update database
-    WriteBatch batch = fdb.batch();
-    batch.update(
-        fdb
-            .collection(cUsers)
-            .doc(_userId)
-            .collection(cUserProfile)
-            .doc(dUserProfileStatistics),
-        {fUserFollowingsCount: FieldValue.increment(-1)});
-    batch.update(
-        fdb
-            .collection(cUsers)
-            .doc(userId)
-            .collection(cUserProfile)
-            .doc(dUserProfileStatistics),
-        {fUserFollowersCount: FieldValue.increment(-1)});
-    await batch.commit();
+    _following.removeWhere((item) => item.friendUid == userId);
+    FriendProvider follower = _follower
+        .firstWhere((element) => element.friendUid == userId, orElse: () {
+      return null;
+    });
+    if (follower != null) follower.friendStatus = eFriendStatusFollower;
+    followingsCount -= 1;
+    notifyListeners();
   }
 
   Future<void> addFollowInList(
     FriendProvider friend,
   ) async {
-    FriendProvider old = _following.firstWhere(
-        (element) => element.friendUid == friend.friendUid, orElse: () {
-      return null;
-    });
-    if (old == null) {
-      _following.insert(0, friend);
-    } else {
-      old.friendStatus = friend.friendStatus;
-    }
+    _logger.i("FriendsProvider-addFollowInList");
+    _following.insert(0, friend);
     FriendProvider follower = _follower.firstWhere(
         (element) => element.friendUid == friend.friendUid, orElse: () {
       return null;
     });
-    if (follower != null) follower.friendStatus = friend.friendStatus;
+    if (follower != null) follower.friendStatus = eFriendStatusFriend;
     followingsCount += 1;
     notifyListeners();
-
-    _logger.i("FriendsProvider-addFollowInList");
-    // Update database
-    WriteBatch batch = fdb.batch();
-    batch.update(
-        fdb
-            .collection(cUsers)
-            .doc(_userId)
-            .collection(cUserProfile)
-            .doc(dUserProfileStatistics),
-        {fUserFollowingsCount: FieldValue.increment(1)});
-    batch.update(
-        fdb
-            .collection(cUsers)
-            .doc(friend.friendUid)
-            .collection(cUserProfile)
-            .doc(dUserProfileStatistics),
-        {fUserFollowersCount: FieldValue.increment(1)});
-    await batch.commit();
   }
 
   void _appendFriendsList(QuerySnapshot query, int limit, bool isFollower) {

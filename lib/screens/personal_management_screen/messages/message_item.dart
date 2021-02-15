@@ -43,7 +43,7 @@ class MessageItem extends StatelessWidget {
                                       .captionMedium1)),
                       SizedBox(width: 10),
                       Text(
-                        DateFormat('yyyy年M月d日 HH:mm a').format(data.createDate),
+                        DateFormat('yyyy年M月d日 HH:mm a').format(data.createdDate),
                         style: data.isRead
                             ? Theme.of(context).textTheme.captionSmall
                             : Theme.of(context)

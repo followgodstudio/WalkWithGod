@@ -95,11 +95,10 @@ class FriendStatus extends StatelessWidget {
           style: isFollowing ? TextButtonStyle.regular : TextButtonStyle.active,
           onPressed: () {
             if (isFollowing) {
-              friend.unfollow(
-                  myProfile.uid, myProfile.name, myProfile.imageUrl);
+              friend.unfollow(myProfile.uid);
               friends.removefollowInList(profile.uid);
             } else {
-              friend.follow(myProfile.uid, myProfile.name, myProfile.imageUrl);
+              friend.follow(myProfile.uid);
               friends.addFollowInList(friend);
             }
           },
@@ -157,7 +156,8 @@ class ReadStatus extends StatelessWidget {
                           style: Theme.of(context).textTheme.captionMedium1),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 4.0),
-                        child: Text(profile.followersCount.toString(),
+                        child: Text(
+                            profile.friendsProvider.followersCount.toString(),
                             style: Theme.of(context).textTheme.headline5),
                       ),
                       Text("人关注",

@@ -65,11 +65,6 @@ class RecentReadProvider with ChangeNotifier {
     recentRead.insert(0, articleProvider);
 
     // update remote database
-    DocumentReference user = fdb
-        .collection(cUsers)
-        .doc(_userId)
-        .collection(cUserProfile)
-        .doc(dUserProfileStatistics);
     DocumentReference history = fdb
         .collection(cUsers)
         .doc(_userId)
@@ -84,8 +79,6 @@ class RecentReadProvider with ChangeNotifier {
     } else {
       // Create a new document in read history
       batch.set(history, {fUpdatedDate: Timestamp.now()});
-      // Increase count
-      batch.update(user, {fUserReadsCount: FieldValue.increment(1)});
     }
     await batch.commit();
 

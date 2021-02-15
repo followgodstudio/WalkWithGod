@@ -24,11 +24,6 @@ class ProfileProvider with ChangeNotifier {
   String uid;
   String name = defaultUserName;
   String imageUrl;
-  // Network info
-  DateTime createdDate;
-  int unreadMessagesCount = 0;
-  int messagesCount = 0;
-  int followersCount = 0;
   // Providers
   FriendsProvider friendsProvider = FriendsProvider();
   SavedArticlesProvider savedArticlesProvider = SavedArticlesProvider();
@@ -58,46 +53,18 @@ class ProfileProvider with ChangeNotifier {
       bool isUserExists = await fetchProfile();
       if (!isUserExists) throw MyException("用户数据缺失，请注销用户后重新注册");
       await savedArticlesProvider.fetchSavedList();
-      await friendsProvider.fetchFriendList(true, followersCount);
+      await friendsProvider.fetchFriendList(true);
       await friendsProvider.fetchFriendList(false);
-      await messagesProvider.fetchMessageList(messagesCount);
-      await settingProvider.fetchAboutUs();
+      await messagesProvider.fetchMessageList();
       await recentReadProvider.fetchRecentRead();
     } on Exception catch (error) {
       _isFetching = false;
       throw error;
     }
-
     _isFetching = false;
     _logger.i("ProfileProvider-fetchAllUserData takes: " +
         DateTime.now().difference(start).inMilliseconds.toString() +
         "ms.");
-  }
-
-  Stream<Map<String, int>> fetchProfileStream() {
-    Stream<DocumentSnapshot> stream = fdb
-        .collection(cUsers)
-        .doc(uid)
-        .collection(cUserProfile)
-        .doc(dUserProfileStatistics)
-        .snapshots();
-    return stream.map((DocumentSnapshot doc) {
-      Map<String, int> data = {
-        fUserUnreadMsgCount: 0,
-        fUserMessagesCount: 0,
-        fUserFollowersCount: 0,
-      };
-      if (!doc.exists) return data;
-      if (doc.data().containsKey(fUserUnreadMsgCount))
-        unreadMessagesCount =
-            data[fUserUnreadMsgCount] = doc.get(fUserUnreadMsgCount);
-      if (doc.data().containsKey(fUserMessagesCount))
-        messagesCount = data[fUserMessagesCount] = doc.get(fUserMessagesCount);
-      if (doc.data().containsKey(fUserFollowersCount))
-        followersCount =
-            data[fUserFollowersCount] = doc.get(fUserFollowersCount);
-      return data;
-    });
   }
 
   Future<bool> fetchProfile() async {
@@ -111,41 +78,43 @@ class ProfileProvider with ChangeNotifier {
           doc.data().containsKey(fUserImageUrl))
         imageUrl = doc.get(fUserImageUrl); // Only fetch once
 
-      // fetch dynamic information
-      DocumentSnapshot docDynamic = await fdb
+      DocumentSnapshot docStatistics = await fdb
           .collection(cUsers)
           .doc(uid)
           .collection(cUserProfile)
           .doc(dUserProfileStatistics)
           .get();
-      if (docDynamic.exists &&
-          docDynamic.data().containsKey(fUserFollowersCount))
-        followersCount = docDynamic.get(fUserFollowersCount);
-
-      // fetch static information
-      DocumentSnapshot docStatic = await fdb
+      if (docStatistics.exists) {
+        if (docStatistics.data().containsKey(fUserReadDuration))
+          recentReadProvider.readDuration =
+              docStatistics.get(fUserReadDuration).floor();
+        if (docStatistics.data().containsKey(fUserReadsCount))
+          recentReadProvider.readsCount = docStatistics.get(fUserReadsCount);
+        if (docStatistics.data().containsKey(fUserFollowingsCount))
+          friendsProvider.followingsCount =
+              docStatistics.get(fUserFollowingsCount);
+        if (docStatistics.data().containsKey(fUserFollowersCount))
+          friendsProvider.followersCount =
+              docStatistics.get(fUserFollowersCount);
+        friendsProvider.notifyListeners();
+        if (docStatistics.data().containsKey(fUserMessagesCount))
+          messagesProvider.messagesCount =
+              docStatistics.get(fUserMessagesCount);
+        if (docStatistics.data().containsKey(fUserUnreadMsgCount))
+          messagesProvider.unreadMessagesCount =
+              docStatistics.get(fUserUnreadMsgCount);
+        messagesProvider.notifyListeners();
+        if (docStatistics.data().containsKey(fUserSavedArticlesCount))
+          savedArticlesProvider.savedArticlesCount =
+              docStatistics.get(fUserSavedArticlesCount);
+      }
+      DocumentSnapshot docSetting = await fdb
           .collection(cUsers)
           .doc(uid)
           .collection(cUserProfile)
-          .doc(dUserProfileStatistics)
+          .doc(dUserProfileSettings)
           .get();
-      if (!docStatic.exists) return true;
-      if (docStatic.data().containsKey(fCreatedDate))
-        createdDate = (docStatic.get(fCreatedDate) as Timestamp).toDate();
-      if (docStatic.data().containsKey(fUserReadDuration))
-        recentReadProvider.readDuration =
-            docStatic.get(fUserReadDuration).floor();
-      if (docStatic.data().containsKey(fUserReadsCount))
-        recentReadProvider.readsCount = docStatic.get(fUserReadsCount);
-      if (docStatic.data().containsKey(fUserFollowingsCount))
-        friendsProvider.followingsCount = docStatic.get(fUserFollowingsCount);
-      if (docStatic.data().containsKey(fUserSavedArticlesCount))
-        savedArticlesProvider.savedArticlesCount =
-            docStatic.get(fUserSavedArticlesCount);
-      if (docStatic.data().containsKey(fSettingScreenAwake))
-        settingProvider.keepScreenAwake = docStatic.get(fSettingScreenAwake);
-      if (docStatic.data().containsKey(fSettingHideRecentRead))
-        settingProvider.hideRecentRead = docStatic.get(fSettingHideRecentRead);
+      if (docSetting.exists) settingProvider.getSetting(docSetting);
       notifyListeners();
       return true;
     } on PlatformException catch (error) {
@@ -191,7 +160,6 @@ class ProfileProvider with ChangeNotifier {
 
   Future<void> initProfile() async {
     _logger.i("ProfileProvider-initProfile");
-    createdDate = DateTime.now();
     await fdb.collection(cUsers).doc(uid).set({fUserName: name});
     await fdb
         .collection(cUsers)
@@ -204,7 +172,7 @@ class ProfileProvider with ChangeNotifier {
         .doc(uid)
         .collection(cUserProfile)
         .doc(dUserProfileStatistics)
-        .set({fCreatedDate: Timestamp.fromDate(createdDate)});
+        .set({fCreatedDate: Timestamp.fromDate(DateTime.now())});
     notifyListeners();
   }
 

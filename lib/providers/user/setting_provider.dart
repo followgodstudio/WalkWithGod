@@ -15,10 +15,10 @@ class SettingProvider with ChangeNotifier {
   String userId;
   bool keepScreenAwake = false;
   bool hideRecentRead = false;
-  bool allowFollowing = false;
+  bool allowFollowing = true;
   bool rejectStrangerMessage = false;
   List<String> blackList = [];
-  bool followingNotification = false;
+  bool followingNotification = true;
   String ourMission = "";
   String whoAreWe = "";
   double imageCacheSize = 0;
@@ -29,6 +29,19 @@ class SettingProvider with ChangeNotifier {
   void setProvider(dynamic fdb, String userId) {
     this.fdb = fdb;
     this.userId = userId;
+  }
+
+  void getSetting(DocumentSnapshot setting) {
+    if (setting.data().containsKey(fSettingScreenAwake))
+      this.keepScreenAwake = setting.get(fSettingScreenAwake);
+    if (setting.data().containsKey(fSettingHideRecentRead))
+      this.hideRecentRead = setting.get(fSettingHideRecentRead);
+    if (setting.data().containsKey(fSettingAllowFollowing))
+      this.allowFollowing = setting.get(fSettingAllowFollowing);
+    if (setting.data().containsKey(fSettingRejectStrangerMessage))
+      this.rejectStrangerMessage = setting.get(fSettingRejectStrangerMessage);
+    if (setting.data().containsKey(fSettingFollowingNotification))
+      this.followingNotification = setting.get(fSettingFollowingNotification);
   }
 
   Future<void> fetchAboutUs() async {
@@ -79,21 +92,21 @@ class SettingProvider with ChangeNotifier {
     }
     if (newHideRecentRead != null)
       hideRecentRead = data[fSettingHideRecentRead] = newHideRecentRead;
-    // if (newAllowFollowing != null)
-    //   allowFollowing = data[fSettingAllowFollowing] = newAllowFollowing;
-    // if (newRejectStrangerMessage != null)
-    //   rejectStrangerMessage =
-    //       data[fSettingRejectStrangerMessage] = newRejectStrangerMessage;
-    // if (newFollowingNotification != null)
-    //   followingNotification =
-    //       data[fSettingFollowingNotification] = newFollowingNotification;
+    if (newAllowFollowing != null)
+      allowFollowing = data[fSettingAllowFollowing] = newAllowFollowing;
+    if (newRejectStrangerMessage != null)
+      rejectStrangerMessage =
+          data[fSettingRejectStrangerMessage] = newRejectStrangerMessage;
+    if (newFollowingNotification != null)
+      followingNotification =
+          data[fSettingFollowingNotification] = newFollowingNotification;
     if (data.isNotEmpty) {
       await fdb
           .collection(cUsers)
           .doc(this.userId)
           .collection(cUserProfile)
-          .doc(dUserProfileStatistics)
-          .update(data);
+          .doc(dUserProfileSettings)
+          .set(data, SetOptions(merge: true));
       notifyListeners();
     }
   }

@@ -33,9 +33,7 @@ class MessagesProvider with ChangeNotifier {
 
   // methods
 
-  Future<void> fetchMessageList(int newMessageCount,
-      [int limit = loadLimit]) async {
-    if (newMessageCount == messagesCount) return; // do not need to refresh
+  Future<void> fetchMessageList([int limit = loadLimit]) async {
     _logger.i("MessagesProvider-fetchMessageList");
     QuerySnapshot query = await fdb
         .collection(cUsers)
@@ -44,7 +42,6 @@ class MessagesProvider with ChangeNotifier {
         .orderBy(fCreatedDate, descending: true)
         .limit(limit)
         .get();
-    messagesCount = newMessageCount;
     _items = [];
     _appendMessageList(query, limit);
   }
@@ -76,7 +73,7 @@ class MessagesProvider with ChangeNotifier {
         senderImage: null,
         receiverUid: receiverUid,
         type: null,
-        createDate: null,
+        createdDate: null,
         isRead: null);
     message.markMessageAsRead(true);
   }
@@ -117,19 +114,6 @@ class MessagesProvider with ChangeNotifier {
     var newDocRef =
         fdb.collection(cUsers).doc(receiverUid).collection(cUserMessages).doc();
     batch.set(newDocRef, data);
-    // Increase message and unread message count by 1
-    batch.update(
-        fdb
-            .collection(cUsers)
-            .doc(receiverUid)
-            .collection(cUserProfile)
-            .doc(dUserProfileStatistics),
-        {
-          fUserMessagesCount: FieldValue.increment(1),
-          fUserUnreadMsgCount: FieldValue.increment(1)
-        });
-
-    await batch.commit();
   }
 
   void _appendMessageList(QuerySnapshot query, int limit) {
@@ -152,7 +136,7 @@ class MessagesProvider with ChangeNotifier {
         senderImage: data[fMessageSenderImage],
         receiverUid: data[fMessageReceiverUid],
         type: data[fMessageType],
-        createDate: (data[fCreatedDate] as Timestamp).toDate(),
+        createdDate: (data[fCreatedDate] as Timestamp).toDate(),
         isRead: data[fMessageIsRead]);
   }
 }

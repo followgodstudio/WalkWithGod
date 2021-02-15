@@ -40,13 +40,11 @@ class FriendItem extends StatelessWidget {
                             listen: false);
                         if (data.friendStatus == eFriendStatusFollowing ||
                             data.friendStatus == eFriendStatusFriend) {
-                          await data.unfollow(
-                              profile.uid, profile.name, profile.imageUrl);
+                          await data.unfollow(profile.uid);
                           await profile.friendsProvider
                               .removefollowInList(data.friendUid);
                         } else {
-                          await data.follow(
-                              profile.uid, profile.name, profile.imageUrl);
+                          await data.follow(profile.uid);
                           await profile.friendsProvider.addFollowInList(data);
                         }
                       });

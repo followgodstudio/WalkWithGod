@@ -1,21 +1,21 @@
-import 'package:firebase_core/firebase_core.dart';
+// import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:provider/provider.dart';
-import 'package:walk_with_god/main.dart';
-import 'package:walk_with_god/providers/article/articles_provider.dart';
-import 'package:walk_with_god/providers/article/comments_provider.dart';
-import 'package:walk_with_god/providers/auth_provider.dart';
-import 'package:walk_with_god/providers/splash_provider.dart';
-import 'package:walk_with_god/providers/user/friends_provider.dart';
-import 'package:walk_with_god/providers/user/messages_provider.dart';
-import 'package:walk_with_god/providers/user/notification_provider.dart';
-import 'package:walk_with_god/providers/user/profile_provider.dart';
-import 'package:walk_with_god/providers/user/recent_read_provider.dart';
-import 'package:walk_with_god/providers/user/saved_articles_provider.dart';
-import 'package:walk_with_god/providers/user/setting_provider.dart';
+// import 'package:provider/provider.dart';
+// import 'package:walk_with_god/main.dart';
+// import 'package:walk_with_god/providers/article/articles_provider.dart';
+// import 'package:walk_with_god/providers/article/comments_provider.dart';
+// import 'package:walk_with_god/providers/auth_provider.dart';
+// import 'package:walk_with_god/providers/splash_provider.dart';
+// import 'package:walk_with_god/providers/user/friends_provider.dart';
+// import 'package:walk_with_god/providers/user/messages_provider.dart';
+// import 'package:walk_with_god/providers/user/notification_provider.dart';
+// import 'package:walk_with_god/providers/user/profile_provider.dart';
+// import 'package:walk_with_god/providers/user/recent_read_provider.dart';
+// import 'package:walk_with_god/providers/user/saved_articles_provider.dart';
+// import 'package:walk_with_god/providers/user/setting_provider.dart';
 
-import 'package:walk_with_god/screens/personal_management_screen/personal_management_screen.dart';
+// import 'package:walk_with_god/screens/personal_management_screen/personal_management_screen.dart';
 import 'package:walk_with_god/screens/personal_management_screen/setting/black_list_screen.dart';
 
 void main() async {

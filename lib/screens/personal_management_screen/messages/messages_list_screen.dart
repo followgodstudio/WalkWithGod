@@ -33,8 +33,7 @@ class MessagesListScreen extends StatelessWidget {
           child: SingleChildScrollView(
               child: FutureBuilder(
                   future: exceptionHandling(context, () async {
-                    await profile.messagesProvider
-                        .fetchMessageList(profile.messagesCount);
+                    await profile.messagesProvider.fetchMessageList();
                   }),
                   builder: (ctx, asyncSnapshot) {
                     if (asyncSnapshot.connectionState ==

@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 /// This is a divider without padding, and implements PreferredSizeWidget
 class MyDivider extends StatelessWidget implements PreferredSizeWidget {
-  final double indent;
   final double thickness;
   final Color color;
+  final EdgeInsets padding;
 
-  MyDivider({this.indent = 0.0, this.thickness = 0.4, this.color});
+  MyDivider({this.thickness = 0.4, this.color, this.padding = EdgeInsets.zero});
 
   @override
   Size get preferredSize => Size.fromHeight(thickness);
@@ -15,7 +15,6 @@ class MyDivider extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     Color _color = color ?? Theme.of(context).dividerColor;
     return Padding(
-        padding: EdgeInsets.symmetric(horizontal: indent),
-        child: Container(color: _color, height: thickness));
+        padding: padding, child: Container(color: _color, height: thickness));
   }
 }

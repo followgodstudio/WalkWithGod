@@ -100,7 +100,7 @@ class _EditPictureScreenState extends State<EditPictureScreen> {
               flutterIcon: Icons.photo_library,
               iconSize: 25,
               padding: 10,
-              onPressed: () => _pickImage(ImageSource.camera),
+              onPressed: () => _pickImage(ImageSource.gallery),
             )
           ],
         ),
