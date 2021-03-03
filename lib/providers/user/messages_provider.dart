@@ -107,13 +107,12 @@ class MessagesProvider with ChangeNotifier {
     data[fMessageIsRead] = false;
     data[fMessageContent] = content;
 
-    final FirebaseFirestore fdb = FirebaseFirestore.instance;
-    WriteBatch batch = fdb.batch();
-
-    // Add document
-    var newDocRef =
-        fdb.collection(cUsers).doc(receiverUid).collection(cUserMessages).doc();
-    batch.set(newDocRef, data);
+    FirebaseFirestore.instance
+        .collection(cUsers)
+        .doc(receiverUid)
+        .collection(cUserMessages)
+        .doc()
+        .set(data, SetOptions(merge: true));
   }
 
   void _appendMessageList(QuerySnapshot query, int limit) {

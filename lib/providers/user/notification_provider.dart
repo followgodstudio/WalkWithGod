@@ -1,13 +1,15 @@
+import 'dart:io' show Platform;
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import '../../screens/article_screen/article_screen.dart';
+import '../../screens/personal_management_screen/friends/friends_list_screen.dart';
 import '../../screens/personal_management_screen/messages/messages_list_screen.dart';
 import '../../utils/my_logger.dart';
 import '../../utils/utils.dart';
 import 'messages_provider.dart';
-import 'dart:io' show Platform;
 
 class NotificationProvider with ChangeNotifier {
   BuildContext _context;
@@ -65,6 +67,14 @@ class NotificationProvider with ChangeNotifier {
   }
 
   void navigateToDetail(Map<String, dynamic> message) {
+    if (message['data']['type'] == "message") {
+      messageReceived(message);
+    } else if (message['data']['type'] == "newFollower") {
+      goToFollowerPage();
+    }
+  }
+
+  void messageReceived(Map<String, dynamic> message) {
     String articleId = message['data']['article_id'];
     String messageId = message['data']['message_id'];
     String commentId = message['data']['comment_id'];
@@ -74,6 +84,11 @@ class NotificationProvider with ChangeNotifier {
       ArticleScreen.routeName,
       arguments: {"articleId": articleId, "commentId": commentId},
     );
+  }
+
+  void goToFollowerPage() {
+    Navigator.of(_context)
+        .pushNamed(FriendsListScreen.routeName, arguments: true);
   }
 
   updateContext(BuildContext context) {

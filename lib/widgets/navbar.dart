@@ -4,27 +4,32 @@ import 'my_divider.dart';
 import 'my_icon_button.dart';
 
 class NavBar extends StatelessWidget implements PreferredSizeWidget {
-  final double _prefferedHeight = 50.0;
+  final double expandedHeight;
   final String title;
   final Widget titleWidget;
   final Color backgroundColor;
   final bool isSliverAppBar;
-  final bool isFix;
+  final bool pinned;
+  final bool floating;
   final bool hasBackButton;
   final Widget actionButton;
+  final Widget flexibleSpace;
 
   NavBar({
     this.title = "",
     this.titleWidget,
     this.backgroundColor,
     this.isSliverAppBar = false,
-    this.isFix = true,
+    this.pinned = true,
+    this.floating = true,
     this.hasBackButton = true,
     this.actionButton,
+    this.expandedHeight = 50.0,
+    this.flexibleSpace,
   });
 
   @override
-  Size get preferredSize => Size.fromHeight(_prefferedHeight);
+  Size get preferredSize => Size.fromHeight(expandedHeight);
 
   @override
   Widget build(BuildContext context) {
@@ -54,13 +59,15 @@ class NavBar extends StatelessWidget implements PreferredSizeWidget {
     if (!hasBackButton && titleWidget == null) leadingBackButton = SizedBox();
     if (isSliverAppBar)
       return SliverAppBar(
-        pinned: isFix,
-        floating: !isFix,
+        pinned: pinned,
+        floating: floating,
+        expandedHeight: expandedHeight,
         elevation: 0,
         title: _titleWidget,
         leading: leadingBackButton,
         backgroundColor: _backgroundColor,
         actions: [action],
+        flexibleSpace: flexibleSpace ?? SizedBox(),
       );
     return AppBar(
       centerTitle: true,

@@ -50,8 +50,7 @@ class ProfileProvider with ChangeNotifier {
     _isFetching = true;
     DateTime start = DateTime.now();
     try {
-      bool isUserExists = await fetchProfile();
-      if (!isUserExists) throw MyException("用户数据缺失，请注销用户后重新注册");
+      await fetchProfile();
       await savedArticlesProvider.fetchSavedList();
       await friendsProvider.fetchFriendList(true);
       await friendsProvider.fetchFriendList(false);
@@ -71,8 +70,11 @@ class ProfileProvider with ChangeNotifier {
     _logger.i("ProfileProvider-fetchProfile");
     try {
       DocumentSnapshot doc = await fdb.collection(cUsers).doc(uid).get();
-      if (!doc.exists) return false; // User not exist
-
+      if (!doc.exists) {
+        // User profile does not exist, init profile
+        await initProfile();
+        doc = await fdb.collection(cUsers).doc(uid).get();
+      }
       if (doc.data().containsKey(fUserName)) name = doc.get(fUserName);
       if ((imageUrl == null || imageUrl.isEmpty) &&
           doc.data().containsKey(fUserImageUrl))
@@ -160,20 +162,16 @@ class ProfileProvider with ChangeNotifier {
 
   Future<void> initProfile() async {
     _logger.i("ProfileProvider-initProfile");
-    await fdb.collection(cUsers).doc(uid).set({fUserName: name});
-    await fdb
-        .collection(cUsers)
-        .doc(uid)
-        .collection(cUserProfile)
-        .doc(dUserProfileStatistics)
-        .set({});
-    await fdb
-        .collection(cUsers)
-        .doc(uid)
-        .collection(cUserProfile)
-        .doc(dUserProfileStatistics)
-        .set({fCreatedDate: Timestamp.fromDate(DateTime.now())});
-    notifyListeners();
+    WriteBatch batch = fdb.batch();
+    batch.set(fdb.collection(cUsers).doc(uid), {fUserName: name});
+    batch.set(
+        fdb
+            .collection(cUsers)
+            .doc(uid)
+            .collection(cUserProfile)
+            .doc(dUserProfileStatistics),
+        {fCreatedDate: Timestamp.fromDate(DateTime.now())});
+    await batch.commit();
   }
 
   Future<void> deleteProfile() async {

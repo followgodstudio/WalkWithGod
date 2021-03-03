@@ -22,6 +22,15 @@ class FriendsListScreen extends StatefulWidget {
 
 class _FriendsListScreenState extends State<FriendsListScreen> {
   bool _isFollower = false;
+
+  @override
+  void didChangeDependencies() {
+    if (ModalRoute.of(context).settings.arguments != null) {
+      _isFollower = ModalRoute.of(context).settings.arguments as bool;
+    }
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     ProfileProvider profile =

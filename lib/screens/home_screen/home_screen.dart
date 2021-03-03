@@ -105,6 +105,21 @@ class _HomeScreenState extends State<HomeScreen> {
                             NavBar(
                                 hasBackButton: false,
                                 isSliverAppBar: true,
+                                expandedHeight: 100.0,
+                                flexibleSpace: Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 60.0, left: 30.0, right: 30.0),
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        "我关注的",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .captionMedium1,
+                                      ),
+                                    ],
+                                  ),
+                                ),
                                 titleWidget: Row(
                                   children: <Widget>[
                                     SizedBox(width: 15),

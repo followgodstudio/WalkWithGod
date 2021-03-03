@@ -12,7 +12,7 @@ class TopBar extends StatelessWidget {
     MyLogger("Widget").v("TopBar-build");
     return NavBar(
         isSliverAppBar: true,
-        isFix: false,
+        pinned: false,
         titleWidget:
             Consumer<ArticleProvider>(builder: (context, article, child) {
           if (article.id == null) return SizedBox();
