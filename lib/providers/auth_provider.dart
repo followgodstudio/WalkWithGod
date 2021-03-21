@@ -58,20 +58,25 @@ class AuthProvider with ChangeNotifier {
   }
 
   // Email & Password Sign Up
-  Future<String> createUserWithEmailAndPassword(
+  Future<void> createUserWithEmailAndPassword(
       String email, String password, String name) async {
     UserCredential authResult = await _auth.createUserWithEmailAndPassword(
       email: email,
       password: password,
     );
-    return await userLoggedIn(authResult);
+    await authResult.user.sendEmailVerification();
   }
 
   // Email & Password Sign In
-  Future<void> signInWithEmailAndPassword(String email, String password) async {
+  Future<bool> signInWithEmailAndPassword(String email, String password) async {
     UserCredential authResult = await _auth.signInWithEmailAndPassword(
         email: email, password: password);
-    await userLoggedIn(authResult);
+    if (authResult.user.emailVerified) {
+      await userLoggedIn(authResult);
+      return true;
+    }
+    await authResult.user.sendEmailVerification();
+    return false;
   }
 
   Future<String> userLoggedIn(authResult) async {

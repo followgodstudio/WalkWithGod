@@ -7,18 +7,16 @@ import '../screens/article_screen/article_screen.dart';
 import '../utils/utils.dart';
 import 'network_manager.dart';
 
-enum ArticleCardStyle { small, large, title }
+enum ArticleCardStyle { small, home, title }
 
 /// Takes the max size that's available
 class ArticleCard extends StatelessWidget {
   final ArticleProvider article;
   final ArticleCardStyle style;
-  final bool hasDescription;
   final double aspectRatio;
   ArticleCard({
     this.article,
     this.style = ArticleCardStyle.small,
-    this.hasDescription = false,
     this.aspectRatio = 6 / 7,
   });
 
@@ -57,10 +55,10 @@ class ArticleCard extends StatelessWidget {
               ArticleScreen.routeName,
               arguments: {'articleId': article.id},
             );
-          } else if (style == ArticleCardStyle.large) {
+          } else if (style == ArticleCardStyle.home) {
             Navigator.of(context).push(PageRouteBuilder(
               fullscreenDialog: true,
-              transitionDuration: Duration(milliseconds: 800),
+              // transitionDuration: Duration(milliseconds: 800),
               pageBuilder: (context, animaton, secondaryAnimtaion) {
                 return NetworkManager(child: ArticleScreen());
               },
@@ -145,7 +143,7 @@ class ArticleCard extends StatelessWidget {
                         ),
                         if (style != ArticleCardStyle.small)
                           SizedBox(height: space),
-                        if (hasDescription)
+                        if (style == ArticleCardStyle.home)
                           Text(
                             article.description ?? "",
                             maxLines: 2,

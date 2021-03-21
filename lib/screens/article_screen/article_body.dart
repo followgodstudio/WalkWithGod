@@ -7,7 +7,6 @@ import '../../utils/my_logger.dart';
 import '../../widgets/aricle_paragraph.dart';
 import '../../widgets/article_card.dart';
 import '../../widgets/my_progress_indicator.dart';
-import '../../widgets/my_text_button.dart';
 import 'article_body_html.dart';
 
 class ArticleBody extends StatefulWidget {
@@ -24,7 +23,7 @@ class _ArticleBodyState extends State<ArticleBody> {
       return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         if (article.id == null) MyProgressIndicator(),
         if (article.id != null)
-          ArticleCard(article: article, style: ArticleCardStyle.title),
+          ArticleCard(article: article, style: ArticleCardStyle.title, aspectRatio: 1),
         SizedBox(height: 10.0),
         // if (article.contentHtml != null)
         //   Center(

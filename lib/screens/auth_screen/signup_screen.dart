@@ -28,7 +28,7 @@ class SignupScreen extends StatefulWidget {
 class _SignupScreenState extends State<SignupScreen> {
   _SignupScreenState({this.authFormType});
   final formKey = GlobalKey<FormState>();
-  String _email, _password, _name;
+  String _email, _password, _name, _errorMessage;
   AuthFormType authFormType;
   bool _showAppleSignIn = false;
   String countryCode = "+1";
@@ -81,16 +81,25 @@ class _SignupScreenState extends State<SignupScreen> {
         final auth = Provider.of<AuthProvider>(context, listen: false);
         switch (authFormType) {
           case AuthFormType.signIn:
-            await auth.signInWithEmailAndPassword(_email, _password);
-            routeHome();
+            final verified =
+                await auth.signInWithEmailAndPassword(_email, _password);
+            if (verified) {
+              routeHome();
+            } else {
+              showPopUpDialog(context, false, "请验证邮箱后登陆，邮件已发送到：$_email");
+            }
             break;
           case AuthFormType.signUp:
+            if (_errorMessage != null) return;
             await auth.createUserWithEmailAndPassword(_email, _password, _name);
-            routeHome();
+            showPopUpDialog(context, true, "请验证邮箱后登陆，邮件已发送到：$_email",
+                durationMilliseconds: 2000);
+            switchFormState("signIn");
             break;
           case AuthFormType.reset:
             await auth.sendPasswordResetEmail(_email);
             showPopUpDialog(context, true, "密码重置邮件已发送到：$_email");
+            switchFormState("signIn");
             break;
           case AuthFormType.phone:
             String _phone = countryCode + phoneNumber;
@@ -178,6 +187,29 @@ class _SignupScreenState extends State<SignupScreen> {
           onSaved: (value) => _password = value,
         ),
       );
+      textFields.add(SizedBox(height: 20));
+    }
+
+    if (authFormType == AuthFormType.signUp) {
+      textFields.add(
+        TextFormField(
+          validator: PasswordValidator.validate,
+          style: Theme.of(context).textTheme.bodyText1,
+          decoration: buildSignUpInputDecoration("请再次输入密码"),
+          obscureText: true,
+          keyboardType: TextInputType.emailAddress,
+          onSaved: (value) => {
+            setState(() {
+              _errorMessage = _password != value ? "两次密码输入不一致" : null;
+            })
+          },
+        ),
+      );
+      if (_errorMessage != null) {
+        textFields.add(SizedBox(height: 10));
+        textFields
+            .add(Text(_errorMessage, style: TextStyle(color: MyColors.error)));
+      }
       textFields.add(SizedBox(height: 20));
     }
 

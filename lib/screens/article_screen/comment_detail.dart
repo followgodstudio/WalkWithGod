@@ -90,6 +90,7 @@ class CommentBottomBar extends StatelessWidget {
   CommentBottomBar(this.onSubmitComment);
   @override
   Widget build(BuildContext context) {
+    final bottomBarHeight = 40.0;
     ProfileProvider profile =
         Provider.of<ProfileProvider>(context, listen: false);
     CommentProvider comment =
@@ -103,7 +104,7 @@ class CommentBottomBar extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: Container(
-                height: 40,
+                height: bottomBarHeight,
                 child: FlatButton(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -135,7 +136,7 @@ class CommentBottomBar extends StatelessWidget {
                       }
                     },
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18.0),
+                      borderRadius: BorderRadius.circular(bottomBarHeight / 2),
                     ),
                     color: Theme.of(context).buttonColor),
               ),

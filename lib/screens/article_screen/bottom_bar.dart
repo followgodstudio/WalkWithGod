@@ -19,6 +19,7 @@ class BottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bottomBarHeight = 40.0;
     MyLogger("Widget").v("BottomBar-build");
     BuildContext rootContext = context;
     ProfileProvider profile =
@@ -31,7 +32,7 @@ class BottomBar extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: Container(
-                height: 40,
+                height: bottomBarHeight,
                 child: FlatButton(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -70,7 +71,7 @@ class BottomBar extends StatelessWidget {
                       }
                     },
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18.0),
+                      borderRadius: BorderRadius.circular(bottomBarHeight / 2),
                     ),
                     color: Theme.of(context).buttonColor),
               ),

@@ -19,10 +19,14 @@ Future<dynamic> exceptionHandling(
     showPopUpDialog(context, false, error.message);
   } on FirebaseAuthException catch (error) {
     String message = error.message;
-    // handle some general exceptions, such as network
-    if (error.code == "network-request-failed") message = "网络不佳";
+    String newMessage;
     MyLogger("Firebase").e(message);
-    showPopUpDialog(context, false, "FirebaseException: " + message);
+    // print(error);
+    // handle some general exceptions, such as network
+    if (error.code == "network-request-failed") newMessage = "网络不佳";
+    if (error.code == "wrong-password") newMessage = "邮箱或密码错误";
+    showPopUpDialog(
+        context, false, newMessage ?? "FirebaseException: " + message);
   } on PlatformException catch (error) {
     MyLogger("TODO-platform").e(error.message);
     showPopUpDialog(context, false, "PlatformException:" + error.message);

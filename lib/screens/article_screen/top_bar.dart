@@ -21,10 +21,10 @@ class TopBar extends StatelessWidget {
               children: [
                 Text(
                   article.title ?? "",
-                  style: Theme.of(context).textTheme.headline4,
+                  style: Theme.of(context).textTheme.button,
                   overflow: TextOverflow.ellipsis,
                 ),
-                SizedBox(height: 5.0),
+                SizedBox(height: 3.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
