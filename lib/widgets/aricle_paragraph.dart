@@ -15,7 +15,7 @@ class ArticleParagraph extends StatelessWidget {
         if (_paragraph.subtitle != null && _paragraph.subtitle.isNotEmpty)
           SelectableText(
             _paragraph.subtitle,
-            style: Theme.of(context).textTheme.captionMedium1,
+            style: Theme.of(context).textTheme.buttonLarge,
           ),
         SizedBox(height: 20.0),
         SelectableText(_paragraph.body,
