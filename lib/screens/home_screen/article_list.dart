@@ -18,7 +18,8 @@ class ArticleList extends StatelessWidget {
                 horizontal: horizontalPadding, vertical: 12.5),
             child: ArticleCard(
                 article: articlesData.articles[index],
-                style: ArticleCardStyle.home),
+                style: ArticleCardStyle.home,
+                aspectRatio: 1),
           );
         },
         childCount:

@@ -9,9 +9,12 @@ import '../../screens/personal_management_screen/personal_management_screen.dart
 import '../../utils/my_logger.dart';
 import '../../utils/utils.dart';
 import '../../widgets/my_bottom_indicator.dart';
+import '../../widgets/my_icon_button.dart';
 import '../../widgets/navbar.dart';
 import '../../widgets/profile_picture.dart';
 import 'article_list.dart';
+
+enum PageContent { following, friends, all }
 
 class HomeScreen extends StatefulWidget {
   static const routeName = '/home';
@@ -22,9 +25,11 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   ScrollController _controller = new ScrollController();
   var prevIndex = -1;
+  var activePage = PageContent.following;
   ValueNotifier<String> title;
   ValueNotifier<String> formattedDate;
-  var formatter = new DateFormat('yyyy年M月d日');
+  ValueNotifier<DateTime> curDate;
+  var formatter = new DateFormat('MMM yyyy');
 
   String diff(DateTime time) {
     var now = DateTime.now();
@@ -44,6 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
     var articleHeight = (MediaQuery.of(context).size.width - 60) / 5 * 6 + 25;
     title = ValueNotifier<String>("今日");
     formattedDate = ValueNotifier<String>(formatter.format(new DateTime.now()));
+    curDate = ValueNotifier<DateTime>(new DateTime.now());
     _controller.addListener(() {
       var index = (_controller.offset.floor() / articleHeight).floor();
       var articles =
@@ -51,6 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
       if (index != prevIndex && index < articles.length && index >= 0) {
         title.value = diff(articles[index].createdDate);
         formattedDate.value = formatter.format(articles[index].createdDate);
+        curDate.value = articles[index].createdDate;
         prevIndex = index;
       }
     });
@@ -64,12 +71,19 @@ class _HomeScreenState extends State<HomeScreen> {
     title = ValueNotifier<String>(diff(articles[0].createdDate));
     formattedDate =
         ValueNotifier<String>(formatter.format(articles[0].createdDate));
+    curDate = ValueNotifier<DateTime>(articles[0].createdDate);
   }
 
   Future<void> refreshArticles() async {
     await exceptionHandling(context, () async {
       await Provider.of<ArticlesProvider>(context, listen: false)
           .fetchArticlesByDate();
+    });
+  }
+
+  void activePageChange(PageContent newActivePage) {
+    setState(() {
+      activePage = newActivePage;
     });
   }
 
@@ -105,48 +119,52 @@ class _HomeScreenState extends State<HomeScreen> {
                             NavBar(
                                 hasBackButton: false,
                                 isSliverAppBar: true,
-                                // expandedHeight: 100.0,
-                                // flexibleSpace: Padding(
-                                //   padding: const EdgeInsets.only(
-                                //       top: 60.0, left: 30.0, right: 30.0),
-                                //   child: Row(
-                                //     children: [
-                                //       Text(
-                                //         "我关注的",
-                                //         style: Theme.of(context)
-                                //             .textTheme
-                                //             .captionMedium1,
-                                //       ),
-                                //     ],
-                                //   ),
-                                // ),
+                                toolbarHeight: 80.0,
+                                expandedHeight: 120.0,
+                                flexibleSpace:
+                                    PageNavigator(activePage, activePageChange),
                                 titleWidget: Row(
-                                  children: <Widget>[
+                                  children: [
                                     SizedBox(width: 15),
                                     ValueListenableBuilder(
-                                      valueListenable: title,
-                                      builder: (context, String value, child) =>
-                                          Text(
-                                        value,
+                                      valueListenable: curDate,
+                                      builder:
+                                          (context, DateTime value, child) =>
+                                              Text(
+                                        value.day.toString(),
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline1,
+                                            .dateLarge,
                                       ),
                                     ),
-                                    Container(
-                                        height: 20,
-                                        child: VerticalDivider(
-                                            color: MyColors.grey)),
-                                    ValueListenableBuilder(
-                                      valueListenable: formattedDate,
-                                      builder: (context, String value, child) =>
-                                          Text(
-                                        value,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .captionGrey,
-                                      ),
-                                    ),
+                                    SizedBox(width: 5),
+                                    Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          ValueListenableBuilder(
+                                            valueListenable: title,
+                                            builder: (context, String value,
+                                                    child) =>
+                                                Text(
+                                              value,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline5,
+                                            ),
+                                          ),
+                                          ValueListenableBuilder(
+                                            valueListenable: formattedDate,
+                                            builder: (context, String value,
+                                                    child) =>
+                                                Text(
+                                              value.toUpperCase(),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .captionGrey,
+                                            ),
+                                          ),
+                                        ]),
                                   ],
                                 ),
                                 actionButton: FlatButton(
@@ -165,5 +183,106 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: MyBottomIndicator(articles.noMoreChild)),
                           ]);
                     })))));
+  }
+}
+
+class PageNavigator extends StatefulWidget {
+  final PageContent activePage;
+  final Function activePageChanged;
+  PageNavigator(this.activePage, this.activePageChanged);
+
+  @override
+  _PageNavigatorState createState() => _PageNavigatorState();
+}
+
+class _PageNavigatorState extends State<PageNavigator> {
+  double leftPosition = 0;
+  GlobalKey _keyFollowing = GlobalKey();
+  GlobalKey _keyFriends = GlobalKey();
+  GlobalKey _keyAll = GlobalKey();
+
+  void changePosition(GlobalKey key) {
+    final RenderBox renderBoxRed = key.currentContext.findRenderObject();
+    final position = renderBoxRed.localToGlobal(Offset.zero);
+    setState(() {
+      leftPosition = position.dx - 30.0;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+        padding: const EdgeInsets.only(top: 75.0, left: 30.0, right: 30.0),
+        child: Container(
+          width: 100,
+          height: 100,
+          child: ListView(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(children: [
+                    PageNavigatorButton(_keyFollowing, "我的关注",
+                        widget.activePage == PageContent.following, () {
+                      widget.activePageChanged(PageContent.following);
+                      changePosition(_keyFollowing);
+                    }),
+                    PageNavigatorButton(_keyFriends, "好友喜欢",
+                        widget.activePage == PageContent.friends, () {
+                      widget.activePageChanged(PageContent.friends);
+                      changePosition(_keyFriends);
+                    }),
+                    PageNavigatorButton(
+                        _keyAll, "全部更新", widget.activePage == PageContent.all,
+                        () {
+                      widget.activePageChanged(PageContent.all);
+                      changePosition(_keyAll);
+                    }),
+                  ]),
+                  MyIconButton(
+                      hasBorder: true, icon: 'save_border', onPressed: () {}),
+                ],
+              ),
+              Container(
+                height: 4.0,
+                child: Stack(
+                  children: [
+                    AnimatedPositioned(
+                        left: leftPosition,
+                        duration: Duration(milliseconds: 100),
+                        child: Container(
+                            width: 40, height: 4.0, color: MyColors.yellow)),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ));
+  }
+}
+
+class PageNavigatorButton extends StatelessWidget {
+  final GlobalKey key;
+  final String buttonText;
+  final bool isActive;
+  final Function onPressed;
+  PageNavigatorButton(this.key, this.buttonText, this.isActive, this.onPressed);
+
+  @override
+  Widget build(BuildContext context) {
+    return FlatButton(
+        padding: EdgeInsets.only(right: 10),
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        minWidth: 0,
+        child: Text(
+          buttonText,
+          style: isActive
+              ? Theme.of(context).textTheme.captionMedium1
+              : Theme.of(context)
+                  .textTheme
+                  .captionMedium1
+                  .copyWith(color: MyColors.midGrey),
+        ),
+        onPressed: onPressed);
   }
 }

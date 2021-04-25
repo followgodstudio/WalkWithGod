@@ -5,10 +5,11 @@ class MyColors {
   static const Color deepBlue = Color.fromARGB(255, 0, 77, 106);
   static const Color lightBlue = Color.fromARGB(255, 50, 197, 255);
   static const Color pink = Color.fromARGB(255, 239, 71, 111);
-  static const Color yellow = Color.fromARGB(255, 255, 235, 133);
+  static const Color yellow = Color.fromARGB(255, 247, 181, 0);
   static const Color lightGreen = Color.fromARGB(255, 195, 255, 235);
   static const Color silver = Color.fromARGB(255, 240, 240, 240);
   static const Color lightGrey = Color.fromARGB(255, 224, 224, 224);
+  static const Color midGrey = Color.fromARGB(255, 194, 194, 194);
   static const Color grey = Color.fromARGB(255, 128, 128, 128);
 
   static const Color error = Colors.red;
@@ -26,8 +27,11 @@ final ThemeData dayTheme = new ThemeData(
         TextStyle(color: MyColors.black, fontSize: 22.0, fontFamily: 'Song'),
     headline3:
         TextStyle(color: MyColors.black, fontSize: 16.0, fontFamily: 'Song'),
-    headline4:
-        TextStyle(color: MyColors.black, fontSize: 14.0, fontFamily: 'Song'),
+    headline4: TextStyle(
+        color: MyColors.black,
+        fontSize: 22.0,
+        fontFamily: 'Hei',
+        fontWeight: FontWeight.w700),
     headline5: TextStyle(
       color: MyColors.black,
       fontSize: 22.0,
@@ -89,6 +93,12 @@ extension CustomStyles on TextTheme {
         color: MyColors.black,
         fontFamily: 'Hei',
         fontWeight: FontWeight.w500,
+      );
+  TextStyle get dateLarge => const TextStyle(
+        fontSize: 56.0,
+        color: MyColors.yellow,
+        fontFamily: 'Hei',
+        fontWeight: FontWeight.w700,
       );
 }
 

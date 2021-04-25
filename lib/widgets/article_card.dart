@@ -26,7 +26,6 @@ class ArticleCard extends StatelessWidget {
     double space = 8.0;
     int maxLines = 2;
     double avatarRadius = 15;
-    double eyebrowWidth = 42;
     String heroTag = article.id;
     double shadowOpacity = 0.3;
     if (style == ArticleCardStyle.small) {
@@ -34,7 +33,6 @@ class ArticleCard extends StatelessWidget {
       space = 3.0;
       maxLines = 3;
       avatarRadius = 10;
-      eyebrowWidth = 30;
       heroTag += "_";
     } else if (style == ArticleCardStyle.title) {
       shadowOpacity = 0.0;
@@ -121,35 +119,46 @@ class ArticleCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.end,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          width: eyebrowWidth,
-                          child:
-                              Divider(color: MyColors.yellow, thickness: 4.0),
-                        ),
-                        if (style != ArticleCardStyle.small)
-                          SizedBox(height: 5.0),
-                        Text(
-                          article.title ?? "",
-                          maxLines: maxLines,
-                          style: (style == ArticleCardStyle.small)
-                              ? Theme.of(context)
-                                  .textTheme
-                                  .headline3
-                                  .copyWith(color: fontColor)
-                              : Theme.of(context)
-                                  .textTheme
-                                  .headline2
-                                  .copyWith(color: fontColor),
+                        IntrinsicHeight(
+                          child: Row(
+                            children: [
+                              VerticalDivider(
+                                indent: 4,
+                                thickness: 4,
+                                color: MyColors.yellow,
+                                width: 4,
+                              ),
+                              SizedBox(width: 8),
+                              Flexible(
+                                  child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  if (style != ArticleCardStyle.small)
+                                    Text(
+                                        getCreatedDuration(
+                                                article.createdDate) +
+                                            " ｜ ??人看过",
+                                        style: captionStyle),
+                                  Text(
+                                    article.title ?? "",
+                                    maxLines: maxLines,
+                                    style: (style == ArticleCardStyle.small)
+                                        ? Theme.of(context)
+                                            .textTheme
+                                            .headline3
+                                            .copyWith(color: fontColor)
+                                        : Theme.of(context)
+                                            .textTheme
+                                            .headline2
+                                            .copyWith(color: fontColor),
+                                  ),
+                                ],
+                              )),
+                            ],
+                          ),
                         ),
                         if (style != ArticleCardStyle.small)
                           SizedBox(height: space),
-                        if (style == ArticleCardStyle.home)
-                          Text(
-                            article.description ?? "",
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: captionStyle,
-                          ),
                         Divider(color: fontColor),
                         if (style != ArticleCardStyle.small)
                           SizedBox(height: space),
@@ -184,8 +193,7 @@ class ArticleCard extends StatelessWidget {
                               ),
                             ),
                             if (style != ArticleCardStyle.small)
-                              Text(getCreatedDuration(article.createdDate),
-                                  style: captionStyle),
+                              Text("已关注", style: captionStyle),
                           ],
                         ),
                       ],

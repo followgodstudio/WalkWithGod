@@ -5,6 +5,7 @@ import 'my_icon_button.dart';
 
 class NavBar extends StatelessWidget implements PreferredSizeWidget {
   final double expandedHeight;
+  final double toolbarHeight;
   final String title;
   final Widget titleWidget;
   final Color backgroundColor;
@@ -25,6 +26,7 @@ class NavBar extends StatelessWidget implements PreferredSizeWidget {
     this.hasBackButton = true,
     this.actionButton,
     this.expandedHeight = 50.0,
+    this.toolbarHeight = 50.0,
     this.flexibleSpace,
   });
 
@@ -62,6 +64,7 @@ class NavBar extends StatelessWidget implements PreferredSizeWidget {
         pinned: pinned,
         floating: floating,
         expandedHeight: expandedHeight,
+        toolbarHeight: toolbarHeight,
         elevation: 0,
         title: _titleWidget,
         leading: leadingBackButton,
