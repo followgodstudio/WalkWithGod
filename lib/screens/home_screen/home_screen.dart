@@ -132,9 +132,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                           (context, DateTime value, child) =>
                                               Text(
                                         value.day.toString().padLeft(2, '0'),
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .dateLarge,
+                                        style: (DateTime.now()
+                                                    .difference(value)
+                                                    .inDays <
+                                                1)
+                                            ? Theme.of(context)
+                                                .textTheme
+                                                .dateLarge
+                                            : Theme.of(context)
+                                                .textTheme
+                                                .dateLarge
+                                                .copyWith(
+                                                    color: MyColors.midGrey),
                                       ),
                                     ),
                                     SizedBox(width: 5),
@@ -161,7 +170,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               value.toUpperCase(),
                                               style: Theme.of(context)
                                                   .textTheme
-                                                  .captionGrey,
+                                                  .dateSmall,
                                             ),
                                           ),
                                         ]),

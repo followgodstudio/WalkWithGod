@@ -147,3 +147,6 @@ flutter:
     - family: Rajdhani
       fonts:
         - asset: fonts/Rajdhani-Bold.ttf
+          weight: 500
+        - asset: fonts/Rajdhani-Regular.ttf
+          weight: 300
