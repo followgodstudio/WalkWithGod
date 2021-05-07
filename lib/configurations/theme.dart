@@ -95,9 +95,9 @@ extension CustomStyles on TextTheme {
         fontWeight: FontWeight.w500,
       );
   TextStyle get dateLarge => const TextStyle(
-        fontSize: 56.0,
+        fontSize: 72.0,
         color: MyColors.yellow,
-        fontFamily: 'Hei',
+        fontFamily: 'Rajdhani',
         fontWeight: FontWeight.w700,
       );
 }

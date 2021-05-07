@@ -106,6 +106,7 @@ class ArticlesProvider with ChangeNotifier {
         authorUid: data[fArticleAuthorUid],
         createdDate: (data[fCreatedDate] as Timestamp).toDate(),
         icon: data[fArticleIcon],
+        readCount: data[fArticleReadCount] ?? 0,
         publisher: data[fArticlePublisher]);
   }
 }

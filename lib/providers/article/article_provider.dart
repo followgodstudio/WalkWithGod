@@ -26,6 +26,7 @@ class ArticleProvider with ChangeNotifier {
   String authorName;
   String authorUid;
   DateTime createdDate;
+  int readCount;
   String publisher;
   List<Paragraph> content = [];
   String contentHtml;
@@ -42,6 +43,7 @@ class ArticleProvider with ChangeNotifier {
       this.authorUid,
       this.createdDate,
       this.imageUrl,
+      this.readCount,
       this.publisher});
 
   Future<void> fetchSimilarArticles([limit = loadLimit]) async {
@@ -98,6 +100,15 @@ class ArticleProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> updateReadCount() async {
+    readCount += 1;
+    notifyListeners();
+    await _fdb
+        .collection(cArticles)
+        .doc(id)
+        .update({fArticleReadCount: FieldValue.increment(1)});
+  }
+
   void deepCopy(ArticleProvider target) {
     if (target == null) return;
     id = target.id;
@@ -108,6 +119,7 @@ class ArticleProvider with ChangeNotifier {
     authorUid = target.authorUid;
     createdDate = target.createdDate;
     imageUrl = target.imageUrl;
+    readCount = target.readCount;
     publisher = target.publisher;
     content = target.content;
     similarArticles = target.similarArticles;

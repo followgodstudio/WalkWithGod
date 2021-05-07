@@ -99,6 +99,7 @@ const String cArticleContent = 'content';
 const String cArticleContentHtml = 'content_html';
 const String fArticleIcon = 'icon';
 const String fArticlePublisher = 'publisher';
+const String fArticleReadCount = 'read_count';
 
 const String fContentSubtitle = 'subtitle';
 const String fContentBody = 'body';

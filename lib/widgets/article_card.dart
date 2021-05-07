@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../configurations/theme.dart';
 import '../providers/article/article_provider.dart';
@@ -45,160 +46,169 @@ class ArticleCard extends StatelessWidget {
         Theme.of(context).textTheme.caption.copyWith(color: fontColor);
     return Hero(
       tag: heroTag,
-      child: FlatButton(
-        padding: const EdgeInsets.all(0),
-        onPressed: () {
-          if (style == ArticleCardStyle.small) {
-            Navigator.of(context).pushNamed(
-              ArticleScreen.routeName,
-              arguments: {'articleId': article.id},
-            );
-          } else if (style == ArticleCardStyle.home) {
-            Navigator.of(context).push(PageRouteBuilder(
-              fullscreenDialog: true,
-              // transitionDuration: Duration(milliseconds: 800),
-              pageBuilder: (context, animaton, secondaryAnimtaion) {
-                return NetworkManager(child: ArticleScreen());
-              },
-              settings: RouteSettings(
-                name: ArticleScreen.routeName,
+      child: ChangeNotifierProvider.value(
+        value: article,
+        child: FlatButton(
+          padding: const EdgeInsets.all(0),
+          onPressed: () {
+            if (style == ArticleCardStyle.small) {
+              Navigator.of(context).pushNamed(
+                ArticleScreen.routeName,
                 arguments: {'articleId': article.id},
-              ),
-              transitionsBuilder:
-                  (context, animation, secondaryAnimation, child) {
-                return FadeTransition(
-                  opacity: animation,
-                  child: child,
-                );
-              },
-            ));
-          }
-        },
-        child: Stack(
-          children: [
-            AspectRatio(
-                aspectRatio: aspectRatio,
-                child: Container(
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                          color: MyColors.grey.withOpacity(shadowOpacity),
-                          spreadRadius: 2,
-                          blurRadius: 20,
-                          offset: Offset(0, 10)),
-                    ],
-                  ),
-                  child: ShaderMask(
-                    shaderCallback: (rect) {
-                      return LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.transparent,
-                          Color.fromARGB(210, 0, 0, 0)
-                        ],
-                      ).createShader(Rect.fromLTRB(
-                          0, rect.height * 0.33, rect.width, rect.height));
-                    },
-                    blendMode: BlendMode.darken,
-                    child: (article.imageUrl == null)
-                        ? imagePlaceholder
-                        : CachedNetworkImage(
-                            imageUrl: article.imageUrl,
-                            fit: BoxFit.cover,
-                            placeholder: (context, url) => imagePlaceholder,
-                            errorWidget: (context, url, error) =>
-                                imagePlaceholder),
-                  ),
-                )),
-            AspectRatio(
-                aspectRatio: aspectRatio,
-                child: Padding(
-                    padding: EdgeInsets.all(textPadding),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        IntrinsicHeight(
-                          child: Row(
-                            children: [
-                              VerticalDivider(
-                                indent: 4,
-                                thickness: 4,
-                                color: MyColors.yellow,
-                                width: 4,
-                              ),
-                              SizedBox(width: 8),
-                              Flexible(
-                                  child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  if (style != ArticleCardStyle.small)
+              );
+            } else if (style == ArticleCardStyle.home) {
+              Navigator.of(context).push(PageRouteBuilder(
+                fullscreenDialog: true,
+                // transitionDuration: Duration(milliseconds: 800),
+                pageBuilder: (context, animaton, secondaryAnimtaion) {
+                  return NetworkManager(child: ArticleScreen());
+                },
+                settings: RouteSettings(
+                  name: ArticleScreen.routeName,
+                  arguments: {'articleId': article.id},
+                ),
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) {
+                  return FadeTransition(
+                    opacity: animation,
+                    child: child,
+                  );
+                },
+              ));
+            }
+          },
+          child: Stack(
+            children: [
+              AspectRatio(
+                  aspectRatio: aspectRatio,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                            color: MyColors.grey.withOpacity(shadowOpacity),
+                            spreadRadius: 2,
+                            blurRadius: 20,
+                            offset: Offset(0, 10)),
+                      ],
+                    ),
+                    child: ShaderMask(
+                      shaderCallback: (rect) {
+                        return LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.transparent,
+                            Color.fromARGB(210, 0, 0, 0)
+                          ],
+                        ).createShader(Rect.fromLTRB(
+                            0, rect.height * 0.33, rect.width, rect.height));
+                      },
+                      blendMode: BlendMode.darken,
+                      child: (article.imageUrl == null)
+                          ? imagePlaceholder
+                          : CachedNetworkImage(
+                              imageUrl: article.imageUrl,
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) => imagePlaceholder,
+                              errorWidget: (context, url, error) =>
+                                  imagePlaceholder),
+                    ),
+                  )),
+              AspectRatio(
+                  aspectRatio: aspectRatio,
+                  child: Padding(
+                      padding: EdgeInsets.all(textPadding),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          IntrinsicHeight(
+                            child: Row(
+                              children: [
+                                VerticalDivider(
+                                  indent: 4,
+                                  thickness: 4,
+                                  color: MyColors.yellow,
+                                  width: 4,
+                                ),
+                                SizedBox(width: 8),
+                                Flexible(
+                                    child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    if (style != ArticleCardStyle.small)
+                                      Consumer<ArticleProvider>(
+                                          builder: (context, article, child) {
+                                        return Text(
+                                            getCreatedDuration(
+                                                    article.createdDate) +
+                                                " ｜ " +
+                                                article.readCount.toString() +
+                                                "次观看",
+                                            style: captionStyle);
+                                      }),
                                     Text(
-                                        getCreatedDuration(
-                                                article.createdDate) +
-                                            " ｜ ??人看过",
-                                        style: captionStyle),
-                                  Text(
-                                    article.title ?? "",
-                                    maxLines: maxLines,
-                                    style: (style == ArticleCardStyle.small)
-                                        ? Theme.of(context)
-                                            .textTheme
-                                            .headline3
-                                            .copyWith(color: fontColor)
-                                        : Theme.of(context)
-                                            .textTheme
-                                            .headline2
-                                            .copyWith(color: fontColor),
-                                  ),
-                                ],
-                              )),
+                                      article.title ?? "",
+                                      maxLines: maxLines,
+                                      style: (style == ArticleCardStyle.small)
+                                          ? Theme.of(context)
+                                              .textTheme
+                                              .headline3
+                                              .copyWith(color: fontColor)
+                                          : Theme.of(context)
+                                              .textTheme
+                                              .headline2
+                                              .copyWith(color: fontColor),
+                                    ),
+                                  ],
+                                )),
+                              ],
+                            ),
+                          ),
+                          if (style != ArticleCardStyle.small)
+                            SizedBox(height: space),
+                          Divider(color: fontColor),
+                          if (style != ArticleCardStyle.small)
+                            SizedBox(height: space),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Flexible(
+                                child: Row(
+                                  children: [
+                                    (article.icon == null ||
+                                            article.icon.isEmpty)
+                                        ? Icon(Icons.album,
+                                            color: fontColor, size: 30)
+                                        : CircleAvatar(
+                                            radius: avatarRadius,
+                                            backgroundImage:
+                                                CachedNetworkImageProvider(
+                                                    article.icon),
+                                            backgroundColor: Colors.transparent,
+                                          ),
+                                    SizedBox(width: space),
+                                    Flexible(
+                                      child: Material(
+                                          color: Colors.transparent,
+                                          child: Text(
+                                            article.authorName ?? "匿名",
+                                            style: captionStyle,
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                          )),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              if (style != ArticleCardStyle.small)
+                                Text("已关注", style: captionStyle),
                             ],
                           ),
-                        ),
-                        if (style != ArticleCardStyle.small)
-                          SizedBox(height: space),
-                        Divider(color: fontColor),
-                        if (style != ArticleCardStyle.small)
-                          SizedBox(height: space),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Flexible(
-                              child: Row(
-                                children: [
-                                  (article.icon == null || article.icon.isEmpty)
-                                      ? Icon(Icons.album,
-                                          color: fontColor, size: 30)
-                                      : CircleAvatar(
-                                          radius: avatarRadius,
-                                          backgroundImage:
-                                              CachedNetworkImageProvider(
-                                                  article.icon),
-                                          backgroundColor: Colors.transparent,
-                                        ),
-                                  SizedBox(width: space),
-                                  Flexible(
-                                    child: Material(
-                                        color: Colors.transparent,
-                                        child: Text(
-                                          article.authorName ?? "匿名",
-                                          style: captionStyle,
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 1,
-                                        )),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            if (style != ArticleCardStyle.small)
-                              Text("已关注", style: captionStyle),
-                          ],
-                        ),
-                      ],
-                    ))),
-          ],
+                        ],
+                      ))),
+            ],
+          ),
         ),
       ),
     );

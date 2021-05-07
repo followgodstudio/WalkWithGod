@@ -131,7 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       builder:
                                           (context, DateTime value, child) =>
                                               Text(
-                                        value.day.toString(),
+                                        value.day.toString().padLeft(2, '0'),
                                         style: Theme.of(context)
                                             .textTheme
                                             .dateLarge,
@@ -240,7 +240,7 @@ class _PageNavigatorState extends State<PageNavigator> {
                     }),
                   ]),
                   MyIconButton(
-                      hasBorder: true, icon: 'save_border', onPressed: () {}),
+                      hasBorder: true, icon: 'search', onPressed: () {}),
                 ],
               ),
               Container(

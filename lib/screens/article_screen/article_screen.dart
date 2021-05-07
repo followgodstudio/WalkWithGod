@@ -46,6 +46,7 @@ class _ArticleScreenState extends State<ArticleScreen>
               .fetchArticlePreviewById(articleId);
       await _article.fetchArticleContent();
       await _article.fetchSimilarArticles();
+      await _article.updateReadCount();
       article.deepCopy(_article);
       ProfileProvider profile =
           Provider.of<ProfileProvider>(context, listen: false);
