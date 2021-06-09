@@ -95,16 +95,24 @@ extension CustomStyles on TextTheme {
         fontWeight: FontWeight.w500,
       );
   TextStyle get dateSmall => const TextStyle(
-        fontSize: 20.0,
+        fontSize: 16.0,
         color: MyColors.grey,
         fontFamily: 'Rajdhani',
         fontWeight: FontWeight.w200,
+        height: 1.5,
       );
   TextStyle get dateLarge => const TextStyle(
-        fontSize: 75.0,
+        fontSize: 60.0,
         color: MyColors.yellow,
         fontFamily: 'Rajdhani',
         fontWeight: FontWeight.w700,
+      );
+  TextStyle get curDaySmall => const TextStyle(
+        color: MyColors.black,
+        fontSize: 20.0,
+        fontFamily: 'Hei',
+        fontWeight: FontWeight.w500,
+        height: 1.2,
       );
 }
 

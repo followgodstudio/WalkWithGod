@@ -159,7 +159,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               value,
                                               style: Theme.of(context)
                                                   .textTheme
-                                                  .headline5,
+                                                  .curDaySmall,
                                             ),
                                           ),
                                           ValueListenableBuilder(

@@ -69,7 +69,7 @@ class NavBar extends StatelessWidget implements PreferredSizeWidget {
         title: _titleWidget,
         leading: leadingBackButton,
         backgroundColor: _backgroundColor,
-        actions: [action],
+        actions: [action, SizedBox(width: 5.0)],
         flexibleSpace: flexibleSpace ?? SizedBox(),
       );
     return AppBar(
