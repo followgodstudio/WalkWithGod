@@ -34,7 +34,6 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomPadding: true,
         appBar: NavBar(title: "用户建议"),
         body: SafeArea(
             child: Padding(

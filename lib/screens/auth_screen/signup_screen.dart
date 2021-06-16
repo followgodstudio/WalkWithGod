@@ -115,7 +115,6 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomPadding: true,
       body: SingleChildScrollView(
         child: SafeArea(
           child: Padding(

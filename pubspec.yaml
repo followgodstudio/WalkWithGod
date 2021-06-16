@@ -48,8 +48,7 @@ dependencies:
   connectivity: ^0.4.9+2
   logger: ^0.7.0
   logger_flutter: ^0.7.1
-  flutter_svg: ^0.18.0
-  flutter_html: ^1.0.2
+  flutter_svg: ^0.19.3
   flutter_email_sender: ^3.0.1
   pin_code_fields: ^6.0.1
   launch_review: ^2.0.0

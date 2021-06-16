@@ -7,7 +7,7 @@ import '../../utils/my_logger.dart';
 import '../../widgets/aricle_paragraph.dart';
 import '../../widgets/article_card.dart';
 import '../../widgets/my_progress_indicator.dart';
-import 'article_body_html.dart';
+
 
 class ArticleBody extends StatefulWidget {
   @override
@@ -46,9 +46,8 @@ class _ArticleBodyState extends State<ArticleBody> {
         if (article.content.length > 0)
           Padding(
               padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-              child: (showHtml)
-                  ? ArticleBodyHtml(article.contentHtml)
-                  : Column(children: [
+              child:
+              Column(children: [
                       ...article.content.map((e) => ArticleParagraph(e))
                     ]))
       ]);

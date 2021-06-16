@@ -60,7 +60,6 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
         ModalRoute.of(context).settings.arguments as String;
     final _auth = Provider.of<AuthProvider>(context, listen: false);
     return Scaffold(
-      resizeToAvoidBottomPadding: true,
       appBar: NavBar(),
       body: SingleChildScrollView(
         child: SafeArea(
