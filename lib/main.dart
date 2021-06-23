@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
+import 'package:walk_with_god/screens/home_screen/search_screen.dart';
 
 import 'configurations/theme.dart';
 import 'providers/article/articles_provider.dart';
@@ -136,6 +137,8 @@ class MyApp extends StatelessWidget {
                   SavedArticlesScreen.routeName: (ctx) => SavedArticlesScreen(),
                   HomeScreen.routeName: (ctx) =>
                       NetworkManager(child: HomeScreen()),
+                  SearchScreen.routeName: (ctx) =>
+                      NetworkManager(child: SearchScreen()),
                   ArticleScreen.routeName: (ctx) =>
                       NetworkManager(child: ArticleScreen()),
                   SignupScreen.routeName: (ctx) => NetworkManager(

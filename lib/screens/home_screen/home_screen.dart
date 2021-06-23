@@ -13,6 +13,7 @@ import '../../widgets/my_icon_button.dart';
 import '../../widgets/navbar.dart';
 import '../../widgets/profile_picture.dart';
 import 'article_list.dart';
+import 'search_screen.dart';
 
 enum PageContent { following, friends, all }
 
@@ -249,7 +250,11 @@ class _PageNavigatorState extends State<PageNavigator> {
                     }),
                   ]),
                   MyIconButton(
-                      hasBorder: true, icon: 'search', onPressed: () {}),
+                      hasBorder: true,
+                      icon: 'search',
+                      onPressed: () {
+                        Navigator.of(context).pushNamed(SearchScreen.routeName);
+                      }),
                 ],
               ),
               Container(
