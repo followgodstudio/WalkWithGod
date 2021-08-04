@@ -9,7 +9,7 @@ import '../../widgets/navbar.dart';
 class TopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    MyLogger("Widget").v("TopBar-build");
+    MyLogger("Widget").i("TopBar-build");
     return NavBar(
         isSliverAppBar: true,
         pinned: false,

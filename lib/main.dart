@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 import 'configurations/app_config.dart';
@@ -39,7 +38,6 @@ import 'screens/personal_management_screen/setting/notification_screen.dart';
 import 'screens/personal_management_screen/setting/privacy_screen.dart';
 import 'screens/personal_management_screen/setting/setting_screen.dart';
 import 'screens/splash_screen.dart';
-import 'utils/my_logger.dart';
 import 'widgets/network_manager.dart';
 
 // void main() async {
@@ -58,8 +56,6 @@ class MyApp extends StatelessWidget {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
         statusBarColor: Theme.of(context).canvasColor,
         statusBarIconBrightness: Brightness.dark));
-    Logger.level = Level.info;
-    MyLogger("Widget").i("MyApp-build");
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(

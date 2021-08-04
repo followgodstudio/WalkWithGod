@@ -1,21 +1,19 @@
 import 'package:intl/intl.dart';
-import 'package:logger/logger.dart';
+import 'package:flutter_logs/flutter_logs.dart';
 
-class MyLogger extends Logger {
-  MyLogger(String className) : super(printer: SimpleLogPrinter(className));
-}
-
-class SimpleLogPrinter extends LogPrinter {
+class MyLogger {
   final String className;
-  SimpleLogPrinter(this.className);
+  MyLogger(this.className);
 
-  @override
-  void log(LogEvent event) {
-    var color = PrettyPrinter.levelColors[event.level];
-    var emoji = PrettyPrinter.levelEmojis[event.level];
-    println(color("$emoji" +
-        DateFormat('hh:mm:ss').format(DateTime.now()) +
-        " [$className] " +
-        event.message));
+  void i(String message) {
+    FlutterLogs.logInfo(className, className, message);
+  }
+
+  void w(String message) {
+    FlutterLogs.logWarn(className, className, message);
+  }
+
+  void e(String message) {
+    FlutterLogs.logError(className, className, message);
   }
 }

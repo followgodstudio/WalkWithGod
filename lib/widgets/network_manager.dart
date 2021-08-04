@@ -2,13 +2,12 @@ import 'dart:async';
 
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
-import 'package:logger_flutter/logger_flutter.dart';
 import 'package:provider/provider.dart';
 import '../providers/user/notification_provider.dart';
 
 import '../utils/utils.dart';
 
-/// To monitor whether network is available, also allow logger console on shake
+/// To monitor whether network is available
 class NetworkManager extends StatefulWidget {
   final Widget child;
   NetworkManager({Key key, this.child}) : super(key: key);
@@ -46,6 +45,6 @@ class _NetworkManagerState extends State<NetworkManager> {
 
   @override
   Widget build(BuildContext context) {
-    return LogConsoleOnShake(child: widget.child);
+    return widget.child;
   }
 }

@@ -67,7 +67,7 @@ class _CommentsState extends State<Comments> {
 
   @override
   Widget build(BuildContext context) {
-    MyLogger("Widget").v("Comments-build");
+    MyLogger("Widget").i("Comments-build");
     return Consumer<ArticleProvider>(builder: (context, article, child) {
       if (article.id == null || article.content.length == 0) return SizedBox();
       return Consumer<CommentsProvider>(builder: (context, data, child) {

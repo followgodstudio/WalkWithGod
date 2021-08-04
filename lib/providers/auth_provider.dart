@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_logs/flutter_logs.dart';
 
 import '../configurations/constants.dart';
 import '../exceptions/my_exception.dart';
@@ -158,12 +159,14 @@ class AuthProvider with ChangeNotifier {
           phoneNumber: phone,
           timeout: Duration(seconds: 60),
           verificationCompleted: (PhoneAuthCredential authCredential) async {
+            _logger.i("AuthProvider-signInWithPhone-verificationCompleted");
             UserCredential authResult =
                 await _auth.signInWithCredential(authCredential);
             await userLoggedIn(authResult);
             _routeHome(context);
           },
           verificationFailed: (FirebaseAuthException exception) {
+            _logger.e("AuthProvider-signInWithPhone-verificationFailed");
             String message = "短信验证失败: " + exception.message;
             if (exception.code == 'invalid-phone-number') {
               message = "无效的电话号码";
@@ -173,6 +176,7 @@ class AuthProvider with ChangeNotifier {
             showPopUpDialog(context, false, message);
           },
           codeSent: (String verificationId, int forceResendingToken) {
+            _logger.i("AuthProvider-signInWithPhone-codeSent");
             _forceResendingToken = forceResendingToken;
             _verificationId = verificationId;
             if (isResend) {
@@ -189,7 +193,12 @@ class AuthProvider with ChangeNotifier {
           });
     } on PlatformException catch (error) {
       String message = error.message;
+      _logger.e(message);
       throw (MyException(message));
+    } on Exception catch (error) {
+      _logger.e(error.toString());
+      FlutterLogs.exportLogs(exportType: ExportType.ALL);
+      throw error;
     }
   }
 
