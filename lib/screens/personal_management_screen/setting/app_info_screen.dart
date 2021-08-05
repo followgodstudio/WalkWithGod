@@ -12,8 +12,7 @@ class AppInfoScreen extends StatelessWidget {
   static const routeName = '/app_info';
   @override
   Widget build(BuildContext context) {
-    final newVersion =
-        NewVersion(context: context, androidId: "com.suixing.walk_with_god");
+    final newVersion = NewVersion();
     return Scaffold(
         appBar: NavBar(title: "关于随行派"),
         body: SafeArea(
