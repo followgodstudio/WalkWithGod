@@ -16,6 +16,7 @@ import 'cache_clear_screen.dart';
 import 'feedback_screen.dart';
 import 'notification_screen.dart';
 import 'privacy_screen.dart';
+import 'edit_profile_screen.dart';
 
 class SettingScreen extends StatelessWidget {
   static const routeName = '/setting';
@@ -58,6 +59,23 @@ class SettingScreen extends StatelessWidget {
                 Column(
                   children: [
                     Divider(),
+                    FlatButton(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      onPressed: () {
+                        Navigator.of(context)
+                            .pushNamed(EditProfileScreen.routeName);
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("编辑个人资料",
+                              style:
+                                  Theme.of(context).textTheme.captionMedium1),
+                          Icon(Icons.arrow_forward_ios,
+                              size: 15.0, color: MyColors.lightBlue)
+                        ],
+                      ),
+                    ),
                     FlatButton(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                       onPressed: () {

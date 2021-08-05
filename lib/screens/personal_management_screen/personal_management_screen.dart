@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 import '../../configurations/constants.dart';
 import '../../configurations/theme.dart';
 import '../../providers/user/friends_provider.dart';
-import '../../providers/user/messages_provider.dart';
 import '../../providers/user/profile_provider.dart';
 import '../../providers/user/saved_articles_provider.dart';
 import '../../utils/my_logger.dart';
@@ -14,10 +14,9 @@ import '../../widgets/my_divider.dart';
 import '../../widgets/my_icon_button.dart';
 import '../../widgets/my_text_button.dart';
 import '../../widgets/navbar.dart';
+import '../../widgets/profile_picture.dart';
 import '../auth_screen/signup_screen.dart';
 import 'friends/friends_list_screen.dart';
-import 'headline/edit_profile_screen.dart';
-import 'headline/introduction.dart';
 import 'headline/network_screen.dart';
 import 'messages/messages_list_screen.dart';
 import 'saved_articles/saved_articles_screen.dart';
@@ -33,15 +32,29 @@ class PersonalManagementScreen extends StatelessWidget {
     return Scaffold(
         appBar: NavBar(
             title: "我的",
-            actionButton: MyIconButton(
-                icon: "setting",
+            actionButton: Row(children: [
+              MyIconButton(
+                icon: "email",
                 onPressed: () {
                   if (!isLoggedIn) {
                     showPopUpDialog(context, false, "请登录后再操作");
                   } else {
-                    Navigator.of(context).pushNamed(SettingScreen.routeName);
+                    Navigator.of(context)
+                        .pushNamed(MessagesListScreen.routeName);
                   }
-                })),
+                },
+              ),
+              SizedBox(width: 10),
+              MyIconButton(
+                  icon: "setting",
+                  onPressed: () {
+                    if (!isLoggedIn) {
+                      showPopUpDialog(context, false, "请登录后再操作");
+                    } else {
+                      Navigator.of(context).pushNamed(SettingScreen.routeName);
+                    }
+                  })
+            ])),
         body: SafeArea(
             child: RefreshIndicator(
           onRefresh: () async {
@@ -49,17 +62,11 @@ class PersonalManagementScreen extends StatelessWidget {
           },
           child: SingleChildScrollView(
             child: Padding(
-              padding: EdgeInsets.symmetric(vertical: verticalPadding),
+              padding: EdgeInsets.symmetric(
+                  horizontal: horizontalPadding, vertical: verticalPadding),
               child: Column(children: <Widget>[
                 HeadLine(isLoggedIn),
-                SizedBox(height: 15),
                 if (isLoggedIn) SavedArticles(),
-                if (isLoggedIn)
-                  Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: horizontalPadding),
-                    child: FriendsMessages(),
-                  ),
               ]),
             ),
           ),
@@ -76,36 +83,91 @@ class HeadLine extends StatelessWidget {
   HeadLine(this.isLoggedIn);
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: FlatButton(
-          onPressed: () {
-            Navigator.of(context).pushNamed(
-              NetworkScreen.routeName,
-              arguments:
-                  Provider.of<ProfileProvider>(context, listen: false).uid,
-            );
-          },
-          child: Column(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: 10.0),
+        Consumer<ProfileProvider>(
+            builder: (ctx, profile, _) => Row(
+                  children: [
+                    ProfilePicture(30.0, profile.imageUrl),
+                    SizedBox(width: 20),
+                    Text(
+                      "你好，" +
+                          ((profile.name == null || profile.name.isEmpty)
+                              ? defaultUserName
+                              : profile.name),
+                      style: Theme.of(context).textTheme.buttonLarge,
+                    ),
+                  ],
+                )),
+        SizedBox(height: 20.0),
+        Consumer<FriendsProvider>(
+          builder: (ctx, friends, _) => Row(
             children: [
-              Consumer<ProfileProvider>(
-                  builder: (ctx, profile, _) =>
-                      Introduction("你好，" + profile.name, profile.imageUrl)),
-              SizedBox(height: 10.0),
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(FriendsListScreen.routeName,
+                        arguments: true);
+                  },
+                  child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          friends.followersCount.toString(),
+                          style: Theme.of(context).textTheme.friendsCount,
+                        ),
+                        SizedBox(width: 3),
+                        Text(
+                          '关注了你',
+                          style: Theme.of(context).textTheme.captionGrey,
+                        )
+                      ])),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 5),
+                child: Container(
+                    height: 24, child: VerticalDivider(color: MyColors.grey)),
+              ),
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context)
+                        .pushNamed(FriendsListScreen.routeName);
+                  },
+                  child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          friends.followingsCount.toString(),
+                          style: Theme.of(context).textTheme.friendsCount,
+                        ),
+                        SizedBox(width: 3),
+                        Text(
+                          '被你关注',
+                          style: Theme.of(context).textTheme.captionGrey,
+                        )
+                      ])),
+              Expanded(child: SizedBox()),
               MyTextButton(
-                width: 100,
-                text: isLoggedIn ? "编辑个人资料" : "请登录 / 注册",
-                isSmall: true,
+                width: 120,
+                text: isLoggedIn ? "我的个人页" : "请登录 / 注册",
+                isSmall: false,
                 onPressed: () {
                   if (isLoggedIn) {
-                    Navigator.of(context)
-                        .pushNamed(EditProfileScreen.routeName);
+                    Navigator.of(context).pushNamed(
+                      NetworkScreen.routeName,
+                      arguments:
+                          Provider.of<ProfileProvider>(context, listen: false)
+                              .uid,
+                    );
                   } else {
                     Navigator.of(context).pushNamed(SignupScreen.routeName);
                   }
                 },
               ),
             ],
-          )),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -115,18 +177,20 @@ class SavedArticles extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<SavedArticlesProvider>(builder: (context, saved, child) {
       Widget savedArticles;
+      double panelPadding = 15;
+      double cardMargin = 10;
       if (saved.articles.length == 0) {
         savedArticles = SizedBox(height: 8.0);
       } else {
-        List<Widget> list = [SizedBox(width: horizontalPadding)];
+        List<Widget> list = [SizedBox(width: panelPadding)];
         saved.articles.forEach((element) {
           list.add(Padding(
-            padding: const EdgeInsets.only(right: 10.0, top: 12.5, bottom: 20),
+            padding: EdgeInsets.only(right: cardMargin, top: 20, bottom: 30),
             child: ArticleCard(article: element),
           ));
         });
         if (!saved.noMore) list.add(Center(child: Icon(Icons.more_horiz)));
-        list.add(SizedBox(width: horizontalPadding - 10.0));
+        list.add(SizedBox(width: panelPadding - cardMargin));
         savedArticles = Container(
           height: 210,
           child: NotificationListener<ScrollNotification>(
@@ -141,31 +205,62 @@ class SavedArticles extends StatelessWidget {
                   ListView(children: list, scrollDirection: Axis.horizontal)),
         );
       }
-      return Column(children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-          child: Column(
-            children: [
-              Divider(),
-              Row(
+      return Padding(
+        padding: const EdgeInsets.only(top: 20.0),
+        child: Container(
+          color: MyColors.silver,
+          child: Column(children: [
+            SizedBox(height: 20),
+            IntrinsicHeight(
+              child: Row(
                 children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 8.0),
-                        Text("我的收藏",
-                            style: Theme.of(context).textTheme.captionMedium1),
-                        SizedBox(height: 8.0),
-                        Text("共" + saved.savedArticlesCount.toString() + "篇收藏",
-                            style: Theme.of(context).textTheme.captionGrey),
-                      ],
-                    ),
+                  VerticalDivider(
+                    indent: 4,
+                    thickness: 6,
+                    color: MyColors.yellow,
+                    width: 0,
                   ),
+                  SizedBox(width: panelPadding),
+                  Text("我的点赞", style: Theme.of(context).textTheme.buttonLarge),
+                ],
+              ),
+            ),
+            MyDivider(
+                padding: EdgeInsets.only(
+                    top: panelPadding,
+                    right: panelPadding,
+                    left: panelPadding)),
+            savedArticles,
+            MyDivider(
+                padding: EdgeInsets.only(
+                    bottom: panelPadding,
+                    right: panelPadding,
+                    left: panelPadding)),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: panelPadding),
+              child: Row(
+                children: [
+                  Text("共订阅", style: Theme.of(context).textTheme.captionGrey),
+                  SizedBox(width: 3),
+                  Text(saved.savedArticlesCount.toString(),
+                      style: Theme.of(context)
+                          .textTheme
+                          .friendsCount
+                          .copyWith(fontSize: 28, height: 1.1)),
+                  SizedBox(width: 3),
+                  Text("个点赞", style: Theme.of(context).textTheme.captionGrey),
+                  Expanded(child: SizedBox()),
                   if (saved.articles.length > 0)
-                    MyTextButton(
-                      text: "查看全部",
-                      isSmall: true,
+                    TextButton(
+                      child: Row(
+                        children: [
+                          Text("查看全部点赞",
+                              style:
+                                  Theme.of(context).textTheme.captionMedium1),
+                          SvgPicture.asset('assets/icons/forward.svg',
+                              width: 15, height: 15, color: MyColors.grey)
+                        ],
+                      ),
                       onPressed: () {
                         Navigator.of(context)
                             .pushNamed(SavedArticlesScreen.routeName);
@@ -173,98 +268,11 @@ class SavedArticles extends StatelessWidget {
                     ),
                 ],
               ),
-            ],
-          ),
+            ),
+            SizedBox(height: 20)
+          ]),
         ),
-        savedArticles,
-      ]);
+      );
     });
-  }
-}
-
-class FriendsMessages extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    FriendsProvider friends =
-        Provider.of<FriendsProvider>(context, listen: false);
-    MessagesProvider messages =
-        Provider.of<MessagesProvider>(context, listen: false);
-    return Column(
-      children: [
-        MyDivider(),
-        SizedBox(height: 5.0),
-        FlatButton(
-          padding: const EdgeInsets.all(0),
-          onPressed: () {
-            Navigator.of(context).pushNamed(FriendsListScreen.routeName);
-          },
-          child: Row(
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        "我的好友",
-                        style: Theme.of(context).textTheme.captionMedium1,
-                      ),
-                      SizedBox(height: 8.0),
-                      Consumer<FriendsProvider>(
-                          builder: (ctx, value, _) => Text(
-                                "共" +
-                                    friends.followersCount.toString() +
-                                    "人关注我, 已关注" +
-                                    friends.followingsCount.toString() +
-                                    "人",
-                                style: Theme.of(context).textTheme.captionGrey,
-                              )),
-                    ],
-                  ),
-                ),
-              ),
-              MyIconButton(icon: "forward", iconSize: 12),
-            ],
-          ),
-        ),
-        Divider(),
-        FlatButton(
-          padding: const EdgeInsets.all(0),
-          onPressed: () {
-            Navigator.of(context).pushNamed(MessagesListScreen.routeName);
-          },
-          child: Row(
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        "我的消息",
-                        style: Theme.of(context).textTheme.captionMedium1,
-                      ),
-                      SizedBox(height: 8.0),
-                      Text(
-                        "共" +
-                            messages.messagesCount.toString() +
-                            "条消息, " +
-                            messages.unreadMessagesCount.toString() +
-                            "条未读",
-                        style: Theme.of(context).textTheme.captionGrey,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              MyIconButton(icon: "forward", iconSize: 12),
-            ],
-          ),
-        ),
-        Divider(),
-      ],
-    );
   }
 }

@@ -35,7 +35,7 @@ class ProfileProvider with ChangeNotifier {
   bool _isFetchedAll = false;
 
   ProfileProvider([this.uid]) {
-    _logger.v("ProfileProvider-init");
+    _logger.i("ProfileProvider-init");
     friendsProvider.setProvider(fdb, uid);
     savedArticlesProvider.setProvider(fdb, uid);
     messagesProvider.setProvider(fdb, uid);

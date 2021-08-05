@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
-import 'package:walk_with_god/screens/home_screen/search_screen.dart';
 
+import 'configurations/app_config.dart';
 import 'configurations/theme.dart';
+import 'environment.dart';
 import 'providers/article/articles_provider.dart';
 import 'providers/article/comments_provider.dart';
 import 'providers/auth_provider.dart';
@@ -20,9 +20,8 @@ import 'screens/article_screen/article_screen.dart';
 import 'screens/auth_screen/phone_verification_screen.dart';
 import 'screens/auth_screen/signup_screen.dart';
 import 'screens/home_screen/home_screen.dart';
+import 'screens/home_screen/search_screen.dart';
 import 'screens/personal_management_screen/friends/friends_list_screen.dart';
-import 'screens/personal_management_screen/headline/edit_image_screen.dart';
-import 'screens/personal_management_screen/headline/edit_profile_screen.dart';
 import 'screens/personal_management_screen/headline/network_screen.dart';
 import 'screens/personal_management_screen/messages/messages_list_screen.dart';
 import 'screens/personal_management_screen/personal_management_screen.dart';
@@ -32,15 +31,14 @@ import 'screens/personal_management_screen/setting/app_info_screen.dart';
 import 'screens/personal_management_screen/setting/black_list_screen.dart';
 import 'screens/personal_management_screen/setting/cache_clear_screen.dart';
 import 'screens/personal_management_screen/setting/delete_account_screen.dart';
+import 'screens/personal_management_screen/setting/edit_image_screen.dart';
+import 'screens/personal_management_screen/setting/edit_profile_screen.dart';
 import 'screens/personal_management_screen/setting/feedback_screen.dart';
 import 'screens/personal_management_screen/setting/notification_screen.dart';
 import 'screens/personal_management_screen/setting/privacy_screen.dart';
 import 'screens/personal_management_screen/setting/setting_screen.dart';
 import 'screens/splash_screen.dart';
-import 'utils/my_logger.dart';
 import 'widgets/network_manager.dart';
-import 'configurations/app_config.dart';
-import 'environment.dart';
 
 // void main() async {
 //   WidgetsFlutterBinding.ensureInitialized();
@@ -58,8 +56,6 @@ class MyApp extends StatelessWidget {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
         statusBarColor: Theme.of(context).canvasColor,
         statusBarIconBrightness: Brightness.dark));
-    Logger.level = Level.info;
-    MyLogger("Widget").i("MyApp-build");
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(

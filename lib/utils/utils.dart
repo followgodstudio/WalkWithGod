@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_logs/flutter_logs.dart';
 
 import '../exceptions/my_exception.dart';
 import '../widgets/popup_dialog.dart';
@@ -31,7 +32,8 @@ Future<dynamic> exceptionHandling(
     MyLogger("TODO-platform").e(error.message);
     showPopUpDialog(context, false, "PlatformException:" + error.message);
   } on Exception catch (error) {
-    print(error);
+    MyLogger("UnknownError").e(error.toString());
+    FlutterLogs.exportLogs(exportType: ExportType.ALL);
   }
 }
 

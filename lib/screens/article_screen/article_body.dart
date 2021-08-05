@@ -8,7 +8,6 @@ import '../../widgets/aricle_paragraph.dart';
 import '../../widgets/article_card.dart';
 import '../../widgets/my_progress_indicator.dart';
 
-
 class ArticleBody extends StatefulWidget {
   @override
   _ArticleBodyState createState() => _ArticleBodyState();
@@ -18,7 +17,7 @@ class _ArticleBodyState extends State<ArticleBody> {
   bool showHtml = false;
   @override
   Widget build(BuildContext context) {
-    MyLogger("Widget").v("ArticleBody-build");
+    MyLogger("Widget").i("ArticleBody-build");
     return Consumer<ArticleProvider>(builder: (context, article, child) {
       return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         if (article.id == null) MyProgressIndicator(),
@@ -46,10 +45,9 @@ class _ArticleBodyState extends State<ArticleBody> {
         if (article.content.length > 0)
           Padding(
               padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-              child:
-              Column(children: [
-                      ...article.content.map((e) => ArticleParagraph(e))
-                    ]))
+              child: Column(children: [
+                ...article.content.map((e) => ArticleParagraph(e))
+              ]))
       ]);
     });
   }

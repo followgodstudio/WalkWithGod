@@ -92,7 +92,7 @@ extension CustomStyles on TextTheme {
         fontSize: 20.0,
         color: MyColors.black,
         fontFamily: 'Hei',
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w700,
       );
   TextStyle get dateSmall => const TextStyle(
         fontSize: 16.0,
@@ -106,6 +106,13 @@ extension CustomStyles on TextTheme {
         color: MyColors.yellow,
         fontFamily: 'Rajdhani',
         fontWeight: FontWeight.w700,
+      );
+  TextStyle get friendsCount => const TextStyle(
+        fontSize: 32.0,
+        color: MyColors.black,
+        fontFamily: 'Rajdhani',
+        fontWeight: FontWeight.w700,
+        height: 0.3,
       );
   TextStyle get curDaySmall => const TextStyle(
         color: MyColors.black,

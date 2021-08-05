@@ -20,7 +20,7 @@ class BottomBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bottomBarHeight = 40.0;
-    MyLogger("Widget").v("BottomBar-build");
+    MyLogger("Widget").i("BottomBar-build");
     BuildContext rootContext = context;
     ProfileProvider profile =
         Provider.of<ProfileProvider>(context, listen: false);
