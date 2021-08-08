@@ -79,7 +79,8 @@ class ArticleProvider with ChangeNotifier {
       content = [];
       querySnapshot.docs.forEach((element) {
         String subtitle = "";
-        if (element.data().containsKey(fContentSubtitle))
+        Map<String, dynamic> elementData = element.data();
+        if (elementData.containsKey(fContentSubtitle))
           subtitle = element.get(fContentSubtitle);
         content.add(
             Paragraph(subtitle: subtitle, body: element.get(fContentBody)));

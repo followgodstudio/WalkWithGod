@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_messaging/firebase_messaging.dart' as fmsg;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -22,7 +22,8 @@ class AuthProvider with ChangeNotifier {
   StreamSubscription userAuthSub;
   FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _db = FirebaseFirestore.instance;
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  final fmsg.FirebaseMessaging _firebaseMessaging =
+      fmsg.FirebaseMessaging.instance;
   MyLogger _logger = MyLogger("Provider");
   String _userId;
   int _forceResendingToken;

@@ -14,7 +14,7 @@ import 'messages_provider.dart';
 class NotificationProvider with ChangeNotifier {
   BuildContext _context;
   MyLogger _logger = MyLogger("Provider");
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
@@ -33,52 +33,50 @@ class NotificationProvider with ChangeNotifier {
         onSelectNotification: onSelectNotification);
   }
 
-  static Future<dynamic> myBackgroundMessageHandler(
-      Map<String, dynamic> message) async {
+  Future<void> myBackgroundMessageHandler(RemoteMessage message) async {
     showPopupNotification(
-        message['notification']['title'], message['notification']['body']);
+        message.notification.title, message.notification.body);
   }
 
-  void initFirebaseMessaging() {
-    _logger.i("NotificationProvider-initFirebaseMessaging");
-    _firebaseMessaging.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        _logger.i("NotificationProvider-onMessage-$message");
-        showPopUpDialog(
-          _context,
-          true,
-          message['notification']['title'],
-          durationMilliseconds: 3000,
-          onPressed: () {
-            navigateToDetail(message);
-          },
-        );
-      },
-      onBackgroundMessage: Platform.isIOS ? null : myBackgroundMessageHandler,
-      onLaunch: (Map<String, dynamic> message) async {
-        _logger.i("NotificationProvider-onLaunch-$message");
-        navigateToDetail(message);
-      },
-      onResume: (Map<String, dynamic> message) async {
-        _logger.i("NotificationProvider-onResume-$message");
+  Future<void> myMessageHandler(RemoteMessage message) async {
+    _logger.i("NotificationProvider-onMessage-$message");
+    showPopUpDialog(
+      _context,
+      true,
+      message.notification.title,
+      durationMilliseconds: 3000,
+      onPressed: () {
         navigateToDetail(message);
       },
     );
   }
 
-  void navigateToDetail(Map<String, dynamic> message) {
-    if (message['data']['type'] == "message") {
+  Future<void> myMessageOpenedAppHandler(RemoteMessage message) async {
+    _logger.i("NotificationProvider-onMessageOpenedApp-$message");
+    navigateToDetail(message);
+  }
+
+  void initFirebaseMessaging() {
+    _logger.i("NotificationProvider-initFirebaseMessaging");
+    FirebaseMessaging.onMessage.listen(myMessageHandler);
+    FirebaseMessaging.onMessageOpenedApp.listen(myMessageOpenedAppHandler);
+    FirebaseMessaging.onBackgroundMessage(
+        Platform.isIOS ? null : myBackgroundMessageHandler);
+  }
+
+  void navigateToDetail(RemoteMessage message) {
+    if (message.data['type'] == "message") {
       messageReceived(message);
-    } else if (message['data']['type'] == "newFollower") {
+    } else if (message.data['type'] == "newFollower") {
       goToFollowerPage();
     }
   }
 
-  void messageReceived(Map<String, dynamic> message) {
-    String articleId = message['data']['article_id'];
-    String messageId = message['data']['message_id'];
-    String commentId = message['data']['comment_id'];
-    String userId = message['data']['user_id'];
+  void messageReceived(RemoteMessage message) {
+    String articleId = message.data['article_id'];
+    String messageId = message.data['message_id'];
+    String commentId = message.data['comment_id'];
+    String userId = message.data['user_id'];
     MessagesProvider.markMessageAsRead(userId, messageId);
     Navigator.of(_context).pushNamed(
       ArticleScreen.routeName,

@@ -75,9 +75,10 @@ class ProfileProvider with ChangeNotifier {
         await initProfile();
         doc = await fdb.collection(cUsers).doc(uid).get();
       }
-      if (doc.data().containsKey(fUserName)) name = doc.get(fUserName);
+      Map<String, dynamic> docData = doc.data();
+      if (docData.containsKey(fUserName)) name = doc.get(fUserName);
       if ((imageUrl == null || imageUrl.isEmpty) &&
-          doc.data().containsKey(fUserImageUrl))
+          docData.containsKey(fUserImageUrl))
         imageUrl = doc.get(fUserImageUrl); // Only fetch once
 
       DocumentSnapshot docStatistics = await fdb
@@ -87,26 +88,27 @@ class ProfileProvider with ChangeNotifier {
           .doc(dUserProfileStatistics)
           .get();
       if (docStatistics.exists) {
-        if (docStatistics.data().containsKey(fUserReadDuration))
+        Map<String, dynamic> docStatisticsData = docStatistics.data();
+        if (docStatisticsData.containsKey(fUserReadDuration))
           recentReadProvider.readDuration =
               docStatistics.get(fUserReadDuration).floor();
-        if (docStatistics.data().containsKey(fUserReadsCount))
+        if (docStatisticsData.containsKey(fUserReadsCount))
           recentReadProvider.readsCount = docStatistics.get(fUserReadsCount);
-        if (docStatistics.data().containsKey(fUserFollowingsCount))
+        if (docStatisticsData.containsKey(fUserFollowingsCount))
           friendsProvider.followingsCount =
               docStatistics.get(fUserFollowingsCount);
-        if (docStatistics.data().containsKey(fUserFollowersCount))
+        if (docStatisticsData.containsKey(fUserFollowersCount))
           friendsProvider.followersCount =
               docStatistics.get(fUserFollowersCount);
         friendsProvider.notifyListeners();
-        if (docStatistics.data().containsKey(fUserMessagesCount))
+        if (docStatisticsData.containsKey(fUserMessagesCount))
           messagesProvider.messagesCount =
               docStatistics.get(fUserMessagesCount);
-        if (docStatistics.data().containsKey(fUserUnreadMsgCount))
+        if (docStatisticsData.containsKey(fUserUnreadMsgCount))
           messagesProvider.unreadMessagesCount =
               docStatistics.get(fUserUnreadMsgCount);
         messagesProvider.notifyListeners();
-        if (docStatistics.data().containsKey(fUserSavedArticlesCount))
+        if (docStatisticsData.containsKey(fUserSavedArticlesCount))
           savedArticlesProvider.savedArticlesCount =
               docStatistics.get(fUserSavedArticlesCount);
       }
@@ -128,14 +130,15 @@ class ProfileProvider with ChangeNotifier {
 
   Future<void> updateProfilePicture(File file) async {
     _logger.i("ProfileProvider-updateProfilePicture");
-    String path = sProfilePictures + "/$uid.jpeg";
-    StorageTaskSnapshot snapshot =
-        await _storage.ref().child(path).putFile(file).onComplete;
-    if (snapshot.error != null) return;
+    final ref = FirebaseStorage.instance
+        .ref()
+        .child(sProfilePictures)
+        .child('$uid.jpeg');
+    String imageUrl = await ref.getDownloadURL();
     if (imageUrl == null || imageUrl.isEmpty) {
-      String newUrl = await snapshot.ref.getDownloadURL();
-      newUrl = newUrl.substring(0, newUrl.indexOf('&token='));
-      await updateProfile(newImageUrl: newUrl);
+      // newUrl = newUrl.substring(0, newUrl.indexOf('&token='));
+      //TODO: Test
+      await updateProfile(newImageUrl: imageUrl);
     } else {
       // To guarantee the image will be reloaded instead of using cache
       String uniqueKey = DateFormat('yyyyMMddkkmmss').format(DateTime.now());
