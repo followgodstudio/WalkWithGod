@@ -254,7 +254,8 @@ class CommentProvider with ChangeNotifier {
     docs.forEach((doc) {
       // Fetch if current user like
       bool isLike = false;
-      if (doc.data().containsKey(fCommentReplyLikes) && userId != null) {
+      Map<String, dynamic> docData = doc.data();
+      if (docData.containsKey(fCommentReplyLikes) && userId != null) {
         isLike = doc.get(fCommentReplyLikes).contains(userId);
       }
       children.add(_buildLevel2CommentByMap(doc.id, doc.data(), isLike));

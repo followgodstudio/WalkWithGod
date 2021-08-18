@@ -31,7 +31,8 @@ Future<void> removeAnonymousUser() async {
   QuerySnapshot query = await _db.collection(cUsers).get();
   List<DocumentSnapshot> docs = query.docs;
   docs.forEach((DocumentSnapshot element) async {
-    if (!element.data().containsKey(fCreatedDate))
+    Map<String, dynamic> elementData = element.data();
+    if (!elementData.containsKey(fCreatedDate))
       _db.collection(cUsers).doc(element.id).delete();
   });
 }

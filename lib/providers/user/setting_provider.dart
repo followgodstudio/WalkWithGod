@@ -32,15 +32,16 @@ class SettingProvider with ChangeNotifier {
   }
 
   void getSetting(DocumentSnapshot setting) {
-    if (setting.data().containsKey(fSettingScreenAwake))
+    Map<String, dynamic> settingData = setting.data();
+    if (settingData.containsKey(fSettingScreenAwake))
       this.keepScreenAwake = setting.get(fSettingScreenAwake);
-    if (setting.data().containsKey(fSettingHideRecentRead))
+    if (settingData.containsKey(fSettingHideRecentRead))
       this.hideRecentRead = setting.get(fSettingHideRecentRead);
-    if (setting.data().containsKey(fSettingAllowFollowing))
+    if (settingData.containsKey(fSettingAllowFollowing))
       this.allowFollowing = setting.get(fSettingAllowFollowing);
-    if (setting.data().containsKey(fSettingRejectStrangerMessage))
+    if (settingData.containsKey(fSettingRejectStrangerMessage))
       this.rejectStrangerMessage = setting.get(fSettingRejectStrangerMessage);
-    if (setting.data().containsKey(fSettingFollowingNotification))
+    if (settingData.containsKey(fSettingFollowingNotification))
       this.followingNotification = setting.get(fSettingFollowingNotification);
   }
 
@@ -88,7 +89,7 @@ class SettingProvider with ChangeNotifier {
     Map<String, dynamic> data = {};
     if (newKeepScreenAwake != null) {
       keepScreenAwake = data[fSettingScreenAwake] = newKeepScreenAwake;
-      Wakelock.toggle(on: newKeepScreenAwake);
+      Wakelock.toggle(enable: newKeepScreenAwake);
     }
     if (newHideRecentRead != null)
       hideRecentRead = data[fSettingHideRecentRead] = newHideRecentRead;

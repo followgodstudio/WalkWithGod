@@ -418,7 +418,7 @@
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = C9GM9UCXCX;
 				ENABLE_BITCODE = NO;
-				FLUTTER_ROOT = /Users/guozhengkuang/Documents/flutter;
+				FLUTTER_ROOT = /Users/ypeng/Programs/flutter;
 				FLUTTER_TARGET = lib/main_prod.dart;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -507,7 +507,7 @@
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = C9GM9UCXCX;
 				ENABLE_BITCODE = NO;
-				FLUTTER_ROOT = /Users/guozhengkuang/Documents/flutter;
+				FLUTTER_ROOT = /Users/ypeng/Programs/flutter;
 				FLUTTER_TARGET = lib/main_dev.dart;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -599,7 +599,7 @@
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = C9GM9UCXCX;
 				ENABLE_BITCODE = NO;
-				FLUTTER_ROOT = /Users/guozhengkuang/Documents/flutter;
+				FLUTTER_ROOT = /Users/ypeng/Programs/flutter;
 				FLUTTER_TARGET = lib/main_prod.dart;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -688,7 +688,7 @@
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = C9GM9UCXCX;
 				ENABLE_BITCODE = NO;
-				FLUTTER_ROOT = /Users/guozhengkuang/Documents/flutter;
+				FLUTTER_ROOT = /Users/ypeng/Programs/flutter;
 				FLUTTER_TARGET = lib/main_dev.dart;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -775,7 +775,7 @@
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = C9GM9UCXCX;
 				ENABLE_BITCODE = NO;
-				FLUTTER_ROOT = /Users/guozhengkuang/Documents/flutter;
+				FLUTTER_ROOT = /Users/ypeng/Programs/flutter;
 				FLUTTER_TARGET = lib/main_prod.dart;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -916,7 +916,7 @@
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = C9GM9UCXCX;
 				ENABLE_BITCODE = NO;
-				FLUTTER_ROOT = /Users/guozhengkuang/Documents/flutter;
+				FLUTTER_ROOT = /Users/ypeng/Programs/flutter;
 				FLUTTER_TARGET = lib/main_prod.dart;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -950,7 +950,7 @@
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = C9GM9UCXCX;
 				ENABLE_BITCODE = NO;
-				FLUTTER_ROOT = /Users/guozhengkuang/Documents/flutter;
+				FLUTTER_ROOT = /Users/ypeng/Programs/flutter;
 				FLUTTER_TARGET = lib/main_prod.dart;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
