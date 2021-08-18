@@ -37,6 +37,7 @@ pubspec.lock
 **/android/gradlew
 **/android/gradlew.bat
 **/android/local.properties
+**/android/app/local.properties
 **/android/**/GeneratedPluginRegistrant.java
 **/android/key.properties
 

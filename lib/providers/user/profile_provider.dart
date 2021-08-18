@@ -130,15 +130,13 @@ class ProfileProvider with ChangeNotifier {
 
   Future<void> updateProfilePicture(File file) async {
     _logger.i("ProfileProvider-updateProfilePicture");
-    final ref = FirebaseStorage.instance
-        .ref()
-        .child(sProfilePictures)
-        .child('$uid.jpeg');
-    String imageUrl = await ref.getDownloadURL();
+    String path = sProfilePictures + "/$uid.jpeg";
+    Reference ref = _storage.ref(path);
+    await ref.putFile(file);
     if (imageUrl == null || imageUrl.isEmpty) {
-      // newUrl = newUrl.substring(0, newUrl.indexOf('&token='));
-      //TODO: Test
-      await updateProfile(newImageUrl: imageUrl);
+      String newUrl = await ref.getDownloadURL();
+      newUrl = newUrl.substring(0, newUrl.indexOf('&token='));
+      await updateProfile(newImageUrl: newUrl);
     } else {
       // To guarantee the image will be reloaded instead of using cache
       String uniqueKey = DateFormat('yyyyMMddkkmmss').format(DateTime.now());
