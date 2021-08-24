@@ -177,9 +177,11 @@ class SavedArticles extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<SavedArticlesProvider>(builder: (context, saved, child) {
       Widget savedArticles;
+      TextStyle seeAllLikedStyle = Theme.of(context).textTheme.captionMedium1;
       double panelPadding = 15;
       double cardMargin = 10;
       if (saved.articles.length == 0) {
+        seeAllLikedStyle = seeAllLikedStyle.copyWith(color: MyColors.midGrey);
         savedArticles = SizedBox(height: 8.0);
       } else {
         List<Widget> list = [SizedBox(width: panelPadding)];
@@ -205,6 +207,13 @@ class SavedArticles extends StatelessWidget {
                   ListView(children: list, scrollDirection: Axis.horizontal)),
         );
       }
+      Widget seeAllLiked = Row(
+        children: [
+          Text("查看全部点赞", style: seeAllLikedStyle),
+          SvgPicture.asset('assets/icons/forward.svg',
+              width: 15, height: 15, color: MyColors.grey)
+        ],
+      );
       return Padding(
         padding: const EdgeInsets.only(top: 20.0),
         child: Container(
@@ -231,16 +240,17 @@ class SavedArticles extends StatelessWidget {
                     right: panelPadding,
                     left: panelPadding)),
             savedArticles,
-            MyDivider(
-                padding: EdgeInsets.only(
-                    bottom: panelPadding,
-                    right: panelPadding,
-                    left: panelPadding)),
+            if (saved.articles.length > 0)
+              MyDivider(
+                  padding: EdgeInsets.only(
+                      bottom: panelPadding,
+                      right: panelPadding,
+                      left: panelPadding)),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: panelPadding),
               child: Row(
                 children: [
-                  Text("共订阅", style: Theme.of(context).textTheme.captionGrey),
+                  Text("共点赞", style: Theme.of(context).textTheme.captionGrey),
                   SizedBox(width: 3),
                   Text(saved.savedArticlesCount.toString(),
                       style: Theme.of(context)
@@ -248,24 +258,17 @@ class SavedArticles extends StatelessWidget {
                           .friendsCount
                           .copyWith(fontSize: 28, height: 1.1)),
                   SizedBox(width: 3),
-                  Text("个点赞", style: Theme.of(context).textTheme.captionGrey),
+                  Text("篇文章", style: Theme.of(context).textTheme.captionGrey),
                   Expanded(child: SizedBox()),
                   if (saved.articles.length > 0)
                     TextButton(
-                      child: Row(
-                        children: [
-                          Text("查看全部点赞",
-                              style:
-                                  Theme.of(context).textTheme.captionMedium1),
-                          SvgPicture.asset('assets/icons/forward.svg',
-                              width: 15, height: 15, color: MyColors.grey)
-                        ],
-                      ),
+                      child: seeAllLiked,
                       onPressed: () {
                         Navigator.of(context)
                             .pushNamed(SavedArticlesScreen.routeName);
                       },
                     ),
+                  if (saved.articles.length == 0) seeAllLiked
                 ],
               ),
             ),
