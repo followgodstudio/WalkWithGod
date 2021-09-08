@@ -7,6 +7,7 @@ enum TextButtonStyle { active, regular, disabled }
 class MyTextButton extends StatelessWidget {
   final String text;
   final Color textColor;
+  final Color buttonColor;
   final bool hasBorder;
   final TextButtonStyle style;
   final bool isSmall;
@@ -17,6 +18,7 @@ class MyTextButton extends StatelessWidget {
   MyTextButton({
     @required this.text,
     this.textColor,
+    this.buttonColor,
     this.hasBorder = true,
     this.style = TextButtonStyle.regular,
     this.isSmall = false,
@@ -33,9 +35,10 @@ class MyTextButton extends StatelessWidget {
             : (style == TextButtonStyle.disabled
                 ? MyColors.grey
                 : MyColors.black));
-    Color _buttonColor = style == TextButtonStyle.active
-        ? MyColors.lightBlue
-        : Theme.of(context).buttonColor;
+    Color _buttonColor = buttonColor ??
+        (style == TextButtonStyle.active
+            ? MyColors.lightBlue
+            : Theme.of(context).buttonColor);
     Widget _textChild = Text(text,
         style: isSmall
             ? Theme.of(context).textTheme.button.copyWith(color: _textColor)
@@ -60,8 +63,9 @@ class MyTextButton extends StatelessWidget {
         child: _textChild,
         style: ElevatedButton.styleFrom(
           padding: EdgeInsets.zero,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
+          shape: RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.circular(height == null ? 18.0 : height / 2)),
           primary: _buttonColor,
           shadowColor: Colors.transparent,
         ),

@@ -10,6 +10,7 @@ import '../../utils/my_logger.dart';
 import '../../utils/utils.dart';
 import '../../widgets/my_icon_button.dart';
 import '../../widgets/popup_comment.dart';
+import '../../widgets/popup_login.dart';
 import 'share_article.dart';
 
 class BottomBar extends StatelessWidget {
@@ -43,7 +44,8 @@ class BottomBar extends StatelessWidget {
                   ),
                   onPressed: () {
                     if (profile.uid == null) {
-                      showPopUpDialog(context, false, "请登录后再操作");
+                      showModalBottomSheet(
+                          context: context, builder: (context) => PopupLogin());
                     } else {
                       showModalBottomSheet(
                           context: context,
@@ -108,7 +110,10 @@ class BottomBar extends StatelessWidget {
                         icon: 'save_border',
                         onPressed: () {
                           if (profile.uid == null) {
-                            showPopUpDialog(context, false, "请登录后再操作");
+                            showModalBottomSheet(
+                              context: context,
+                              builder: (context) => PopupLogin(),
+                            );
                           } else {
                             value.addSavedByArticleId(
                                 articleId,

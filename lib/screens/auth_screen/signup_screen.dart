@@ -87,13 +87,13 @@ class _SignupScreenState extends State<SignupScreen> {
             if (verified) {
               routeHome();
             } else {
-              showPopUpDialog(context, false, "请验证邮箱后登陆，邮件已发送到：$_email");
+              showPopUpDialog(context, false, "请验证邮箱后登录，邮件已发送到：$_email");
             }
             break;
           case AuthFormType.signUp:
             if (_errorMessage != null) return;
             await auth.createUserWithEmailAndPassword(_email, _password, _name);
-            showPopUpDialog(context, true, "请验证邮箱后登陆，邮件已发送到：$_email",
+            showPopUpDialog(context, true, "请验证邮箱后登录，邮件已发送到：$_email",
                 durationMilliseconds: 2000);
             switchFormState("signIn");
             break;

@@ -11,6 +11,7 @@ import '../../widgets/my_bottom_indicator.dart';
 import '../../widgets/my_divider.dart';
 import '../../widgets/my_icon_button.dart';
 import '../../widgets/popup_comment.dart';
+import '../../widgets/popup_login.dart';
 
 class CommentDetail extends StatefulWidget {
   @override
@@ -115,7 +116,10 @@ class CommentBottomBar extends StatelessWidget {
                   ),
                   onPressed: () {
                     if (profile.uid == null) {
-                      showPopUpDialog(context, false, "请登录后再操作");
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (context) => PopupLogin(),
+                      );
                     } else {
                       showModalBottomSheet(
                           context: context,
@@ -154,7 +158,10 @@ class CommentBottomBar extends StatelessWidget {
                   icon: 'heart_border',
                   onPressed: () {
                     if (profile.uid == null) {
-                      showPopUpDialog(context, false, "请登录后再操作");
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (context) => PopupLogin(),
+                      );
                     } else {
                       data.addLike(profile.uid, profile.name, profile.imageUrl);
                     }

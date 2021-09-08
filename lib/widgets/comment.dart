@@ -11,6 +11,7 @@ import '../providers/user/profile_provider.dart';
 import '../screens/personal_management_screen/headline/network_screen.dart';
 import '../utils/utils.dart';
 import '../widgets/popup_comment.dart';
+import '../widgets/popup_login.dart';
 import 'my_icon_button.dart';
 import 'profile_picture.dart';
 
@@ -144,7 +145,10 @@ class Comment extends StatelessWidget {
                                 icon: 'heart_border',
                                 onPressed: () {
                                   if (profile.uid == null) {
-                                    showPopUpDialog(context, false, "请登录后再操作");
+                                    showModalBottomSheet(
+                                      context: context,
+                                      builder: (context) => PopupLogin(),
+                                    );
                                   } else {
                                     data.addLike(profile.uid, profile.name,
                                         profile.imageUrl);
@@ -168,7 +172,10 @@ class Comment extends StatelessWidget {
                                   : "回复",
                               onPressed: () async {
                                 if (profile.uid == null) {
-                                  showPopUpDialog(context, false, "请登录后再操作");
+                                  showModalBottomSheet(
+                                    context: context,
+                                    builder: (context) => PopupLogin(),
+                                  );
                                 } else {
                                   int timeLag;
                                   if (onStartComment != null) {

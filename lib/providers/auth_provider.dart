@@ -142,7 +142,7 @@ class AuthProvider with ChangeNotifier {
         break;
 
       case AuthorizationStatus.error:
-        throw (MyException("登陆失败：${result.error.localizedDescription}"));
+        throw (MyException("登录失败：${result.error.localizedDescription}"));
         break;
 
       case AuthorizationStatus.cancelled:

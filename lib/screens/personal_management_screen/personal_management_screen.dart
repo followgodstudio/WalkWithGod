@@ -8,12 +8,12 @@ import '../../providers/user/friends_provider.dart';
 import '../../providers/user/profile_provider.dart';
 import '../../providers/user/saved_articles_provider.dart';
 import '../../utils/my_logger.dart';
-import '../../utils/utils.dart';
 import '../../widgets/article_card.dart';
 import '../../widgets/my_divider.dart';
 import '../../widgets/my_icon_button.dart';
 import '../../widgets/my_text_button.dart';
 import '../../widgets/navbar.dart';
+import '../../widgets/popup_login.dart';
 import '../../widgets/profile_picture.dart';
 import '../auth_screen/signup_screen.dart';
 import 'friends/friends_list_screen.dart';
@@ -37,7 +37,10 @@ class PersonalManagementScreen extends StatelessWidget {
                 icon: "email",
                 onPressed: () {
                   if (!isLoggedIn) {
-                    showPopUpDialog(context, false, "请登录后再操作");
+                    showModalBottomSheet(
+                      context: context,
+                      builder: (context) => PopupLogin(),
+                    );
                   } else {
                     Navigator.of(context)
                         .pushNamed(MessagesListScreen.routeName);
@@ -49,7 +52,10 @@ class PersonalManagementScreen extends StatelessWidget {
                   icon: "setting",
                   onPressed: () {
                     if (!isLoggedIn) {
-                      showPopUpDialog(context, false, "请登录后再操作");
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (context) => PopupLogin(),
+                      );
                     } else {
                       Navigator.of(context).pushNamed(SettingScreen.routeName);
                     }
