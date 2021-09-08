@@ -42,7 +42,7 @@ class _EditPictureScreenState extends State<EditPictureScreen> {
 
   /// Select an image via gallery or camera
   Future<void> _pickImage(ImageSource source) async {
-    final pickedFile = await picker.getImage(source: source);
+    final pickedFile = await picker.pickImage(source: source);
     await _cropImage(File(pickedFile.path));
   }
 

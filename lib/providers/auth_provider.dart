@@ -135,9 +135,8 @@ class AuthProvider with ChangeNotifier {
 
         // update the user information
         if (_appleAuth.fullName != null) {
-          _auth.currentUser.updateProfile(
-              displayName:
-                  "${_appleAuth.fullName.givenName} ${_appleAuth.fullName.familyName}");
+          _auth.currentUser.updateDisplayName(
+              "${_appleAuth.fullName.givenName} ${_appleAuth.fullName.familyName}");
         }
 
         break;
@@ -226,9 +225,7 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future updateUserName(String name, User currentUser) async {
-    // var userUpdateInfo = UserUpdateInfo();
-    // userUpdateInfo.displayName = name;
-    await currentUser.updateProfile(displayName: name);
+    await currentUser.updateDisplayName(name);
     await currentUser.reload();
   }
 

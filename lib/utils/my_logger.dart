@@ -1,4 +1,3 @@
-import 'package:intl/intl.dart';
 import 'package:flutter_logs/flutter_logs.dart';
 
 class MyLogger {
