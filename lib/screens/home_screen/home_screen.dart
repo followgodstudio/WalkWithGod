@@ -121,7 +121,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 hasBackButton: false,
                                 isSliverAppBar: true,
                                 toolbarHeight: 80.0,
-                                expandedHeight: 120.0,
+                                expandedHeight: 130.0,
                                 flexibleSpace:
                                     PageNavigator(activePage, activePageChange),
                                 titleWidget: Row(
@@ -177,7 +177,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ]),
                                   ],
                                 ),
-                                actionButton: FlatButton(
+                                actionButton: TextButton(
                                   child: Consumer<ProfileProvider>(
                                       builder: (ctx, profile, _) =>
                                           ProfilePicture(
@@ -284,10 +284,8 @@ class PageNavigatorButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FlatButton(
-        padding: EdgeInsets.only(right: 10),
-        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        minWidth: 0,
+    return TextButton(
+        style: TextButton.styleFrom(padding: EdgeInsets.only(right: 10)),
         child: Text(
           buttonText,
           style: isActive

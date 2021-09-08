@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 
 import '../../configurations/theme.dart';
+import '../../../widgets/my_text_button.dart';
 
 class ShareArticle extends StatelessWidget {
   final String articleId;
   ShareArticle(this.articleId);
   @override
   Widget build(BuildContext context) {
-    double _iconSize = 35.0;
-    double _buttonPadding = 5.0;
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -19,112 +18,57 @@ class ShareArticle extends StatelessWidget {
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: [
-                Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.all(_buttonPadding),
-                      child: FlatButton(
-                        padding: const EdgeInsets.all(0),
-                        onPressed: () {},
-                        child: CircleAvatar(
-                            radius: _iconSize,
-                            backgroundColor: Theme.of(context).buttonColor,
-                            child: Image.asset(
-                              'assets/images/wechat.png',
-                              width: _iconSize,
-                            )),
-                        color: Theme.of(context).buttonColor,
-                        shape: CircleBorder(),
-                      ),
-                    ),
-                    Text("微信", style: Theme.of(context).textTheme.captionGrey)
-                  ],
-                ),
-                Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.all(_buttonPadding),
-                      child: FlatButton(
-                        padding: const EdgeInsets.all(0),
-                        onPressed: () {},
-                        child: CircleAvatar(
-                            radius: _iconSize,
-                            backgroundColor: Theme.of(context).buttonColor,
-                            child: Image.asset(
-                              'assets/images/friends_circle.png',
-                              width: _iconSize,
-                            )),
-                        color: Theme.of(context).buttonColor,
-                        shape: CircleBorder(),
-                      ),
-                    ),
-                    Text("朋友圈", style: Theme.of(context).textTheme.captionGrey)
-                  ],
-                ),
-                Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.all(_buttonPadding),
-                      child: FlatButton(
-                        padding: const EdgeInsets.all(0),
-                        onPressed: () {},
-                        child: CircleAvatar(
-                            radius: _iconSize,
-                            backgroundColor: Theme.of(context).buttonColor,
-                            child: Image.asset(
-                              'assets/images/facebook.png',
-                              width: _iconSize,
-                            )),
-                        color: Theme.of(context).buttonColor,
-                        shape: CircleBorder(),
-                      ),
-                    ),
-                    Text("Facebook",
-                        style: Theme.of(context).textTheme.captionGrey)
-                  ],
-                ),
-                Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.all(_buttonPadding),
-                      child: FlatButton(
-                        padding: const EdgeInsets.all(0),
-                        onPressed: () {},
-                        child: CircleAvatar(
-                            radius: _iconSize,
-                            backgroundColor: Theme.of(context).buttonColor,
-                            child: Image.asset(
-                              'assets/images/email.png',
-                              width: _iconSize,
-                            )),
-                        color: Theme.of(context).buttonColor,
-                        shape: CircleBorder(),
-                      ),
-                    ),
-                    Text("电子邮件", style: Theme.of(context).textTheme.captionGrey)
-                  ],
-                ),
+                ShareButton('assets/images/wechat.png', "微信"),
+                ShareButton('assets/images/friends_circle.png', "朋友圈"),
+                ShareButton('assets/images/facebook.png', "Facebook"),
+                ShareButton('assets/images/email.png', "电子邮件"),
               ],
             ),
           ),
-          Container(
+          MyTextButton(
             width: double.infinity,
-            child: FlatButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text("取消",
-                      style: Theme.of(context).textTheme.captionSmall),
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18.0),
-                ),
-                color: Theme.of(context).buttonColor),
+            text: "取消",
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
           ),
         ],
       ),
+    );
+  }
+}
+
+class ShareButton extends StatelessWidget {
+  final String imageAsset;
+  final String imageText;
+  ShareButton(this.imageAsset, this.imageText);
+  @override
+  Widget build(BuildContext context) {
+    double _iconSize = 35.0;
+    double _buttonPadding = 10.0;
+    return Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.all(_buttonPadding),
+          child: ElevatedButton(
+            onPressed: () {},
+            child: CircleAvatar(
+                radius: _iconSize,
+                backgroundColor: Theme.of(context).buttonColor,
+                child: Image.asset(
+                  this.imageAsset,
+                  width: _iconSize,
+                )),
+            style: ElevatedButton.styleFrom(
+              padding: EdgeInsets.zero,
+              shape: CircleBorder(),
+              primary: Theme.of(context).buttonColor,
+              shadowColor: Colors.transparent,
+            ),
+          ),
+        ),
+        Text(this.imageText, style: Theme.of(context).textTheme.captionGrey)
+      ],
     );
   }
 }

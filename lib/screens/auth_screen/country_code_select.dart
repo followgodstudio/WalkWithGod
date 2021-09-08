@@ -277,12 +277,13 @@ class CountryCodeSelect extends StatelessWidget {
           ),
         ));
       } else {
-        list.add(FlatButton(
+        list.add(TextButton(
           onPressed: () {
             this.onSelectFunc(countryCodeList[i][1]);
             Navigator.of(context).pop();
           },
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          style: TextButton.styleFrom(
+              padding: EdgeInsets.symmetric(vertical: 8.0)),
           child:
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             Text(countryCodeList[i][0],

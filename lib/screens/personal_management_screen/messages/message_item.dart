@@ -13,7 +13,7 @@ class MessageItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<MessageProvider>(
-        builder: (context, data, child) => FlatButton(
+        builder: (context, data, child) => TextButton(
               onPressed: () {
                 data.markMessageAsRead(true);
                 Navigator.of(context).pushNamed(
@@ -43,7 +43,8 @@ class MessageItem extends StatelessWidget {
                                       .captionMedium1)),
                       SizedBox(width: 10),
                       Text(
-                        DateFormat('yyyy年M月d日 HH:mm a').format(data.createdDate),
+                        DateFormat('yyyy年M月d日 HH:mm a')
+                            .format(data.createdDate),
                         style: data.isRead
                             ? Theme.of(context).textTheme.captionSmall
                             : Theme.of(context)

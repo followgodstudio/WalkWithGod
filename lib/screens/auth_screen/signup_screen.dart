@@ -218,7 +218,7 @@ class _SignupScreenState extends State<SignupScreen> {
       Widget phoneWidget = Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          FlatButton(
+          TextButton(
               onPressed: () {
                 showModalBottomSheet(
                     context: context,

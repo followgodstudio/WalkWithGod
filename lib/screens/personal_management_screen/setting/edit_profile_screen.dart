@@ -31,7 +31,7 @@ class EditProfileScreen extends StatelessWidget {
                       "头像",
                       style: Theme.of(context).textTheme.captionMedium1,
                     ),
-                    FlatButton(
+                    TextButton(
                         onPressed: () {
                           Navigator.of(context)
                               .pushNamed(EditPictureScreen.routeName);

@@ -48,8 +48,8 @@ class ArticleCard extends StatelessWidget {
       tag: heroTag,
       child: ChangeNotifierProvider.value(
         value: article,
-        child: FlatButton(
-          padding: const EdgeInsets.all(0),
+        child: TextButton(
+          style: TextButton.styleFrom(padding: EdgeInsets.zero),
           onPressed: () {
             if (style == ArticleCardStyle.small) {
               Navigator.of(context).pushNamed(

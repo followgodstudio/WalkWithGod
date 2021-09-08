@@ -14,7 +14,6 @@ import 'messages_provider.dart';
 class NotificationProvider with ChangeNotifier {
   BuildContext _context;
   MyLogger _logger = MyLogger("Provider");
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 

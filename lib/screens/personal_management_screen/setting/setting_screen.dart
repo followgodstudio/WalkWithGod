@@ -59,126 +59,14 @@ class SettingScreen extends StatelessWidget {
                 Column(
                   children: [
                     Divider(),
-                    FlatButton(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      onPressed: () {
-                        Navigator.of(context)
-                            .pushNamed(EditProfileScreen.routeName);
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("编辑个人资料",
-                              style:
-                                  Theme.of(context).textTheme.captionMedium1),
-                          Icon(Icons.arrow_forward_ios,
-                              size: 15.0, color: MyColors.lightBlue)
-                        ],
-                      ),
-                    ),
-                    FlatButton(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      onPressed: () {
-                        Navigator.of(context)
-                            .pushNamed(PrivacyScreen.routeName);
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("隐私",
-                              style:
-                                  Theme.of(context).textTheme.captionMedium1),
-                          Icon(Icons.arrow_forward_ios,
-                              size: 15.0, color: MyColors.lightBlue)
-                        ],
-                      ),
-                    ),
-                    FlatButton(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      onPressed: () {
-                        Navigator.of(context)
-                            .pushNamed(NotificationScreen.routeName);
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("通知",
-                              style:
-                                  Theme.of(context).textTheme.captionMedium1),
-                          Icon(Icons.arrow_forward_ios,
-                              size: 15.0, color: MyColors.lightBlue)
-                        ],
-                      ),
-                    ),
-                    FlatButton(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      onPressed: () {
-                        Navigator.of(context)
-                            .pushNamed(CacheClearScreen.routeName);
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("缓存清理",
-                              style:
-                                  Theme.of(context).textTheme.captionMedium1),
-                          Icon(Icons.arrow_forward_ios,
-                              size: 15.0, color: MyColors.lightBlue)
-                        ],
-                      ),
-                    ),
+                    SubPageButton("编辑个人资料", EditProfileScreen.routeName),
+                    SubPageButton("隐私", PrivacyScreen.routeName),
+                    SubPageButton("通知", NotificationScreen.routeName),
+                    SubPageButton("缓存清理", CacheClearScreen.routeName),
                     Divider(),
-                    FlatButton(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      onPressed: () {
-                        Navigator.of(context)
-                            .pushNamed(AppInfoScreen.routeName);
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("关于随行派",
-                              style:
-                                  Theme.of(context).textTheme.captionMedium1),
-                          Icon(Icons.arrow_forward_ios,
-                              size: 15.0, color: MyColors.lightBlue)
-                        ],
-                      ),
-                    ),
-                    FlatButton(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      onPressed: () {
-                        Navigator.of(context)
-                            .pushNamed(AboutUsScreen.routeName);
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("关于我们",
-                              style:
-                                  Theme.of(context).textTheme.captionMedium1),
-                          Icon(Icons.arrow_forward_ios,
-                              size: 15.0, color: MyColors.lightBlue)
-                        ],
-                      ),
-                    ),
-                    FlatButton(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      onPressed: () {
-                        Navigator.of(context)
-                            .pushNamed(FeedbackScreen.routeName);
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("用户建议",
-                              style:
-                                  Theme.of(context).textTheme.captionMedium1),
-                          Icon(Icons.arrow_forward_ios,
-                              size: 15.0, color: MyColors.lightBlue)
-                        ],
-                      ),
-                    ),
+                    SubPageButton("关于随行派", AppInfoScreen.routeName),
+                    SubPageButton("关于我们", AboutUsScreen.routeName),
+                    SubPageButton("用户建议", FeedbackScreen.routeName),
                     Divider(),
                     SizedBox(height: 20),
                     MyTextButton(
@@ -201,5 +89,28 @@ class SettingScreen extends StatelessWidget {
             ),
           ),
         )));
+  }
+}
+
+class SubPageButton extends StatelessWidget {
+  final String buttonText;
+  final String routeName;
+  SubPageButton(this.buttonText, this.routeName);
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      style: TextButton.styleFrom(padding: EdgeInsets.symmetric(vertical: 8.0)),
+      onPressed: () {
+        Navigator.of(context).pushNamed(this.routeName);
+      },
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(this.buttonText,
+              style: Theme.of(context).textTheme.captionMedium1),
+          Icon(Icons.arrow_forward_ios, size: 15.0, color: MyColors.lightBlue)
+        ],
+      ),
+    );
   }
 }

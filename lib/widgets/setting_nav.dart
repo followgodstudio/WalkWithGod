@@ -10,8 +10,8 @@ class SettingNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FlatButton(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+    return TextButton(
+      style: TextButton.styleFrom(padding: EdgeInsets.symmetric(vertical: 8.0)),
       onPressed: () {
         Navigator.of(context).pushNamed(this.routeName);
       },

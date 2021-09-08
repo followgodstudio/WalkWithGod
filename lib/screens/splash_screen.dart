@@ -58,8 +58,8 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(body: SafeArea(
         child: Consumer<SplashProvider>(builder: (context, splash, child) {
       if (splash.imageUrl == null) return MyProgressIndicator();
-      return FlatButton(
-          padding: const EdgeInsets.all(0),
+      return TextButton(
+          style: TextButton.styleFrom(padding: EdgeInsets.zero),
           onPressed: () {
             _timer.cancel();
             routeHome();
@@ -124,7 +124,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   ),
                   Container(
                       height: 20, child: VerticalDivider(color: MyColors.grey)),
-                  FlatButton(
+                  TextButton(
                       onPressed: () {
                         _timer.cancel();
                         routeHome();

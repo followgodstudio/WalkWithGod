@@ -53,13 +53,16 @@ class MyIconButton extends StatelessWidget {
       child: Container(
         width: hasBorder ? buttonSize : iconSize,
         height: hasBorder ? buttonSize : iconSize,
-        child: FlatButton(
-            padding: EdgeInsets.all(0),
-            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            onPressed: onPressed,
-            child: _icon,
-            color: !hasBorder ? Colors.transparent : _buttonColor,
-            shape: hasBorder ? CircleBorder() : null),
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            padding: EdgeInsets.zero,
+            shape: hasBorder ? CircleBorder() : null,
+            primary: !hasBorder ? Colors.transparent : _buttonColor,
+            shadowColor: Colors.transparent,
+          ),
+          onPressed: onPressed,
+          child: _icon,
+        ),
       ),
     );
   }

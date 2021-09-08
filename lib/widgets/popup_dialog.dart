@@ -36,14 +36,18 @@ class PopUpDialog extends StatelessWidget {
       ),
     );
     return AlertDialog(
-        elevation: 0,
-        backgroundColor: MyColors.silver,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(18.0),
-        ),
-        titlePadding: EdgeInsets.zero,
-        contentPadding: EdgeInsets.zero,
-        content: FlatButton(
-            padding: EdgeInsets.zero, onPressed: onPressed, child: content));
+      elevation: 0,
+      backgroundColor: MyColors.silver,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(18.0),
+      ),
+      titlePadding: EdgeInsets.zero,
+      contentPadding: EdgeInsets.zero,
+      content: TextButton(
+        style: TextButton.styleFrom(padding: EdgeInsets.zero),
+        onPressed: onPressed,
+        child: content,
+      ),
+    );
   }
 }

@@ -134,8 +134,8 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
                         .captionMedium1
                         .copyWith(color: MyColors.lightGrey)),
               if (restTime == 0)
-                FlatButton(
-                    padding: EdgeInsets.zero,
+                TextButton(
+                    style: TextButton.styleFrom(padding: EdgeInsets.zero),
                     onPressed: () async {
                       await exceptionHandling(context, () async {
                         await _auth.signInWithPhone(phoneNumber, context, true);

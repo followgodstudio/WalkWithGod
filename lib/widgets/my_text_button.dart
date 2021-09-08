@@ -52,17 +52,19 @@ class MyTextButton extends StatelessWidget {
     return Container(
       width: width,
       height: height,
-      child: FlatButton(
+      child: ElevatedButton(
         onPressed: () {
           if (style == TextButtonStyle.disabled) return;
           if (onPressed != null) onPressed();
         },
         child: _textChild,
-        color: _buttonColor,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
-        padding: const EdgeInsets.all(0),
-        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        style: ElevatedButton.styleFrom(
+          padding: EdgeInsets.zero,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
+          primary: _buttonColor,
+          shadowColor: Colors.transparent,
+        ),
       ),
     );
   }

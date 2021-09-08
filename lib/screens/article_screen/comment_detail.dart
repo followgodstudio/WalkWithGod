@@ -105,40 +105,44 @@ class CommentBottomBar extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: Container(
                 height: bottomBarHeight,
-                child: FlatButton(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Text("您可以在此添加回复",
-                            style: Theme.of(context).textTheme.captionMedium2),
-                      ],
-                    ),
-                    onPressed: () {
-                      if (profile.uid == null) {
-                        showPopUpDialog(context, false, "请登录后再操作");
-                      } else {
-                        showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            builder: (context) => PopUpComment(
-                                  isReply: true,
-                                  articleId: comment.articleId,
-                                  onPressFunc: (String content) async {
-                                    await comment.addLevel2Comment(
-                                        content,
-                                        profile.uid,
-                                        profile.name,
-                                        profile.imageUrl,
-                                        false);
-                                    onSubmitComment();
-                                  },
-                                ));
-                      }
-                    },
-                    shape: RoundedRectangleBorder(
+                child: ElevatedButton(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Text("您可以在此添加回复",
+                          style: Theme.of(context).textTheme.captionMedium2),
+                    ],
+                  ),
+                  onPressed: () {
+                    if (profile.uid == null) {
+                      showPopUpDialog(context, false, "请登录后再操作");
+                    } else {
+                      showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          builder: (context) => PopUpComment(
+                                isReply: true,
+                                articleId: comment.articleId,
+                                onPressFunc: (String content) async {
+                                  await comment.addLevel2Comment(
+                                      content,
+                                      profile.uid,
+                                      profile.name,
+                                      profile.imageUrl,
+                                      false);
+                                  onSubmitComment();
+                                },
+                              ));
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    shape: new RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(bottomBarHeight / 2),
                     ),
-                    color: Theme.of(context).buttonColor),
+                    primary: Theme.of(context).buttonColor,
+                    shadowColor: Colors.transparent,
+                  ),
+                ),
               ),
             ),
           ),

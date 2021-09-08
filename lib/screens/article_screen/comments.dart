@@ -91,8 +91,8 @@ class _CommentsState extends State<Comments> {
           list.add(ChangeNotifierProvider.value(
               value: comments[i],
               builder: (context, _) {
-                return FlatButton(
-                    padding: const EdgeInsets.all(0),
+                return TextButton(
+                    style: TextButton.styleFrom(padding: EdgeInsets.zero),
                     onPressed: () async {
                       await goToCommentDetail(profile.uid, comments[i]);
                     },
