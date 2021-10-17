@@ -67,5 +67,59 @@ flutter pub get
 ```
 
 ## For app release
+generate aab
+```
+flutter build appbundle --flavor prod -t lib/main_prod.dart --build-number 10
+```
+generate apk
+```
+flutter build apk --debug --flavor prod -t lib/main_prod.dart
+```
 
-run: flutter build appbundle --build-number
+## For Firebase Cloud Function
+```
+firebase emulators:start
+firebase deploy --only functions:user_notifications-pushMessage
+```
+
+## Switch Firebase environment
+```
+firebase use walkwithgod-dev
+firebase use  walkwithgod-73ee8
+```
+
+## Generate SHA Key
+Add the generated SHA Key to firebase
+```
+cd android
+./gradlew signingReport
+```
+
+generate a SHA key if not available
+```
+keytool -genkey -v -keystore /Users/haley/.android/debug.keystore -alias AndroidDebugKey
+```
+
+list SHA key
+```
+keytool -list -v -keystore /Users/haley/.android/debug.keystore -alias AndroidDebugKey -storepass android -keypass android 
+```
+
+## Generate JKS key (For app release)
+Sharing the same key for google play store deploy
+Add file: android/key.properties
+
+storePassword=$our_key_not_commited_in_github$
+keyPassword=$our_key_not_commited_in_github$
+keyAlias=suixing
+storeFile=/Users/haley/key.jks
+
+## Google Play Store
+Add the generated SHA Key to firebase
+```
+cd android
+./gradlew signingReport
+```
+
+You might need to [install JAVA JDK](https://www.oracle.com/java/technologies/downloads/#jdk17-mac) if not available. 
+[Download dmg](https://download.oracle.com/java/17/latest/jdk-17_macos-aarch64_bin.dmg) and click to install it.

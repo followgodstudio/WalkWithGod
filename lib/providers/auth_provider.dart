@@ -30,10 +30,7 @@ class AuthProvider with ChangeNotifier {
   String _verificationId;
 
   final GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: <String>[
-      'email',
-      'https://www.googleapis.com/auth/contacts.readonly',
-    ],
+    scopes: <String>['email'],
   );
 
   AuthProvider() {
