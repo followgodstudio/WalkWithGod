@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 import '../../configurations/constants.dart';
 import '../../configurations/theme.dart';
 import '../../providers/user/friends_provider.dart';
 import '../../providers/user/profile_provider.dart';
 import '../../providers/user/saved_articles_provider.dart';
+import '../../providers/article/article_provider.dart';
+import '../../providers/user/recent_read_provider.dart';
 import '../../utils/my_logger.dart';
 import '../../widgets/article_card.dart';
 import '../../widgets/my_divider.dart';
@@ -73,6 +76,7 @@ class PersonalManagementScreen extends StatelessWidget {
               child: Column(children: <Widget>[
                 HeadLine(isLoggedIn),
                 if (isLoggedIn) SavedArticles(),
+                if (isLoggedIn) RecentRead(),
               ]),
             ),
           ),
@@ -275,6 +279,162 @@ class SavedArticles extends StatelessWidget {
                       },
                     ),
                   if (saved.articles.length == 0) seeAllLiked
+                ],
+              ),
+            ),
+            SizedBox(height: 20)
+          ]),
+        ),
+      );
+    });
+  }
+}
+
+class RecentRead extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<RecentReadProvider>(builder: (context, recent, child) {
+      Widget imagePlaceholder = Container(
+          decoration: BoxDecoration(color: Theme.of(context).buttonColor));
+      Widget recentReadArticles;
+      TextStyle seeAllLikedStyle = Theme.of(context).textTheme.captionMedium1;
+      double panelPadding = 15;
+      if (recent.recentRead.length == 0) {
+        seeAllLikedStyle = seeAllLikedStyle.copyWith(color: MyColors.midGrey);
+        recentReadArticles = SizedBox(height: 8.0);
+      } else {
+        ArticleProvider mostRecentArticle = recent.recentRead[0];
+        recentReadArticles = Row(children: [
+          SizedBox(width: 15),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 5),
+                Text("上次阅读",
+                    maxLines: 3,
+                    style: Theme.of(context).textTheme.captionGrey),
+                SizedBox(height: 5),
+                Text(mostRecentArticle.title,
+                    maxLines: 2, style: Theme.of(context).textTheme.headline3),
+                SizedBox(height: 5),
+                Text(mostRecentArticle.description,
+                    maxLines: 3,
+                    style: Theme.of(context).textTheme.captionGrey),
+                SizedBox(height: 8),
+                Row(
+                  children: [
+                    (mostRecentArticle.icon == null ||
+                            mostRecentArticle.icon.isEmpty)
+                        ? Icon(Icons.album, color: MyColors.grey, size: 30)
+                        : CircleAvatar(
+                            radius: 15,
+                            backgroundImage: CachedNetworkImageProvider(
+                                mostRecentArticle.icon),
+                            backgroundColor: Colors.transparent,
+                          ),
+                    SizedBox(width: 3),
+                    Flexible(
+                      child: Material(
+                          color: Colors.transparent,
+                          child: Text(
+                            mostRecentArticle.authorName ?? "匿名",
+                            style: Theme.of(context)
+                                .textTheme
+                                .caption
+                                .copyWith(color: MyColors.grey),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          )),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 5),
+              ],
+            ),
+          ),
+          Container(
+            width: 150,
+            child: ClipRect(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 20, top: 20, bottom: 20),
+                child: Transform.rotate(
+                  angle: -0.1,
+                  child: CachedNetworkImage(
+                      height: 150,
+                      imageUrl: mostRecentArticle.imageUrl,
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => imagePlaceholder,
+                      errorWidget: (context, url, error) => imagePlaceholder),
+                ),
+              ),
+            ),
+          ),
+        ]);
+      }
+      Widget seeAllLiked = Row(
+        children: [
+          Text("查看阅读历史", style: seeAllLikedStyle),
+          SvgPicture.asset('assets/icons/forward.svg',
+              width: 15, height: 15, color: MyColors.grey)
+        ],
+      );
+      return Padding(
+        padding: const EdgeInsets.only(top: 20.0),
+        child: Container(
+          color: MyColors.silver,
+          child: Column(children: [
+            SizedBox(height: 20),
+            IntrinsicHeight(
+              child: Row(
+                children: [
+                  VerticalDivider(
+                    indent: 4,
+                    thickness: 6,
+                    color: MyColors.yellow,
+                    width: 0,
+                  ),
+                  SizedBox(width: panelPadding),
+                  Text("最近阅读", style: Theme.of(context).textTheme.buttonLarge),
+                ],
+              ),
+            ),
+            MyDivider(
+                padding: EdgeInsets.only(
+                    top: panelPadding,
+                    right: panelPadding,
+                    left: panelPadding)),
+            recentReadArticles,
+            if (recent.recentRead.length > 0)
+              MyDivider(
+                  padding: EdgeInsets.only(
+                      bottom: panelPadding,
+                      right: panelPadding,
+                      left: panelPadding)),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: panelPadding),
+              child: Row(
+                children: [
+                  Text("过去一周阅读",
+                      style: Theme.of(context).textTheme.captionGrey),
+                  SizedBox(width: 3),
+                  Text(recent.recentRead.length.toString(),
+                      style: Theme.of(context)
+                          .textTheme
+                          .friendsCount
+                          .copyWith(fontSize: 28, height: 1.1)),
+                  SizedBox(width: 3),
+                  Text("篇文章", style: Theme.of(context).textTheme.captionGrey),
+                  Expanded(child: SizedBox()),
+                  if (recent.recentRead.length > 0)
+                    TextButton(
+                      child: seeAllLiked,
+                      onPressed: () {
+                        Navigator.of(context)
+                            .pushNamed(SavedArticlesScreen.routeName);
+                      },
+                    ),
+                  if (recent.recentRead.length == 0) seeAllLiked
                 ],
               ),
             ),

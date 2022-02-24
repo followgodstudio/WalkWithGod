@@ -26,6 +26,7 @@ import 'screens/personal_management_screen/headline/network_screen.dart';
 import 'screens/personal_management_screen/messages/messages_list_screen.dart';
 import 'screens/personal_management_screen/personal_management_screen.dart';
 import 'screens/personal_management_screen/saved_articles/saved_articles_screen.dart';
+import 'screens/personal_management_screen/recent_read/recent_read_screen.dart';
 import 'screens/personal_management_screen/setting/about_us_screen.dart';
 import 'screens/personal_management_screen/setting/app_info_screen.dart';
 import 'screens/personal_management_screen/setting/black_list_screen.dart';
@@ -39,12 +40,6 @@ import 'screens/personal_management_screen/setting/privacy_screen.dart';
 import 'screens/personal_management_screen/setting/setting_screen.dart';
 import 'screens/splash_screen.dart';
 import 'widgets/network_manager.dart';
-
-// void main() async {
-//   WidgetsFlutterBinding.ensureInitialized();
-//   await Firebase.initializeApp();
-//   runApp(MyApp());
-// }
 
 class MyApp extends StatelessWidget {
   final Environment environment;
@@ -131,6 +126,7 @@ class MyApp extends StatelessWidget {
                   NetworkScreen.routeName: (ctx) =>
                       NetworkManager(child: NetworkScreen()),
                   SavedArticlesScreen.routeName: (ctx) => SavedArticlesScreen(),
+                  RecentReadScreen.routeName: (ctx) => RecentReadScreen(),
                   HomeScreen.routeName: (ctx) =>
                       NetworkManager(child: HomeScreen()),
                   SearchScreen.routeName: (ctx) =>
