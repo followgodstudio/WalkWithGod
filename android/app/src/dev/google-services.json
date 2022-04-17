@@ -1,33 +1,70 @@
 {
   "project_info": {
-    "project_number": "1091903247025",
-    "project_id": "walkwithgod-dev",
-    "storage_bucket": "walkwithgod-dev.appspot.com"
+    "project_number": "361008934731",
+    "project_id": "walkwithgod-dev-3952c",
+    "storage_bucket": "walkwithgod-dev-3952c.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1091903247025:android:22bcb2e6ebdc70c0548890",
+        "mobilesdk_app_id": "1:361008934731:android:f312ebd085ea511bcb42ce",
         "android_client_info": {
-          "package_name": "com.suixing.walk_with_god.dev"
+          "package_name": "com.suixing.walk_with_god"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1091903247025-ie5eerk3upujbcjbn87rcpgm3v11eusd.apps.googleusercontent.com",
+          "client_id": "361008934731-ahu1p6avgm90g334ivknhgs9849vove9.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDff9x-ZEAAQ0B9jTxxDMcbYw1L5FcoxPQ"
+          "current_key": "AIzaSyCDfWQp2h6xNEfw2on_4XkAAZzoRQYX6Ck"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1091903247025-ie5eerk3upujbcjbn87rcpgm3v11eusd.apps.googleusercontent.com",
+              "client_id": "361008934731-ahu1p6avgm90g334ivknhgs9849vove9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:361008934731:android:460430d32a3773cccb42ce",
+        "android_client_info": {
+          "package_name": "com.suixing.walk_with_god.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "361008934731-dou5vq108nsjogkerh3oaoia02rliqf2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.suixing.walk_with_god.dev",
+            "certificate_hash": "40b13f0a70e7b016ab5df6977a65f05b93e1dc7a"
+          }
+        },
+        {
+          "client_id": "361008934731-ahu1p6avgm90g334ivknhgs9849vove9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDfWQp2h6xNEfw2on_4XkAAZzoRQYX6Ck"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "361008934731-ahu1p6avgm90g334ivknhgs9849vove9.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
